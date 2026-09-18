@@ -1,0 +1,246 @@
+[
+ {
+  "sub": "Sense",
+  "id": "6cydv2",
+  "label": "Review, 6 months in - very disappointed",
+  "url": "https://reddit.com/r/Sense/comments/6cydv2/",
+  "score": 10,
+  "selftext": "I installed my unit with little fanfare in December.  It has only reconized very basic appliances in this time - garage door opener, water heater,microwave, curling iron, clothes drier and garbage disposal.  With this little detected, it would have been far easier and cheaper to get individual z wave power meters.\n\nI expected it to pick up often used things like the TV, desktop computers, washing machine, toilet seat heater, etc...  But no dice even though these items are power cycled at least once per day.  The vast majority of the time, I just see a big unkown blob.",
+  "comments": [
+   {
+    "s": 6,
+    "b": "Thanks for this - helps me make a decision about buying it or not. Sorry that it was a disappointment for you"
+   },
+   {
+    "s": 6,
+    "b": "This, btw, is fairly frustrating. The only way I can get my Sense to \"recognize\" new devices is to send a series of support tickets which usually culminate in being told \"we're going to push some new devices to you soon\"—then nothing new happens until the next time I complain. Going on ~9months now, only 16 devices \"recognized\" (two I still can't figure out what they might be, and only one ever came in pre-labeled instead of \"unknown\"), and for May (close enough to a full mont) still looking at 58.1% Unknown and 20.4% Always On—meaning Sense only recognizes 21.5% of my household's power use."
+   },
+   {
+    "s": 2,
+    "b": "I'm sorry to hear to hear that you're not satisfied with your Sense experience thus far! Have you reached out to our technical support team? If you message me your Sense account's email address, we can take a closer look. There are certain devices that we are great at identifying right now and others that we are still working to improve detection on. The more people use Sense and the more data we have, the better our detection algorithms get. That being said, the typical Sense home generally has more devices identified after 6 months, so it is definitely worth having our team take a look at!"
+   },
+   {
+    "s": 2,
+    "b": "This happened to me. I emailed support concerned about no detection, then WHAM the mother ship downloaded a bunch of devices to my account THAT NEVER TURNED ON!!! I walked around my house turning things on and off, and nothing on my list reacted. Love the concept, and app, but getting fed up."
+   },
+   {
+    "s": 1,
+    "b": "Good to know, will pm email"
+   }
+  ]
+ },
+ {
+  "sub": "Sense",
+  "id": "1tkyg00",
+  "label": "How Accurate is Sense? Community Accuracy Measurements",
+  "url": "https://reddit.com/r/Sense/comments/1tkyg00/",
+  "score": 0,
+  "selftext": "**Category:** General Reference | **Tags:** accuracy, utility, metering, solar    \n**Original post:** [community.sense.com](https://community.sense.com/t/how-accurate-is-sense-summary-of-sense-accuracy-measurements-vs-utilities/14193)    \n**Stats:** 📌 Pinned | 8.5k views | 52 likes | 22 contributors | Updated through Jan 2025\n\n# Overview\n\nThis is the Sense community's master reference thread on measurement accuracy. The headline finding across dozens of user comparisons: **Sense is quite accurate against utility meters**, often within 1%, though some users start out seeing large discrepancies — almost always traceable to a specific, fixable cause.\n\n>\n\n# Master Accuracy Table\n\nThe following community-reported comparisons are all cases where Sense was validated against an independent reference (utility meter, inverter, or revenue-grade meter):\n\n|**Measured Accuracy**|**Notes**|**Thread**|\n|:-|:-|:-|\n|**Within 1% of utility**|After discovering a mystery second panel that wasn't being measured|[Usage Accuracy](https://community.sense.com/t/usage-accuracy/3875)|\n|**Within 1% of utility**|Even after past Sense issues; far better more recently|[How to Tell When Your Sense is Lying to You](https://community.sense.com/t/how-to-tell-when-your-sense-is-lying-to-you/13651/6)|\n|**Variance ≤3% vs utility**|Spot check comparison|[Total kWh Accuracy](https://community.sense.com/t/total-kwh-accuracy/573/9)|\n|**Within 1% of utility**|After aligning Sense and utility time periods|[Solar Produc",
+  "comments": [
+   {
+    "s": 4,
+    "b": "I do t need AI to tell me that it’s not accurate at ALL quite useless to be quite frank. "
+   },
+   {
+    "s": 2,
+    "b": "Mine has never quite worked as advertised. Customer support wanted me to spend $xxx more to solve that problem. Fuck it. Money wasted."
+   },
+   {
+    "s": 2,
+    "b": "Interesting to see the variety of issues that users had doing comparisons, before they got it right. Also funny to see that Sense found a case where the meters were associated with the wrong addresses. Also feels like some users don’t understand subtleties that make energy and power measurements different."
+   }
+  ]
+ },
+ {
+  "sub": "Sense",
+  "id": "se6hvo",
+  "label": "Sense vs Emporia Vue",
+  "url": "https://reddit.com/r/Sense/comments/se6hvo/",
+  "score": 19,
+  "selftext": "Since I already wrote this as a response to another user and several of you wanted an update regarding the Vue as an alternative to Sense, I figured I would post it here as well.\n\nSorry, it actually took me 2 weeks to get the Vue up and running (turned out the wifi antenna was defective but they decided to replace the main unit first which didn't fix the problem) and that's why I haven't posted an update yet.\n\nFrom the few days I've had it set up, I will say that I find myself checking the Vue much more than the Sense.  I will give Sense credit for ease of installation and I prefer their user interface but I factory reset my unit the same time I got the Vue up and running and so far all it's found is \"always on.\"\n\nPlease see [this](https://imgur.com/a/lSD1Ove) image for a comparison between the two.  Most of my large appliances (dishwasher, microwave, washer, dryer) are on their own circuit so I didn't need smart plugs for those.  Of course 240v appliances need to be monitored at the panel but that's way better than relying on Sense's wishy-washy AI that told me my space heater was a toaster and also an aquarium heater, and only picked up half the usage of my actual toaster.  I still have it installed to see what it picks up, but if I want to monitor anything with a dedicated smart plug, I will use the Emporia ones, mainly because they are significantly cheaper at $30 for 4.\n\nI will clarify this by saying that my primary use case was not necessarily to identify small power wa",
+  "comments": [
+   {
+    "s": 9,
+    "b": "Thank you for this! I'm done with the Sense. 5 years. 54% \"Other\" Their forum says they won't make a profile for a Volvo BEV because there aren't enough of them. I'm certainly not spending another $50 to find out the vampiric draw of my toaster oven. (Spoiler alert, it's a cent per year) However I very much care how much energy the Heat Pump is using when it's 34 deg outside because I'm trying to find the temperature balance where backup gas is cheaper."
+   },
+   {
+    "s": 8,
+    "b": "I have both running at the same time. Sense is neat but I just think their solution isn’t technically feasible to the extent expected by most consumers."
+   },
+   {
+    "s": 8,
+    "b": "64% Agree 36% Other"
+   },
+   {
+    "s": 3,
+    "b": "I also am a dual user, sense first, vue second. A little background. I live rural, the run from the utility pole to my house is 150ft (roughly 50m) underground. I own that. Originally it was run in the 70's not in conduit. A couple years back, I lost the neutral due to ground shift. As an electrical engineer, I took a disappointingly long time to diagnose this. After I got it all fixed, I started investigating ways to notify me of this happening. I lost -everything- powered on one leg of the USA standard 2 leg with neutral system. I lost nothing 220v powered (both legs). I first purchased the sense. It does monitor usage, it doesn't tell me lost neutral. It's basically a 220v device. The Vue tells me detailed usage on every leg I stick it on. It has helped me diagnose if my well pump is bad (both legs monitored), it helps me identify voltage to neutral and voltage to ground issues. An"
+   },
+   {
+    "s": 3,
+    "b": "Your Emporia image looks like what I hoped the Sense would provide me. Emporia here I come…"
+   },
+   {
+    "s": 3,
+    "b": "I studied sense off and on for a couple of years. I have three inverter variable speed heat pumps and three variable speed furnaces. I went with Vue because I did not expect that Sense could sort out 6 loads that are changing. I just installed one Vue and it is very informative about how the HVAC gear operates. Two more Vue's are in transit. With five panels, I might not do them all. Vue forums are very lean when no one is talking about what is detected and what is not and why."
+   },
+   {
+    "s": 3,
+    "b": "I am now also officially ex-sense and now Vue2. A few Vue2's with a few smart plugs in a week has given me WAY more valuable data than the Sense did in 3-4 years. The sense is still running, but honestly, it's feels like snake oil."
+   },
+   {
+    "s": 3,
+    "b": "After 3 years, Sense has not identified even my large appliances. A 1HP pool pump that runs 6 hours a day, every day, has not been found. A 3-ton AC that runs almost every day (in Florida) has not been found. One of two refrigerators, which runs many times every day, has not been found. And a freezer, several other motors, and dozens of little things. The first step to reducing the power bill is, to identify where the power is being spent. Without that first step, you don't even reach step 2 ... I suspect that the power-usage profiles of smart high-efficiency appliances with slow-start variable-speed motors, are not easy to identify. So trying to identify them without user input is basically a lost cause. So I think I will try a Vue system, next."
+   },
+   {
+    "s": 2,
+    "b": "100% agree"
+   },
+   {
+    "s": 2,
+    "b": "Yeah, mine is back up to heat 5 after resetting it, I haven't even bothered to figure out what they are."
+   },
+   {
+    "s": 2,
+    "b": "Can we start an emporia subreddit?"
+   },
+   {
+    "s": 2,
+    "b": "Did you start one?"
+   }
+  ]
+ },
+ {
+  "sub": "Sense",
+  "id": "bd5a1y",
+  "label": "Is sense relevant anymore?",
+  "url": "https://reddit.com/r/Sense/comments/bd5a1y/",
+  "score": 4,
+  "selftext": "I’ve had Sense for about a year now. The detection has been okay I guess. It hasn’t found many appliances and the ones it does find (washer, dishwasher) is only tracks part of the time they’re in use. \n\nWith all the smart plugs that report phantom draw, idle states, active use... why bother with sense at all? You can filter all that data though Grafana, InfuxDB or even through Home Assistant. \n\nOkay, so maybe that many smart plus would be pretty expensive. It might take work to determine when the fridge is idle, chilling, making ice, dispensing ice but you’d have the data and spikes right there and not need the Sense to filter through all the noise to find it - or not find it.\n\nI guess I’m trying to figure out what to do. Sense isn’t great at detection for my house. I feel a little disappointed but I want to participate! \n\nThoughts?",
+  "comments": [
+   {
+    "s": 5,
+    "b": "It's just not good enough at identifying devices. It has found 25 devices in something like a year for me. It 'finds' my shop vac over and over (thinks I have 5). Can train it in any way... Meh. Really looking forward to a per circuit in panel meter. I had such high hopes but really thinking about the complexity sense has to deal with it's a bit of a pipe dream."
+   },
+   {
+    "s": 3,
+    "b": "It really isn't clear yet. At our house I find the sense invaluable. We have plenty of circuits I would not want a smart plug on. Either no room, or too large a draw, or worse if the smart plug malfunctioned or you accidentally click it off, the critical appliance could be turned off. Sense is totally passive and gets around those issues, but at the trade off that it isn't super discrete and not everyone's home is as easy to detect devices in compared to others. I wish there was a way they could let you buy one and get a reading over a week on how \"noisy\" or likely it will be to identify devices. My take is there are two factors: 1) overall noise in the power system- this might be actionable depending on if it's power incoming, line quality, or a device that can be identified and replaced, causing the noise. 2) a device being identifiable. Think of a light bulb on a dimme"
+   },
+   {
+    "s": 2,
+    "b": "I've found myself checking sense less and less over the past year, and I used to participate a ton on the community forum, but for me it was never really about device discovery. I think it's much better for those with solar - it's given me much more insight into how much we need to conserve to allow our solar production to cover usage, and that's just as important in helping us save money now that we've done most everything we can to minimize our always on, etc."
+   },
+   {
+    "s": 2,
+    "b": "If I didn't have Sense Solar, I wouldn't get it tbh. I haven't found the power monitoring useful yet, but checking how much current solar we're generating compared to how much power we're using in the house and comparing these over a week, month, year, has been awesome. Yes to Sense Solar, no to Sense when solo for me."
+   },
+   {
+    "s": 1,
+    "b": "The more stuff you have, the harder it is to disaggregate, the less stuff you have, the easier it is, but it’s not useful if you only have a few things."
+   },
+   {
+    "s": 1,
+    "b": "I'm up to Vacuum 8 today! So many vacuums for one household. Any sense people care to take a look?"
+   },
+   {
+    "s": 1,
+    "b": "[deleted]"
+   }
+  ]
+ },
+ {
+  "sub": "Sense",
+  "id": "1w2v275",
+  "label": "How to go back to Sense app that really rocked?",
+  "url": "https://reddit.com/r/Sense/comments/1w2v275/",
+  "score": 9,
+  "selftext": "Short version... \n\nPurchased Sense monitor 5 years ago and downloaded app...totally awesome experience. 👍\n\nLater converted to Wiser app as required, but still a great app. 👍\n\nThen later again was forced to convert to Schneider app...totally useless POS!!! 👎👎👎\n\nAre there any options for going back to an app that really works and provides the accuracy and details that the Sense app did? \n\nHELP!!! ",
+  "comments": [
+   {
+    "s": 23,
+    "b": "Wait, the sense app’s not supposed to be the app we use anymore? It seems to work perfectly fine for me. What am I missing? "
+   },
+   {
+    "s": 10,
+    "b": "I’m still using the orange sense app. It’s still in the Apple App Store. "
+   },
+   {
+    "s": 6,
+    "b": "You can’t go back. You have to buy an orange box and ditch the green box. I found one on eBay. Also, you can’t sign in with the same account because it’ll just tell you to go back to the Schneider home app. You’ll have to make a new account with a different email address. No idea what Schneider’s actual plan is because they just discontinued all the new energy monitoring relays etc that were supposed to work in conjunction with the green box. I think Schneider Pulse is dead. I spoke to a Schneider engineer last summer (I’m an electrical contractor) and they told me the software/app was being completely revamped after the botched transition and would be released by the end of 2025, but now I can’t get any further responses from them on what’s going to happen."
+   },
+   {
+    "s": 5,
+    "b": "Didn’t know there was any option besides the sense app. "
+   },
+   {
+    "s": 5,
+    "b": "Even with the Orange app that I have now in the orange box, it's basically useless "
+   },
+   {
+    "s": 4,
+    "b": "Ah, ok. I have the orange sense hardware. Purchased about 3 years ago. "
+   },
+   {
+    "s": 3,
+    "b": "For those of us who got a deal on the sensor by buying it in green we’ve been forced to go to the wiser energy monitor app which really drove me nuts because I lost home assistant integration "
+   },
+   {
+    "s": 3,
+    "b": "I also have downloaded the Sense app but it will not connect. I have the original green Sense hardware. "
+   },
+   {
+    "s": 3,
+    "b": "It was useless when I installed in years ago "
+   },
+   {
+    "s": 3,
+    "b": "Unfortunately you didn't purchase a Sense unit. You purchased a Wiser unit that was powered by Sense. Many of us did that assuming it was just a marketing difference, which it was until Schneider changed the rules on us post purchase. The only option these days is to buy an orange Sense monitor on the secondary market or go with a different product entirely as the Schneider Home app is complete garbage. https://youtu.be/Q2dPBTrYgzo"
+   },
+   {
+    "s": 2,
+    "b": "Sense was always a crappy app, like the nest thermostat , it had soo much potential before they got acquired!"
+   },
+   {
+    "s": 2,
+    "b": "Sense is still a private company. So nobody acquired. Sense (orange monitor) and Wiser / Schneider (Sense-designed, Schneider built green monitor) drifted apart after their OEM deal ended about 3 years ago. Now the green monitors only work with the Schneider app. And Sense has moved focus to millions of Sense-enabled power meters delivered by Landis & Gyr and others. Those, along with the orange monitors still use the Sense app."
+   }
+  ]
+ },
+ {
+  "sub": "homeassistant",
+  "id": "1iupvzx",
+  "label": "ML/GenAI for device-level disaggregation without smart plugs",
+  "url": "https://reddit.com/r/homeassistant/comments/1iupvzx/",
+  "score": 12,
+  "selftext": "Hey everyone, I'm diving deep into optimizing my home energy usage and trying to avoid the cost of putting smart plugs on *every* device. For example in the kitchen, it is not straightforward to put a meter behind each device (also due to higher loads). I'm particularly interested in tracking the energy consumption of my major appliances (heat pump, induction cooktop, dishwasher, washing machine, dryer, etc.) without needing a dedicated smart plug for each.\n\nI've been reading about Non-Intrusive Load Monitoring techniques, and found this really great blueprint [https://community.home-assistant.io/t/energy-disaggregation-or-non-intrusive-load-monitoring-nilm-blueprint/619672/2](https://community.home-assistant.io/t/energy-disaggregation-or-non-intrusive-load-monitoring-nilm-blueprint/619672/2) However, it seems like Machine Learning classifiers or even Generative AI (GenAI) could be a powerful tool to automate a lot of the work. The idea would be to use the energy data I *already* have access to and then use an ML/GenAI model to disaggregate the total energy consumption into individual appliance usage.\n\nI already have access to whole-home energy data through my smart meter and my solar inverter. My thinking is to feed a model data like:\n\n* Data from the **smart meter** and solar inverter to capture the unique \"fingerprint\" of each appliance turning on/off and operating.\n* Appliance usage patterns are often **time-dependent**.\n* Data from **presence detection sensors** (motion ",
+  "comments": [
+   {
+    "s": 5,
+    "b": "I don't follow. If you manage to do this and (let's pick a scenario) get the precise and reliable information that your induction cooktop uses a lot of energy, what will you do? Stop cooking, change your diet? Or do you see this more like a cool project to learn new techniques?"
+   },
+   {
+    "s": 3,
+    "b": "Good question! In Belgium we have a very silly implementation of the capacity tarriff. We get charged for the highest peak in the month. Based on the above scenario, I would like to improve my load balancing, but only for devices that are not too important, for example, we're planning on installing a sauna and jacuzzi in the future."
+   },
+   {
+    "s": 3,
+    "b": "This seems like throwing software at a hardware problem. If you don’t want to use smart plugs, use a CT-clamp style monitor like the Emporia Vue 3 and place CT’s on every circuit. But energy monitor smart plugs are already pretty inexpensive."
+   },
+   {
+    "s": 2,
+    "b": "Ah, thanks fellow countryperson. That makes sense. At least you have a smart meter! For my flat it's still an old one and Engie applies the ridiculous model that effectively pushes most of the yearly consumption into the more expensive months..."
+   },
+   {
+    "s": 1,
+    "b": "I do have an IT background, so you are probably right. Thanks for the very interesting reference, I'll have to look into it. It seems they also have a 3-phase setup. However, $240 (shipping included) is also not really that 'inexpensive' in my opinion. But I'll search for alternatives. Most inexpensive smart plugs are not suitable for high load appliances such as heatpump, home ventilation, induction cooktop, etc. though."
+   },
+   {
+    "s": 1,
+    "b": "For inexpensive smart plugs, I recently purchased 4 additional Sonoff S31’s for $7 each. Flashed with Tasmota, they provide very good energy monitoring for smaller appliances. For larger appliances, the CT type is the way to go. The Shelly EM devices can be a good option too. But you have to compare the price/convenience of having 16 individual energy monitors versus a single 16-channel emporia. If you want to spread the cost over time or you only need a few, getting individual EM’s may be the way to go. If you want a single solution for the whole house all at once, then the Emporia is a better approach."
+   },
+   {
+    "s": 1,
+    "b": "This is how Sense works [https://sense.com/](https://sense.com/) Very interested to hear what you come up with. Im particularly interested in any sort of anomaly detection."
+   }
+  ]
+ }
+]

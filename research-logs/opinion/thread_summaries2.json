@@ -1,0 +1,173 @@
+[
+ {
+  "sub": "Appliances",
+  "id": "1ozdj5q",
+  "title": "Do energy-efficient appliances really save money in the long run?",
+  "author": "Billidays",
+  "created": "2025-11-17",
+  "score": 14,
+  "n": 85,
+  "text": "I've been considering upgrading my appliances to more energy-efficient models, but I'm curious about the actual savings. Do energy-efficient appliances truly lower utility bills enough to justify the initial investment? I've heard mixed opinions from friends and family. Some swear by their new energy-efficient refrigerators and dishwashers, claiming they save a significant amount on their electric bills. Others say the savings are minimal compared to the higher upfront costs.",
+  "top": [
+   {
+    "a": "daLejaKingOriginal",
+    "s": 11,
+    "b": "Just calculate the cost/savings."
+   },
+   {
+    "a": "thewags05",
+    "s": 10,
+    "b": "It depends on what you're replacing. I just had to get a new refrigerator. Compared to the old one it'll pay for itself in about 3.5 years. Heat pump dryers can pay for themselves pretty quickly too. Even running a little longer they'll use significantly less power. Plus you're not exhausting very large amount of conditioned air outside. One less penetration of the building envelope is a good thing too. Everything else is very situation dependent. For example my water supply it a spring fed well that takes very little power to pump the water into the house. It also dumps excess spring water (s"
+   },
+   {
+    "a": "Caprichoso1",
+    "s": 8,
+    "b": "Never had any of those problems with any of my HE appliances, showers."
+   },
+   {
+    "a": "thrax_uk",
+    "s": 7,
+    "b": "Reliability > Energy efficiency. Also, energy efficient modes usually have downsides. E.g. a washing machine set to eco 40 actually washes your clothes at a lower temperature and to compensate, washes longer, doesn't clean as well, wears out your clothes more and probably also shortens the life of the machine bearings and motor. Older appliances are also more likely to be repairable vs newer appliances."
+   },
+   {
+    "a": "[deleted]",
+    "s": 7,
+    "b": "Bingo. A heat pump dryer might pay for itself over the course of years based on back-of-the-envelope calculations. But replacing a working, \"old\" appliance with a new one for efficiency's sake will almost never pay off."
+   },
+   {
+    "a": "[deleted]",
+    "s": 6,
+    "b": "People will typically defend high value purchases come what may, so the judgement of friends can be misplaced. Buy a plug that measures electrical consumption. Use it to measure the daily consumption of your appliance and maybe ask a friend to do the same and you can compare numbers and get a proper fact-based financial breakdown of the potential benefits."
+   },
+   {
+    "a": "mikerall",
+    "s": 5,
+    "b": "Reliability will save you so much in having to buy a new appliance every 60 months vs electricity + manufacturing waste. My fridge is like 15/month, my uncle's was about 22/month in today's prices. My friend's is 10/month. His just had a 700 repair after 5 years. That offset another 6 years of efficiency between his and mine."
+   },
+   {
+    "a": "sherrybobbinsbort",
+    "s": 3,
+    "b": "We have the lg heat pump dryer. It is 100% going to pay of the extra cost of purchase."
+   },
+   {
+    "a": "thewags05",
+    "s": 3,
+    "b": "They are starting to make larger heat pump dryers though. LG has a high capacity one now that people seem to like."
+   },
+   {
+    "a": "DevilsPajamas",
+    "s": 3,
+    "b": "Reliability is really hard to estimate these days. Just buy what you want within your price range for the features/brand... and cross your fingers. More expensive doesnt necessarily mean more reliable. More features means more chances for shit to break."
+   },
+   {
+    "a": "Zeyn1",
+    "s": 3,
+    "b": "I'm not convinced the longer wash wears out clothes more. The reason it is a longer wash is because it spends more time just sitting in the water letting the detergent work. Faster washes need to agitate the clothes more. This mean rubbing them against each other and the agitator (the screw thing in the middle)."
+   },
+   {
+    "a": "[deleted]",
+    "s": 3,
+    "b": "[removed]"
+   }
+  ]
+ },
+ {
+  "sub": "homeassistant",
+  "id": "1t0hesy",
+  "title": "Whole home power monitoring",
+  "author": "turbocharged5652",
+  "created": "2026-05-01",
+  "score": 485,
+  "n": 236,
+  "text": "Has anyone in here used something like this? I want to find one that won't call home and maybe is zigbee compatible, not wifi only",
+  "top": [
+   {
+    "a": "digitalmarley",
+    "s": 233,
+    "b": "I use the Emporia Vue 3 and it has an ethernet port. It was the only one I found at the time that was compatible with home assistant and Google home. Was scared to connect it to my electrical box but the clamps are easy and it turned out to be a breeze. Had it up and running In 20 minutes and it's been running no issues for over a year. Since some of my breakers have multiple outlets on them I use smart plugs with en"
+   },
+   {
+    "a": "BadPizza",
+    "s": 111,
+    "b": "Look into the Emporia Vue 3 when flashed with ESPHome if you want fully offline and HA compatible. Though still WiFi (or ethernet)"
+   },
+   {
+    "a": "MonkeyCartridge",
+    "s": 76,
+    "b": "Have the same thing. Though I didn't use Ethernet. I also set up a breaker view. Not all are populated yet, and the total power overlaps with the untracked power on mobile. But it's useful for diagnosing things. I was also working in a region floorplan map that would shade regions by their usage. https://preview.redd.it/vlwots30dgyg1.png?width=1080&format=png&auto=webp&s=0d072a1cec1d9ba6e4fd92fc7d8caf767da3c420"
+   },
+   {
+    "a": "PJLLB2",
+    "s": 46,
+    "b": "Shelly monitors don't have to \"call home.\" You just set the device wifi connection up using device wifi. You connect them to Home Assistant directly via the LAN. There is no WAN traffic between the two."
+   },
+   {
+    "a": "pashdown",
+    "s": 45,
+    "b": "I have it. It isn't Zigbee compatible, but it is local and Meross makes a Home Assistant integration for it. Works flawlessly, although the sensors are divided into \"phases\" of your home system. For example, if you have two-phase power, like most homes do, you can assign 6 to one phase, and 6 to another phase, and then dedicate the last 6 to either phase. This may or may not cover your entire breaker box. I was able "
+   },
+   {
+    "a": "Exciting_Turn_9559",
+    "s": 34,
+    "b": "I won't be buying any more devices that require an app to configure unless there is a documented local API. Moment the app is out of development and no longer supported by the OS, the expensive device becomes ewaste."
+   },
+   {
+    "a": "jcasper",
+    "s": 30,
+    "b": "To be pedantic since we are discussing home power… homes in the US have split-phase power (which has two hots and a neutral), not two-phase power (which has four hots and is pretty rare afaik). "
+   },
+   {
+    "a": "AnduriII",
+    "s": 26,
+    "b": "I have a lot of shelly and i never downloaded the app"
+   },
+   {
+    "a": "Aciied",
+    "s": 24,
+    "b": "Shelly doesn't require an app to configure. Once you power it up it broadcast a wifi where it hosts a webserver that you can access, and setup through that. All local. No need to use their app and setup through Bluetooth."
+   },
+   {
+    "a": "badkapp00",
+    "s": 21,
+    "b": "I have the version from Refoss. It's basically the same. Make sure you buy the EM16P version. The P version doesn't need an app and you can use either the official integration or MQTT to get the data to home assistant. You can use the browser to configure everything. I've just installed it in my breaker box a couple days ago. They provide a good manual how to install it. If you're in the US you have 2 power wires. Yo"
+   }
+  ]
+ },
+ {
+  "sub": "homeassistant",
+  "id": "1fe515c",
+  "title": "IKEA just released a smart plug with energy monitor for $11.99",
+  "author": "BnH_-_Roxy",
+  "created": "2024-09-11",
+  "score": 741,
+  "n": 266,
+  "text": "IMO very interesting product as it's dirt cheap and I can throw away my old Wi-Fi plugs and don't have to pay $20+ for new zigbee ones. [https://www.ikea.com/us/en/p/inspelning-plug-smart-energy-monitor-90569846/?utm\\_source=syndication](https://www.ikea.com/us/en/p/inspelning-plug-smart-energy-monitor-90569846/?utm_source=syndication)",
+  "top": [
+   {
+    "a": "[deleted]",
+    "s": 206,
+    "b": "[removed]"
+   },
+   {
+    "a": "TheCruelSloth",
+    "s": 184,
+    "b": "Hijacking your comment, 3680 W / 16 A for the EU market. According to the spec sheet on the Norwegian site."
+   },
+   {
+    "a": "[deleted]",
+    "s": 113,
+    "b": "its zigbee and works with HA?"
+   },
+   {
+    "a": "[deleted]",
+    "s": 94,
+    "b": "[deleted]"
+   },
+   {
+    "a": "[deleted]",
+    "s": 59,
+    "b": "[deleted]"
+   }
+  ]
+ }
+]

@@ -1,0 +1,27 @@
+# Kept out of git - heavy raw data (re-downloadable) + client-material analysis; see README
+#   repo/                  client clone, pinned in docs/client/repo-review.md (github.com/AdibReza/WattWiser @ d39f0e0)
+#   docs/client/           my analysis of the client's material (repo review, docx extraction)
+#   docs/external/         client-provided documents (brief, calibration deck)
+#   sakunrasilka_nilm-test2  UK-DALE slice, re-downloadable from the UK-DALE dataset
+#   xingyang990210_nilm-datasets  third-party NILM-datasets clone, re-downloadable from GitHub
+#   kaggle_1min, plaid     re-downloadable archives (V-I captures re-fetchable via research-logs/vi/plaid_fetch.py)
+#   ukdale-full            UK-DALE 2017 full download (CEDA), re-downloadable
+#   data/                  user-staged dataset downloads (ukdale-full/, REFIT/, AMPds2/, redd/, GREEND)
+repo/
+docs/client/
+docs/external/
+research-logs/sakunrasilka_nilm-test2/
+research-logs/xingyang990210_nilm-datasets/
+research-logs/kaggle_1min/
+research-logs/plaid/
+research-logs/ukdale-full/
+research-logs/redd-kaggle/
+data/
+research-logs/vi/plaid_samples/
+.scratch/
+
+# Transient
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/

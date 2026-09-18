@@ -1,0 +1,1092 @@
+[
+ {
+  "sub": "SaaS",
+  "id": "1pa2nf2",
+  "title": "Energy disaggregation software",
+  "score": 3,
+  "n": 4,
+  "created": "2025-11",
+  "perma": "/r/SaaS/comments/1pa2nf2/energy_disaggregation_software/",
+  "text": "I'm writing this post for feedback and help with a current idea I have for a SaaS, all critiques and criticism would be appreciated. I am looking to validate or invalidate my idea for an Energy Disaggregation Software aimed more towards Residential users. I have coded a MVP that takes smart meter data and then currently with very basic algorithms and machine learning from other data will output energy use for Hvac, if specified water heater/Other appliances, base load, ect. I want to know if the"
+ },
+ {
+  "sub": "energy",
+  "id": "1pa1qqt",
+  "title": "Energy disaggregation software",
+  "score": 2,
+  "n": 2,
+  "created": "2025-11",
+  "perma": "/r/energy/comments/1pa1qqt/energy_disaggregation_software/",
+  "text": "I'm writing this post for feedback and help with a current idea I have for a SaaS, all critiques and criticism would be appreciated. I am looking to validate or invalidate my idea for an Energy Disaggregation Software aimed more towards Residential users. I have coded a MVP that takes smart meter data and then currently with very basic algorithms and machine learning from other data will output energy use for Hvac, if specified water heater/Other appliances, base load, ect. I want to know if the"
+ },
+ {
+  "sub": "Home",
+  "id": "1pa1rj3",
+  "title": "Energy disaggregation software",
+  "score": 1,
+  "n": 0,
+  "created": "2025-11",
+  "perma": "/r/Home/comments/1pa1rj3/energy_disaggregation_software/",
+  "text": ""
+ },
+ {
+  "sub": "homeassistant",
+  "id": "1iupvzx",
+  "title": "Has anyone experimented using ML/GenAI for device-level energy disaggregation without individual smart plugs?",
+  "score": 13,
+  "n": 8,
+  "created": "2025-02",
+  "perma": "/r/homeassistant/comments/1iupvzx/has_anyone_experimented_using_mlgenai_for/",
+  "text": "Hey everyone, I'm diving deep into optimizing my home energy usage and trying to avoid the cost of putting smart plugs on *every* device. For example in the kitchen, it is not straightforward to put a meter behind each device (also due to higher loads). I'm particularly interested in tracking the energy consumption of my major appliances (heat pump, induction cooktop, dishwasher, washing machine, dryer, etc.) without needing a dedicated smart plug for each. I've been reading about Non-Intrusive "
+ },
+ {
+  "sub": "science",
+  "id": "56xpas",
+  "title": "ACS AMA: I'm Kyle Bradbury, Managing Director of the Energy Data Analytics Lab at the Duke University Energy Initiative. Ask me anything about energy storage systems and energy data analytics.",
+  "score": 2207,
+  "n": 270,
+  "created": "2016-10",
+  "perma": "/r/science/comments/56xpas/acs_ama_im_kyle_bradbury_managing_director_of_the/",
+  "text": "Hi Reddit! Have you ever thought about how energy storage might transform our energy infrastructure if the storage systems were both safe and inexpensive? If so, then you've come to the right place. I'm [Kyle Bradbury](http://www.kylebradbury.org/), the [Managing Director](https://energy.duke.edu/about/staff/kyle-bradbury) of the [Energy Data Analytics Lab](https://energy.duke.edu/research/energy-data) and Lecturing fellow at the [Duke University Energy Initiative](https://energy.duke.edu/), and"
+ },
+ {
+  "sub": "energy",
+  "id": "13dwzkp",
+  "title": "Energy Disaggregation at the Home",
+  "score": 2,
+  "n": 7,
+  "created": "2023-05",
+  "perma": "/r/energy/comments/13dwzkp/energy_disaggregation_at_the_home/",
+  "text": "I started collecting data about energy use in my home using a few smart plugs on particular appliances, but I wanted the whole picture. This led to buying an energy monitor that has a current transformer (CT) clamp on each leg of my split single phase supply coming into my breaker box. This allows me to see the aggregate usage for the whole house (or for each leg of the split phase). I have this data flowing into Home Assistant and InfluxDB. I’d like to be able to account for the energy use of d"
+ },
+ {
+  "sub": "datasets",
+  "id": "13wfuw7",
+  "title": "REDD Dataset (A public data set for energy disaggregation) new link?",
+  "score": 1,
+  "n": 2,
+  "created": "2023-05",
+  "perma": "/r/datasets/comments/13wfuw7/redd_dataset_a_public_data_set_for_energy/",
+  "text": "Anyone have another source to download the REDD dataset? The original source http://redd.csail.mit.edu/, is not working and cant access. We badly need the full dataset. Thank you!"
+ },
+ {
+  "sub": "MachineLearning",
+  "id": "54qygd",
+  "title": "Best algorithm for training an energy disaggregation (non-intrusive load monitoring) model?",
+  "score": 2,
+  "n": 1,
+  "created": "2016-09",
+  "perma": "/r/MachineLearning/comments/54qygd/best_algorithm_for_training_an_energy/",
+  "text": "Hi all, I am in an interesting situation where I am the resident of an ultra-renewable energy home (for research purposes). We are collecting electricity usage data from every outlet, every appliance, and every load in the home. We are also collecting flow meter reading from just about every faucet and water source in the home. So we also know how much water is being used (and where it is being used). I have months and months of data, down to the average power usage per minute. Obviously, from a"
+ },
+ {
+  "sub": "statML",
+  "id": "4ii52r",
+  "title": "Energy Disaggregation for Real-Time Building Flexibility Detection. (arXiv:1605.01939v1 [stat.ML])",
+  "score": 1,
+  "n": 1,
+  "created": "2016-05",
+  "perma": "/r/statML/comments/4ii52r/energy_disaggregation_for_realtime_building/",
+  "text": ""
+ },
+ {
+  "sub": "Sense",
+  "id": "50nuaq",
+  "title": "Startup Sense Raises $14M for Super-Accurate Home Energy Disaggregation",
+  "score": 5,
+  "n": 0,
+  "created": "2016-09",
+  "perma": "/r/Sense/comments/50nuaq/startup_sense_raises_14m_for_superaccurate_home/",
+  "text": ""
+ },
+ {
+  "sub": "dataanalysiscareers",
+  "id": "1s4tubv",
+  "title": "Can someone help me figure out what am I doing wrong, unable to shortlist for interviews.",
+  "score": 3,
+  "n": 4,
+  "created": "2026-03",
+  "perma": "/r/dataanalysiscareers/comments/1s4tubv/can_someone_help_me_figure_out_what_am_i_doing/",
+  "text": ""
+ },
+ {
+  "sub": "dataanalysiscareers",
+  "id": "1sj7bvc",
+  "title": "How to fix my resume. I'm a final year student passing this year no full time offer in hand and actively looking for job.(Target job profile in DS/ML)",
+  "score": 2,
+  "n": 2,
+  "created": "2026-04",
+  "perma": "/r/dataanalysiscareers/comments/1sj7bvc/how_to_fix_my_resume_im_a_final_year_student/",
+  "text": ""
+ },
+ {
+  "sub": "MachineLearning",
+  "id": "9mreca",
+  "title": "[D] AMA with Vladimir – Kaggle Grand Master",
+  "score": 201,
+  "n": 46,
+  "created": "2018-10",
+  "perma": "/r/MachineLearning/comments/9mreca/d_ama_with_vladimir_kaggle_grand_master/",
+  "text": "Dear Reddit. Myself just came into the Data Science world around 1 year ago. I've learned a lot with the help of [Kaggle](http://kaggle/)and [ODS.ai](http://ods.ai/) (Open Data Science) -- the biggest Data Science community. When I just joined the ODS, there were already some STARS. Well, they were STARS in my eyes at that time. What I mean is that there were some guys who would easily crack Kaggle (and other) challenges. They were really good. Some of you may have heard of [Vladimir Iglovikov]("
+ },
+ {
+  "sub": "datasets",
+  "id": "17f0uaa",
+  "title": "Open Source data set to reprocess data",
+  "score": 0,
+  "n": 4,
+  "created": "2023-10",
+  "perma": "/r/datasets/comments/17f0uaa/open_source_data_set_to_reprocess_data/",
+  "text": "I am trying to find a data set that takes data from a database and reproccesses it by removing noise and other irrelevant information from it. I have been looking at REDD (A public data set for energy disaggregation), but the hardware for it seems outside my budget. I am not sure if this is the right place to put this but if anyone knows of something, please let me know!"
+ },
+ {
+  "sub": "datasets",
+  "id": "62klg3",
+  "title": "Code for parsing REDD dataset",
+  "score": 2,
+  "n": 12,
+  "created": "2017-03",
+  "perma": "/r/datasets/comments/62klg3/code_for_parsing_redd_dataset/",
+  "text": "I want to work on the REDD (The Reference Energy Disaggregation Data Set) and on [their paper](https://people.csail.mit.edu/mattjj/papers/kddsust2011.pdf) it is stated that \" The entirety of the data as well as code for parsing the data and running basic algorithms is publicly available on the web: http://redd.csail.mit.edu.\". However, I cannot find any code sample on the site. Could someone help me please? "
+ },
+ {
+  "sub": "MachineLearning",
+  "id": "ch2o60",
+  "title": "[P] Final Project ANN",
+  "score": 0,
+  "n": 6,
+  "created": "2019-07",
+  "perma": "/r/MachineLearning/comments/ch2o60/p_final_project_ann/",
+  "text": "Hello, I'm Hendra. I'm an undergraduate students who is working on final project so I can graduate. My lecturer asked me to use ANN for energy disaggregation system. I'm using keras machine learning with tensor flow as the backend. Lately I have a problem on making a correct model for my case and got bad accuracy score. I have 4 lamps with various power consumption and I want to predict the power consumption of each lamp using ANN. My dataset is on link. On the dataset, 1 means ON and 0 means OF"
+ },
+ {
+  "sub": "MLQuestions",
+  "id": "55solr",
+  "title": "Methods to learn data in changed environment with minimal re-training",
+  "score": 0,
+  "n": 0,
+  "created": "2016-10",
+  "perma": "/r/MLQuestions/comments/55solr/methods_to_learn_data_in_changed_environment_with/",
+  "text": "Hi folks, I'm doing a project of home energy disaggregation system in which it decomposes the power consumption data at the load center box to predict the constituent of usage electrical appliances. Now, I can create a basic data learning system based on supervised training. Next step, I would like to develop a learning method that can cope with the change of output format such as number of appliance increased with minimal training the associated new data (eg. I have trained 10 appliances and cr"
+ },
+ {
+  "sub": "electrical",
+  "id": "1mvdkhz",
+  "title": "👉 Sub-metering vs non-intrusive load monitoring (NILM) for energy management in large buildings – your experience?",
+  "score": 0,
+  "n": 0,
+  "created": "2025-08",
+  "perma": "/r/electrical/comments/1mvdkhz/submetering_vs_nonintrusive_load_monitoring_nilm/",
+  "text": "Hey everyone, I’ve been digging into energy management requirements for large commercial buildings, especially with new regulations in Europe (like the French “BACS” decree) that mandate energy monitoring by usage and zone. From what I’ve seen, there are two main approaches on the ground: * **Traditional sub-metering**: installing multiple meters on each panel or circuit. Reliable, but costly and complex in existing buildings (wiring constraints, downtime, maintenance, calibration). * **Non-Intr"
+ },
+ {
+  "sub": "learnmachinelearning",
+  "id": "1lv02ry",
+  "title": "Advice for anomaly detection + non-intrusive load monitoring",
+  "score": 1,
+  "n": 0,
+  "created": "2025-07",
+  "perma": "/r/learnmachinelearning/comments/1lv02ry/advice_for_anomaly_detection_nonintrusive_load/",
+  "text": "Hey, for a project, I have data on total energy consumption over time, as well as data from individual sensors reading the consumption of IoT devices. I want to use unsupervised anomaly detection on the total data and identify which sensor is most responsible. For anomaly detection, I tried simple methods like the z-score; however, given that the data is not normally distributed, I opted for the isolation forest. Now, when assigning sensors to the anomalies, I attempted to examine their rate of "
+ },
+ {
+  "sub": "ElvenAINews",
+  "id": "1icslb1",
+  "title": "[2501.16817] Enhancing Non-Intrusive Load Monitoring with Features Extracted by Independent Component Analysis",
+  "score": 1,
+  "n": 0,
+  "created": "2025-01",
+  "perma": "/r/ElvenAINews/comments/1icslb1/250116817_enhancing_nonintrusive_load_monitoring/",
+  "text": ""
+ },
+ {
+  "sub": "MLQuestions",
+  "id": "179tw19",
+  "title": "Non intrusive load monitoring",
+  "score": 2,
+  "n": 0,
+  "created": "2023-10",
+  "perma": "/r/MLQuestions/comments/179tw19/non_intrusive_load_monitoring/",
+  "text": "Hey, fellow ML enthusiasts! I'm exploring non-intrusive load monitoring (NILM) with smart meter data, and I'm curious about the latest advancements and best practices. What are some effective ML algorithms or techniques for disaggregating and identifying individual appliances' energy consumption from smart meter readings? Any interesting datasets or open-source tools you recommend for someone starting in this field? Looking for insights and resources to kickstart my NILM project. Thanks!"
+ },
+ {
+  "sub": "learnmachinelearning",
+  "id": "17akr8g",
+  "title": "Seeking Collaborators for Non-Intrusive Load Monitoring Research",
+  "score": 1,
+  "n": 0,
+  "created": "2023-10",
+  "perma": "/r/learnmachinelearning/comments/17akr8g/seeking_collaborators_for_nonintrusive_load/",
+  "text": " Hello fellow Redditors! I hope this post finds you well. I'm reaching out to the Reddit community because I'm embarking on a fascinating journey into the world of Non-Intrusive Load Monitoring (NILM). I believe this field holds immense potential to revolutionize the way we monitor and manage energy consumption, and I'm looking for collaborators who share this passion. **What is Non-Intrusive Load Monitoring (NILM)?** NILM is a cutting-edge technology that allows us to analyze and monitor househ"
+ },
+ {
+  "sub": "deeplearning",
+  "id": "179u2u8",
+  "title": "Non intrusive load monitoring from smart meter data using deep learning",
+  "score": 0,
+  "n": 0,
+  "created": "2023-10",
+  "perma": "/r/deeplearning/comments/179u2u8/non_intrusive_load_monitoring_from_smart_meter/",
+  "text": " Hello, ML community! I'm diving into non-intrusive load monitoring (NILM) using smart meter data, and I'm eager to harness the power of deep learning for this task. Can you share your experiences and recommendations for deep learning models or architectures that excel in disaggregating and recognizing individual appliances' energy consumption from smart meter readings? Additionally, any pointers on preprocessing steps, feature engineering, or relevant libraries/frameworks for deep learning in N"
+ },
+ {
+  "sub": "ActiveAssistedLiving",
+  "id": "yi6wt5",
+  "title": "\"Exploiting Smart Meter Power Consumption Measurements for Human Activity Recognition (HAR) with a Motif-Detection-Based Non-Intrusive Load Monitoring (NILM) Approach\" (2022)",
+  "score": 1,
+  "n": 0,
+  "created": "2022-10",
+  "perma": "/r/ActiveAssistedLiving/comments/yi6wt5/exploiting_smart_meter_power_consumption/",
+  "text": ""
+ },
+ {
+  "sub": "ActiveAssistedLiving",
+  "id": "y13jzg",
+  "title": "„Exploiting Smart Meter Power Consumption Measurements for Human Activity Recognition (HAR) with a Motif-Detection-Based Non-Intrusive Load Monitoring (NILM) Approach“ (2022)",
+  "score": 1,
+  "n": 0,
+  "created": "2022-10",
+  "perma": "/r/ActiveAssistedLiving/comments/y13jzg/exploiting_smart_meter_power_consumption/",
+  "text": ""
+ },
+ {
+  "sub": "MachineLearning",
+  "id": "23cpl3",
+  "title": "NILMTK: an open source toolkit for non-intrusive load monitoring",
+  "score": 13,
+  "n": 3,
+  "created": "2014-04",
+  "perma": "/r/MachineLearning/comments/23cpl3/nilmtk_an_open_source_toolkit_for_nonintrusive/",
+  "text": ""
+ },
+ {
+  "sub": "MachineLearning",
+  "id": "54qygd",
+  "title": "Best algorithm for training an energy disaggregation (non-intrusive load monitoring) model?",
+  "score": 2,
+  "n": 1,
+  "created": "2016-09",
+  "perma": "/r/MachineLearning/comments/54qygd/best_algorithm_for_training_an_energy/",
+  "text": "Hi all, I am in an interesting situation where I am the resident of an ultra-renewable energy home (for research purposes). We are collecting electricity usage data from every outlet, every appliance, and every load in the home. We are also collecting flow meter reading from just about every faucet and water source in the home. So we also know how much water is being used (and where it is being used). I have months and months of data, down to the average power usage per minute. Obviously, from a"
+ },
+ {
+  "sub": "MachineLearning",
+  "id": "1mvu3w",
+  "title": "INDiC: Improved Non-Intrusive load monitoring using load Division and Calibration",
+  "score": 1,
+  "n": 0,
+  "created": "2013-09",
+  "perma": "/r/MachineLearning/comments/1mvu3w/indic_improved_nonintrusive_load_monitoring_using/",
+  "text": "Preprint and IPython notebook of work to appear at ICMLA 2013 Paper: http://nipunbatra.files.wordpress.com/2013/09/icmla.pdf IPython notebook: http://www.iiitd.edu.in/~amarjeet/Research/indic.html"
+ },
+ {
+  "sub": "homeassistant",
+  "id": "1w1jbyj",
+  "title": "Estimate Appliance Energy Use From Whole Home Power, Now With Multiple Mains Support | HA-NILM 1.1.9",
+  "score": 22,
+  "n": 10,
+  "created": "2026-08",
+  "perma": "/r/homeassistant/comments/1w1jbyj/estimate_appliance_energy_use_from_whole_home/",
+  "text": "Hey everyone, For anyone discovering it for the first time, HA-NILM is a local Non-Intrusive Load Monitoring system for Home Assistant. It uses your whole-home power data and a short training process to estimate when individual appliances are running and how much energy they use. I’ve just released **HA NILM 1.1.9**, with support for multiple mains sensors. # What’s new **Multiple mains sensors** You can now configure multiple mains power sensors, making HA-NILM suitable for split phase, three p"
+ },
+ {
+  "sub": "homeassistant",
+  "id": "1ueb9ls",
+  "title": "Home Assistant app that estimates appliance usage from one mains power sensor",
+  "score": 33,
+  "n": 18,
+  "created": "2026-06",
+  "perma": "/r/homeassistant/comments/1ueb9ls/home_assistant_app_that_estimates_appliance_usage/",
+  "text": "Most appliance-level energy monitoring in Home Assistant means adding a smart plug, clamp meter, or submeter for every device. That gets expensive fast, and it is not always practical for hardwired or high-current appliances. I built a NILM (Non-Intrusive Load Monitoring) project that uses a single whole-home mains power sensor to estimate when individual appliances are running and their approximate power use. You train a model on your own Home Assistant history, so it can adapt to your applianc"
+ },
+ {
+  "sub": "homeautomation",
+  "id": "1w465jm",
+  "title": "Estimate Appliance Energy Use From Whole Home Power, Now With Multiple Mains Support | HA-NILM 1.1.9",
+  "score": 3,
+  "n": 2,
+  "created": "2026-09",
+  "perma": "/r/homeautomation/comments/1w465jm/estimate_appliance_energy_use_from_whole_home/",
+  "text": "Hey everyone, For anyone discovering it for the first time, HA-NILM is a local Non-Intrusive Load Monitoring system for Home Assistant. It uses your whole-home power data and a short training process to estimate when individual appliances are running and how much energy they use. I’ve just released **HA NILM 1.1.9**, with support for multiple mains sensors. # What’s new **Multiple mains sensors** You can now configure multiple mains power sensors, making HA-NILM suitable for split phase, three p"
+ },
+ {
+  "sub": "antiai",
+  "id": "1sl2fsq",
+  "title": "Pensate di aver blindato casa per le ferie? Il vostro contatore smart sta trasmettendo le vostre abitudini (e la vostra assenza) in chiaro. Parliamo di NILM.",
+  "score": 0,
+  "n": 7,
+  "created": "2026-04",
+  "perma": "/r/antiai/comments/1sl2fsq/pensate_di_aver_blindato_casa_per_le_ferie_il/",
+  "text": "Chiudiamo la porta a chiave, attiviamo l'allarme di ultima generazione, controlliamo le telecamere dall'app e ci mettiamo in viaggio. Ci sentiamo al sicuro. Eppure, proprio fuori dalla porta, c'è un dispositivo che continua a trasmettere un flusso di dati capace di rivelare a chiunque sappia leggerli l'esatta routine della nostra famiglia. Sto parlando del contatore intelligente (lo smart meter). Non è complottismo, è una tecnica ben nota chiamata NILM (Non-Intrusive Load Monitoring). Gli smart "
+ },
+ {
+  "sub": "dataanalysiscareers",
+  "id": "1s4tubv",
+  "title": "Can someone help me figure out what am I doing wrong, unable to shortlist for interviews.",
+  "score": 2,
+  "n": 4,
+  "created": "2026-03",
+  "perma": "/r/dataanalysiscareers/comments/1s4tubv/can_someone_help_me_figure_out_what_am_i_doing/",
+  "text": ""
+ },
+ {
+  "sub": "dataanalysiscareers",
+  "id": "1sj7bvc",
+  "title": "How to fix my resume. I'm a final year student passing this year no full time offer in hand and actively looking for job.(Target job profile in DS/ML)",
+  "score": 2,
+  "n": 2,
+  "created": "2026-04",
+  "perma": "/r/dataanalysiscareers/comments/1sj7bvc/how_to_fix_my_resume_im_a_final_year_student/",
+  "text": ""
+ },
+ {
+  "sub": "homeassistant",
+  "id": "1iupvzx",
+  "title": "Has anyone experimented using ML/GenAI for device-level energy disaggregation without individual smart plugs?",
+  "score": 12,
+  "n": 8,
+  "created": "2025-02",
+  "perma": "/r/homeassistant/comments/1iupvzx/has_anyone_experimented_using_mlgenai_for/",
+  "text": "Hey everyone, I'm diving deep into optimizing my home energy usage and trying to avoid the cost of putting smart plugs on *every* device. For example in the kitchen, it is not straightforward to put a meter behind each device (also due to higher loads). I'm particularly interested in tracking the energy consumption of my major appliances (heat pump, induction cooktop, dishwasher, washing machine, dryer, etc.) without needing a dedicated smart plug for each. I've been reading about Non-Intrusive "
+ },
+ {
+  "sub": "Voltaware",
+  "id": "1mexj1j",
+  "title": "Voltaware is now IEC 63297 Certified - What it Means for You",
+  "score": 2,
+  "n": 0,
+  "created": "2025-08",
+  "perma": "/r/Voltaware/comments/1mexj1j/voltaware_is_now_iec_63297_certified_what_it/",
+  "text": "Big milestone: Voltaware has officially achieved **IEC 63297:2025 certification** \\- the world’s first international standard for **non-intrusive load monitoring (NILM) sensing devices**. What does this mean for you as a Voltaware user? ✅ Better accuracy for disaggregated energy usage ✅ Faster data and smarter appliance-level insights ✅ Increased trust - our sensor now meets global compliance benchmarks ✅ Future-ready for integration with smart meters and utility platforms ✅ It confirms our comm"
+ },
+ {
+  "sub": "Julia",
+  "id": "1ax3dq4",
+  "title": "Hidden Markov Models for time series forecasting?",
+  "score": 13,
+  "n": 10,
+  "created": "2024-02",
+  "perma": "/r/Julia/comments/1ax3dq4/hidden_markov_models_for_time_series_forecasting/",
+  "text": "I'm looking for software packages for Hidden Markov Models that could be used for time series forecasting, i.e. a supervised learning application. The packages I found so far seem to be focused on unsupervised learning, though. They use a series of past observations Y(1:T) to try to estimate the underlying state X(1:T), which is very useful for signal processing (X is the actual variable of interest, Y is its measurement) or bioinformatics. I want to use them for time series forecasting in energ"
+ },
+ {
+  "sub": "energy",
+  "id": "13dwzkp",
+  "title": "Energy Disaggregation at the Home",
+  "score": 2,
+  "n": 7,
+  "created": "2023-05",
+  "perma": "/r/energy/comments/13dwzkp/energy_disaggregation_at_the_home/",
+  "text": "I started collecting data about energy use in my home using a few smart plugs on particular appliances, but I wanted the whole picture. This led to buying an energy monitor that has a current transformer (CT) clamp on each leg of my split single phase supply coming into my breaker box. This allows me to see the aggregate usage for the whole house (or for each leg of the split phase). I have this data flowing into Home Assistant and InfluxDB. I’d like to be able to account for the energy use of d"
+ },
+ {
+  "sub": "u_SunApEcopower",
+  "id": "j1c960",
+  "title": "Bosch Phantom",
+  "score": 1,
+  "n": 0,
+  "created": "2020-09",
+  "perma": "/r/u_SunApEcopower/comments/j1c960/bosch_phantom/",
+  "text": " Bosch Phantom is an Advanced Artificial Intelligence (AI) device for Non-Intrusive Load Monitoring and Energy Management Solution. https://preview.redd.it/k1fizk8i7wp51.jpg?width=800&format=pjpg&auto=webp&s=d983607a53419231482b960a3200ffda4eb56011 Contact us marketing@sunapecopower.com \\+91 8884466393 . www.sunapecopower.com [\\#IoT](https://www.instagram.com/explore/tags/iot/) [\\#Technology](https://www.instagram.com/explore/tags/technology/) [\\#BoschOnInsta](https://www.instagram.com/explore/t"
+ },
+ {
+  "sub": "u_SunApEcopower",
+  "id": "iyxzwx",
+  "title": "Bosch Phantom",
+  "score": 1,
+  "n": 0,
+  "created": "2020-09",
+  "perma": "/r/u_SunApEcopower/comments/iyxzwx/bosch_phantom/",
+  "text": " Bosch Phantom is an Advanced Artificial Intelligence (AI) device for Non-Intrusive Load Monitoring and Energy Management Solution. It is a small device that can help purchasers identify possibilities to conserve cost on electric bills. Contact us marketing@sunapecopower.com \\+91 8884466393 . www.sunapecopower.com [\\#IoT](https://www.instagram.com/explore/tags/iot/) [\\#Technology](https://www.instagram.com/explore/tags/technology/) [\\#BoschOnInsta](https://www.instagram.com/explore/tags/boschoni"
+ },
+ {
+  "sub": "u_SunApEcopower",
+  "id": "io6ytj",
+  "title": "Bosch Phantom",
+  "score": 1,
+  "n": 0,
+  "created": "2020-09",
+  "perma": "/r/u_SunApEcopower/comments/io6ytj/bosch_phantom/",
+  "text": " >!Bosch Phantom!< is an Advanced Artificial Intelligence (AI) device for Non-Intrusive Load Monitoring and Energy Management Solution. It is a small device that can help purchasers identify possibilities to conserve cost on electric bills. https://preview.redd.it/3v6r5gbz3ql51.jpg?width=800&format=pjpg&auto=webp&s=df5b10c2505860ec80da211ae5ddac8e0bce6f9f Contact us marketing@sunapecopower.com \\+91 8884466393 www.sunapecopower.com [\\#IoT](https://www.instagram.com/explore/tags/iot/) [\\#Technolog"
+ },
+ {
+  "sub": "WriteAThing",
+  "id": "4idxq7",
+  "title": "Could a native speaker have a look at my research proposal introduction, please?",
+  "score": 1,
+  "n": 0,
+  "created": "2016-05",
+  "perma": "/r/WriteAThing/comments/4idxq7/could_a_native_speaker_have_a_look_at_my_research/",
+  "text": " Energy efficiency is one of the major challenges of the twenty first century. One way to tackle our energy crisis is to save energy in households. But to do so we need data. Data that enables us to optimize energy efficiency where it counts. Data that helps us to identify wasteful consumer behavior. But measuring every single device individually is expensive and annoying to consumers. Non-intrusive load monitoring is key to identifying weak spots within appliances and providing real time inform"
+ },
+ {
+  "sub": "homeassistant",
+  "id": "1w1jbyj",
+  "title": "Estimate Appliance Energy Use From Whole Home Power, Now With Multiple Mains Support | HA-NILM 1.1.9",
+  "score": 22,
+  "n": 10,
+  "created": "2026-08",
+  "perma": "/r/homeassistant/comments/1w1jbyj/estimate_appliance_energy_use_from_whole_home/",
+  "text": "Hey everyone, For anyone discovering it for the first time, HA-NILM is a local Non-Intrusive Load Monitoring system for Home Assistant. It uses your whole-home power data and a short training process to estimate when individual appliances are running and how much energy they use. I’ve just released **HA NILM 1.1.9**, with support for multiple mains sensors. # What’s new **Multiple mains sensors** You can now configure multiple mains power sensors, making HA-NILM suitable for split phase, three p"
+ },
+ {
+  "sub": "homeautomation",
+  "id": "1w465jm",
+  "title": "Estimate Appliance Energy Use From Whole Home Power, Now With Multiple Mains Support | HA-NILM 1.1.9",
+  "score": 1,
+  "n": 2,
+  "created": "2026-09",
+  "perma": "/r/homeautomation/comments/1w465jm/estimate_appliance_energy_use_from_whole_home/",
+  "text": "Hey everyone, For anyone discovering it for the first time, HA-NILM is a local Non-Intrusive Load Monitoring system for Home Assistant. It uses your whole-home power data and a short training process to estimate when individual appliances are running and how much energy they use. I’ve just released **HA NILM 1.1.9**, with support for multiple mains sensors. # What’s new **Multiple mains sensors** You can now configure multiple mains power sensors, making HA-NILM suitable for split phase, three p"
+ },
+ {
+  "sub": "u_okkkkkkkm7088",
+  "id": "1vpw16n",
+  "title": "Nilm university anyone ? Let's connect ✌🏻",
+  "score": 1,
+  "n": 0,
+  "created": "2026-08",
+  "perma": "/r/u_okkkkkkkm7088/comments/1vpw16n/nilm_university_anyone_lets_connect/",
+  "text": ""
+ },
+ {
+  "sub": "HaryanaSocial",
+  "id": "1vn5yxx",
+  "title": "Anyone from NILM UNIVERSITY KAITHAL HARYANA??",
+  "score": 2,
+  "n": 0,
+  "created": "2026-08",
+  "perma": "/r/HaryanaSocial/comments/1vn5yxx/anyone_from_nilm_university_kaithal_haryana/",
+  "text": ""
+ },
+ {
+  "sub": "RuralHaryana",
+  "id": "1vn5zwe",
+  "title": "Anyone from NILM UNIVERSITY KAITHAL HARYANA??",
+  "score": 1,
+  "n": 0,
+  "created": "2026-08",
+  "perma": "/r/RuralHaryana/comments/1vn5zwe/anyone_from_nilm_university_kaithal_haryana/",
+  "text": ""
+ },
+ {
+  "sub": "obgyn",
+  "id": "1uv8wiz",
+  "title": "ASC-US (HPV negative) → 3 months later NILM but minimal inflammatory changes. Should I still have a colposcopy?",
+  "score": 1,
+  "n": 2,
+  "created": "2026-07",
+  "perma": "/r/obgyn/comments/1uv8wiz/ascus_hpv_negative_3_months_later_nilm_but/",
+  "text": "Hi everyone, I’m looking for some advice or to hear about similar experiences. Back in March, my Pap smear came back as **ASC-US**, but my **HPV test was negative**. My gynecologist prescribed 3 months of treatment (vitamins, antioxidants, and Colpofix gel+ gardasil vaccine) I repeated the Pap smear after 3 months, and the result now says: Reduced inflammatory background Trophic squamous epithelial cells, transformation zone present **Minimal reparative-inflammatory changes** **No cytological at"
+ },
+ {
+  "sub": "antiai",
+  "id": "1sl2fsq",
+  "title": "Pensate di aver blindato casa per le ferie? Il vostro contatore smart sta trasmettendo le vostre abitudini (e la vostra assenza) in chiaro. Parliamo di NILM.",
+  "score": 0,
+  "n": 7,
+  "created": "2026-04",
+  "perma": "/r/antiai/comments/1sl2fsq/pensate_di_aver_blindato_casa_per_le_ferie_il/",
+  "text": "Chiudiamo la porta a chiave, attiviamo l'allarme di ultima generazione, controlliamo le telecamere dall'app e ci mettiamo in viaggio. Ci sentiamo al sicuro. Eppure, proprio fuori dalla porta, c'è un dispositivo che continua a trasmettere un flusso di dati capace di rivelare a chiunque sappia leggerli l'esatta routine della nostra famiglia. Sto parlando del contatore intelligente (lo smart meter). Non è complottismo, è una tecnica ben nota chiamata NILM (Non-Intrusive Load Monitoring). Gli smart "
+ },
+ {
+  "sub": "HPV",
+  "id": "1st1duq",
+  "title": "HPV16 NILM, Gyn recommending LEEP?",
+  "score": 2,
+  "n": 4,
+  "created": "2026-04",
+  "perma": "/r/HPV/comments/1st1duq/hpv16_nilm_gyn_recommending_leep/",
+  "text": "Hi all, I have HPV 16, active infection for 3 years. Don't smoke, rarely drink - last time I had a drink was last year. I've got vaccinated after initial diagnosis. Just had my annual pap today, past few years I've had positive paps for HPV but no cell changes (NILM). My Gyn is recommending LEEP if it comes back again positive, even if NILM again. My question is - would you do it? I asked if positive but NILM to wait 6months and have another pap... but she's strongly suggesting not to wait. I wo"
+ },
+ {
+  "sub": "feedthebeast",
+  "id": "1ql98aj",
+  "title": "Nilm in star technology",
+  "score": 0,
+  "n": 1,
+  "created": "2026-01",
+  "perma": "/r/feedthebeast/comments/1ql98aj/nilm_in_star_technology/",
+  "text": "I'm stuck, not really, but i really want to do a kilm, but i cant find anywhere how to do it, pls helps. https://preview.redd.it/lmxfvspj87fg1.png?width=770&format=png&auto=webp&s=4cec2d14ea163fdcd014519bd460a3f62933a840"
+ },
+ {
+  "sub": "BlueArchive",
+  "id": "1lj9plv",
+  "title": "Family Time with Neru (くまちよ)",
+  "score": 3423,
+  "n": 49,
+  "created": "2025-06",
+  "perma": "/r/BlueArchive/comments/1lj9plv/family_time_with_neru_くまちよ/",
+  "text": ""
+ },
+ {
+  "sub": "MLQuestions",
+  "id": "1luzufo",
+  "title": "Anomaly detection in power consumption + NILM",
+  "score": 2,
+  "n": 5,
+  "created": "2025-07",
+  "perma": "/r/MLQuestions/comments/1luzufo/anomaly_detection_in_power_consumption_nilm/",
+  "text": "Hey, for a project I have data of total energy consumption over time as well as the data of individual sensors reading the consumption of IoTs. I want to use unsupervised anomaly detection on the total data and identify which sensor is most responsible. For anomaly detection, I tried simple methods like z-score; however, given that the data is not normally distributed, I went with isolation forest. Now, for assigning sensors to the anomalies, I tried to look at their rate of change around the ti"
+ },
+ {
+  "sub": "electrical",
+  "id": "1mvdkhz",
+  "title": "👉 Sub-metering vs non-intrusive load monitoring (NILM) for energy management in large buildings – your experience?",
+  "score": 0,
+  "n": 0,
+  "created": "2025-08",
+  "perma": "/r/electrical/comments/1mvdkhz/submetering_vs_nonintrusive_load_monitoring_nilm/",
+  "text": "Hey everyone, I’ve been digging into energy management requirements for large commercial buildings, especially with new regulations in Europe (like the French “BACS” decree) that mandate energy monitoring by usage and zone. From what I’ve seen, there are two main approaches on the ground: * **Traditional sub-metering**: installing multiple meters on each panel or circuit. Reliable, but costly and complex in existing buildings (wiring constraints, downtime, maintenance, calibration). * **Non-Intr"
+ },
+ {
+  "sub": "HPV",
+  "id": "1iufb7z",
+  "title": "Positive for HPV aptima. Negative for 16/18/45 and NILM. Never had any genital warts ever.",
+  "score": 4,
+  "n": 9,
+  "created": "2025-02",
+  "perma": "/r/HPV/comments/1iufb7z/positive_for_hpv_aptima_negative_for_161845_and/",
+  "text": "And I’m under 30 years old I was trying to do a bunch of reading on it and it seems like I just have to wait for it to clear on its own? I also got my first dose of the gardasil vaccine during my visit. Freaking out a little bit "
+ },
+ {
+  "sub": "counterstrike2",
+  "id": "1snuvad",
+  "title": "T1 BlueGem Talon ( Potential 1 Of 1 )",
+  "score": 490,
+  "n": 85,
+  "created": "2026-04",
+  "perma": "/r/counterstrike2/comments/1snuvad/t1_bluegem_talon_potential_1_of_1/",
+  "text": "does anyone have an idea of what this is worth? i did a trade up for it a few weeks ago and still have no progress finding a market for it. i can prove that i have the knife if youre actually interested in helping me get an estimate/quote"
+ },
+ {
+  "sub": "gibberish",
+  "id": "1jq1d9d",
+  "title": "Blembteltov nelbanpek, estrugeck nulroon dlaberrog usht sleeve ushek nilm.",
+  "score": 2,
+  "n": 1,
+  "created": "2025-04",
+  "perma": "/r/gibberish/comments/1jq1d9d/blembteltov_nelbanpek_estrugeck_nulroon_dlaberrog/",
+  "text": "Flewombeg esht newhelm selomped lauj muleeg. Wentelteeb, splembibalakt nellost{> . Plevenb skelabtrund effib snilvarg strengukt. Elovbim, slaumtrekukt ellempipob slund elfeeg. Sneshott ollesp nefemniliusk jejjeejsosk. Wampleloptlib?"
+ },
+ {
+  "sub": "BlueArchive",
+  "id": "1lxoy1b",
+  "title": "Overlap Trait [Kikyou, Kazusa] (中子射流)",
+  "score": 2212,
+  "n": 37,
+  "created": "2025-07",
+  "perma": "/r/BlueArchive/comments/1lxoy1b/overlap_trait_kikyou_kazusa_中子射流/",
+  "text": ""
+ },
+ {
+  "sub": "Healthyhooha",
+  "id": "1iuj6nb",
+  "title": "Positive for HPV aptima. Negative for 16/18/45 and NILM. Never had any genital warts ever.",
+  "score": 1,
+  "n": 1,
+  "created": "2025-02",
+  "perma": "/r/Healthyhooha/comments/1iuj6nb/positive_for_hpv_aptima_negative_for_161845_and/",
+  "text": ""
+ },
+ {
+  "sub": "HPV",
+  "id": "1bixl4h",
+  "title": "NEGATIVE FOR HPV + NILM PAP ",
+  "score": 22,
+  "n": 10,
+  "created": "2024-03",
+  "perma": "/r/HPV/comments/1bixl4h/negative_for_hpv_nilm_pap/",
+  "text": "Everyone, I NEVER thought this day would come!! I had no hope at all. I can finally say I have cleared HPV!!!! I am so happy but I also feel sad because I spent a whole year HATING myself, and absolutely just going through life miserable. I first tested positive for hpv at the end of march 2023. I immediately googled everything and searched this sub EVERYDAY. Going through all the comments and posts looking for everything people were taking that seemed to help with clearance. I had a 6 month fol"
+ },
+ {
+  "sub": "Iloilo",
+  "id": "1u75snb",
+  "title": "Sharing our little SMOOTHIE BAR in Bolilao! 🫶🏻",
+  "score": 404,
+  "n": 55,
+  "created": "2026-06",
+  "perma": "/r/Iloilo/comments/1u75snb/sharing_our_little_smoothie_bar_in_bolilao/",
+  "text": "Hey ILO peeps! 👋 One thing we always felt was missing here was a dedicated smoothie spot. Damo na ta coffee shops, milk tea, kag dessert places, and while some offer smoothies, we rarely see a place built around them, with a full lineup of signature blends to choose from. So we decided to open one!! 😊 We’re SUMUJI, a new smoothie and soft serve shop currently on soft opening. Our smoothies are made with real whole fruit, and prices start at just ₱109. Gani, we really tried our best to keep the"
+ },
+ {
+  "sub": "cork",
+  "id": "1tki0av",
+  "title": "Another one of these gaffs",
+  "score": 123,
+  "n": 127,
+  "created": "2026-05",
+  "perma": "/r/cork/comments/1tki0av/another_one_of_these_gaffs/",
+  "text": "Seriously, how are so many of these types of shops getting approved? They're everywhere. In particular, this one located here is just utter shite. This is actually a really nice street, would have loved to have seen something more in keeping with the general vibe. Awful shite altogether. \\*This is bridge street btw"
+ },
+ {
+  "sub": "HPV",
+  "id": "1gs91up",
+  "title": "Normal (NILM) to HR HPV LSIL in 7 mos + yeast infections ",
+  "score": 3,
+  "n": 0,
+  "created": "2024-11",
+  "perma": "/r/HPV/comments/1gs91up/normal_nilm_to_hr_hpv_lsil_in_7_mos_yeast/",
+  "text": "hi so i recently went to a follow up 6 month PAP after having a LEEP in Aug 2022 for HR HPV with CIN 1 and CIN 2. I tested positive for HR HPV and my PAP came back abnormal with a general interpretation of LSIL and also another interpretation of yeast infection. Satisfactory for evaluation; endocervical/transformation zone component present Epithelial cell abnormality - Low grade squamous intraepithelial lesion (LSIL) Fungal organisms morphologically consistent with Candida spp I last had a pap "
+ },
+ {
+  "sub": "MEPEngineering",
+  "id": "1g5o92k",
+  "title": "Looking for Real-World Feedback on NILM Technologies",
+  "score": 2,
+  "n": 1,
+  "created": "2024-10",
+  "perma": "/r/MEPEngineering/comments/1g5o92k/looking_for_realworld_feedback_on_nilm/",
+  "text": "Hey everyone, Looking for real-world feedback on **NILM technologies** like **Smart Impulse**, **Sense**, and **Bidgely**. How accurate are they at identifying equipment and breaking down energy use? Any issues with setup, long-term reliability, or performance in larger commercial spaces? Do the cost and benefits compare well to traditional sub-metering? Thanks!"
+ },
+ {
+  "sub": "glutmother",
+  "id": "1w7bp5p",
+  "title": "Full tracklist no C section 😢",
+  "score": 190,
+  "n": 59,
+  "created": "2026-09",
+  "perma": "/r/glutmother/comments/1w7bp5p/full_tracklist_no_c_section/",
+  "text": ""
+ },
+ {
+  "sub": "HPV",
+  "id": "18f8hir",
+  "title": "Confused: NILM pap to CIN3 biopsy",
+  "score": 1,
+  "n": 10,
+  "created": "2023-12",
+  "perma": "/r/HPV/comments/18f8hir/confused_nilm_pap_to_cin3_biopsy/",
+  "text": "Why don't I ask my gyno? They're unable to see me until after the new year and didn't have an answer to this specific question. Can anyone shed some light as to how my pap smear could come back \"NILM, HPV16+\", but my biopsy results in CIN 3? Seems like a huge disconnect. Are pap smears just inaccurate? This was my first year I tested positive for the 16 strain. Time from Pap smear to biopsy was only 1 month apart. Late 2020: ASCUS, HPV+ (Previous gyno considered me clear, colpo showed mild infla"
+ },
+ {
+  "sub": "badMovies",
+  "id": "1pmvwi2",
+  "title": "Was looking for Fateful Findings on dvd/blu-ray… what in the world is the explanation for this?",
+  "score": 335,
+  "n": 112,
+  "created": "2025-12",
+  "perma": "/r/badMovies/comments/1pmvwi2/was_looking_for_fateful_findings_on_dvdbluray/",
+  "text": "… nothing further to add… I think the image above explains its insanity enough on its own (the current going rate of the blu-ray on amazon)."
+ },
+ {
+  "sub": "Sense",
+  "id": "50nuaq",
+  "title": "Startup Sense Raises $14M for Super-Accurate Home Energy Disaggregation",
+  "score": 5,
+  "n": 0,
+  "created": "2016-09",
+  "perma": "/r/Sense/comments/50nuaq/startup_sense_raises_14m_for_superaccurate_home/",
+  "text": ""
+ },
+ {
+  "sub": "Sense",
+  "id": "14slqi2",
+  "title": "3rd Party 240V plugs?",
+  "score": 4,
+  "n": 5,
+  "created": "2023-07",
+  "perma": "/r/Sense/comments/14slqi2/3rd_party_240v_plugs/",
+  "text": "I'm wondering if anybody knows of a 3rd party for 240V plugs. The sense is having a tough time differentiating between my hot water tank heat pump and my dryer heat pump: both are under \"pump 2\". Alternatively, can I somehow disaggregate the two heat pumps? (Oh, and I have two solar inverters, so those slots are taken)"
+ },
+ {
+  "sub": "Sense",
+  "id": "1v6mded",
+  "title": "Removing ‘Always On’ Devices",
+  "score": 6,
+  "n": 2,
+  "created": "2026-07",
+  "perma": "/r/Sense/comments/1v6mded/removing_always_on_devices/",
+  "text": "At one point the Sense App allowed you to define devices that were part of your Always On bubble — this may have just been part of the general Device definition. During that time I went in and defined every device I could think of that contributed to my Always On total. As far as I can tell, there is no longer any way to see these devices in the Sense App, but various APIs, and scans turn them up. Of course over time, our devices change, and some or many of these become obsolete. Is there any wa"
+ },
+ {
+  "sub": "Sense",
+  "id": "1tlyf8j",
+  "title": "⚡ Five Things to Know About 'Always On' in Sense",
+  "score": 0,
+  "n": 7,
+  "created": "2026-05",
+  "perma": "/r/Sense/comments/1tlyf8j/five_things_to_know_about_always_on_in_sense/",
+  "text": "# Category: General Reference | Tags: always-on, energy-monitoring # Original post: [community.sense.com](https://community.sense.com/t/five-things-to-know-about-always-on/21154) # What Is Always On? \"Always On\" is Sense's measurement of your home's **vampire load** — the continuous baseline power consumed by devices that never fully turn off. It is estimated based on the lowest power usage in your home over the past 48 hours. Always On can be confusing and sometimes controversial, but it serves"
+ },
+ {
+  "sub": "Sense",
+  "id": "1kbpn5t",
+  "title": "Always on",
+  "score": 4,
+  "n": 11,
+  "created": "2025-04",
+  "perma": "/r/Sense/comments/1kbpn5t/always_on/",
+  "text": "I have some Kasa plugs working with Sense. I have several always on devices plugged into these so I can determine what energy these are using. I have a Synology NAS plugged into one and the bubble for it shows 77 watts in use, 70 always on. I get it that the always on figure is an average of the usage over 24-48 hours, so I don’t have an issue with the numbers. But the big always on bubble shows like 1,000 watts and there’s no way I can see to get a list of the devices (plugs, identified) that a"
+ },
+ {
+  "sub": "Sense",
+  "id": "1fu85bt",
+  "title": "Does Losing Power Clear Always On?",
+  "score": 0,
+  "n": 8,
+  "created": "2024-10",
+  "perma": "/r/Sense/comments/1fu85bt/does_losing_power_clear_always_on/",
+  "text": "We’ve lost power a few times over the last month, we (manually) switch to generator and back again, it happened again today. I hadn’t noticed before, but when the power came back on, my ‘Always On’ bubble was gone, it’s now encompassed within Other. Is this normal? We’ve lost power enough times you’d think I’d have noticed it before, but I haven’t, this seems new?"
+ },
+ {
+  "sub": "Sense",
+  "id": "jar48e",
+  "title": "Got my Flex kit today. Looking forward to being able to analyze each circuit to better understand my always on and \"other\".",
+  "score": 21,
+  "n": 33,
+  "created": "2020-10",
+  "perma": "/r/Sense/comments/jar48e/got_my_flex_kit_today_looking_forward_to_being/",
+  "text": ""
+ },
+ {
+  "sub": "Sense",
+  "id": "16ww2df",
+  "title": "Heat Pump being included into Always On",
+  "score": 1,
+  "n": 12,
+  "created": "2023-10",
+  "perma": "/r/Sense/comments/16ww2df/heat_pump_being_included_into_always_on/",
+  "text": "How do I get it out of Always On? It's clearly not always on."
+ },
+ {
+  "sub": "Sense",
+  "id": "10eipqc",
+  "title": "Seems Like a Lot of Folks Don't Know a Breakdown of Always On Exists !",
+  "score": 10,
+  "n": 8,
+  "created": "2023-01",
+  "perma": "/r/Sense/comments/10eipqc/seems_like_a_lot_of_folks_dont_know_a_breakdown/",
+  "text": "Have seen a few posts where people are trying to figure out the components of their Always On, but don't really seem to know that the Always On device can help users itemize their Always On: * Devices that are on smart plugs and Direct Current Monitoring (DCM) are automatically added to the list using a Sense-calculated Always On for that device. * Users can use the \"+\" to add devices that are not on smart plugs. Hitting the \"+\" will bring up a smallish-library of pre-measured devices. If you ca"
+ },
+ {
+  "sub": "Sense",
+  "id": "13pyiys",
+  "title": "Just got my panels turned on yesterday. I suspect I have one of my consumption CTs upside down when I'm producing a surplus? It's saying I'm using 0 watts, which can't be since my always on was around 300-400 watts before doing the solar setup.",
+  "score": 8,
+  "n": 6,
+  "created": "2023-05",
+  "perma": "/r/Sense/comments/13pyiys/just_got_my_panels_turned_on_yesterday_i_suspect/",
+  "text": ""
+ },
+ {
+  "sub": "Sense",
+  "id": "zp63h8",
+  "title": "Overlap between Always On and everything else",
+  "score": 3,
+  "n": 7,
+  "created": "2022-12",
+  "perma": "/r/Sense/comments/zp63h8/overlap_between_always_on_and_everything_else/",
+  "text": "Hello! About a week and a half into my install and watching as new devices (slowly) get recognized. If I were to group everything into either items that were recognized or items that weren't (\"Other\"), I assumed my total instantaneous usage would be the sum of all recognized items plus the \"Other\" group (everything that isn't recognized). I was thinking that all of the \"Always On\" usage was split between recognized devices and \"Other\", and that the Always On item was just a data value-add. But i"
+ },
+ {
+  "sub": "Sense",
+  "id": "zdnymy",
+  "title": "Lutron Caseta Always On",
+  "score": 2,
+  "n": 5,
+  "created": "2022-12",
+  "perma": "/r/Sense/comments/zdnymy/lutron_caseta_always_on/",
+  "text": "Does anyone have any experience tracking down always on usage for Lutron Caseta switches? I have about 25 of these throughout my home and would like to understand what the phantom draw is."
+ },
+ {
+  "sub": "Sense",
+  "id": "esrna9",
+  "title": "Always On still large bubble after several months",
+  "score": 1,
+  "n": 19,
+  "created": "2020-01",
+  "perma": "/r/Sense/comments/esrna9/always_on_still_large_bubble_after_several_months/",
+  "text": "I’m trying to figure out what’s included in my “Always On” category. It is still taking up the largest part of my home’s energy usage and has not been broken down further by Sense, even after six months and many device detections. Our “Always On” is typically in the 1,100-1,200 W range, even when the house is quiet and everyone is asleep. It’s getting really frustrating trying to figure out what’s impacting this high number. Is there something else I can do to help Sense break down this number f"
+ },
+ {
+  "sub": "Sense",
+  "id": "jcqvko",
+  "title": "What do you consider as normal Always On?",
+  "score": 7,
+  "n": 13,
+  "created": "2020-10",
+  "perma": "/r/Sense/comments/jcqvko/what_do_you_consider_as_normal_always_on/",
+  "text": "So I have solar... and thanks to sense I figured out why my electric bills are so insanely high. I have an always on in my house as 1.2kw... when I consider most of every light... most other things as off. I went into every room... and added energy monitors for all what’s plugged in. With every light off, with screens off... with A/C off... I haven’t gotten it below 1.2 kW/h. When I added up all of what I have plugged in... I am monitoring 500 W / 0.5 kW. So I have a mystery 0.7 kW I have no clu"
+ },
+ {
+  "sub": "Sense",
+  "id": "iay4ul",
+  "title": "Recognizing \"other\" and \"always on\"",
+  "score": 2,
+  "n": 13,
+  "created": "2020-08",
+  "perma": "/r/Sense/comments/iay4ul/recognizing_other_and_always_on/",
+  "text": "I was wondering if there's a better way to figure out what the devices that show up as \"other\" and \"always on\" are? The \"other\" in my app shows a lot of usage and I was wondering it could be. I've had the device installed now for over a year and still waiting on a lot to be identified."
+ },
+ {
+  "sub": "Sense",
+  "id": "d2qpjc",
+  "title": "Typical always on wattage",
+  "score": 5,
+  "n": 16,
+  "created": "2019-09",
+  "perma": "/r/Sense/comments/d2qpjc/typical_always_on_wattage/",
+  "text": "I have a horrible electric bill which was my motivation to get the Sense, after almost a week I seem to have an always on background usage of 600w, regardless of appliances, is that typical? What kind of numbers do you see? My home is a typical 1400sqft property, 3 people, and unoccupied for 8hrs a day and a smart thermostat that backs off in away mode. Just wondering if the 600w background is high and if I have a fault on my wiring"
+ },
+ {
+  "sub": "Sense",
+  "id": "pc3i2y",
+  "title": "Wattage for known always on devices?",
+  "score": 3,
+  "n": 5,
+  "created": "2021-08",
+  "perma": "/r/Sense/comments/pc3i2y/wattage_for_known_always_on_devices/",
+  "text": "What is the best way to determine wattage for known always on devices that aren’t already in the Sense database?"
+ },
+ {
+  "sub": "Sense",
+  "id": "b6wr18",
+  "title": "Anyone else having issues with \"Always On\" and \"Other\" last couple of days?",
+  "score": 3,
+  "n": 12,
+  "created": "2019-03",
+  "perma": "/r/Sense/comments/b6wr18/anyone_else_having_issues_with_always_on_and/",
+  "text": "I submitted a ticket, but basically, my \"Always On\" keeps going up over the last couple days and nothing I do will drop it. As of now it's stuck at 497 watts. I've unplugged TVs, DVRs, Google Homes, Even my NAS, Modem, and Router (on a UPS so I didn't lose 'internet') and my \"Always On\" stayed at 497. [See here for 'increase' over last few days](https://i.imgur.com/WwWPwLV.png)"
+ },
+ {
+  "sub": "Sense",
+  "id": "rodza0",
+  "title": "\"Always on\" device removed",
+  "score": 3,
+  "n": 2,
+  "created": "2021-12",
+  "perma": "/r/Sense/comments/rodza0/always_on_device_removed/",
+  "text": "I moved a set of what should be \"always on\" devices to a kasa TP plug 125. (aquarium power strip.) My \"always on\" rating hasn't changed, but the 140W from the tank popped right up. 1) is Sense duplicating this current? 2) about how long should it take for sense to recognize this? 3) is there any way to \"tell\" it? (..... of course not, right?) I recycled this TP link from another use for this purpose. Would it have been better (smarter, faster) if I had started fresh with a new kasa outlet? Thank"
+ },
+ {
+  "sub": "Sense",
+  "id": "s7qldo",
+  "title": "Always On Devices",
+  "score": 1,
+  "n": 1,
+  "created": "2022-01",
+  "perma": "/r/Sense/comments/s7qldo/always_on_devices/",
+  "text": "For MANUALLY ADDED devices, is there any way these can be arranged in alphabetical order? They seem to be listed in the order in which they were added. If you have a large number of always on devices (which I do), this makes it very difficult to isolate any missing devices that need to be added."
+ },
+ {
+  "sub": "Sense",
+  "id": "feykhx",
+  "title": "Always On appears in Usage but not on the bubbles. What’s up?",
+  "score": 5,
+  "n": 3,
+  "created": "2020-03",
+  "perma": "/r/Sense/comments/feykhx/always_on_appears_in_usage_but_not_on_the_bubbles/",
+  "text": ""
+ },
+ {
+  "sub": "Sense",
+  "id": "f6o88y",
+  "title": "Always On bubble",
+  "score": 1,
+  "n": 2,
+  "created": "2020-02",
+  "perma": "/r/Sense/comments/f6o88y/always_on_bubble/",
+  "text": "Hi my always on bubble is not showing up. Any ideas?"
+ },
+ {
+  "sub": "Sense",
+  "id": "6qahf0",
+  "title": "Always on seems really high",
+  "score": 1,
+  "n": 4,
+  "created": "2017-07",
+  "perma": "/r/Sense/comments/6qahf0/always_on_seems_really_high/",
+  "text": "I just recently installed my sense. My always on is running at roughly 40% of my daily usage about 660 watts. This seems very high to me. I mean the always on is using more energy than my AC in late July. Sense says average is 288watts. I'm more than double that. Can anyone share their always on # for comparison."
+ },
+ {
+  "sub": "Sense",
+  "id": "64o0ld",
+  "title": "Best way to help sense find \"always on\" devices?",
+  "score": 4,
+  "n": 2,
+  "created": "2017-04",
+  "perma": "/r/Sense/comments/64o0ld/best_way_to_help_sense_find_always_on_devices/",
+  "text": "Just got sense installed last week, and I'm working through the impatience of waiting for it to find devices. It's found my main refrigerator and a small fridge as well so far; I'm hopeful this means Sense is getting better/quicker at device detection, but understand this might not be realistic. I've got a home lab (computers etc) that I don't turn off that are presumably making up a good portion of my Always On amount; I know we're not supposed to \"help\" sense learn devices, but once it figures"
+ },
+ {
+  "sub": "Sense",
+  "id": "5d5l4g",
+  "title": "Always on turned off",
+  "score": 1,
+  "n": 2,
+  "created": "2016-11",
+  "perma": "/r/Sense/comments/5d5l4g/always_on_turned_off/",
+  "text": "My Always on item turned off a few days ago and hasn't come back on. Looks like most of it jumped to unknown. :("
+ },
+ {
+  "sub": "Sense",
+  "id": "1vpfp69",
+  "title": "What does this mean?",
+  "score": 5,
+  "n": 8,
+  "created": "2026-08",
+  "perma": "/r/Sense/comments/1vpfp69/what_does_this_mean/",
+  "text": "I think this is a bug. I know it's supposed to be comparing current usage to previous usage, but what does \"last 4 Saturday\" mean?"
+ },
+ {
+  "sub": "Sense",
+  "id": "1u56sae",
+  "title": "Main screen and solar screen show different usage amounts.",
+  "score": 3,
+  "n": 6,
+  "created": "2026-06",
+  "perma": "/r/Sense/comments/1u56sae/main_screen_and_solar_screen_show_different_usage/",
+  "text": "This started happening a few days ago (about the same time the long term data stopped showing on the app). My usage on the main bubble screen is 10 kw off from after I click the solar value. It seems the bubble screen is correct based on my usage in the past. The second screen seems to start 10kw too high. I haven't been awake at 1 am when it starts showing to see if 10kw magically appears but when I wake in the morning, I'd have used 13-15kw when my actual usage is typically 3-5kw. "
+ },
+ {
+  "sub": "homeassistant",
+  "id": "1iupvzx",
+  "title": "Has anyone experimented using ML/GenAI for device-level energy disaggregation without individual smart plugs?",
+  "score": 12,
+  "n": 8,
+  "created": "2025-02",
+  "perma": "/r/homeassistant/comments/1iupvzx/has_anyone_experimented_using_mlgenai_for/",
+  "text": "Hey everyone, I'm diving deep into optimizing my home energy usage and trying to avoid the cost of putting smart plugs on *every* device. For example in the kitchen, it is not straightforward to put a meter behind each device (also due to higher loads). I'm particularly interested in tracking the energy consumption of my major appliances (heat pump, induction cooktop, dishwasher, washing machine, dryer, etc.) without needing a dedicated smart plug for each. I've been reading about Non-Intrusive "
+ },
+ {
+  "sub": "homeassistant",
+  "id": "1w1jbyj",
+  "title": "Estimate Appliance Energy Use From Whole Home Power, Now With Multiple Mains Support | HA-NILM 1.1.9",
+  "score": 19,
+  "n": 10,
+  "created": "2026-08",
+  "perma": "/r/homeassistant/comments/1w1jbyj/estimate_appliance_energy_use_from_whole_home/",
+  "text": "Hey everyone, For anyone discovering it for the first time, HA-NILM is a local Non-Intrusive Load Monitoring system for Home Assistant. It uses your whole-home power data and a short training process to estimate when individual appliances are running and how much energy they use. I’ve just released **HA NILM 1.1.9**, with support for multiple mains sensors. # What’s new **Multiple mains sensors** You can now configure multiple mains power sensors, making HA-NILM suitable for split phase, three p"
+ },
+ {
+  "sub": "homeassistant",
+  "id": "1ueb9ls",
+  "title": "Home Assistant app that estimates appliance usage from one mains power sensor",
+  "score": 32,
+  "n": 18,
+  "created": "2026-06",
+  "perma": "/r/homeassistant/comments/1ueb9ls/home_assistant_app_that_estimates_appliance_usage/",
+  "text": "Most appliance-level energy monitoring in Home Assistant means adding a smart plug, clamp meter, or submeter for every device. That gets expensive fast, and it is not always practical for hardwired or high-current appliances. I built a NILM (Non-Intrusive Load Monitoring) project that uses a single whole-home mains power sensor to estimate when individual appliances are running and their approximate power use. You train a model on your own Home Assistant history, so it can adapt to your applianc"
+ },
+ {
+  "sub": "homeassistant",
+  "id": "1u6ue2w",
+  "title": "I built an add-on that can tell you if an appliance is on when it shouldn't be, or even about to fail!",
+  "score": 4,
+  "n": 9,
+  "created": "2026-06",
+  "perma": "/r/homeassistant/comments/1u6ue2w/i_built_an_addon_that_can_tell_you_if_an/",
+  "text": "If you have a multi-channel energy meter this (HACS) add-on analyzes appliance energy patterns, and creates sensors that can be used for notifications to tell you when an appliance is acting differently than it normally does. It can answer questions like the following: * Is this appliance running, idle, on standby, or not showing recent activity? * Is today's energy use unusually high for this circuit? * Is my refrigerator, washer, dryer, pump, HVAC, water heater, or EV charger behaving differen"
+ },
+ {
+  "sub": "homeassistant",
+  "id": "1u0j3cm",
+  "title": "CircuitSetup Energy Analyzer - Detailed Appliance and Circuit Diagnostics",
+  "score": 4,
+  "n": 7,
+  "created": "2026-06",
+  "perma": "/r/homeassistant/comments/1u0j3cm/circuitsetup_energy_analyzer_detailed_appliance/",
+  "text": "I'm currently working on an Energy Analyzer HACS integration, and could use some people to test it. Currently single phase and split single phase circuits and mains are supported (there are plans to integrate 3-phase systems in the future). There are already a ton of features outlined here: [https://github.com/CircuitSetup/CircuitSetup-Energy-Analyzer](https://github.com/CircuitSetup/CircuitSetup-Energy-Analyzer) Click here to add to HACS: [https://my.home-assistant.io/redirect/hacs\\_repository/"
+ },
+ {
+  "sub": "homeassistant",
+  "id": "1td0dna",
+  "title": "Smart home related senior design project ideas",
+  "score": 2,
+  "n": 5,
+  "created": "2026-05",
+  "perma": "/r/homeassistant/comments/1td0dna/smart_home_related_senior_design_project_ideas/",
+  "text": "I'm a computer engineering student starting my senior design capstone project and I'm looking for real problems to solve. A few ideas I'm already considering: * Ultrasonic flow/pipe monitoring for leak detection * Water heater thermocline monitoring (digital twin) to know how much hot water you have left * NILM-style power monitoring from a single point to identify appliances and catch early failure signatures But I'm genuinely open to more ideas .What's a problem you keep running into that? Wha"
+ },
+ {
+  "sub": "homeassistant",
+  "id": "1iupvzx",
+  "title": "Has anyone experimented using ML/GenAI for device-level energy disaggregation without individual smart plugs?",
+  "score": 11,
+  "n": 8,
+  "created": "2025-02",
+  "perma": "/r/homeassistant/comments/1iupvzx/has_anyone_experimented_using_mlgenai_for/",
+  "text": "Hey everyone, I'm diving deep into optimizing my home energy usage and trying to avoid the cost of putting smart plugs on *every* device. For example in the kitchen, it is not straightforward to put a meter behind each device (also due to higher loads). I'm particularly interested in tracking the energy consumption of my major appliances (heat pump, induction cooktop, dishwasher, washing machine, dryer, etc.) without needing a dedicated smart plug for each. I've been reading about Non-Intrusive "
+ },
+ {
+  "sub": "tomorrowsworld",
+  "id": "14mxywl",
+  "title": "The Future of Upgradeable Appliances: Signature Kitchen Suite - Design Milk",
+  "score": 1,
+  "n": 0,
+  "created": "2023-06",
+  "perma": "/r/tomorrowsworld/comments/14mxywl/the_future_of_upgradeable_appliances_signature/",
+  "text": ""
+ },
+ {
+  "sub": "kitchenremodel",
+  "id": "1pmm2bj",
+  "title": "Progress Update",
+  "score": 148,
+  "n": 51,
+  "created": "2025-12",
+  "perma": "/r/kitchenremodel/comments/1pmm2bj/progress_update/",
+  "text": "We are finally in the home stretch of this full gut kitchen reno! **Details:** • Upper Cabinets: J&K B5 in color Pure (white) • Lower Cabinets, Island, & Beverage station: Cabinet Joint/Conestoga Cabinets, Cherry, Saddle Stain, RutlandMT reverse G-cove/beveled shaker door style • Quartzite: “Calacatta Boheme.” In order to have enough slabs for the project we opted for honed backsplash and dog station, and polished countertops. (I think it looks similar to Mont Blanc. Has movement, depth, and cry"
+ },
+ {
+  "sub": "kitchenremodel",
+  "id": "1psolwv",
+  "title": "Another update! 💡Lighting is in…",
+  "score": 119,
+  "n": 27,
+  "created": "2025-12",
+  "perma": "/r/kitchenremodel/comments/1psolwv/another_update_lighting_is_in/",
+  "text": "And it makes a big difference 🤩 12 weeks in and now I really see the ✨light✨at the end of the reno tunnel!! Not done yet, WIP ⚠️ : Faucet (we have it in hand just not installed), ceiling repairs, trim, hood and vent, garden window, beverage bar inset doors and glass, wooden shelves on either side of the window Details ⬇️ • Dog station: The dog bowl filler was hard to figure out but we finally went with the following spout with separate handle: Index Bath - Folding Spout Faucet https://indexbath"
+ },
+ {
+  "sub": "dataanalysiscareers",
+  "id": "1sj7bvc",
+  "title": "How to fix my resume. I'm a final year student passing this year no full time offer in hand and actively looking for job.(Target job profile in DS/ML)",
+  "score": 2,
+  "n": 2,
+  "created": "2026-04",
+  "perma": "/r/dataanalysiscareers/comments/1sj7bvc/how_to_fix_my_resume_im_a_final_year_student/",
+  "text": ""
+ },
+ {
+  "sub": "MST3K",
+  "id": "1cqww9a",
+  "title": "Beefaroni",
+  "score": 147,
+  "n": 23,
+  "created": "2024-05",
+  "perma": "/r/MST3K/comments/1cqww9a/beefaroni/",
+  "text": "My husband has had this stuck in his head since January. Today he finally did it. "
+ },
+ {
+  "sub": "kitchenremodel",
+  "id": "1iymr9t",
+  "title": "Progress!",
+  "score": 2,
+  "n": 23,
+  "created": "2025-02",
+  "perma": "/r/kitchenremodel/comments/1iymr9t/progress/",
+  "text": "✅ Appliances: Signature Kitchen Suite (Combo wall oven, induction range, hood insert) ✅ Stone for Countertop & Backsplash: “Calacatta” Quartzite (looks like White Macaubus). Highly recommend shopping around, the fanciest all-indoor place near us in PA with largest quartzite selection, Onur, was also less expensive ✅ Sink: Kohler Whitehaven (thanks to FB Marketplace) ❌ Cabinets: Inspiration is BePurposed kitchen. We are still waiting on Cabinet Joint quote… Could not find another “RTA” brand with"
+ },
+ {
+  "sub": "sysadmin",
+  "id": "5axe3q",
+  "title": "Chrome Remote Desktop security?",
+  "score": 14,
+  "n": 10,
+  "created": "2016-11",
+  "perma": "/r/sysadmin/comments/5axe3q/chrome_remote_desktop_security/",
+  "text": "What are other admins thoughts on allowing your sysadmins to use Chrome Remote Desktop in lieu of a proper VPN, or in cases where a VPN doesn't currently exist?"
+ },
+ {
+  "sub": "MachineLearning",
+  "id": "6c2fkz",
+  "title": "[P] Energy use prediction and appliance labels with LSTM",
+  "score": 11,
+  "n": 2,
+  "created": "2017-05",
+  "perma": "/r/MachineLearning/comments/6c2fkz/p_energy_use_prediction_and_appliance_labels_with/",
+  "text": "I am toying with LSTM's to label my mix of appliances from energy monitoring data series. If anyone would like to play with my live data or suggest easy labelling solutions / appliance signature databases here is my notebook so far https://github.com/whatnick/TS_EnergyMonitor/blob/master/LSTM%2BEnergy%2BSeries.ipynb"
+ }
+]

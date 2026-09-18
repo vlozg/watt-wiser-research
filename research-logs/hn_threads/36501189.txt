@@ -1,0 +1,68 @@
+Title: Ask HN: Home Energy Monitor Recommendations?
+Author: voisin
+Points: 17
+Thread Stats:
+- Total comments: 13
+- Top-level threads: 6
+- Max depth: 3
+- Displayed comments: 13
+- Displayed top-level threads: 6
+- Displayed max depth: 3
+- Unique commenters: 9
+- Comments with text: 13
+- Deleted or empty comments: 0
+- Average replies per comment: 0.54
+- Top commenters: sponaugle (4), leon_sbt (2), atmanactive (1), fendale (1), guiambros (1)
+
+Comments:
+
+-- guiambros (3 replies) --
+I'm also considering the Sense, but haven't decided yet.
+There's also SPAN Panel [1]. I don't have firsthand knowledge, but the entire panel is "smart", so you can toggle each circuit individually on/off, monitor power utilization, detect patterns, set schedules, etc.
+Quite expensive thought -- $4.5K for the device + a massive installation of a new panel, requiring city permits, inspections, etc. I guess the target audience is new constructions and major remodeling, and not existing homeowners.
+[1] https://www.span.io/panel
+
+  -- sponaugle (0 replies) --
+  The SPAN panels are interesting, and I considered them and a few others like them, but it is hard to use them without knowing if they will be around in 10 years.  The standard panels from SquareD, etc are such a known quantity especially for parts availability.
+  You can get the monitoring part of the equation with CTs at least, and that is a start.
+
+  -- roland35 (0 replies) --
+  Sense is much less upfront to install - it is able to detect most large loads just by looking at the overall current and voltage going into the house via disagregation. It works pretty well!
+
+  -- leon_sbt (1 replies) --
+  I saw Span a few times. It is a nice idea, but I'm personally not a fan. Doing switching at the panel level seems very clunky. In reality, switching should be done at the device level. Ie per fan , light etc. If they had a self contained server similar to IOTAWATT that just instruments the power draw of each circuit then I would be a fan.
+
+    -- moneywoes (0 replies) --
+    Hey, I saw your old post here about working on a business may i ask how it turned out?
+    Here is the post https://news.ycombinator.com/item?id=25087138
+
+-- sponaugle (2 replies) --
+I am using IotaWatts to do monitoring of every circuit in my house, and it is a pretty great setup.   I have a reasonable large setup given I have 9 panels to monitor with >120 individual circuits.  I also have it monitoring my 20kw Solar system as well as 42kwh of batteries.
+https://community.iotawatt.com/t/sorta-larger-than-average-i...
+I have all of the data going into influx, with grafana for display.
+During the build of my house I planned for this by adding additional space below the panels: https://www.garagejournal.com/forum/threads/jeffs-mountain-s...
+However that was more of a nice to have, not something you have to do.
+On the solar side, if you want per panel measurements that is something you can really only do with micro-inverters.  I'm using Enphase 7A micro-inverters on each panel, so I also get direct data from enphase/enlighten about power production from each panel.
+
+  -- sponaugle (0 replies) --
+  Oh, and one other that I have used:  
+https://www.brultech.com/greeneye/
+  I had one of these in my old house.  A little older tech, and I had my own code on a raspberry pi getting to data and putting it into influx.  The IotaWatts are much more plug and play, but still it is an option for the DIY.
+
+  -- voisin (1 replies) --
+  Iotawatt looks great! Super disappointing they’ve discontinued direct sales and now only work through dealers, with apparently only one dealer in Australia right now.
+
+    -- sponaugle (0 replies) --
+    Oh that is a bummer for sure!  Hopefully they can get someone in the US as a distributor.
+
+-- j4nek (0 replies) --
+https://www.shelly.cloud/en/products/energy-metering-energy-...
+
+-- atmanactive (0 replies) --
+After installing several dozen of Tasmota based WiFi energy monitors around the house, I've noticed WiFi performance dropping significantly on my three-mesh-Ubiquity-Amplifi WiFi network. Therefore, I'm slowly moving away from WiFi based IoT devices and expanding my Z-Wave network with more and more devices. Two years ago I was doing exactly the opposite. The core is, of course, Home Assistant. Just my experience.
+
+-- leon_sbt (0 replies) --
+Another vote for IotAWatt . I installed one a few months ago. No cloud app. visit an IP to view the local webserver. Has a neat graphing functions, and can pipe data to InfluxDB. + Home Assistant intergration. Love it. I wish they had a 30 circuit variant, so I can monitor every single circuit in my panel.
+
+-- fendale (0 replies) --
+I have a Shelly EM on my main grid circuit and solar array and find it to be an excellent product. They have lots of other automation products too.

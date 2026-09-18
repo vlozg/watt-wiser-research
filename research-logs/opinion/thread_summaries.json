@@ -1,0 +1,544 @@
+[
+ {
+  "sub": "homeassistant",
+  "id": "1u6ue2w",
+  "title": "I built an add-on that can tell you if an appliance is on when it shouldn't be, or even about to fail!",
+  "score": 1,
+  "n": 9,
+  "created": "2026-06-15",
+  "text": "If you have a multi-channel energy meter this (HACS) add-on analyzes appliance energy patterns, and creates sensors that can be used for notifications to tell you when an appliance is acting differently than it normally does. It can answer questions like the following: * Is this appliance running, idle, on standby, or not showing recent activity? * Is today's energy use unusually high for this circuit? * Is my refrigerator, washer, dryer, pump, HVAC, water heater, or EV charger behaving differently from its learned baseline? * Is a 240 V appliance balanced across both legs? * Are watts, amps, volts, VA, and power factor internally consistent? * Is a circuit approaching a configured breaker o",
+  "top": [
+   {
+    "a": "tavenger5",
+    "s": 5,
+    "d": 3,
+    "b": "Wasn't sure how much detail you wanted. No, it does not use an LLM to do anything. The pattern matching is a rule-based time-series with robust baseline comparison using median, median absolute deviation, 10th percentile, 90th percentile, and a confidence value based on sample count. Deviation scoring compares the observed value against the baseline median using a spread based on MAD, a percentage of the median, and a minimum floor. It'll gather data for x (default 7) number "
+   },
+   {
+    "a": "sf_frankie",
+    "s": 4,
+    "d": 0,
+    "b": "Will it allow me to share the data to a public webpage of some sort? Trying to find a way to stop these damn kids from calling constantly and asking if my refrigerator is running! If I could share the data with them then maybe they’ll stop calling me all the time!"
+   },
+   {
+    "a": "tavenger5",
+    "s": 3,
+    "d": 1,
+    "b": "Theres a data export, so yes, tell those kids to shove it."
+   },
+   {
+    "a": "Davedamon",
+    "s": 3,
+    "d": 0,
+    "b": "What mechanism does this use for pattern recognition?"
+   },
+   {
+    "a": "Davedamon",
+    "s": 3,
+    "d": 2,
+    "b": "That's not an answer—obviously the system uses pattern matching to recognise patterns. But what form of pattern matching. Basically I'm asking \"is this LLM powered\" and if not, how does it work? What algorithm or model?"
+   },
+   {
+    "a": "tavenger5",
+    "s": 2,
+    "d": 1,
+    "b": "Pattern matching and, for mains, NILM"
+   }
+  ]
+ },
+ {
+  "sub": "homeassistant",
+  "id": "1ueb9ls",
+  "title": "Home Assistant app that estimates appliance usage from one mains power sensor",
+  "score": 29,
+  "n": 18,
+  "created": "2026-06-24",
+  "text": "Most appliance-level energy monitoring in Home Assistant means adding a smart plug, clamp meter, or submeter for every device. That gets expensive fast, and it is not always practical for hardwired or high-current appliances. I built a NILM (Non-Intrusive Load Monitoring) project that uses a single whole-home mains power sensor to estimate when individual appliances are running and their approximate power use. You train a model on your own Home Assistant history, so it can adapt to your appliances and electrical setup. It can then publish virtual entities for estimated appliance power, cumulative energy consumption, and on/off state. These can be used in dashboards, automations, notification",
+  "top": [
+   {
+    "a": "msravi",
+    "s": 3,
+    "d": 0,
+    "b": "Looks promising. The github page doesn't say what sort of inputs the training server needs or accepts - or maybe I didn't look hard enough. Can I train it with things like \"if there's a 2kW jump on the blue phase (3 phase energy meter), it's the ground floor water heater\" or \"if there's a 1.5kW jump after 8pm it's the dishwasher\"?"
+   },
+   {
+    "a": "Foreign-War7559",
+    "s": 3,
+    "d": 1,
+    "b": "Thank you for the feedback. You can train it either with a ground-truth appliance power meter or by manually marking the appliance’s ON intervals. The website has short explanatory videos that walk through both approaches: [https://ha-nilm.bigwicho.com/](https://ha-nilm.bigwicho.com/)"
+   },
+   {
+    "a": "AI_Racer",
+    "s": 2,
+    "d": 0,
+    "b": "Looks really cool but whatever I tried, always get \"Failed to prepare training data: Failed to prepare training data: No valid training windows remain after removing mains gaps. Please choose a cleaner range or reduce missing data\""
+   },
+   {
+    "a": "Foreign-War7559",
+    "s": 2,
+    "d": 1,
+    "b": "Thank you. The 4 GB recommendation is an estimate for running both the NILM and Training Server apps on the same device. You may need less RAM when training with a shorter data interval, such as one to three days. If the Training Server runs on another machine, I estimate that the NILM app can run on the Home Assistant device with around 1 GB of RAM."
+   },
+   {
+    "a": "Foreign-War7559",
+    "s": 2,
+    "d": 1,
+    "b": "The main NILM app requires the Home Assistant OS app/add-on environment, including Supervisor/Ingress support, which Home Assistant Container does not provide. The training server can run as Docker, but the main NILM app is not yet supported as a standalone container. Container support may be added later. EDIT: this can work when the containers are run directly, and you manually provide the HA API URL, WebSocket URL, and a long-lived access token."
+   },
+   {
+    "a": "msravi",
+    "s": 1,
+    "d": 2,
+    "b": "Thank you! Seems from the videos that it trains on the power signatures (jump, shape, duration, etc) of each appliance - is that correct?"
+   },
+   {
+    "a": "Foreign-War7559",
+    "s": 1,
+    "d": 1,
+    "b": "Thank you for the feedback. Make sure that the mains-power interval selected for training contains enough relevant data. The same applies when using a ground-truth sensor. Its history should align with the selected mains interval. When using ON-interval training mode, ensure that the intervals you mark accurately match the appliance's activity in the aggregate mains signal. If you can share screenshots of the selected interval and configuration, I can take a closer look at th"
+   },
+   {
+    "a": "CBFry",
+    "s": 1,
+    "d": 2,
+    "b": "I’m having the same issue, with both manual and ground-truth sensor, and I’m getting the same error in the logs every time: Training prepare request appliance=Fridge supervision\\_mode=intervals bundle\\_id=None bundle\\_mode=online full\\_history\\_points=294 selected\\_windows=5 appliance\\_history\\_points=0 Training prepare failed: No valid training windows remain after removing mains gaps. Please choose a cleaner range or reduce missing data. Traceback (most recent call last): F"
+   }
+  ]
+ },
+ {
+  "sub": "homeassistant",
+  "id": "1w1jbyj",
+  "title": "Estimate Appliance Energy Use From Whole Home Power, Now With Multiple Mains Support | HA-NILM 1.1.9",
+  "score": 22,
+  "n": 10,
+  "created": "2026-08-29",
+  "text": "Hey everyone, For anyone discovering it for the first time, HA-NILM is a local Non-Intrusive Load Monitoring system for Home Assistant. It uses your whole-home power data and a short training process to estimate when individual appliances are running and how much energy they use. I’ve just released **HA NILM 1.1.9**, with support for multiple mains sensors. # What’s new **Multiple mains sensors** You can now configure multiple mains power sensors, making HA-NILM suitable for split phase, three phase, multiple meters, and independently monitored panel setups. Each appliance model can be assigned to the mains sensor that actually powers it, and inference is performed using that specific feed. ",
+  "top": [
+   {
+    "a": "Don_Speekingleesh",
+    "s": 2,
+    "d": 0,
+    "b": "I have most things monitored in the house, except for the oven, kettle, coffee machines and air fryer. Would this be useful for tracking their usage?"
+   },
+   {
+    "a": "Foreign-War7559",
+    "s": 2,
+    "d": 1,
+    "b": "Yes, absolutely. It has already been tested with kettles and ovens and works well with them. That said, it is still something worth testing on each setup because appliances can have very different power signatures depending on the model and how they operate."
+   },
+   {
+    "a": "BuzzLightyear826",
+    "s": 2,
+    "d": 0,
+    "b": "Ik ben met Powercalc bezig geweest wat ook wel goede resultaten geeft. Dit is een andere dimensie die het proberen waard is. Bedankt voor je post. Gelijk wat te doen vanavond lol"
+   },
+   {
+    "a": "Don_Speekingleesh",
+    "s": 1,
+    "d": 2,
+    "b": "Great, I'll have a look later."
+   },
+   {
+    "a": "[deleted]",
+    "s": 1,
+    "d": 0,
+    "b": "[removed]"
+   },
+   {
+    "a": "Foreign-War7559",
+    "s": 1,
+    "d": 1,
+    "b": "The training time doesn’t really depend on the appliance itself, but on how long the training window is. For appliances like a fridge or dryer, one full day of data can often be enough, although in general the more representative training data you provide, the better. The actual model training process is quite fast and usually takes around 1 minute."
+   },
+   {
+    "a": "sydpermres",
+    "s": 1,
+    "d": 0,
+    "b": "This looks interesting. I've been playing around with HAEMO, HAEFO and EMHASS and all of them are quite confusing since it's not popular, no easy documentation and of course no video. Just wondering if you have any plans to make a video of how to use it?"
+   },
+   {
+    "a": "ApprehensivePain8788",
+    "s": 1,
+    "d": 0,
+    "b": "I'm new to this, do you have a list of of sensors work best with this. I'm assuming some are better than others"
+   }
+  ]
+ },
+ {
+  "sub": "MLQuestions",
+  "id": "1luzufo",
+  "title": "Anomaly detection in power consumption + NILM",
+  "score": 2,
+  "n": 5,
+  "created": "2025-07-08",
+  "text": "Hey, for a project I have data of total energy consumption over time as well as the data of individual sensors reading the consumption of IoTs. I want to use unsupervised anomaly detection on the total data and identify which sensor is most responsible. For anomaly detection, I tried simple methods like z-score; however, given that the data is not normally distributed, I went with isolation forest. Now, for assigning sensors to the anomalies, I tried to look at their rate of change around the timestep of the anomalies, but I am not confident in my results yet. Does anyone have any other suggestions on how to tackle this?",
+  "top": [
+   {
+    "a": "jimtoberfest",
+    "s": 1,
+    "d": 0,
+    "b": "With isoforest you need to set an anomaly rate. How did you determine that number?"
+   },
+   {
+    "a": "bela_u",
+    "s": 1,
+    "d": 1,
+    "b": "i first used 0.01 as a starting point which seemed to mark too many datapoints as anomalies and gradually lowered it. I have no labeled data so it is a bit hard to determine the ideal parameter."
+   },
+   {
+    "a": "jimtoberfest",
+    "s": 1,
+    "d": 2,
+    "b": "Are the anomalies fundamentally time based? Or like range based? If time based try fft detection methods for anomalies. If range based you can try clustering algos, AE, or boosted trees. Don’t be afraid to diff sensor 1 / sensor 2, stuff like that. Another one to try if time based is matrix profiling; check out stumpy library. With clustering / AE you are looking for different groups or areas with high reconstruction error. You could try and select periods you THINK are good "
+   },
+   {
+    "a": "bela_u",
+    "s": 1,
+    "d": 3,
+    "b": "thanks for the suggestions i will look into it! What do you recommend for finding the sensor that is causing the anomaly? Is looking at differences around an anomaly feasable?"
+   }
+  ]
+ },
+ {
+  "sub": "homeassistant",
+  "id": "1iupvzx",
+  "title": "Has anyone experimented using ML/GenAI for device-level energy disaggregation without individual smart plugs?",
+  "score": 13,
+  "n": 8,
+  "created": "2025-02-21",
+  "text": "Hey everyone, I'm diving deep into optimizing my home energy usage and trying to avoid the cost of putting smart plugs on *every* device. For example in the kitchen, it is not straightforward to put a meter behind each device (also due to higher loads). I'm particularly interested in tracking the energy consumption of my major appliances (heat pump, induction cooktop, dishwasher, washing machine, dryer, etc.) without needing a dedicated smart plug for each. I've been reading about Non-Intrusive Load Monitoring techniques, and found this really great blueprint [https://community.home-assistant.io/t/energy-disaggregation-or-non-intrusive-load-monitoring-nilm-blueprint/619672/2](https://communi",
+  "top": [
+   {
+    "a": "fawkesdotbe",
+    "s": 6,
+    "d": 0,
+    "b": "I don't follow. If you manage to do this and (let's pick a scenario) get the precise and reliable information that your induction cooktop uses a lot of energy, what will you do? Stop cooking, change your diet? Or do you see this more like a cool project to learn new techniques?"
+   },
+   {
+    "a": "dwyimli",
+    "s": 3,
+    "d": 1,
+    "b": "Good question! In Belgium we have a very silly implementation of the capacity tarriff. We get charged for the highest peak in the month. Based on the above scenario, I would like to improve my load balancing, but only for devices that are not too important, for example, we're planning on installing a sauna and jacuzzi in the future."
+   },
+   {
+    "a": "DIY_CHRIS",
+    "s": 3,
+    "d": 0,
+    "b": "This seems like throwing software at a hardware problem. If you don’t want to use smart plugs, use a CT-clamp style monitor like the Emporia Vue 3 and place CT’s on every circuit. But energy monitor smart plugs are already pretty inexpensive."
+   },
+   {
+    "a": "fawkesdotbe",
+    "s": 2,
+    "d": 2,
+    "b": "Ah, thanks fellow countryperson. That makes sense. At least you have a smart meter! For my flat it's still an old one and Engie applies the ridiculous model that effectively pushes most of the yearly consumption into the more expensive months..."
+   },
+   {
+    "a": "dwyimli",
+    "s": 2,
+    "d": 3,
+    "b": "The models used are indeed ridiculous. What's even worse, is that in the months that we have no grid usage at all (home battery), they still assign a peak of 2,5 kW to our peak for those months. But that's a whole other discussion :-)"
+   },
+   {
+    "a": "dwyimli",
+    "s": 1,
+    "d": 1,
+    "b": "I do have an IT background, so you are probably right. Thanks for the very interesting reference, I'll have to look into it. It seems they also have a 3-phase setup. However, $240 (shipping included) is also not really that 'inexpensive' in my opinion. But I'll search for alternatives. Most inexpensive smart plugs are not suitable for high load appliances such as heatpump, home ventilation, induction cooktop, etc. though."
+   },
+   {
+    "a": "DIY_CHRIS",
+    "s": 1,
+    "d": 2,
+    "b": "For inexpensive smart plugs, I recently purchased 4 additional Sonoff S31’s for $7 each. Flashed with Tasmota, they provide very good energy monitoring for smaller appliances. For larger appliances, the CT type is the way to go. The Shelly EM devices can be a good option too. But you have to compare the price/convenience of having 16 individual energy monitors versus a single 16-channel emporia. If you want to spread the cost over time or you only need a few, getting individu"
+   },
+   {
+    "a": "BeerDoctor",
+    "s": 1,
+    "d": 0,
+    "b": "This is how Sense works [https://sense.com/](https://sense.com/) Very interested to hear what you come up with. Im particularly interested in any sort of anomaly detection."
+   }
+  ]
+ },
+ {
+  "sub": "Sense",
+  "id": "1056f4q",
+  "title": "Appliances that change over time",
+  "score": 3,
+  "n": 13,
+  "created": "2023-01-06",
+  "text": "Long time Sense user here (almost 3 years). Over the years, I've had to replace appliances that were recognized by Sense. First it was the dishwasher, then the microwave. This week the furnace and AC that were replaced by a heat pump HVAC. I'm sad that Sense has not found my new dishwasher nor microwave yet. We'll see about the heat pump. When I've replaced an appliance, I've removed it from Sense. I think that's the right thing to do? Some of my new appliances like my Breville microwave and Mitsubishi heat pump have inverters. (The companies seem quite proud to advertise that fact -- both display \"INVERTER\" right on the front.) I wonder if the variable nature of inverter-driven appliances m",
+  "top": [
+   {
+    "a": "RangerPretzel",
+    "s": 4,
+    "d": 2,
+    "b": "I picked up the Emporia Vue2. As I said previously, the app doesn't graph as well as the Sense app does. Fortunately, the graphing is \"good enough\" and the individual circuit monitoring is invaluable. As an example, I discovered right away that my one heat pump draws 25w when \"off\" while the other only draws 5w when \"off\". So in the Spring and the early Fall, I shut off both heat pumps via circuit breaker. While that doesn't sound like a lot (0.72 kwh per day), I often get my"
+   },
+   {
+    "a": "[deleted]",
+    "s": 3,
+    "d": 0,
+    "b": "> I wonder if the variable nature of inverter-driven appliances make them harder to detect? For sure. Because they have variable demand."
+   },
+   {
+    "a": "[deleted]",
+    "s": 3,
+    "d": 0,
+    "b": "My practice is to keep the old device, and merge it with the replacement. This allows me to see a combined history. That’s just my personal preference. I got a Mitsubishi heat pump last summer. Sense is never going to detect that. It’s variable speed everything, with no clear on/off transitions. I ended up getting an Emporia for Christmas, as the heat-pump is probably going to be around half of my annual usage. Getting that right is just as important as everything else in my "
+   },
+   {
+    "a": "twoaspensimages",
+    "s": 3,
+    "d": 0,
+    "b": "We've had our Sense 7 years. It found most of the late 80s appliances and even guessed what they were correctly. I was pleasantly surprised. When we gut renovated it's been a very different story. It doesn't find anything with a variable load. It's lost more than it ever found. It did find our electric car but the charger has its own app. Honestly all I use it for is an instant watt meter I can see as I'm walking around the house turning things on and off."
+   },
+   {
+    "a": "MartinB3",
+    "s": 2,
+    "d": 1,
+    "b": "This. It's really all Sense is. A digital meter."
+   },
+   {
+    "a": "RangerPretzel",
+    "s": 2,
+    "d": 0,
+    "b": "When I owned a Sense, I ended up purchasing a dozen of those TP-LINK power monitors so that I could individually monitor devices that Sense would not reliably pick up. (eg. fridge, dishwasher, microwave, etc.) I've since switched over to a different power monitoring device that monitors each circuit of my house and I have a more reliable and more granular view of what my house is using. The only thing I miss is the Sense app's graphing ability. It is far superior to any other"
+   },
+   {
+    "a": "NeedleworkerNo4095",
+    "s": 2,
+    "d": 1,
+    "b": "I would use plugs but it still wouldn’t cover things like my oven and heat pumps. Mind if I ask what energy monitor you switched to? I’m considering my options. Thanks."
+   },
+   {
+    "a": "NeedleworkerNo4095",
+    "s": 2,
+    "d": 3,
+    "b": "Thank you, that’s very helpful! The ability to measure individual circuits is very attractive. I wish Sense would add that. I agree the Sense UI is top notch. As a developer, I appreciate the design and thought that went into it. Given how many “unknowns” I have now with the addition of variable speed appliances, Emporia sounds right for me. It’s just the switching cost (hiring an electrician for the install) that gives me pause."
+   }
+  ]
+ },
+ {
+  "sub": "Sense",
+  "id": "jar48e",
+  "title": "Got my Flex kit today. Looking forward to being able to analyze each circuit to better understand my always on and \"other\".",
+  "score": 21,
+  "n": 33,
+  "created": "2020-10-14",
+  "text": "",
+  "top": [
+   {
+    "a": "showMeTheSnow",
+    "s": 6,
+    "d": 0,
+    "b": "Looks like a repackaging of the solar clips. What’s your plan, just go breaker to breaker? I wish they would work on some training feature to help ID devices."
+   },
+   {
+    "a": "poppinfresh_original",
+    "s": 5,
+    "d": 1,
+    "b": "Could be, but I'm assuming they made a software change in how they function. Yes I intend to go breaker by breaker to gather some data about usage for the mystery stuff. For $30 with the coupon code they sent me it seemed like a decent deal."
+   },
+   {
+    "a": "poppinfresh_original",
+    "s": 3,
+    "d": 3,
+    "b": "Understood. I wasn't thinking it would keep the data anyway. I plan on using it more like a fancy Kill-A-Watt where I collect some data on a circuit's use over a period of time and then move on to the next. Eventually I might settle on two that they permanently stay on, but that is TBD."
+   },
+   {
+    "a": "poppinfresh_original",
+    "s": 3,
+    "d": 1,
+    "b": "Yes. It’s for monitoring two dedicated circuits in addition to the overall load the main sensors are picking up."
+   },
+   {
+    "a": "JustinAtSense",
+    "s": 2,
+    "d": 2,
+    "b": "Hey u/poppinfresh_original. When dedicated circuit monitoring releases, we will be sharing more information about how flex sensors can be utilized. To clarify, part of those resources address that Sense **will not retain** data or detection from previous dedicated circuit devices if you choose to move your flex sensors to other circuits. Flex sensors must be present on the dedicated circuits you are monitoring to see data for dedicated devices in-app."
+   },
+   {
+    "a": "JustinAtSense",
+    "s": 2,
+    "d": 1,
+    "b": "Hey u/gatchek \\- we shared an early preview with existing customers. When this feature releases (hopefully this week), there will be an update and release notes that tell you how you'll get started with dedicated circuit monitoring. I'll make sure to share them here, too."
+   },
+   {
+    "a": "gatchek",
+    "s": 2,
+    "d": 2,
+    "b": "Awesome! Thank you sir!"
+   },
+   {
+    "a": "JustinAtSense",
+    "s": 2,
+    "d": 3,
+    "b": "Hi u/Algeradd. We ran into some small bugs in the back-end that we're fixing before release. The week of the 19th is reserved in case we run into any unanticipated bugs/issues, but release could be as soon as this week."
+   }
+  ]
+ },
+ {
+  "sub": "Sense",
+  "id": "se6hvo",
+  "title": "Sense vs. Emporia Vue",
+  "score": 19,
+  "n": 32,
+  "created": "2022-01-27",
+  "text": "Since I already wrote this as a response to another user and several of you wanted an update regarding the Vue as an alternative to Sense, I figured I would post it here as well. Sorry, it actually took me 2 weeks to get the Vue up and running (turned out the wifi antenna was defective but they decided to replace the main unit first which didn't fix the problem) and that's why I haven't posted an update yet. From the few days I've had it set up, I will say that I find myself checking the Vue much more than the Sense. I will give Sense credit for ease of installation and I prefer their user interface but I factory reset my unit the same time I got the Vue up and running and so far all it's fo",
+  "top": [
+   {
+    "a": "twoaspensimages",
+    "s": 8,
+    "d": 0,
+    "b": "Thank you for this! I'm done with the Sense. 5 years. 54% \"Other\" Their forum says they won't make a profile for a Volvo BEV because there aren't enough of them. I'm certainly not spending another $50 to find out the vampiric draw of my toaster oven. (Spoiler alert, it's a cent per year) However I very much care how much energy the Heat Pump is using when it's 34 deg outside because I'm trying to find the temperature balance where backup gas is cheaper."
+   },
+   {
+    "a": "Shadow14l",
+    "s": 8,
+    "d": 0,
+    "b": "I have both running at the same time. Sense is neat but I just think their solution isn’t technically feasible to the extent expected by most consumers."
+   },
+   {
+    "a": "RyanBorck",
+    "s": 8,
+    "d": 2,
+    "b": "64% Agree 36% Other"
+   },
+   {
+    "a": "DaHick",
+    "s": 3,
+    "d": 0,
+    "b": "I also am a dual user, sense first, vue second. A little background. I live rural, the run from the utility pole to my house is 150ft (roughly 50m) underground. I own that. Originally it was run in the 70's not in conduit. A couple years back, I lost the neutral due to ground shift. As an electrical engineer, I took a disappointingly long time to diagnose this. After I got it all fixed, I started investigating ways to notify me of this happening. I lost -everything- powered o"
+   },
+   {
+    "a": "Salmundo",
+    "s": 3,
+    "d": 0,
+    "b": "Your Emporia image looks like what I hoped the Sense would provide me. Emporia here I come…"
+   },
+   {
+    "a": "Dean-KS",
+    "s": 3,
+    "d": 0,
+    "b": "I studied sense off and on for a couple of years. I have three inverter variable speed heat pumps and three variable speed furnaces. I went with Vue because I did not expect that Sense could sort out 6 loads that are changing. I just installed one Vue and it is very informative about how the HVAC gear operates. Two more Vue's are in transit. With five panels, I might not do them all. Vue forums are very lean when no one is talking about what is detected and what is not and wh"
+   },
+   {
+    "a": "dwright1542",
+    "s": 3,
+    "d": 0,
+    "b": "I am now also officially ex-sense and now Vue2. A few Vue2's with a few smart plugs in a week has given me WAY more valuable data than the Sense did in 3-4 years. The sense is still running, but honestly, it's feels like snake oil."
+   },
+   {
+    "a": "Natoochtoniket",
+    "s": 3,
+    "d": 0,
+    "b": "After 3 years, Sense has not identified even my large appliances. A 1HP pool pump that runs 6 hours a day, every day, has not been found. A 3-ton AC that runs almost every day (in Florida) has not been found. One of two refrigerators, which runs many times every day, has not been found. And a freezer, several other motors, and dozens of little things. The first step to reducing the power bill is, to identify where the power is being spent. Without that first step, you don't e"
+   }
+  ]
+ },
+ {
+  "sub": "energy",
+  "id": "13dwzkp",
+  "title": "Energy Disaggregation at the Home",
+  "score": 2,
+  "n": 7,
+  "created": "2023-05-10",
+  "text": "I started collecting data about energy use in my home using a few smart plugs on particular appliances, but I wanted the whole picture. This led to buying an energy monitor that has a current transformer (CT) clamp on each leg of my split single phase supply coming into my breaker box. This allows me to see the aggregate usage for the whole house (or for each leg of the split phase). I have this data flowing into Home Assistant and InfluxDB. I’d like to be able to account for the energy use of different loads in the house, or in other words, to disaggregate the energy use data that I’m collecting. I have also seen this referred to as non-intrusive load monitoring. For anyone with experience ",
+  "top": [
+   {
+    "a": "Jane_the_analyst",
+    "s": 3,
+    "d": 2,
+    "b": "many of the lectric loads would be step loads, step on, step off, at an approximately the same amount, as in +2000W load, the kettle on, and -2000W kettle off. Refridgerators will tend off to have exponential decay, as in 120W load, decreasing to 77W, then step off to 5-6W etc."
+   },
+   {
+    "a": "heckinseal",
+    "s": 2,
+    "d": 0,
+    "b": "Big motors or anything with a heating element are usually the biggest draws. If it's an old house, you could probably upgrade windows, insulation, washer, and swap any lights to led."
+   },
+   {
+    "a": "Jane_the_analyst",
+    "s": 2,
+    "d": 0,
+    "b": ">I have this data flowing into Home Assistant and InfluxDB. I Oh my! Big data for a small house! :) You need to understand the behavior of your individual loads if you want to have a signal analysis if what I am reading is correct. As in, does your load modulate its power input? Does it change? In steps or continuously? When a 20W load jump appears, is it a light bulb? DOes it disappear into another 20W step down? Etc. Refridgerators act weird. etc."
+   },
+   {
+    "a": "itsallgoode",
+    "s": 1,
+    "d": 1,
+    "b": "The big loads would probably be the easiest to identify, especially if they have a clear on/off profile or very regular intervals. I expect it is much more difficult to identify the always-on loads or small loads with irregular usage patterns."
+   },
+   {
+    "a": "itsallgoode",
+    "s": 1,
+    "d": 1,
+    "b": "Ha! Big data indeed! Yes, it would be signal analysis of a sort. I wish I had more knowledge in that field. Any pointers?"
+   },
+   {
+    "a": "itsallgoode",
+    "s": 1,
+    "d": 1,
+    "b": "I don’t have solar or a battery bank yet, but am moving in that direction soon. I’m aware of smart inverters and will likely end up getting one that can load shift and minimize grid costs by gaming the time of use rates. I’m in North Carolina and the new net metering program makes this approach make the most sense. In the meantime, I’m looking for ways to save money and reduce energy use. Understanding which loads are behind the energy use would help inform decisions about wh"
+   },
+   {
+    "a": "[deleted]",
+    "s": -1,
+    "d": 0,
+    "b": ">for the energy use of different loads in the house, or in other words, to disaggregate the energy use data that I’m collecting. for what *purpose*? what is the endgame? to use less/save money.. ? &#x200B; >I have this data flowing into Home Assistant and InfluxDB. why the detailed analysis? every month, you pay for X units of energy. don't take as many to begin with. &#x200B; solar + battery for the house. &#x200B; **Tesla Powerwall customers in Texas can now sell their elec"
+   }
+  ]
+ },
+ {
+  "sub": "homeassistant",
+  "id": "1u0j3cm",
+  "title": "CircuitSetup Energy Analyzer - Detailed Appliance and Circuit Diagnostics",
+  "score": 4,
+  "n": 7,
+  "created": "2026-06-08",
+  "text": "I'm currently working on an Energy Analyzer HACS integration, and could use some people to test it. Currently single phase and split single phase circuits and mains are supported (there are plans to integrate 3-phase systems in the future). There are already a ton of features outlined here: [https://github.com/CircuitSetup/CircuitSetup-Energy-Analyzer](https://github.com/CircuitSetup/CircuitSetup-Energy-Analyzer) Click here to add to HACS: [https://my.home-assistant.io/redirect/hacs\\_repository/?owner=CircuitSetup&repository=CircuitSetup-Energy-Analyzer&category=Integration](https://my.home-assistant.io/redirect/hacs_repository/?owner=CircuitSetup&repository=CircuitSetup-Energy-Analyzer&cate",
+  "top": [
+   {
+    "a": "Altruistic_Driver733",
+    "s": 2,
+    "d": 0,
+    "b": "The appliance status tracking looks pretty slick, especially being able to detect when stuff is running vs standby - would love to test this on my setup if you're still looking for testers"
+   },
+   {
+    "a": "skizztle",
+    "s": 2,
+    "d": 0,
+    "b": "Why am I out of town for the next week while this drops. I'll save this and come back soon. "
+   },
+   {
+    "a": "tavenger5",
+    "s": 1,
+    "d": 1,
+    "b": "Yeah! Absolutely looking for testers! By default it will analyze data for 7 days so it can find patterns, then even make suggestions to settings so it is more accurate with reporting."
+   },
+   {
+    "a": "CypSteel",
+    "s": 1,
+    "d": 0,
+    "b": "Its not clear to me how it determines the power usage. Is this a monitor for your breaker box? Do you use an ESP32 for every plug? Help me understand. "
+   },
+   {
+    "a": "tavenger5",
+    "s": 1,
+    "d": 1,
+    "b": "Yes, there has to be an existing power meter, like the CircuitSetup 6 channel meter, or Emporia Vue"
+   },
+   {
+    "a": "Mia-066",
+    "s": 1,
+    "d": 0,
+    "b": "Does this mean that project participants need to have hardware capable of monitoring electricity consumption?"
+   },
+   {
+    "a": "tavenger5",
+    "s": 1,
+    "d": 1,
+    "b": "Yes, something that outputs (ideally) voltage and current, power (watts) per device. It can also operate on just mains, but not as much can be done to actually analyze appliances."
+   }
+  ]
+ }
+]

@@ -1,0 +1,148 @@
+
+==============================================================================
+1. SHAPE / CADENCE
+==============================================================================
+rows x cols : (518400, 20)
+columns     : ['timestamp', 'voltage_V', 'current_A', 'active_power_W', 'apparent_power_VA', 'power_factor', 'frequency_Hz', 'cumulative_energy_Wh', 'kettle_power_W', 'fridge_power_W', 'microwave_power_W', 'washing_machine_power_W', 'kettle_on', 'fridge_on', 'microwave_on', 'washing_machine_on', 'n_on', 'base', 'dP', 'hr']
+span        : 2026-01-01 00:00:00 -> 2026-01-30 23:59:55
+duration    : 29 days 23:59:55
+intervals   : {'0 days 00:00:05': 518399}
+missing (raw 16 cols): 0 | duplicate rows: 0
+
+==============================================================================
+2. INTERNAL ARITHMETIC (are columns independent measurements?)
+==============================================================================
+VA vs V*I        max abs err: 0.0217
+PF vs W/VA       max abs err: 0.000105
+W  vs VA*PF      max abs err: 0.2007
+Wh vs cumsum(W)  max abs err: 0.0032
+
+==============================================================================
+3. LABEL PURITY (is appliance power ever nonzero when state = OFF?)
+==============================================================================
+  kettle            OFF n=508,016 max=    0.00 nonzero=      0 | ON n= 10,384 min= 1517.39 max= 2437.90 CV=0.092
+  fridge            OFF n=410,080 max=    0.00 nonzero=      0 | ON n=108,320 min=   67.71 max=  177.62 CV=0.150
+  microwave         OFF n=512,984 max=    0.00 nonzero=      0 | ON n=  5,416 min=  578.59 max= 1388.71 CV=0.230
+  washing_machine   OFF n=492,060 max=    0.00 nonzero=      0 | ON n= 26,340 min=  100.00 max= 1500.00 CV=0.848
+
+==============================================================================
+4. AUTOCORRELATION (physical process, or i.i.d. draw + daily template?)
+==============================================================================
+series                    lag1      lag2     lag12    lag288  lag17280 (1 day)
+voltage_V                0.860     0.860     0.860     0.855             0.860
+frequency_Hz            -0.001     0.000    -0.001     0.002             0.001
+active_power_W           0.985     0.972     0.848     0.080             0.051
+base                     0.893     0.893     0.894     0.875             0.893
+power_factor             0.859     0.855     0.818     0.092            -0.011
+
+  flat autocorr across lags      -> deterministic periodic template
+  autocorr ~ 0 at every lag      -> white noise
+  voltage_V        skew=  0.002 kurtosis= -1.110
+  frequency_Hz     skew=  0.001 kurtosis= -0.001
+  power_factor     skew= -1.092 kurtosis=  0.151
+  base             skew=  0.347 kurtosis= -0.545
+
+==============================================================================
+5. ADDITIVITY: active_power_W = base(t) + sum(4 labelled appliances)?
+==============================================================================
+count    518400.000000
+mean        264.865958
+std          53.719571
+min         119.900000
+25%         224.737500
+50%         258.900000
+75%         301.570000
+max         445.600000
+
+  base autocorr lag1: 0.8933
+  |d(base)| > 45 W : 36200 of 518,400 rows
+  |d(base)| > 100 W: 28
+
+==============================================================================
+6. UNLABELLED LOADS: does anything step that is not one of the 4 labels?
+==============================================================================
+  every large step in the signal traces to a labelled appliance
+  => zero unknown/UNKNOWN loads in 30 days
+
+==============================================================================
+7. SIMULTANEITY
+==============================================================================
+  0 appliances ON:  72.76%
+  1 appliances ON:  25.49%
+  2 appliances ON:   1.71%
+  3 appliances ON:   0.04%
+  (UK-DALE measured 2+ simultaneous = 32.0% for a 5-appliance set)
+
+==============================================================================
+8. STEP SIZE AT ON-TRANSITIONS vs THE APPLIANCE'S OWN POWER
+==============================================================================
+  kettle            events= 166 | dP mean  1962.6 min   1532.5 | own mean  1964.6 | err   -2.0
+  fridge            events= 389 | dP mean   118.8 min   -185.1 | own mean   120.6 | err   -1.7
+  microwave         events= 118 | dP mean   971.4 min    567.2 | own mean   972.2 | err   -0.8
+  washing_machine   events=  27 | dP mean  1349.8 min   1263.3 | own mean  1344.6 | err    5.2
+
+==============================================================================
+9. VOLTAGE vs LOAD COUPLING (real supplies sag)
+==============================================================================
+            mean       std      min      max
+n_on                                        
+0     230.026240  2.135491  225.000  235.863
+1     229.960544  2.145699  225.000  236.106
+2     229.573456  1.914676  225.000  234.757
+3     228.560220  0.795714  226.691  230.731
+  corr(voltage_V, active_power_W): -0.0788
+
+==============================================================================
+10. DIURNAL PATTERN (mean by hour of day)
+==============================================================================
+  hour |   base_W | voltage |  power_W
+     0 |    187.4 |  230.37 |    236.6
+     1 |    193.9 |  231.07 |    237.0
+     2 |    201.8 |  231.70 |    247.8
+     3 |    211.7 |  232.22 |    285.4
+     4 |    227.4 |  232.59 |    304.9
+     5 |    254.7 |  232.77 |    337.7
+     6 |    290.2 |  232.77 |    377.6
+     7 |    311.2 |  232.57 |    405.2
+     8 |    301.4 |  232.22 |    431.3
+     9 |    275.9 |  231.70 |    458.5
+    10 |    257.7 |  231.07 |    415.5
+    11 |    249.0 |  230.37 |    449.3
+    12 |    244.6 |  229.63 |    363.4
+    13 |    243.1 |  228.94 |    469.1
+    14 |    247.7 |  228.30 |    448.6
+    15 |    266.6 |  227.79 |    392.9
+    16 |    300.8 |  227.43 |    383.5
+    17 |    341.1 |  227.24 |    464.1
+    18 |    367.2 |  227.23 |    519.6
+    19 |    361.0 |  227.42 |    453.1
+    20 |    322.4 |  227.78 |    400.1
+    21 |    270.5 |  228.30 |    333.7
+    22 |    227.1 |  228.92 |    285.0
+    23 |    202.2 |  229.63 |    250.1
+
+  base peak/trough : 1.959
+  power peak/trough: 2.196
+
+==============================================================================
+11. NIGHT-TIME ACTIVITY (02:00-05:00)
+==============================================================================
+  kettle            night 0.0187  vs overall 0.0200
+  fridge            night 0.1902  vs overall 0.2090
+  microwave         night 0.0072  vs overall 0.0104
+  washing_machine   night 0.0000  vs overall 0.0508
+
+==============================================================================
+12. TRIVIAL BASELINE (calibrate on first 15 days, test on last 15)
+==============================================================================
+  learned profiles (mean ON power): {'kettle': np.float64(1961.2), 'fridge': np.float64(120.0), 'microwave': np.float64(984.2), 'washing_machine': np.float64(653.9)}
+  threshold 45.0 W -> 22,868 candidate steps, 4,962 matched a profile
+  kettle            detected=  172 true_ON=   84 ratio= 2.05
+  fridge            detected= 4641 true_ON=  199 ratio=23.32
+  microwave         detected=  109 true_ON=   55 ratio= 1.98
+  washing_machine   detected=   40 true_ON=   13 ratio= 3.08
+  unmatched background steps: 17,906
+
+==============================================================================
+END OF REPORT
+==============================================================================

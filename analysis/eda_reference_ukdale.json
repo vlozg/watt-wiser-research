@@ -1,0 +1,117 @@
+{
+ "sampling": {
+  "rows": 985855,
+  "span_days": 70.66,
+  "dt_median_s": 6.0,
+  "dt_min_s": 5.0,
+  "dt_max_s": 22242.0,
+  "gap_fraction": 0.0024
+ },
+ "power": {
+  "mean_W": 186.3,
+  "p1_W": 21.0,
+  "p5_W": 34.0,
+  "p25_W": 92.0,
+  "p50_W": 151.0,
+  "p75_W": 203.0,
+  "p95_W": 280.0,
+  "p99_W": 1839.0,
+  "max_W": 5344.0,
+  "always_on_W": 89.0
+ },
+ "steps": {
+  "dP_p50_W": 2.0,
+  "dP_p90_W": 16.0,
+  "dP_p99_W": 100.0,
+  "noise_floor_W": 1.0,
+  "steps_per_day_gt30W": 715.0,
+  "steps_per_day_gt100W": 138.5,
+  "steps_per_day_gt300W": 22.9
+ },
+ "diurnal": {
+  "hourly_mean_W": [
+   171.5,
+   182.5,
+   181.4,
+   187.6,
+   172.2,
+   160.4,
+   153.5,
+   179.8,
+   179.3,
+   173.4,
+   180.0,
+   191.2,
+   220.9,
+   213.6,
+   194.1,
+   225.8,
+   204.5,
+   197.9,
+   196.6,
+   190.7,
+   180.9,
+   178.7,
+   181.3,
+   174.5
+  ],
+  "peak_hour": 15,
+  "trough_hour": 6,
+  "peak_over_trough": 1.47,
+  "lag1day_autocorr": 0.012,
+  "weekday_mean_W": 180.7,
+  "weekend_mean_W": 200.2
+ },
+ "appliances": {
+  "fridge": {
+   "energy_share_pct": 21.5,
+   "duty_pct": 36.5,
+   "median_on_W": 109.0,
+   "events_per_day": 33.19,
+   "on_minutes_p50": 18.8,
+   "on_minutes_p90": 24.8,
+   "transition_step_p50_W": 107.0
+  },
+  "dish_washer": {
+   "energy_share_pct": 8.8,
+   "duty_pct": 2.4,
+   "median_on_W": 97.0,
+   "events_per_day": 3.58,
+   "on_minutes_p50": 2.3,
+   "on_minutes_p90": 30.3,
+   "transition_step_p50_W": 55.0
+  },
+  "kettle": {
+   "energy_share_pct": 6.8,
+   "duty_pct": 0.4,
+   "median_on_W": 2890.0,
+   "events_per_day": 2.99,
+   "on_minutes_p50": 1.7,
+   "on_minutes_p90": 2.9,
+   "transition_step_p50_W": 2878.0
+  },
+  "washing_machine": {
+   "energy_share_pct": 6.2,
+   "duty_pct": 1.4,
+   "median_on_W": 161.0,
+   "events_per_day": 16.63,
+   "on_minutes_p50": 0.1,
+   "on_minutes_p90": 2.9,
+   "transition_step_p50_W": 28.0
+  },
+  "monitor": {
+   "energy_share_pct": 42.2,
+   "duty_pct": 82.1,
+   "median_on_W": 111.0,
+   "events_per_day": 0.34,
+   "on_minutes_p50": 716.9,
+   "on_minutes_p90": 7213.1,
+   "transition_step_p50_W": 66.0
+  }
+ },
+ "overlap": {
+  "frac_0_on_pct": 11.2,
+  "frac_1_on_pct": 56.1,
+  "frac_2plus_on_pct": 32.7
+ }
+}
