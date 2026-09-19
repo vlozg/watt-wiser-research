@@ -6,7 +6,8 @@
 #   xingyang990210_nilm-datasets  third-party NILM-datasets clone, re-downloadable from GitHub
 #   kaggle_1min, plaid     re-downloadable archives (V-I captures re-fetchable via research-logs/vi/plaid_fetch.py)
 #   ukdale-full            UK-DALE 2017 full download (CEDA), re-downloadable
-#   data/                  user-staged dataset downloads (ukdale-full/, REFIT/, AMPds2/, redd/, GREEND)
+#   data/                  fnd/ + gold/ layers and raw/ dataset downloads (gitignored)
+#                          raw/: ukdale-full/, REFIT/, AMPds2/, redd/, GREEND_0-2_300615/, ECO/
 repo/
 docs/client/
 docs/external/

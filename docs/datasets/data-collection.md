@@ -35,9 +35,16 @@ not any workspace-root `research_logs/`, which holds other-topic research only.
 
 **Status 2026-09-19:** landed in `data/` (project folder, transient staging) via CEDA -
 `dap.ceda.ac.uk/edc/d1/7d78f943-.../` (the working host; the wget/aria2 script is tracked at `tools/download_uk_dale_2017.sh`, a copy also sits beside the staged data).
+**Layout note 2026-09-19:** all raw dataset directories were reorganized under `data/raw/`
+(`data/raw/ukdale-full/`, `data/raw/REFIT/`, `data/raw/redd/`, `data/raw/AMPds2/`,
+`data/raw/GREEND_0-2_300615/`, `data/raw/ECO/`); paths below and in the extraction
+pipelines point there. Extraction into `data/fnd/` is unchanged. Reproducible staging:
+the user uploaded one zip per dataset to public Google Drive -
+`src/pipelines/00_download_dataset/download_all.py` downloads, extracts and verifies them
+(size-verified against `raw_manifest.json`); if a download fails, see `docs/Data source note.md`.
 Two zips mid-download (aria2): `ukdale.zip` = plain-text channels (the set our loader parses),
 `ukdale.h5.zip` = HDF5/NILMTK (needs pytables - absent; keep as archive). Plus readmes, per-building
-yamls, metadata. An armed watcher moves each zip to `data/ukdale-full/` the moment its
+yamls, metadata. An armed watcher moves each zip to `data/raw/ukdale-full/` the moment its
 `.aria2` control file disappears, then the readmes/script; the staged copy under `data/` is
 retained (user-managed, gitignored).
 
@@ -46,7 +53,7 @@ retained (user-managed, gitignored).
   parses. House 1 has 53 labeled channels; houses 1-3 reportedly include 1-s aggregate mains (verify on
   arrival - that would cover the sub-10-s band question without any waveform data).
 - Size: tens of GB for the low-frequency part. The ~3 TB part is the 16 kHz waveform release - **skip it**.
-- Land at: `data/ukdale-full/house_<n>/` (keep upstream structure).
+- Land at: `data/raw/ukdale-full/house_<n>/` (keep upstream structure).
 - On arrival: add to `.gitignore` (raw data, re-downloadable), rebuild `eda_reference_ukdale.json`,
   re-run R1-R5, unlock R7 across houses 2-5. See the checklist in 8.
 
@@ -62,7 +69,7 @@ retained (user-managed, gitignored).
   2015 Strathclyde entry is the RAW uncleaned version (known timestamp drift) - skip it.
   Files: `https://zenodo.org/api/records/5063428/files/CLEAN_HouseN.csv/content`. Land at
   `research-logs/refit/`; conversion = wide CSV -> long table.
-  **Staged 2026-09-19: `data/REFIT/` = `CLEAN_REFIT_081116.7z` (the FULL 20-house Strathclyde cleaned
+  **Staged 2026-09-19: `data/raw/REFIT/` = `CLEAN_REFIT_081116.7z` (the FULL 20-house Strathclyde cleaned
   release - supersedes the 6-house Zenodo plan; numbering skips house 14, spans 392-648 d/house) +
   `Processed_Data_CSV.7z` + `MetaData_Tables.xlsx`. Extract per use (6.7 GB extracted in scratch).**
   User-supplied REFIT routes: `pureportal.strath.ac.uk/.../refit-electrical-load-measurements-cleaned/`
@@ -82,7 +89,7 @@ retained (user-managed, gitignored).
   User is downloading `redd.h5` themselves (agent fetch attempt aborted); on arrival verify channel
   inventory + timestamps, land at `research-logs/redd-original/`. Provenance chain = original REDD ->
   NILMTK conversion -> third-party paper upload.
-  **Staged 2026-09-19: `data/redd/redd.h5` (383 MB). Read path verified: `tables` compound nodes
+  **Staged 2026-09-19: `data/raw/redd/redd.h5` (383 MB). Read path verified: `tables` compound nodes
   work; `pandas.HDFStore` fails on this legacy store under pandas 3. b1: 20 meters, mains
   2011-04-18 to 05-24 @1 s; 11-26 meters per building.**
   Checked third-party route 2026-09-19: `inesylla/energy-disaggregation-DL` builds on the Seoul National
@@ -111,11 +118,11 @@ retained (user-managed, gitignored).
 
 - **AMPds2** - zenodo.org (probed 200), doi:10.5281/zenodo.591331 (verify the record page). 1 house,
   ~2 yr, native 1-min = exactly the Shelly 60 s rung.
-  **Staged 2026-09-19: `data/AMPds2/` (2.2 GB) - `Electricity_P.csv`: 730 d from 2012-04-01, 60 s,
+  **Staged 2026-09-19: `data/raw/AMPds2/` (2.2 GB) - `Electricity_P.csv`: 730 d from 2012-04-01, 60 s,
   zero measured gaps, WHE aggregate + 20 appliance cols, mean 1,112 W.**
 - **ECO** - dataverse.harvard.edu reachable; ETH host untested. 6 homes, 1 s, Swiss market.
 - **DRED / GREEND** - DRED optional (hosts likely blocked; browser route). GREEND staged:
-  **`data/GREEND_0-2_300615/` (16 GB), 8 buildings, 134-500 daily files each, 1 s, plug-level MACs
+  **`data/raw/GREEND_0-2_300615/` (16 GB), 8 buildings, 134-500 daily files each, 1 s, plug-level MACs
   only (no aggregate column); buildings 4-5 contain mis-dated `dataset_2000-01-01.csv` files.**
   Naming trap checked 2026-09-19: Kaggle `lucabasa/dutch-energy` (Energy consumption of the
   Netherlands) is **not DRED** - it is the annual per-zipcode consumption tables published by the
@@ -218,7 +225,7 @@ suffices).
 ## 8. Arrival checklist for the current download
 
 - [x] houses 1-5 present, each with `labels.dat` (checked 2026-09-19; extracted to
-  `data/ukdale-full/house_N/` - house_1 14 GB/53 ch, house_2 913 MB/19 ch, house_3 34 MB/5 ch,
+  `data/raw/ukdale-full/house_N/` - house_1 14 GB/53 ch, house_2 913 MB/19 ch, house_3 34 MB/5 ch,
   house_4 171 MB/6 ch, house_5 809 MB/25 ch)
 - [x] aggregate rate check: **all five houses are 6-s aggregates in this release - no 1-s aggregate**
   (1-s mains exists only in the separate 2015 mains zips). Native rung = 6 s; 60/300 via floor-divide.
@@ -237,6 +244,6 @@ suffices).
   (house_4 composite `kettle_radio`); washer = house_1/house_2 `washing_machine`, house_5
   `washer_dryer`, house_4 composite; dish washer = houses 1/2/5; microwave = houses 1/2/5. No
   same-house fridge+freezer pair exists anywhere, so no intra-house merge is needed.
-- [x] heavy dirs already gitignored (`data/ukdale-full/` and the other staged dataset dirs)
+- [x] heavy dirs already gitignored (`data/` covers everything: `raw/`, `fnd/`, `gold/`)
 - [ ] rebuild `eda_reference_ukdale.json`; re-run R1-R5
 - [ ] R7 transfer matrix: house 1 -> houses 2-5 (+ REDD homes)
