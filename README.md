@@ -19,7 +19,6 @@ client's code + data as received.
 | `figures/` | Shipped figures (`fig01`-`fig09`) + `src/` - the scripts that generate them |
 | `eda_runs/` | Saved runs: `ukdale_reference/`, `synthetic_vs_reference/` - each `report.md`, `metrics.json`, 4 figures |
 | `repo/WattWiser/` | Client repo as received (github.com/AdibReza/WattWiser, commit `d39f0e0`, 31 files, one commit). Read-only reference; keeps its own `.git`. The 49 MB synthetic dataset is `repo/WattWiser/data/raw/synthetic_shelly_data.csv` |
-| `tools/` | Dataset/bibliography acquisition scripts behind the verified DOIs: OpenAlex (`oa_*.py`), GitHub (`gh_*.py`), docx extraction (`extract2.py`, `media.py`), dataset lookups (`datasets.py`, `ds_*.py`) |
 | `research-logs/` | Early-research archive (139 MB): UK-DALE slice, PLAID upstream zip + metadata, the V-I track (`vi/`: 16 PLAID 30 kHz captures + `plaid_cd.json` + fetchers + `SOURCE.md`), second NILM dataset clone (`xingyang990210`), Kaggle 1-min data, OA bibliography stores (`training-approaches-key.json`), community-research captures, early notes (`low-frequency-nilm.md`, `training-approaches.md`) + fetcher scripts |
 | `data/` | User-staged dataset downloads (UK-DALE full, REFIT, AMPds2, REDD, GREEND) - transient staging, gitignored, intake procedure in `docs/datasets/data-collection.md` |
 | `pyproject.toml` + `uv.lock` | uv-tracked Python deps (numpy / pandas / matplotlib / scipy / h5py / py7zr / pytables / pyarrow / pypdf); setup: `uv sync` |

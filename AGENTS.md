@@ -11,8 +11,6 @@ for US homes with Shelly EM Gen3 submeters.
 - `analysis/` - all analysis code: EDA twins (`eda_shelly.py` / `.ipynb` +
   `eda_reference_ukdale.json`), `q123_*` scripts, `nb_validate.py`, client-repo
   forensics (`repo-forensics/`).
-- `tools/` - dataset/bibliography acquisition scripts (OpenAlex, GitHub, docx,
-  dataset lookups).
 - `figures/` shipped figures + `src/`; `eda_runs/` saved run outputs.
 - `repo/` client code as received (read-only); forensics in `analysis/repo-forensics/`.
 - `data/` - user-staged dataset downloads. Transient staging, gitignored, user-managed:
@@ -31,3 +29,4 @@ for US homes with Shelly EM Gen3 submeters.
 - No `git commit` unless the user explicitly asks.
 - Chat replies: escape `$` as `\$` (LaTeX rendering) and avoid bare `~`.
 - Doc paths must be exact and unambiguous; prefer project-relative paths.
+- Code homes: one-off/throwaway scripts in `.scratch/`; tracked acquisition/fetch scripts in `research-logs/`; pipeline code in `src/pipelines/`; analysis code in `analysis/`. Never create a new top-level directory without updating this file and `README.md`.

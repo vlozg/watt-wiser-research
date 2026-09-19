@@ -34,7 +34,7 @@ not any workspace-root `research_logs/`, which holds other-topic research only.
 **UK-DALE 2017, disaggregated appliance + whole-house power** - IN PROGRESS (user download).
 
 **Status 2026-09-19:** landed in `data/` (project folder, transient staging) via CEDA -
-`dap.ceda.ac.uk/edc/d1/7d78f943-.../` (the working host; the wget/aria2 script is tracked at `tools/download_uk_dale_2017.sh`, a copy also sits beside the staged data).
+`dap.ceda.ac.uk/edc/d1/7d78f943-.../` (the working host; the wget/aria2 script is tracked at `research-logs/download_uk_dale_2017.sh`, a copy also sits beside the staged data).
 **Layout note 2026-09-19:** all raw dataset directories were reorganized under `data/raw/`
 (`data/raw/ukdale-full/`, `data/raw/REFIT/`, `data/raw/redd/`, `data/raw/AMPds2/`,
 `data/raw/GREEND_0-2_300615/`, `data/raw/ECO/`); paths below and in the extraction
