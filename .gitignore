@@ -26,3 +26,6 @@ research-logs/vi/plaid_samples/
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
+
+# Local agent instructions (never tracked)
+AGENTS.local.md
