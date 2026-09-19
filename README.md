@@ -22,7 +22,7 @@ client's code + data as received.
 | `tools/` | Dataset/bibliography acquisition scripts behind the verified DOIs: OpenAlex (`oa_*.py`), GitHub (`gh_*.py`), docx extraction (`extract2.py`, `media.py`), dataset lookups (`datasets.py`, `ds_*.py`) |
 | `research-logs/` | Early-research archive (139 MB): UK-DALE slice, PLAID upstream zip + metadata, the V-I track (`vi/`: 16 PLAID 30 kHz captures + `plaid_cd.json` + fetchers + `SOURCE.md`), second NILM dataset clone (`xingyang990210`), Kaggle 1-min data, OA bibliography stores (`training-approaches-key.json`), community-research captures, early notes (`low-frequency-nilm.md`, `training-approaches.md`) + fetcher scripts |
 | `data/` | User-staged dataset downloads (UK-DALE full, REFIT, AMPds2, REDD, GREEND) - transient staging, gitignored, intake procedure in `docs/datasets/data-collection.md` |
-| `pyproject.toml` + `uv.lock` | uv-tracked Python deps (numpy / pandas / matplotlib / scipy / h5py / py7zr); setup: `uv sync` |
+| `pyproject.toml` + `uv.lock` | uv-tracked Python deps (numpy / pandas / matplotlib / scipy / h5py / py7zr / pytables / pyarrow / pypdf); setup: `uv sync` |
 | `AGENTS.md` | Working rules + layout conventions for agents |
 
 ## Reading order (docs)
@@ -52,6 +52,29 @@ uv run python3 analysis/eda_shelly.py ukdale --make-reference --out eda_runs/ukd
 
 # Client-repo forensics:
 uv run python3 analysis/repo-forensics/analyze_synthetic.py repo/WattWiser/data/raw/synthetic_shelly_data.csv
+
+# Make targets wrap the common runs (see Makefile; `make help` lists all):
+make setup          # uv sync - installs deps + the wattwiser helper package (editable)
+make download       # stage raw from the public Drive zips (00_download_dataset)
+make extract        # all six extractors -> data/fnd/ (resumable)
+make labels         # rebuild data/gold/appliance_map.json
+make fnd-check      # verify the parquet foundations
+
+# Raw data staging from the public Google Drive zips (see src/pipelines/00_download_dataset/README.md):
+uv run python3 src/pipelines/00_download_dataset/download_all.py
+
+# Dataset extraction into parquet foundations (data/fnd/, see docs/datasets/parquet-foundations.md):
+uv run python3 src/pipelines/01_extract_dataset/extract_ukdale.py   # likewise extract_redd/refit/eco/greend/ampds2
+
+# NILMTK cross-checks (results table in docs/datasets/parquet-foundations.md):
+uv run python3 analysis/xcheck/verify_all.py
+
+# Baseline campaign (spec: docs/experiments/baseline-ukdale-plan.md):
+uv run python3 analysis/baseline_ukdale.py --dataset all
+uv run python3 analysis/device_campaign.py --build
+uv run python3 analysis/device_campaign.py --enrollment
+uv run python3 analysis/device_campaign.py --run-experiments
+uv run python3 analysis/plan_runs.py --run all
 ```
 
 Interactive EDA: open `analysis/eda_shelly.ipynb`, edit the config cell, run top-to-bottom.
