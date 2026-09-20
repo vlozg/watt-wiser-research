@@ -17,13 +17,23 @@ src/pipelines/01_extract_dataset/extract_<name>.py  # one per dataset, argparse 
 
 ## Conventions
 
-- **Raw fidelity**: every source column is kept verbatim (no resampling, no
-  renaming, no unit conversion). Source sentinels stay as-is: REDD/REFIT NULLs
-  become null, ECO `-1` missing markers are preserved as `-1`.
+- **Raw fidelity**: every source measurement column is kept verbatim (no
+  resampling, no renaming, no unit conversion). Source sentinels stay as-is:
+  REDD/REFIT NULLs become null, ECO `-1` missing markers are preserved as
+  `-1`. AMPds2 columns that are not measurements (billing period dates,
+  ECCC quality flags, weather text, the HistoricalNormals month grid with
+  its extreme-date cells) are kept verbatim as nullable strings and recorded
+  per file in the manifest (`non_numeric_cols`); the same goes for a
+  non-time first column (HistoricalNormals `Item`, NaturalGas_HeatValues
+  `Day` - the table's row identity, kept beside its null `ts_us`).
 - **`ts_us`**: int64 microseconds since Unix epoch as the first column, derived
   from the source's own timestamp semantics (per-dataset anchors below).
   Rows whose source ts cannot parse keep `ts_us` null (never dropped).
 - **Compression**: zstd level 3 via the shared writer (`wattwiser.parquet.write_parquet`).
+- **Extra derived column (REFIT only)**: refit parquets add `ts_local_us` -
+  the true UK local wall clock (Europe/London conversion of `ts_us`, stored as
+  naive local epoch microseconds) - because UK-DALE-style DST-aware local-time
+  joins need it. Every other dataset keeps `ts_us` only.
 - **Resumable**: a per-dataset `manifest.json` keys every output; reruns skip
   finished outputs unless `--force`. Records carry `path, rows, bytes,
   ts_min_us, ts_max_us, src, src_bytes` plus dataset-specific fields.
@@ -31,18 +41,19 @@ src/pipelines/01_extract_dataset/extract_<name>.py  # one per dataset, argparse 
   UK-DALE `labels.dat` + README copied per house, ECO `doc.txt` +
   `eco_labels.json` per house.
 
-## Datasets (verified 2026-02-13; rows == parquet metadata for every file)
+## Datasets (verified 2026-02-13; REFIT and ampds2 aux files rebuilt +
+re-verified 2026-09-20; rows == parquet metadata for every file)
 
 | dataset | files | rows | out MB | ts range | extractor quirks |
 | --- | ---: | ---: | ---: | --- | --- |
 | ukdale | 182 | 970,784,319 | 4,353 | 2012-11-09..2017-04-26 | houses 1-5 `.dat` whitespace tables incl. `button_press` event logs; `labels.dat` skipped as data and copied verbatim; ts = round(unix_s * 1e6) |
-| ampds2 | 38 | 31,553,674 | 236 | 2013..2014 (1970 rows = non-time tables) | ts fallback chain numeric -> parsed datetime -> nullable Int64; Climate_HistoricalNormals `Item` and NaturalGas `Day` are not time series (ts null) |
+| ampds2 | 38 | 31,553,674 | 236 | 2013..2014 (1970 rows = non-time tables) | ts fallback chain numeric -> parsed datetime -> nullable Int64; Climate_HistoricalNormals `Item` and NaturalGas_HeatValues `Day` are not time series (ts null, first column kept as string); other non-numeric columns kept as nullable strings |
 | redd | 147 | 56,342,478 | 227 | 2011-04-16..2011-06-14 | pytables direct API (`arr['index']` ns, `arr['values_block_0']`); float32 source dtype preserved; NILMTK cache tables converted too; attrs -> `redd_meta.json` |
-| refit | 20 | 119,495,879 | 661 | 2013-09-17..2015-07-10 | streamed per house from `CLEAN_REFIT_081116.7z` (fresh py7zr handle per member - handle reuse corrupts); `Unix` s * 1e6 |
+| refit | 20 | 119,495,879 | 1,085 | 2013-09-17..2015-07-10 | streamed per house from `CLEAN_REFIT_081116.7z` (fresh py7zr handle per member - handle reuse corrupts); `Unix` s * 1e6; also carries derived `ts_local_us` (see Conventions); the release `Time` string column verified to render the same corrected timeline and dropped - the RAW variant's `Time` is the uncorrected logger clock |
 | greend | 8 | 196,943,999 | 1,203 | 2000-01-01..2015-06-29 | block-aware parser below; rows == source data lines verified for all 8 buildings |
 | eco | 71 | 849,398,400 | 5,401 | 2012-05-30..2013-01-31 | see below; matlab zips not converted |
 
-Total: 2,224,518,749 rows, ~12.1 GB parquet (zstd).
+Total: 2,224,518,749 rows, ~12.5 GB parquet (zstd).
 
 ## GREEND: mid-file header rows (no rows dropped)
 
@@ -73,6 +84,32 @@ rows with null ts and null plugs.
 - **ts anchor**: `ts_us` = the file's date at midnight (naive local wall clock,
   CET/CEST as measured, no DST correction) + row-index seconds; the same rule
   for plugs and occupancy. Documented in the dataset `notes`.
+
+## Quality gate (`src/pipelines/01_extract_dataset/qa_raw.py`)
+
+The pipeline is extract (data/raw = verbatim strings on disk) -> quality gate
+-> cast (the extractors build typed parquet in data/fnd). `qa_raw.py` is the
+gate: it re-reads every raw source as text (per-column numeric parse rates,
+junk-cell examples - exactly the values an `errors='coerce'` would silently
+NaN - plus missing/NULL counts) and audits the landed parquets (all-NaN ghost
+columns, `ts_us` duplicates, non-monotonic runs). It writes
+`data/fnd/qa/qa_report.json` and prints a summary; it is read-only on data.
+
+```bash
+uv run python3 src/pipelines/01_extract_dataset/qa_raw.py            # all datasets
+uv run python3 src/pipelines/01_extract_dataset/qa_raw.py ampds2     # subset
+```
+
+First full findings (2026-09-20; ampds2 aux files rebuilt same day to keep
+their text columns): the only coercion losses ever found in fnd came from
+AMPds2's auxiliary files - 56,257 raw cells (date labels, quality flags,
+weather text); every meter/climate measurement CSV and all 19 REFIT house
+CSVs are fully numeric. At extract time the same policy is enforced inline:
+`extract_refit.py` raises on non-numeric measurement cells;
+`extract_ampds2.py` keeps non-numeric columns verbatim as nullable strings
+with a manifest record (dropping them had discarded usable metadata - e.g.
+the HistoricalNormals extreme-event dates - and NaNifying cells had been
+silent corruption of mostly-numeric columns).
 
 ## Cross-checks against public loaders (NILMTK converters, verified 2026-02-13)
 

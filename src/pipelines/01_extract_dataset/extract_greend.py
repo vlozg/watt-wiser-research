@@ -12,24 +12,36 @@ maps every header block's rows onto the building-wide union of plug MACs;
 plugs absent from a block are null for that interval.
 ts_us = round(unix_seconds * 1e6).
 """
-import argparse, glob, os, re, time
+from __future__ import annotations
+
+import argparse
+import glob
+import logging
+import os
+import re
+import time
+from typing import Any
+
 import numpy as np
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from wattwiser import DATA, FND, RAW, ROOT, done, ensure, load_manifest, log, record, save_manifest, stat_parquet
-from wattwiser.labels import canonical_label, write_slice
+from wattwiser import FND, RAW, ROOT, done, ensure, load_manifest, record, setup_logging, stat_parquet
+from wattwiser.labels import GreendBuilding, GreendMeterLabel, canonical_label, write_slice
+
+log = logging.getLogger(__name__)
 
 # per-building plug->label metadata copied into this pipeline dir (from the GREEND repo)
 HERE = os.path.dirname(os.path.abspath(__file__))
 GREEND_YAML_DIR = os.path.join(HERE, 'metadata', 'greend')
 
 
-def _slow_blocks(d):
+def _slow_blocks(d: str) -> list[pd.DataFrame]:
     """Block-aware parse keyed on every 'timestamp' header line (incl. the first)."""
-    cur_cols, cur_rows = None, None
-    blocks = []
+    cur_cols: list[str] | None = None
+    cur_rows: list[list[str]] | None = None
+    blocks: list[tuple[list[str], list[list[str]]]] = []
     with open(d) as fh:
         for line in fh:
             line = line.rstrip('\r\n')
@@ -43,11 +55,14 @@ def _slow_blocks(d):
                 cur_rows.append(line.split(','))
     if cur_cols is not None:
         blocks.append((cur_cols, cur_rows))
-    out = []
+    # block -> frame: ts cell via to_numeric (degenerate lines -> NaN ts), plug
+    # cells padded to the block's width, NULL/empty -> NaN, junk -> NaN (none
+    # found by qa_raw.py)
+    out: list[pd.DataFrame] = []
     for cols, rows in blocks:
         if not rows:
             continue
-        data = {'timestamp': pd.to_numeric([r[0] for r in rows], errors='coerce')}
+        data: dict[str, Any] = {'timestamp': pd.to_numeric([r[0] for r in rows], errors='coerce')}
         for j, c in enumerate(cols):
             data[c] = pd.to_numeric(
                 [r[j + 1] if j + 1 < len(r) else None for r in rows],
@@ -56,7 +71,7 @@ def _slow_blocks(d):
     return out
 
 
-def read_day(d):
+def read_day(d: str) -> tuple[list[pd.DataFrame], int]:
     """Return (list of block DataFrames each with 'timestamp' first col, extra_headers).
 
     Fast path: uniform file via pandas C parser. Slow paths (re-headered files,
@@ -65,18 +80,22 @@ def read_day(d):
     if os.path.getsize(d) < 2:
         return [], 0  # some building6 days are empty files
     try:
+        # fast path assumes one uniform header; NULL is GREEND's missing marker
         df = pd.read_csv(d, na_values=['NULL'])
+        # any string dtype in a plug column means a mid-file header was parsed
+        # as data (same-width re-header) -> redo with the block-aware parser
         if any(not pd.api.types.is_numeric_dtype(df[c]) for c in df.columns[1:]):
             # same-width re-header: mid-file header row parsed as data -> redo block-aware
             blocks = _slow_blocks(d)
-            log('re-headered file (same width): %s (%d blocks)' % (os.path.basename(d), len(blocks)))
+            log.info('re-headered file (same width): %s (%d blocks)' % (os.path.basename(d), len(blocks)))
             return blocks, len(blocks) - 1
         return [df], 0
     except pd.errors.ParserError:
         return _slow_blocks(d), len(_slow_blocks(d)) - 1
 
 
-def extract(force=False):
+def extract(force: bool = False) -> None:
+    """Convert every building's daily CSVs to one parquet (resumable via the manifest)."""
     name = 'greend'
     notes = ['source: data/raw/GREEND_0-2_300615/GREEND_0-2_300615/building{0..7}/dataset_YYYY-MM-DD.csv',
              '1 s per-plug readings; columns are raw plug MAC ids (labels need GREEND metadata); NULL -> null',
@@ -96,7 +115,8 @@ def extract(force=False):
         t0 = time.time()
         days = sorted(glob.glob(os.path.join(bdir, '*.csv')))
         # pass 1: building-wide union of plug MACs across every header line
-        union, seen = [], set()
+        union: list[str] = []
+        seen: set[str] = set()
         for d in days:
             with open(d) as fh:
                 for line in fh:
@@ -118,6 +138,8 @@ def extract(force=False):
             w = pd.concat(day_blocks, ignore_index=True) if len(day_blocks) > 1 else day_blocks[0]
             tsf = np.round(pd.to_numeric(w['timestamp'], errors='coerce').values * 1e6)
             ts = pd.array(tsf, dtype='Int64')  # NaN ts (degenerate whitespace line) -> null, row kept
+            # blocks may not carry every union MAC: plugs absent from a block
+            # become all-NaN for that interval (raw fidelity, no rows dropped)
             arrs = [pa.array(ts)] + [
                 pa.array(w[c].values, type=pa.float64()) if c in w.columns
                 else pa.array(np.full(len(w), np.nan), type=pa.float64())
@@ -126,39 +148,39 @@ def extract(force=False):
             nrows += len(w)
         writer.close()
         st = stat_parquet(out)
-        if st['rows'] != nrows:
-            raise RuntimeError('row mismatch %s: %d vs %d' % (bname, st['rows'], nrows))
+        if st.rows != nrows:
+            raise RuntimeError('row mismatch %s: %d vs %d' % (bname, st.rows, nrows))
         record(man, name, bname, out, bdir, st, t0, src_days=len(days),
                src_bytes=sum(os.path.getsize(d) for d in days), cols=len(union),
                midfile_header_rows=reheaders)
-        log('%s: %d rows x %d plug cols from %d days, %d mid-file header rows (%.0fs)' % (
+        log.info('%s: %d rows x %d plug cols from %d days, %d mid-file header rows (%.0fs)' % (
             bname, nrows, len(union), len(days), reheaders, time.time() - t0))
 
 
-def extract_labels():
+def extract_labels() -> dict[str, GreendBuilding]:
     """Meter labels from the vendored NILMTK metadata YAMLs (metadata/greend/README.md).
 
     Meter k = k-th MAC column of the raw CSVs (column order preserved in fnd).
     """
-    out = {}
+    out: dict[str, GreendBuilding] = {}
     for f in sorted(glob.glob(os.path.join(GREEND_YAML_DIR, 'building*.yaml'))):
         nb = int(re.search(r'building(\d+)', f).group(1))
         txt = open(f, encoding='utf-8').read()
         name = re.search(r'original_name:\s*(\S+)', txt)
-        meters = {}
+        meters: dict[str, list[GreendMeterLabel]] = {}
+        # each appliance block: 'type: ...' first line then meters: [ids]
         for blk in re.split(r'\n- type:', txt)[1:]:
             label = blk.split('\n')[0].strip()
             m = re.search(r'meters:\s*\[([^\]]+)\]', blk)
             room = re.search(r'\broom:\s*(\S+)', blk)
             for mid in ([int(x) for x in m.group(1).replace(' ', '').split(',')] if m else []):
-                meters.setdefault(str(mid), []).append({
-                    'label': label, 'canonical': canonical_label(label),
-                    'room': room.group(1) if room else None})
-        out['building_%d' % (nb - 1)] = {
-            'source': os.path.relpath(f, ROOT),
-            'house_name': name.group(1) if name else None,
-            'meters': meters,
-        }
+                meters.setdefault(str(mid), []).append(GreendMeterLabel(
+                    label=label, canonical=canonical_label(label),
+                    room=room.group(1) if room else None))
+        out['building_%d' % (nb - 1)] = GreendBuilding(
+            source=os.path.relpath(f, ROOT),
+            house_name=name.group(1) if name else None,
+            meters=meters)
     return out
 
 
@@ -168,11 +190,12 @@ if __name__ == '__main__':
     ap.add_argument('--labels', action='store_true',
                     help='extract appliance labels only -> data/gold/appliance_map_greend.json')
     a = ap.parse_args()
+    setup_logging()
     if a.labels:
-        log('=== greend labels ===')
-        log('wrote %s' % write_slice('greend', extract_labels()))
-        log('=== done greend labels ===')
+        log.info('=== greend labels ===')
+        log.info('wrote %s' % write_slice('greend', extract_labels()))
+        log.info('=== done greend labels ===')
     else:
-        log('=== greend extract ===')
+        log.info('=== greend extract ===')
         extract(force=a.force)
-        log('=== done greend ===')
+        log.info('=== done greend ===')

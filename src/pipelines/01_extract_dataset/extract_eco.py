@@ -13,14 +13,29 @@ Source: data/raw/ECO/{NN}_sm_csv.zip, {NN}_plugs_csv.zip, {NN}_occupancy_csv.zip
   dataset's native CET/CEST clock without DST correction; documented in notes.
 - Matlab zip variants are not converted; doc.txt is copied verbatim per house.
 """
-import argparse, glob, io, json, os, re, shutil, time
+from __future__ import annotations
+
+import argparse
+import glob
+import io
+import json
+import logging
+import os
+import re
+import shutil
+import time
+import zipfile
+from typing import Any
+
 import numpy as np
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from wattwiser import DATA, FND, RAW, ROOT, done, ensure, load_manifest, log, record, save_manifest, stat_parquet
-from wattwiser.labels import canonical_label, write_slice
+from wattwiser import FND, RAW, ROOT, done, ensure, load_manifest, record, save_manifest, setup_logging, stat_parquet
+from wattwiser.labels import DeviceLabel, EcoBuilding, canonical_label, write_slice
+
+log = logging.getLogger(__name__)
 
 SM_COLS = ['powerallphases', 'powerl1', 'powerl2', 'powerl3', 'currentneutral',
            'currentl1', 'currentl2', 'currentl3', 'voltagel1', 'voltagel2',
@@ -30,12 +45,8 @@ SM_COLS = ['powerallphases', 'powerl1', 'powerl2', 'powerl3', 'currentneutral',
 LABEL_RE = re.compile(r'^\s*(\d{2}):\s*(.+?)\s*\(no[.,]?\s*days:\s*(\d+),\s*coverage:\s*([\d.]+)%\)')
 
 
-def ts_of_date(base, n):
-    start = pd.to_datetime(base).value // 1000
-    return (start + np.arange(n, dtype=np.int64) * 1000000).astype(np.int64)
-
-
-def extract(force=False):
+def extract(force: bool = False) -> None:
+    """Convert every house's sm/plug/occupancy zips to parquet (resumable via the manifest)."""
     name = 'eco'
     notes = ['source: data/raw/ECO/{NN}_sm_csv.zip + {NN}_plugs_csv.zip + {NN}_occupancy_csv.zip (+ doc.txt)',
              'sm: headerless 16-col daily CSVs in doc.txt order; missing = -1 preserved verbatim',
@@ -48,14 +59,14 @@ def extract(force=False):
     root = os.path.join(RAW, 'ECO')
     outroot = os.path.join(FND, name)
     ensure(outroot)
-    import zipfile
 
     for zpath in sorted(glob.glob(os.path.join(root, '*_sm_csv.zip'))):
         house = os.path.basename(zpath)[:2]
         hdir = os.path.join(outroot, 'house_' + house)
         ensure(hdir)
         shutil.copy(os.path.join(root, house + '_doc.txt'), os.path.join(hdir, 'doc.txt'))
-        labels = {}
+        # doc.txt carries the plug table: "NN: name (no. days: D, coverage: C%)"
+        labels: dict[str, dict[str, Any]] = {}
         lsrc = os.path.join(root, house + '_doc.txt')
         if os.path.exists(lsrc):
             for m in LABEL_RE.finditer(open(lsrc).read()):
@@ -78,6 +89,8 @@ def extract(force=False):
             nrows, ndays = 0, 0
             for n in members:
                 df = pd.read_csv(io.BytesIO(z.read(n)), header=None, names=SM_COLS)
+                # ts anchor: filename date at midnight (naive local CET/CEST, the
+                # dataset's own clock - no DST correction, documented in notes)
                 date = os.path.basename(n)[:-4]
                 ts = pd.Timestamp(date).value // 1000
                 arrs = [pa.array((ts + np.arange(len(df), dtype=np.int64) * 1000000).astype(np.int64))]
@@ -88,13 +101,14 @@ def extract(force=False):
             writer.close()
             st = stat_parquet(out)
             record(man, name, key, out, zpath, st, t0, days=ndays)
-            log('%s: %d rows from %d days (%.0fs)' % (key, nrows, ndays, time.time() - t0))
+            log.info('%s: %d rows from %d days (%.0fs)' % (key, nrows, ndays, time.time() - t0))
 
         key = 'house_' + house + '/plugs'
         if force or not done(man, key):
             t0 = time.time()
             pz = zipfile.ZipFile(os.path.join(root, house + '_plugs_csv.zip'))
-            by_plug = {}
+            # group day files by plug id: members look like NN/PP/YYYY-MM-DD.csv
+            by_plug: dict[str, list[str]] = {}
             for n in sorted(pz.namelist()):
                 m = re.match(r'%s/(\d{2})/\d{4}-\d{2}-\d{2}\.csv$' % house, n)
                 if m and '__MACOSX' not in n:
@@ -105,6 +119,8 @@ def extract(force=False):
                 if not force and done(man, pkey):
                     continue
                 out = os.path.join(hdir, 'plug_' + pid + '.parquet')
+                # most plug day files are single-column; a few carry extras,
+                # which get generic col_N names so one schema fits the plug
                 with pz.open(members[0]) as fh:
                     ncols = len(fh.readline().strip(b'\r\n').split(b','))
                 plug_cols = ['consumption'] + ['col_%d' % i for i in range(ncols - 1)]
@@ -124,12 +140,13 @@ def extract(force=False):
                 st = stat_parquet(out)
                 record(man, name, pkey, out, house + '_plugs_csv.zip:' + pid, st, t0)
                 written += 1
+            # summary row in the manifest once every plug of the house is done
             done_all = all(done(man, 'house_' + house + '/plug_' + pid) for pid in by_plug)
             if done_all:
                 man['files'][key] = {'plug_count': len(by_plug),
                                      'note': 'per-plug parquets plug_PP.parquet'}
                 save_manifest(name, man)
-            log('%s: %d plugs (%.0fs)' % (key, len(by_plug), time.time() - t0))
+            log.info('%s: %d plugs (%.0fs)' % (key, len(by_plug), time.time() - t0))
 
         occ_z = os.path.join(root, house + '_occupancy_csv.zip')
         if os.path.exists(occ_z):
@@ -142,6 +159,8 @@ def extract(force=False):
                 member = house + '_' + season + '.csv'
                 if member not in z.namelist():
                     continue
+                # day matrix: skip the 86,400 time-label header; col 0 = date,
+                # cols 1..86400 = per-second 0/1 presence -> unpivot to long
                 df = pd.read_csv(io.BytesIO(z.read(member)), header=None, skiprows=1, dtype=str)
                 dates = pd.to_datetime(df[0], format='%d-%b-%Y')
                 vals = df.iloc[:, 1:].astype(np.int8).values
@@ -159,22 +178,22 @@ def extract(force=False):
                 writer.close()
                 st = stat_parquet(out)
                 record(man, name, key, out, house + '_occupancy_csv.zip:' + season, st, t0, days=len(dates))
-                log('%s: %d rows (%.0fs)' % (key, nrows, time.time() - t0))
+                log.info('%s: %d rows (%.0fs)' % (key, nrows, time.time() - t0))
 
 
-def extract_labels():
+def extract_labels() -> dict[str, EcoBuilding]:
     """Plug labels from NN_doc.txt plug tables (plug id -> appliance name)."""
-    out = {}
+    out: dict[str, EcoBuilding] = {}
     for f in sorted(glob.glob(os.path.join(RAW, 'ECO', '*_doc.txt'))):
         house = 'house_' + os.path.basename(f).split('_')[0]
-        plugs = {}
+        plugs: dict[str, DeviceLabel] = {}
         for line in open(f, encoding='utf-8', errors='ignore'):
             m = re.match(r'^(\d\d):\s*([^(*]+?)(?:\s*\(|\s*\(no|$)', line.strip())
             if m and int(m.group(1)) <= 20:
                 label = m.group(2).strip().rstrip(',')
-                plugs[m.group(1)] = {'label': label, 'canonical': canonical_label(label)}
+                plugs[m.group(1)] = DeviceLabel(label=label, canonical=canonical_label(label))
         if plugs:
-            out[house] = {'source': os.path.relpath(f, ROOT), 'plugs': plugs}
+            out[house] = EcoBuilding(source=os.path.relpath(f, ROOT), plugs=plugs)
     return out
 
 
@@ -184,11 +203,12 @@ if __name__ == '__main__':
     ap.add_argument('--labels', action='store_true',
                     help='extract appliance labels only -> data/gold/appliance_map_eco.json')
     a = ap.parse_args()
+    setup_logging()
     if a.labels:
-        log('=== eco labels ===')
-        log('wrote %s' % write_slice('eco', extract_labels()))
-        log('=== done eco labels ===')
+        log.info('=== eco labels ===')
+        log.info('wrote %s' % write_slice('eco', extract_labels()))
+        log.info('=== done eco labels ===')
     else:
-        log('=== eco extract ===')
+        log.info('=== eco extract ===')
         extract(force=a.force)
-        log('=== done eco ===')
+        log.info('=== done eco ===')
