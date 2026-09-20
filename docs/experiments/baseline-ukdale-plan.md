@@ -243,9 +243,9 @@ If the fridge fails its 60 s gate, the client's 60 s default becomes an explicit
 | R5 (stretch) | +/-5% noise + 30 VA floor on top of 60 s | robustness under measurement error |
 | R6 | anomaly-loop rehearsal: take the R1 residual/UNKNOWN stream, inject synthetic anomaly events (known shapes), run classify -> open-question mechanics | the demoable-now loop demo, no humans involved |
 
-Artifacts: `baseline_ukdale.py` (CLI, mirroring the `eda_shelly.py` twin pattern) + `baseline_runs/` with
+Artifacts: `deprecated/analysis/baseline_ukdale.py` (CLI, mirroring the `deprecated/analysis/eda_shelly.py` twin pattern) + `deprecated/baseline_runs/` with
 `report.md` + `metrics.json` per run. Reuse the EDA loaders and primitives; do not fork them. When the real
-Shelly feed arrives, the existing domain-shift judge (`eda_shelly.py` vs `eda_reference_ukdale.json`) gates
+Shelly feed arrives, the existing domain-shift judge (`deprecated/analysis/eda_shelly.py` vs `deprecated/analysis/eda_reference_ukdale.json`) gates
 whether baseline conclusions transfer - PASS/FLAG bands are already defined there.
 
 ## 7. Pitfalls & honesty
@@ -364,7 +364,7 @@ transfer testing, not for learning curves.
 
 | Quantity | Value | Source |
 |---|---|---|
-| Rows / span / dt | 985,855 / 70.66 d / 6.0 s | EDA run, `eda_runs/ukdale_reference/` |
+| Rows / span / dt | 985,855 / 70.66 d / 6.0 s | EDA run, `deprecated/eda_runs/ukdale_reference/` |
 | Steps > 30 W per day | 715.0 | EDA |
 | 2+ appliances ON | 32.7% of time | EDA |
 | Monitor duty / median-ON | 80-82% / 111 W | EDA + episode count run (this doc) |

@@ -2,7 +2,7 @@
 
 **Scope.** Independent peer review of `docs/reports/dataset_eda/03_redd_eda.ipynb` (46 cells: 23 markdown, 23 code, 9 figures). REDD is this series’ split-phase / 110 V reference: the notebook asks what a US panel, two legs and a 3–4 s circuit clock do to the assumptions every later notebook inherits. Scope is the notebook as written — claims, code, printed output, prose and the machine-readable summary at the end. The builder’s own self-review (`03_redd_eda_review.md`) sits alongside this file and covers the same ground from the inside; I did not use it while forming these findings, and I have not edited it.
 
-**Method.** Everything below was recomputed from the source of truth: `data/fnd/redd/` (147 parquet — 116 main, 31 `_cache_`, 56,341,629 main rows), `data/gold/appliance_map_redd.json`, and `analysis/eda_fnd_lib.py` read directly. I re-implemented `channel_stats` (both the `legacy` and the floor-aware rule) and `simultaneity` from the library source and ran them over all 6 buildings, and I re-read the notebook’s own cell outputs to check prose against table. Where my number differs from the notebook’s I say which is right and why. Tags follow the series convention: `[insight only]` (true of REDD, not generalisable) versus `[collectable]` (something worth measuring on a client site).
+**Method.** Everything below was recomputed from the source of truth: `data/fnd/redd/` (147 parquet — 116 main, 31 `_cache_`, 56,341,629 main rows), `data/gold/appliance_map_redd.json`, and `src/pipelines/02_fnd_eda_notebooks/eda_fnd_lib.py` read directly. I re-implemented `channel_stats` (both the `legacy` and the floor-aware rule) and `simultaneity` from the library source and ran them over all 6 buildings, and I re-read the notebook’s own cell outputs to check prose against table. Where my number differs from the notebook’s I say which is right and why. Tags follow the series convention: `[insight only]` (true of REDD, not generalisable) versus `[collectable]` (something worth measuring on a client site).
 
 ---
 
@@ -249,7 +249,7 @@ Q6 is explicit that each window is the circuit’s highest-energy day, which is 
 
 - `docs/reports/dataset_eda/03_redd_eda.ipynb` — the notebook under review (46 cells, 9 figures).
 - `docs/reports/dataset_eda/00_overview.md` — series framing; line 15 repeats the “4 s circuits” wording (R6), and the cross-dataset claims that Q8’s b1-only number feeds.
-- `analysis/eda_fnd_lib.py` — `channel_stats` (legacy and floor rules), `simultaneity`, `kwh_of`; read directly and re-implemented for this review.
+- `src/pipelines/02_fnd_eda_notebooks/eda_fnd_lib.py` — `channel_stats` (legacy and floor rules), `simultaneity`, `kwh_of`; read directly and re-implemented for this review.
 - `data/fnd/redd/` — 147 parquet (116 main, 31 `_cache_`), 56,341,629 main rows; `data/gold/appliance_map_redd.json` — labels and canonical roles; `data/gold/thresholds.json`.
 - Kolter, J. Z. and Johnson, M. J., *REDD: A public data set for energy disaggregation research*, SustKDD 2011 — the citation printed in the release README itself (see R11); distributed for research use.
 - Batra, N. et al., *NILMTK: An Open Source Toolkit for NILM*, e-Energy 2014 — the conversion tooling whose caches Q5 decodes.

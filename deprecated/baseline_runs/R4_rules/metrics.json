@@ -1,0 +1,189 @@
+{
+ "variants": {
+  "(2,2) anchor": {
+   "fridge": {
+    "gt_episodes": 1762,
+    "det_episodes": 2632,
+    "matched": 1129,
+    "precision": 0.429,
+    "recall": 0.641,
+    "f1": 0.514,
+    "on_W": 109.0
+   },
+   "dish_washer": {
+    "gt_episodes": 179,
+    "det_episodes": 3096,
+    "matched": 54,
+    "precision": 0.017,
+    "recall": 0.302,
+    "f1": 0.033,
+    "on_W": 97.0
+   },
+   "kettle": {
+    "gt_episodes": 172,
+    "det_episodes": 371,
+    "matched": 168,
+    "precision": 0.453,
+    "recall": 0.977,
+    "f1": 0.619,
+    "on_W": 2884.0
+   },
+   "washing_machine": {
+    "gt_episodes": 507,
+    "det_episodes": 2478,
+    "matched": 94,
+    "precision": 0.038,
+    "recall": 0.185,
+    "f1": 0.063,
+    "on_W": 170.0
+   }
+  },
+  "(1,2) no detector dwell": {
+   "fridge": {
+    "gt_episodes": 1762,
+    "det_episodes": 3590,
+    "matched": 1129,
+    "precision": 0.314,
+    "recall": 0.641,
+    "f1": 0.422,
+    "on_W": 109.0
+   },
+   "dish_washer": {
+    "gt_episodes": 179,
+    "det_episodes": 4436,
+    "matched": 54,
+    "precision": 0.012,
+    "recall": 0.302,
+    "f1": 0.023,
+    "on_W": 97.0
+   },
+   "kettle": {
+    "gt_episodes": 172,
+    "det_episodes": 380,
+    "matched": 168,
+    "precision": 0.442,
+    "recall": 0.977,
+    "f1": 0.609,
+    "on_W": 2884.0
+   },
+   "washing_machine": {
+    "gt_episodes": 507,
+    "det_episodes": 3102,
+    "matched": 99,
+    "precision": 0.032,
+    "recall": 0.195,
+    "f1": 0.055,
+    "on_W": 170.0
+   }
+  },
+  "(2,1) loose GT": {
+   "fridge": {
+    "gt_episodes": 2117,
+    "det_episodes": 2632,
+    "matched": 1130,
+    "precision": 0.429,
+    "recall": 0.534,
+    "f1": 0.476,
+    "on_W": 109.0
+   },
+   "dish_washer": {
+    "gt_episodes": 229,
+    "det_episodes": 3096,
+    "matched": 54,
+    "precision": 0.017,
+    "recall": 0.236,
+    "f1": 0.032,
+    "on_W": 97.0
+   },
+   "kettle": {
+    "gt_episodes": 187,
+    "det_episodes": 371,
+    "matched": 168,
+    "precision": 0.453,
+    "recall": 0.898,
+    "f1": 0.602,
+    "on_W": 2884.0
+   },
+   "washing_machine": {
+    "gt_episodes": 1042,
+    "det_episodes": 2478,
+    "matched": 100,
+    "precision": 0.04,
+    "recall": 0.096,
+    "f1": 0.057,
+    "on_W": 170.0
+   }
+  },
+  "(1,1) no dwell rules": {
+   "fridge": {
+    "gt_episodes": 2117,
+    "det_episodes": 3590,
+    "matched": 1133,
+    "precision": 0.316,
+    "recall": 0.535,
+    "f1": 0.397,
+    "on_W": 109.0
+   },
+   "dish_washer": {
+    "gt_episodes": 229,
+    "det_episodes": 4436,
+    "matched": 54,
+    "precision": 0.012,
+    "recall": 0.236,
+    "f1": 0.023,
+    "on_W": 97.0
+   },
+   "kettle": {
+    "gt_episodes": 187,
+    "det_episodes": 380,
+    "matched": 168,
+    "precision": 0.442,
+    "recall": 0.898,
+    "f1": 0.593,
+    "on_W": 2884.0
+   },
+   "washing_machine": {
+    "gt_episodes": 1042,
+    "det_episodes": 3102,
+    "matched": 126,
+    "precision": 0.041,
+    "recall": 0.121,
+    "f1": 0.061,
+    "on_W": 170.0
+   }
+  }
+ },
+ "confusability_no_dwell": {
+  "fridge": {
+   "dish_washer": 1343,
+   "kettle": 121,
+   "washing_machine": 1138
+  },
+  "dish_washer": {
+   "fridge": 147,
+   "kettle": 60,
+   "washing_machine": 127
+  },
+  "kettle": {
+   "fridge": 176,
+   "dish_washer": 176,
+   "washing_machine": 175
+  },
+  "washing_machine": {
+   "fridge": 658,
+   "dish_washer": 667,
+   "kettle": 49
+  }
+ },
+ "monitor_negative_control": {
+  "monitor_signature_W": 117.0,
+  "monitor_own_floor_W": 113.0,
+  "det_episodes_in_reference": 991,
+  "gt_monitor_episodes": 24,
+  "duty_pct": 80.1
+ },
+ "notes": [
+  "dwell ablation: (det_min, gt_min) min-samples per variant; signatures unchanged",
+  "monitor control per plan 5.4: monitor channel itself run through the same pipeline"
+ ]
+}

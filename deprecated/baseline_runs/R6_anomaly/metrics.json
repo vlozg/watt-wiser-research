@@ -1,0 +1,69 @@
+{
+ "injections": [
+  {
+   "shape": "2 kW x 5 min step",
+   "level_W": 2000.0,
+   "dwell_s": 300,
+   "detected": true,
+   "latency_s": 0.0
+  },
+  {
+   "shape": "3 kW x 1 min spike",
+   "level_W": 3000.0,
+   "dwell_s": 60,
+   "detected": true,
+   "latency_s": 0.0
+  },
+  {
+   "shape": "800 W x 30 min stuck load",
+   "level_W": 800.0,
+   "dwell_s": 1800,
+   "detected": true,
+   "latency_s": 0.0
+  },
+  {
+   "shape": "1.2 kW x 10 min (on/off at 60 s)",
+   "level_W": 1200.0,
+   "dwell_s": 600,
+   "detected": true,
+   "latency_s": 0.0
+  },
+  {
+   "shape": "1.5 kW x 20 min at 03:17",
+   "level_W": 1500.0,
+   "dwell_s": 1200,
+   "detected": true,
+   "latency_s": 0.0
+  },
+  {
+   "shape": "2.5 kW x 45 min unusual",
+   "level_W": 2500.0,
+   "dwell_s": 2700,
+   "detected": true,
+   "latency_s": 0.0
+  },
+  {
+   "shape": "400 W x 2 h small-but-long",
+   "level_W": 400.0,
+   "dwell_s": 7200,
+   "detected": false,
+   "latency_s": null
+  },
+  {
+   "shape": "900 W x 10 min mid-morning",
+   "level_W": 900.0,
+   "dwell_s": 600,
+   "detected": true,
+   "latency_s": 0.0
+  }
+ ],
+ "background": {
+  "clean_detections": 7,
+  "clean_residual_kwh": 3.27
+ },
+ "notes": [
+  "residual = aggregate - always_on - attributed detections (R1 M0), clipped at 0",
+  "generic detector: 1000 W threshold, same hysteresis + 2-sample dwell",
+  "detection = a generic episode overlapping the injection window"
+ ]
+}

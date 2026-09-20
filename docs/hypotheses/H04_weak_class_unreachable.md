@@ -21,7 +21,7 @@ Scope discipline: "unreachable" is claimed **only** for this frozen variant fami
 
 ## Evidence so far
 
-- [quarantined] `baseline_runs/experiments/` E00-E19: 14 detector variants; best weak-class gain +0.006-0.012 F1 — negligible; documented failure modes are noise-floor over-fire (5-17x) and fragmented ground truth.
+- [quarantined] `deprecated/baseline_runs/experiments/` E00-E19: 14 detector variants; best weak-class gain +0.006-0.012 F1 — negligible; documented failure modes are noise-floor over-fire (5-17x) and fragmented ground truth.
 - [reviewed] The separation problem is real in the data: washer/dishwasher p50-ON 120-380 W vs fridge base 30-130 W and per-house always-on floors — the classes overlap in the priors table [`00_overview.md` §6].
 
 ## Open questions

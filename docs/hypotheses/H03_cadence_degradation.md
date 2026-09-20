@@ -19,7 +19,7 @@ At the deployment logging cadence (60 s class [quarantined assumption; 1-minute 
 
 ## Evidence so far
 
-- [quarantined] `baseline_runs/R2_rungs/`: on real mains, 60 s drops kettle 0.62→0.48, fridge 0.51→0.39, dishwasher→0.00. The calibration slice shows the *opposite* pattern (bucketing denoises it) — substrate choice flips the conclusion, which is exactly why the deployment verdict must come from real-mains substrates.
+- [quarantined] `deprecated/baseline_runs/R2_rungs/`: on real mains, 60 s drops kettle 0.62→0.48, fridge 0.51→0.39, dishwasher→0.00. The calibration slice shows the *opposite* pattern (bucketing denoises it) — substrate choice flips the conclusion, which is exactly why the deployment verdict must come from real-mains substrates.
 - [reviewed] AMPds2 is natively 60 s and its kettle/fridge episodes sit near the detection floor — a natural degraded-cadence proxy [`00_overview.md` §6].
 
 ## Open questions

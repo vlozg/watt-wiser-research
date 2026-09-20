@@ -56,7 +56,7 @@ extend-ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 # the notebook keeps a bare 'display' fallback for plain-python execution
-"analysis/*.ipynb" = ["B018"]
+"deprecated/analysis/*.ipynb" = ["B018"]
 
 [tool.pyrefly]
 preset = "basic"

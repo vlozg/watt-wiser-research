@@ -1,0 +1,632 @@
+{
+ "id": "E10",
+ "slug": "hyst_040_020",
+ "hypothesis": "wider hysteresis (enter .40, exit .20)",
+ "cfg": {
+  "thr_frac": 0.4
+ },
+ "substrates": {
+  "slice": {
+   "devices": {
+    "fridge": {
+     "gt": 1762,
+     "det": 3320,
+     "matched": 1119,
+     "P": 0.337,
+     "R": 0.635,
+     "F1": 0.44,
+     "energy_ratio_p50": 0.99
+    },
+    "dish_washer": {
+     "gt": 179,
+     "det": 3489,
+     "matched": 64,
+     "P": 0.018,
+     "R": 0.358,
+     "F1": 0.035,
+     "energy_ratio_p50": 0.94
+    },
+    "kettle": {
+     "gt": 172,
+     "det": 370,
+     "matched": 168,
+     "P": 0.454,
+     "R": 0.977,
+     "F1": 0.62,
+     "energy_ratio_p50": 0.99
+    },
+    "washing_machine": {
+     "gt": 507,
+     "det": 2239,
+     "matched": 99,
+     "P": 0.044,
+     "R": 0.195,
+     "F1": 0.072,
+     "energy_ratio_p50": 0.97
+    }
+   },
+   "summary": {
+    "weak_mean_f1": 0.053,
+    "kettle_f1": 0.62,
+    "fridge_f1": 0.44,
+    "all_mean_f1": 0.292,
+    "n_devices": 4,
+    "fp_rate_pct": 30.5,
+    "seconds": 0.1
+   },
+   "f2_diag": null,
+   "confusion": null
+  },
+  "house2": {
+   "devices": {
+    "laptop": {
+     "gt": 453,
+     "det": 2288,
+     "matched": 11,
+     "P": 0.005,
+     "R": 0.024,
+     "F1": 0.008
+    },
+    "monitor": {
+     "gt": 299,
+     "det": 1743,
+     "matched": 13,
+     "P": 0.007,
+     "R": 0.043,
+     "F1": 0.013
+    },
+    "speakers": {
+     "gt": 198,
+     "det": 3580,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0
+    },
+    "server": {
+     "gt": 19,
+     "det": 3848,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0
+    },
+    "router": {
+     "gt": 2626,
+     "det": 4517,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0
+    },
+    "server_hdd": {
+     "gt": 1,
+     "det": 0,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0
+    },
+    "kettle": {
+     "gt": 535,
+     "det": 1420,
+     "matched": 430,
+     "P": 0.303,
+     "R": 0.804,
+     "F1": 0.44
+    },
+    "rice_cooker": {
+     "gt": 52,
+     "det": 2133,
+     "matched": 6,
+     "P": 0.003,
+     "R": 0.115,
+     "F1": 0.005
+    },
+    "running_machine": {
+     "gt": 58,
+     "det": 3580,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0
+    },
+    "laptop2": {
+     "gt": 396,
+     "det": 2104,
+     "matched": 23,
+     "P": 0.011,
+     "R": 0.058,
+     "F1": 0.018
+    },
+    "washing_machine": {
+     "gt": 843,
+     "det": 2517,
+     "matched": 44,
+     "P": 0.017,
+     "R": 0.052,
+     "F1": 0.026
+    },
+    "dish_washer": {
+     "gt": 264,
+     "det": 1771,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0
+    },
+    "fridge": {
+     "gt": 123,
+     "det": 3580,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0
+    },
+    "microwave": {
+     "gt": 452,
+     "det": 2697,
+     "matched": 241,
+     "P": 0.089,
+     "R": 0.533,
+     "F1": 0.153
+    },
+    "toaster": {
+     "gt": 25,
+     "det": 2980,
+     "matched": 10,
+     "P": 0.003,
+     "R": 0.4,
+     "F1": 0.007
+    },
+    "playstation": {
+     "gt": 9,
+     "det": 0,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0
+    },
+    "modem": {
+     "gt": 2931,
+     "det": 3580,
+     "matched": 14,
+     "P": 0.004,
+     "R": 0.005,
+     "F1": 0.004
+    },
+    "cooker": {
+     "gt": 99,
+     "det": 3580,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0
+    }
+   },
+   "summary": {
+    "weak_mean_f1": 0.013,
+    "kettle_f1": 0.44,
+    "fridge_f1": 0.0,
+    "all_mean_f1": 0.037,
+    "n_devices": 18,
+    "fp_rate_pct": 0.0,
+    "seconds": 0.5
+   },
+   "f2_diag": null,
+   "confusion": null
+  },
+  "house5": {
+   "devices": {
+    "stereo_speakers_bedroom": {
+     "gt": 4,
+     "det": 0,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0
+    },
+    "i7_desktop": {
+     "gt": 1931,
+     "det": 5630,
+     "matched": 13,
+     "P": 0.002,
+     "R": 0.007,
+     "F1": 0.003
+    },
+    "hairdryer": {
+     "gt": 237,
+     "det": 3029,
+     "matched": 137,
+     "P": 0.045,
+     "R": 0.578,
+     "F1": 0.084
+    },
+    "primary_tv": {
+     "gt": 473,
+     "det": 7669,
+     "matched": 20,
+     "P": 0.003,
+     "R": 0.042,
+     "F1": 0.005
+    },
+    "24_inch_lcd_bedroom": {
+     "gt": 101,
+     "det": 6775,
+     "matched": 2,
+     "P": 0.0,
+     "R": 0.02,
+     "F1": 0.001
+    },
+    "treadmill": {
+     "gt": 575,
+     "det": 13092,
+     "matched": 1,
+     "P": 0.0,
+     "R": 0.002,
+     "F1": 0.0
+    },
+    "network_attached_storage": {
+     "gt": 130,
+     "det": 12009,
+     "matched": 1,
+     "P": 0.0,
+     "R": 0.008,
+     "F1": 0.0
+    },
+    "core2_server": {
+     "gt": 30052,
+     "det": 7296,
+     "matched": 171,
+     "P": 0.023,
+     "R": 0.006,
+     "F1": 0.009
+    },
+    "24_inch_lcd": {
+     "gt": 540,
+     "det": 11574,
+     "matched": 26,
+     "P": 0.002,
+     "R": 0.048,
+     "F1": 0.004
+    },
+    "steam_iron": {
+     "gt": 4,
+     "det": 2815,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0
+    },
+    "nespresso_pixie": {
+     "gt": 83,
+     "det": 3337,
+     "matched": 16,
+     "P": 0.005,
+     "R": 0.193,
+     "F1": 0.009
+    },
+    "atom_pc": {
+     "gt": 11,
+     "det": 11551,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0
+    },
+    "toaster": {
+     "gt": 28,
+     "det": 3015,
+     "matched": 8,
+     "P": 0.003,
+     "R": 0.286,
+     "F1": 0.005
+    },
+    "home_theatre_amp": {
+     "gt": 494,
+     "det": 12075,
+     "matched": 2,
+     "P": 0.0,
+     "R": 0.004,
+     "F1": 0.0
+    },
+    "sky_hd_box": {
+     "gt": 2043,
+     "det": 13092,
+     "matched": 35,
+     "P": 0.003,
+     "R": 0.017,
+     "F1": 0.005
+    },
+    "kettle": {
+     "gt": 155,
+     "det": 2816,
+     "matched": 112,
+     "P": 0.04,
+     "R": 0.723,
+     "F1": 0.075
+    },
+    "fridge_freezer": {
+     "gt": 9725,
+     "det": 5853,
+     "matched": 188,
+     "P": 0.032,
+     "R": 0.019,
+     "F1": 0.024
+    },
+    "oven": {
+     "gt": 6353,
+     "det": 13092,
+     "matched": 42,
+     "P": 0.003,
+     "R": 0.007,
+     "F1": 0.004
+    },
+    "electric_hob": {
+     "gt": 1889,
+     "det": 2844,
+     "matched": 423,
+     "P": 0.149,
+     "R": 0.224,
+     "F1": 0.179
+    },
+    "dishwasher": {
+     "gt": 762,
+     "det": 6363,
+     "matched": 10,
+     "P": 0.002,
+     "R": 0.013,
+     "F1": 0.003
+    },
+    "microwave": {
+     "gt": 11181,
+     "det": 9475,
+     "matched": 75,
+     "P": 0.008,
+     "R": 0.007,
+     "F1": 0.007
+    },
+    "washer_dryer": {
+     "gt": 9733,
+     "det": 13092,
+     "matched": 61,
+     "P": 0.005,
+     "R": 0.006,
+     "F1": 0.005
+    },
+    "vacuum_cleaner": {
+     "gt": 21,
+     "det": 0,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0
+    }
+   },
+   "summary": {
+    "weak_mean_f1": 0.004,
+    "kettle_f1": 0.075,
+    "fridge_f1": 0.024,
+    "all_mean_f1": 0.018,
+    "n_devices": 23,
+    "fp_rate_pct": 0.0,
+    "seconds": 1.7
+   },
+   "f2_diag": null,
+   "confusion": null
+  },
+  "ampds2": {
+   "devices": {
+    "RSE": {
+     "gt": 4,
+     "det": 3131,
+     "matched": 1,
+     "P": 0.0,
+     "R": 0.25,
+     "F1": 0.001,
+     "energy_ratio_p50": 0.54
+    },
+    "GRE": {
+     "gt": 109,
+     "det": 4677,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0,
+     "energy_ratio_p50": null
+    },
+    "MHE": {
+     "gt": 4,
+     "det": 15100,
+     "matched": 1,
+     "P": 0.0,
+     "R": 0.25,
+     "F1": 0.0,
+     "energy_ratio_p50": 0.93
+    },
+    "B1E": {
+     "gt": 874,
+     "det": 2290,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0,
+     "energy_ratio_p50": null
+    },
+    "BME": {
+     "gt": 2076,
+     "det": 2343,
+     "matched": 6,
+     "P": 0.003,
+     "R": 0.003,
+     "F1": 0.003,
+     "energy_ratio_p50": 0.02
+    },
+    "CWE": {
+     "gt": 427,
+     "det": 4669,
+     "matched": 2,
+     "P": 0.0,
+     "R": 0.005,
+     "F1": 0.001,
+     "energy_ratio_p50": 1.03
+    },
+    "DWE": {
+     "gt": 2003,
+     "det": 14437,
+     "matched": 29,
+     "P": 0.002,
+     "R": 0.014,
+     "F1": 0.004,
+     "energy_ratio_p50": 1.35
+    },
+    "EQE": {
+     "gt": 4,
+     "det": 2629,
+     "matched": 1,
+     "P": 0.0,
+     "R": 0.25,
+     "F1": 0.001,
+     "energy_ratio_p50": 0.99
+    },
+    "FRE": {
+     "gt": 7,
+     "det": 4677,
+     "matched": 1,
+     "P": 0.0,
+     "R": 0.143,
+     "F1": 0.0,
+     "energy_ratio_p50": 0.95
+    },
+    "HPE": {
+     "gt": 9141,
+     "det": 2629,
+     "matched": 115,
+     "P": 0.044,
+     "R": 0.013,
+     "F1": 0.02,
+     "energy_ratio_p50": 0.08
+    },
+    "OFE": {
+     "gt": 4,
+     "det": 2290,
+     "matched": 1,
+     "P": 0.0,
+     "R": 0.25,
+     "F1": 0.001,
+     "energy_ratio_p50": 0.16
+    },
+    "UTE": {
+     "gt": 4,
+     "det": 2343,
+     "matched": 1,
+     "P": 0.0,
+     "R": 0.25,
+     "F1": 0.001,
+     "energy_ratio_p50": 0.18
+    },
+    "WOE": {
+     "gt": 91,
+     "det": 5769,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0,
+     "energy_ratio_p50": null
+    },
+    "B2E": {
+     "gt": 1562,
+     "det": 2343,
+     "matched": 2,
+     "P": 0.001,
+     "R": 0.001,
+     "F1": 0.001,
+     "energy_ratio_p50": 0.15
+    },
+    "CDE": {
+     "gt": 628,
+     "det": 8168,
+     "matched": 198,
+     "P": 0.024,
+     "R": 0.315,
+     "F1": 0.045,
+     "energy_ratio_p50": 0.99
+    },
+    "DNE": {
+     "gt": 984,
+     "det": 2343,
+     "matched": 2,
+     "P": 0.001,
+     "R": 0.002,
+     "F1": 0.001,
+     "energy_ratio_p50": 1.47
+    },
+    "EBE": {
+     "gt": 13,
+     "det": 0,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0,
+     "energy_ratio_p50": null
+    },
+    "FGE": {
+     "gt": 28047,
+     "det": 5769,
+     "matched": 827,
+     "P": 0.143,
+     "R": 0.029,
+     "F1": 0.049,
+     "energy_ratio_p50": 1.31
+    },
+    "HTE": {
+     "gt": 22621,
+     "det": 2290,
+     "matched": 10,
+     "P": 0.004,
+     "R": 0.0,
+     "F1": 0.001,
+     "energy_ratio_p50": 0.83
+    },
+    "OUE": {
+     "gt": 1,
+     "det": 0,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0,
+     "energy_ratio_p50": null
+    },
+    "TVE": {
+     "gt": 5,
+     "det": 2629,
+     "matched": 1,
+     "P": 0.0,
+     "R": 0.2,
+     "F1": 0.001,
+     "energy_ratio_p50": 1.75
+    },
+    "UNE": {
+     "gt": 6199,
+     "det": 3177,
+     "matched": 10,
+     "P": 0.003,
+     "R": 0.002,
+     "F1": 0.002,
+     "energy_ratio_p50": 0.58
+    }
+   },
+   "summary": {
+    "weak_mean_f1": 0.013,
+    "kettle_f1": null,
+    "fridge_f1": 0.049,
+    "all_mean_f1": 0.006,
+    "n_devices": 22,
+    "fp_rate_pct": 0.0,
+    "seconds": 1.1
+   },
+   "f2_diag": null,
+   "confusion": null
+  }
+ }
+}

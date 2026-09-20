@@ -116,7 +116,7 @@ silent corruption of mostly-numeric columns).
 Every extractor was cross-checked against NILMTK's official converter for the
 same dataset (`nilmtk/dataset_converters/<name>/convert_<name>.py`, master
 branch), re-run on the same source files and compared row-for-row with the
-parquets (probe scripts under `analysis/xcheck/`, runnable from any cwd).
+parquets (probe scripts under `deprecated/analysis/xcheck/`, runnable from any cwd).
 
 | dataset | NILMTK check | result |
 | --- | --- | --- |

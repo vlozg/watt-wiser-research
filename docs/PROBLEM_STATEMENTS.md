@@ -13,7 +13,7 @@ Every factual claim in this doc carries exactly one tag:
 |---|---|
 | **[reviewed]** | Appears in owner-reviewed, approved material: `docs/knowledge/`, `docs/research/`, `docs/reports/dataset_eda/`, `src/pipelines/00_download_dataset/`, `src/pipelines/01_extract_dataset/`, `src/pipelines/02_fnd_eda_notebooks/` |
 | **[client]** | From the client-provided original `docs/client/docx/Calibration_Refined_for_Professor_Review (1).docx` (gitignored; client input, not agent-generated). "§n" refers to that document's sections |
-| **[quarantined]** | Exists in the repo but has **not** been owner-reviewed (`baseline_runs/`, `docs/experiments/`, `docs/reports/phase1-report-draft.md`, `docs/datasets/`, `docs/product/`, `analysis/`, `data/gold/`). Recorded as a *claim*, never as fact |
+| **[quarantined]** | Exists in the repo but has **not** been owner-reviewed (`deprecated/baseline_runs/`, `docs/experiments/`, `docs/reports/phase1-report-draft.md`, `docs/datasets/`, `docs/product/`, `deprecated/analysis/`, `data/gold/`). Recorded as a *claim*, never as fact |
 | **[owner]** | Stated by the project owner in conversation (2026-09-20); re-confirm with the client where it changes product behaviour |
 
 [quarantined] claims are exactly what the hypothesis registry (`docs/hypotheses/README.md`) exists to verify or discard. Numbers from quarantined artifacts can never promote a hypothesis to *proved* by themselves.
@@ -100,7 +100,7 @@ Three distinct objects, often conflated:
 2. **The anchor** — a deliberately simple, rules-based detector ("the dumbest honest thing that works"), explainable to the client, run under the harness. The client doc leaves rule-vs-ML open [client §9 Q3]; our stance: rules first.
 3. **The floor** — the measured numbers any future model must beat.
 
-The existing campaign artifacts (`baseline_runs/`, spec `docs/experiments/baseline-ukdale-plan.md`) claim all three but are [quarantined] — and, critically, their calibration side was **idealized**: signatures were derived from clean per-device submeter traces, which the real product will never have. Their numbers are upper bounds recorded per hypothesis, not evidence. The button-press calibration simulation (H02) is the instrument that re-derives them under the real protocol.
+The existing campaign artifacts (`deprecated/baseline_runs/`, spec `docs/experiments/baseline-ukdale-plan.md`) claim all three but are [quarantined] — and, critically, their calibration side was **idealized**: signatures were derived from clean per-device submeter traces, which the real product will never have. Their numbers are upper bounds recorded per hypothesis, not evidence. The button-press calibration simulation (H02) is the instrument that re-derives them under the real protocol.
 
 ---
 

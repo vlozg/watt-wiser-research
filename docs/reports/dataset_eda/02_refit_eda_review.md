@@ -3,7 +3,7 @@
 **Scope.** `docs/reports/dataset_eda/02_refit_eda.ipynb` only. The stale `03`-`07` notebooks are out of scope.
 
 **Method.** Read the notebook cell by cell; re-derived every headline number directly from
-`data/fnd/refit/` using `analysis/eda_fnd_lib.py` and independent re-implementations of its two
+`data/fnd/refit/` using `src/pipelines/02_fnd_eda_notebooks/eda_fnd_lib.py` and independent re-implementations of its two
 run-detectors; read the release's own documentation (`data/raw/REFIT/CLEAN_READ_ME_081116.txt`,
 `REFIT_Readme.txt`) and the dataset's data descriptor (**Murray, Stankovic & Stankovic, *Scientific
 Data* 4:160122, 2017** — full text retrieved); cross-checked the statistics against what the

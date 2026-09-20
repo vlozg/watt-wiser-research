@@ -1,0 +1,129 @@
+{
+ "protocol": {
+  "title": "UK-DALE FULL house1 (real mains, 6 s)",
+  "calibration_days": 7.0,
+  "reference_days_wall": 1572.23,
+  "reference_days_rows": 1482.36,
+  "dt_s": 6.0,
+  "always_on_W": 169.0,
+  "detector": "M0 threshold+hysteresis+dwell",
+  "notes": [
+   "channel_1 = real aggregate mains",
+   "calibration starts 2012-12-29 12:08:04: first 7-d window where aggregate + all archetype channels are dense (house rollout artifact)",
+   "house label for dish_washer is composite: dishwasher"
+  ]
+ },
+ "signatures": {
+  "fridge": {
+   "on_W": 88.0,
+   "on_p10_W": 84.0,
+   "n_cal_episodes": 389,
+   "energy_share_pct": 8.6
+  },
+  "dish_washer": {
+   "on_W": 123.0,
+   "on_p10_W": 121.0,
+   "n_cal_episodes": 7,
+   "energy_share_pct": 3.6
+  },
+  "washing_machine": {
+   "on_W": 208.0,
+   "on_p10_W": 19.0,
+   "n_cal_episodes": 254,
+   "energy_share_pct": 5.3
+  },
+  "kettle": {
+   "on_W": 2321.0,
+   "on_p10_W": 2274.0,
+   "n_cal_episodes": 29,
+   "energy_share_pct": 3.3
+  }
+ },
+ "per_appliance": {
+  "fridge": {
+   "gt_episodes": 543982,
+   "det_episodes": 36379,
+   "matched": 1030,
+   "precision": 0.028,
+   "recall": 0.002,
+   "f1": 0.004,
+   "onset_err_s_p50": 0.0,
+   "onset_err_s_p90": 6.0,
+   "offset_err_s_p50": 12.0,
+   "energy_est_over_gt_p50": 1.03,
+   "gt_energy_kwh": 1341.4
+  },
+  "dish_washer": {
+   "gt_episodes": 31811,
+   "det_episodes": 34942,
+   "matched": 18,
+   "precision": 0.001,
+   "recall": 0.001,
+   "f1": 0.001,
+   "onset_err_s_p50": 6.0,
+   "onset_err_s_p90": 7.8,
+   "offset_err_s_p50": 12.0,
+   "energy_est_over_gt_p50": 4.69,
+   "gt_energy_kwh": 833.5
+  },
+  "washing_machine": {
+   "gt_episodes": 79511,
+   "det_episodes": 36521,
+   "matched": 4097,
+   "precision": 0.112,
+   "recall": 0.052,
+   "f1": 0.071,
+   "onset_err_s_p50": 6.0,
+   "onset_err_s_p90": 12.0,
+   "offset_err_s_p50": 6.0,
+   "energy_est_over_gt_p50": 1.17,
+   "gt_energy_kwh": 842.1
+  },
+  "kettle": {
+   "gt_episodes": 10697,
+   "det_episodes": 33578,
+   "matched": 4919,
+   "precision": 0.146,
+   "recall": 0.46,
+   "f1": 0.222,
+   "onset_err_s_p50": 0.0,
+   "onset_err_s_p90": 6.0,
+   "offset_err_s_p50": 6.0,
+   "energy_est_over_gt_p50": 0.99,
+   "gt_energy_kwh": 434.2
+  }
+ },
+ "confusability": {
+  "fridge": {
+   "dish_washer": 494632,
+   "washing_machine": 383100,
+   "kettle": 27416
+  },
+  "dish_washer": {
+   "fridge": 31420,
+   "washing_machine": 30866,
+   "kettle": 12162
+  },
+  "washing_machine": {
+   "fridge": 77795,
+   "dish_washer": 77424,
+   "kettle": 17442
+  },
+  "kettle": {
+   "fridge": 10683,
+   "dish_washer": 10681,
+   "washing_machine": 10665
+  }
+ },
+ "negative_control": {
+  "detections_total": 141420,
+  "false_positives": 23909,
+  "fp_rate_pct": 16.9,
+  "fp_energy_kwh": 306.93
+ },
+ "residual": {
+  "above_always_on_kwh": 7464.1,
+  "covered_pct_of_above_on": 99.2,
+  "residual_kwh": 62.8
+ }
+}

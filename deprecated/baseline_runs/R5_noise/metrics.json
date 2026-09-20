@@ -1,0 +1,180 @@
+{
+ "variants": {
+  "60 s clean (R2 anchor)": {
+   "fridge": {
+    "gt_episodes": 1527,
+    "det_episodes": 1332,
+    "matched": 1088,
+    "precision": 0.817,
+    "recall": 0.713,
+    "f1": 0.761,
+    "on_W": 108.72727272727273
+   },
+   "dish_washer": {
+    "gt_episodes": 31,
+    "det_episodes": 1383,
+    "matched": 5,
+    "precision": 0.004,
+    "recall": 0.161,
+    "f1": 0.007,
+    "on_W": 97.0
+   },
+   "kettle": {
+    "gt_episodes": 163,
+    "det_episodes": 239,
+    "matched": 153,
+    "precision": 0.64,
+    "recall": 0.939,
+    "f1": 0.761,
+    "on_W": 1872.3585858585857
+   },
+   "washing_machine": {
+    "gt_episodes": 31,
+    "det_episodes": 1076,
+    "matched": 14,
+    "precision": 0.013,
+    "recall": 0.452,
+    "f1": 0.025,
+    "on_W": 152.1
+   },
+   "_fp": {
+    "rate_pct": 1.3,
+    "total": 4030,
+    "fp": 52
+   }
+  },
+  "60 s + 5% noise": {
+   "fridge": {
+    "gt_episodes": 1527,
+    "det_episodes": 1332,
+    "matched": 1088,
+    "precision": 0.817,
+    "recall": 0.713,
+    "f1": 0.761,
+    "on_W": 108.72727272727273
+   },
+   "dish_washer": {
+    "gt_episodes": 31,
+    "det_episodes": 1383,
+    "matched": 5,
+    "precision": 0.004,
+    "recall": 0.161,
+    "f1": 0.007,
+    "on_W": 97.0
+   },
+   "kettle": {
+    "gt_episodes": 163,
+    "det_episodes": 239,
+    "matched": 153,
+    "precision": 0.64,
+    "recall": 0.939,
+    "f1": 0.761,
+    "on_W": 1958.617076064093
+   },
+   "washing_machine": {
+    "gt_episodes": 31,
+    "det_episodes": 1068,
+    "matched": 14,
+    "precision": 0.013,
+    "recall": 0.452,
+    "f1": 0.025,
+    "on_W": 152.1
+   },
+   "_fp": {
+    "rate_pct": 1.3,
+    "total": 4022,
+    "fp": 52
+   }
+  },
+  "60 s + 30 VA floor": {
+   "fridge": {
+    "gt_episodes": 1501,
+    "det_episodes": 1332,
+    "matched": 1088,
+    "precision": 0.817,
+    "recall": 0.725,
+    "f1": 0.768,
+    "on_W": 108.8
+   },
+   "dish_washer": {
+    "gt_episodes": 57,
+    "det_episodes": 1383,
+    "matched": 18,
+    "precision": 0.013,
+    "recall": 0.316,
+    "f1": 0.025,
+    "on_W": 97.0
+   },
+   "kettle": {
+    "gt_episodes": 163,
+    "det_episodes": 239,
+    "matched": 153,
+    "precision": 0.64,
+    "recall": 0.939,
+    "f1": 0.761,
+    "on_W": 1872.3585858585857
+   },
+   "washing_machine": {
+    "gt_episodes": 39,
+    "det_episodes": 1032,
+    "matched": 16,
+    "precision": 0.016,
+    "recall": 0.41,
+    "f1": 0.03,
+    "on_W": 162.82857142857142
+   },
+   "_fp": {
+    "rate_pct": 1.3,
+    "total": 3986,
+    "fp": 52
+   }
+  },
+  "60 s + noise + floor": {
+   "fridge": {
+    "gt_episodes": 1501,
+    "det_episodes": 1332,
+    "matched": 1088,
+    "precision": 0.817,
+    "recall": 0.725,
+    "f1": 0.768,
+    "on_W": 108.8
+   },
+   "dish_washer": {
+    "gt_episodes": 57,
+    "det_episodes": 1383,
+    "matched": 18,
+    "precision": 0.013,
+    "recall": 0.316,
+    "f1": 0.025,
+    "on_W": 97.0
+   },
+   "kettle": {
+    "gt_episodes": 163,
+    "det_episodes": 239,
+    "matched": 153,
+    "precision": 0.64,
+    "recall": 0.939,
+    "f1": 0.761,
+    "on_W": 1801.8277091721372
+   },
+   "washing_machine": {
+    "gt_episodes": 39,
+    "det_episodes": 1016,
+    "matched": 16,
+    "precision": 0.016,
+    "recall": 0.41,
+    "f1": 0.03,
+    "on_W": 162.82857142857142
+   },
+   "_fp": {
+    "rate_pct": 1.3,
+    "total": 3970,
+    "fp": 52
+   }
+  }
+ },
+ "notes": [
+  "plan 3.4: noise only on levels above ~230 W; 30 VA floor zeroes small readings",
+  "transforms applied to aggregate AND submeters identically; seed 42"
+ ]
+}

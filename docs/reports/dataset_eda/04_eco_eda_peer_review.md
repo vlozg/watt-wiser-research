@@ -2,7 +2,7 @@
 
 **Scope.** Independent review of `docs/reports/dataset_eda/04_eco_eda.ipynb`, the ECO (Swiss, 2012) pass over `data/fnd/eco/`: six apartments, five with a complete 17-column smart-meter panel, 49 plug meters, ten seasonal occupancy windows. This is the series reference for a *measured* panel-vs-plug relation, 1 Hz clock conventions and occupancy-labelled load. Companion: `03_redd_eda_peer_review.md` (REDD), `06_ampds2_eda_peer_review.md` (integrity benchmark).
 
-**Method.** Every headline number was recomputed from `data/fnd/eco/*.parquet` with `./.venv/bin/python` (pandas, pyarrow; `analysis/eda_fnd_lib.py` for `channel_stats` and `kwh_of` so the definitions match the notebook's exactly). No notebook output was trusted. Where the claim under test is the notebook's own printed table, I first reproduce its definitions, then vary them one at a time (e.g. span-based coverage vs sample-based coverage; plug sum with and without a nested group).
+**Method.** Every headline number was recomputed from `data/fnd/eco/*.parquet` with `./.venv/bin/python` (pandas, pyarrow; `src/pipelines/02_fnd_eda_notebooks/eda_fnd_lib.py` for `channel_stats` and `kwh_of` so the definitions match the notebook's exactly). No notebook output was trusted. Where the claim under test is the notebook's own printed table, I first reproduce its definitions, then vary them one at a time (e.g. span-based coverage vs sample-based coverage; plug sum with and without a nested group).
 
 ---
 
@@ -157,7 +157,7 @@ The ECO paper itself (Beckel et al., 2014) publishes the plug inventory and the 
 
 - `docs/reports/dataset_eda/04_eco_eda.ipynb` and its build-time review (claim inventory).
 - `docs/reports/dataset_eda/03_redd_eda.ipynb` (REDD panel maximum, threshold audit) and `03_redd_eda_peer_review.md`.
-- `data/fnd/eco/`, `data/gold/appliance_map_eco.json`; `analysis/eda_fnd_lib.py` (`channel_stats`, `kwh_of`).
+- `data/fnd/eco/`, `data/gold/appliance_map_eco.json`; `src/pipelines/02_fnd_eda_notebooks/eda_fnd_lib.py` (`channel_stats`, `kwh_of`).
 - Beckel, C., Kleiminger, W., Cicchetti, R., Staake, T., Santini, S. (2014). The ECO Data Set and the Performance of Non-Intrusive Load Monitoring Algorithms. BuildSys '14.
 - Kleiminger, W., Beckel, C., Santini, S. (2015). Household Occupancy Monitoring Using Electricity Meters. UbiComp '15.
 - Kelly, J., Knottenbelt, W. (2015). Metadata for Energy Disaggregation (NILM Metadata).

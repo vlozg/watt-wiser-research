@@ -1,0 +1,294 @@
+{
+ "rungs": {
+  "slice 60 s mean": {
+   "fridge": {
+    "gt_episodes": 1527,
+    "det_episodes": 1332,
+    "matched": 1088,
+    "precision": 0.817,
+    "recall": 0.713,
+    "f1": 0.761,
+    "on_W": 108.72727272727273
+   },
+   "dish_washer": {
+    "gt_episodes": 31,
+    "det_episodes": 1383,
+    "matched": 5,
+    "precision": 0.004,
+    "recall": 0.161,
+    "f1": 0.007,
+    "on_W": 97.0
+   },
+   "kettle": {
+    "gt_episodes": 163,
+    "det_episodes": 239,
+    "matched": 153,
+    "precision": 0.64,
+    "recall": 0.939,
+    "f1": 0.761,
+    "on_W": 1872.3585858585857
+   },
+   "washing_machine": {
+    "gt_episodes": 31,
+    "det_episodes": 1076,
+    "matched": 14,
+    "precision": 0.013,
+    "recall": 0.452,
+    "f1": 0.025,
+    "on_W": 152.1
+   }
+  },
+  "slice 60 s max": {
+   "fridge": {
+    "gt_episodes": 1618,
+    "det_episodes": 1466,
+    "matched": 1085,
+    "precision": 0.74,
+    "recall": 0.671,
+    "f1": 0.704,
+    "on_W": 110.0
+   },
+   "dish_washer": {
+    "gt_episodes": 34,
+    "det_episodes": 1569,
+    "matched": 10,
+    "precision": 0.006,
+    "recall": 0.294,
+    "f1": 0.012,
+    "on_W": 97.0
+   },
+   "kettle": {
+    "gt_episodes": 163,
+    "det_episodes": 245,
+    "matched": 159,
+    "precision": 0.649,
+    "recall": 0.975,
+    "f1": 0.779,
+    "on_W": 2906.5
+   },
+   "washing_machine": {
+    "gt_episodes": 31,
+    "det_episodes": 1072,
+    "matched": 24,
+    "precision": 0.022,
+    "recall": 0.774,
+    "f1": 0.044,
+    "on_W": 221.0
+   }
+  },
+  "slice 300 s mean": {
+   "fridge": {
+    "gt_episodes": 1501,
+    "det_episodes": 1008,
+    "matched": 897,
+    "precision": 0.89,
+    "recall": 0.598,
+    "f1": 0.715,
+    "on_W": 108.00999999999999
+   },
+   "dish_washer": {
+    "gt_episodes": 23,
+    "det_episodes": 1100,
+    "matched": 15,
+    "precision": 0.014,
+    "recall": 0.652,
+    "f1": 0.027,
+    "on_W": 96.94117647058823
+   },
+   "kettle": {
+    "gt_episodes": 62,
+    "det_episodes": 118,
+    "matched": 34,
+    "precision": 0.288,
+    "recall": 0.548,
+    "f1": 0.378,
+    "on_W": 809.64
+   },
+   "washing_machine": {
+    "gt_episodes": 29,
+    "det_episodes": 714,
+    "matched": 19,
+    "precision": 0.027,
+    "recall": 0.655,
+    "f1": 0.051,
+    "on_W": 168.95833333333334
+   }
+  },
+  "slice 300 s max": {
+   "fridge": {
+    "gt_episodes": 1527,
+    "det_episodes": 1109,
+    "matched": 981,
+    "precision": 0.885,
+    "recall": 0.642,
+    "f1": 0.744,
+    "on_W": 111.0
+   },
+   "dish_washer": {
+    "gt_episodes": 26,
+    "det_episodes": 1121,
+    "matched": 14,
+    "precision": 0.012,
+    "recall": 0.538,
+    "f1": 0.024,
+    "on_W": 102.5
+   },
+   "kettle": {
+    "gt_episodes": 63,
+    "det_episodes": 147,
+    "matched": 61,
+    "precision": 0.415,
+    "recall": 0.968,
+    "f1": 0.581,
+    "on_W": 2913.0
+   },
+   "washing_machine": {
+    "gt_episodes": 45,
+    "det_episodes": 1046,
+    "matched": 21,
+    "precision": 0.02,
+    "recall": 0.467,
+    "f1": 0.038,
+    "on_W": 8.0
+   }
+  },
+  "house1 60 s mean": {
+   "fridge": {
+    "gt_episodes": 40186,
+    "det_episodes": 18955,
+    "matched": 11614,
+    "precision": 0.613,
+    "recall": 0.289,
+    "f1": 0.393,
+    "on_W": 87.7
+   },
+   "dish_washer": {
+    "gt_episodes": 804,
+    "det_episodes": 16542,
+    "matched": 23,
+    "precision": 0.001,
+    "recall": 0.029,
+    "f1": 0.003,
+    "on_W": 123.05
+   },
+   "washing_machine": {
+    "gt_episodes": 1499,
+    "det_episodes": 14220,
+    "matched": 187,
+    "precision": 0.013,
+    "recall": 0.125,
+    "f1": 0.024,
+    "on_W": 173.9
+   },
+   "kettle": {
+    "gt_episodes": 6761,
+    "det_episodes": 14567,
+    "matched": 5087,
+    "precision": 0.349,
+    "recall": 0.752,
+    "f1": 0.477,
+    "on_W": 1866.8
+   }
+  },
+  "house1 60 s max": {
+   "fridge": {
+    "gt_episodes": 45015,
+    "det_episodes": 20561,
+    "matched": 13219,
+    "precision": 0.643,
+    "recall": 0.294,
+    "f1": 0.403,
+    "on_W": 89.0
+   },
+   "dish_washer": {
+    "gt_episodes": 964,
+    "det_episodes": 19313,
+    "matched": 19,
+    "precision": 0.001,
+    "recall": 0.02,
+    "f1": 0.002,
+    "on_W": 124.0
+   },
+   "washing_machine": {
+    "gt_episodes": 1483,
+    "det_episodes": 13057,
+    "matched": 274,
+    "precision": 0.021,
+    "recall": 0.185,
+    "f1": 0.038,
+    "on_W": 278.0
+   },
+   "kettle": {
+    "gt_episodes": 6770,
+    "det_episodes": 17805,
+    "matched": 5430,
+    "precision": 0.305,
+    "recall": 0.802,
+    "f1": 0.442,
+    "on_W": 2344.0
+   }
+  },
+  "ampds2 60 s max (native 60 s)": {
+   "fridge": {
+    "gt_episodes": 28047,
+    "det_episodes": 7091,
+    "matched": 1051,
+    "precision": 0.148,
+    "recall": 0.037,
+    "f1": 0.06,
+    "on_W": 127.0
+   },
+   "dish_washer": {
+    "gt_episodes": 2003,
+    "det_episodes": 11148,
+    "matched": 59,
+    "precision": 0.005,
+    "recall": 0.029,
+    "f1": 0.009,
+    "on_W": 727.0
+   },
+   "washing_machine": {
+    "gt_episodes": 427,
+    "det_episodes": 7099,
+    "matched": 2,
+    "precision": 0.0,
+    "recall": 0.005,
+    "f1": 0.001,
+    "on_W": 117.0
+   }
+  },
+  "ampds2 300 s mean": {
+   "fridge": {
+    "gt_episodes": 23006,
+    "det_episodes": 7821,
+    "matched": 2824,
+    "precision": 0.361,
+    "recall": 0.123,
+    "f1": 0.183,
+    "on_W": 107.6
+   },
+   "dish_washer": {
+    "gt_episodes": 397,
+    "det_episodes": 9292,
+    "matched": 36,
+    "precision": 0.004,
+    "recall": 0.091,
+    "f1": 0.007,
+    "on_W": 460.29999999999995
+   },
+   "washing_machine": {
+    "gt_episodes": 413,
+    "det_episodes": 8157,
+    "matched": 5,
+    "precision": 0.001,
+    "recall": 0.012,
+    "f1": 0.001,
+    "on_W": 122.2
+   }
+  }
+ },
+ "notes": [
+  "plan 3.4: transforms applied to aggregate AND submeters identically",
+  "min dwell 2 samples => 12 s @6s, 120 s @60s, 600 s @300s; onset tol = 2*dt"
+ ]
+}

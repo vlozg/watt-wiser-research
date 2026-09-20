@@ -33,7 +33,7 @@ partial plug set, GREEND without mains, AMPds2 60 s) are documented in
 
     make gold            # build/update all six datasets (resumable)
     make gold-force      # rebuild everything from fnd
-    make gold-check      # verify gold tables against their fnd sources
+    uv run python3 src/pipelines/03_gold_nilm/qa_gold.py   # quality gate: verify gold vs fnd
 
 Or run a single dataset:
 

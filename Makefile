@@ -42,18 +42,18 @@ gold-force: ## rebuild every gold table from fnd
 	$(PY) src/pipelines/03_gold_nilm/gold_all.py --force
 
 fnd-check: ## verify every fnd parquet (rows / sizes vs the fnd manifests)
-	$(PY) analysis/xcheck/verify_all.py
+	$(PY) src/pipelines/01_extract_dataset/qa_fnd.py
 
 xcheck: ## NILMTK cross-checks: others, mains, greend2
-	$(PY) analysis/xcheck/xcheck_others.py
-	$(PY) analysis/xcheck/xcheck_mains.py
-	$(PY) analysis/xcheck/xcheck_greend2.py
+	$(PY) deprecated/analysis/xcheck/xcheck_others.py
+	$(PY) deprecated/analysis/xcheck/xcheck_mains.py
+	$(PY) deprecated/analysis/xcheck/xcheck_greend2.py
 
-baseline: ## R1 baseline campaign on all substrates
-	$(PY) analysis/baseline_ukdale.py --dataset all
+baseline: ## R1 baseline campaign on all substrates (quarantined legacy; do not extend)
+	$(PY) deprecated/analysis/baseline_ukdale.py --dataset all
 
-plan-runs: ## R2-R6 planned runs (plan section 6)
-	$(PY) analysis/plan_runs.py --run all
+plan-runs: ## R2-R6 planned runs (plan section 6; quarantined legacy; do not extend)
+	$(PY) deprecated/analysis/plan_runs.py --run all
 
 EDA_NOTEBOOKS := 01_ukdale_eda 02_refit_eda 02b_refit_eda_localtime 03_redd_eda 04_eco_eda 05_greend_eda 06_ampds2_eda
 

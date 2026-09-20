@@ -31,7 +31,7 @@ Raised in owner review, 2026-09-20.
 ## Evidence so far
 
 - [none] — both forms are new with this review pass.
-- [quarantined] the old campaign ran an anomaly rung (`baseline_runs/R6_anomaly/`) on the R1 residual (aggregate − always-on − attributed); unreviewed, recorded here as prior-art claim only [registry rule 1; recorded 2026-09-20 during the contradiction trace].
+- [quarantined] the old campaign ran an anomaly rung (`deprecated/baseline_runs/R6_anomaly/`) on the R1 residual (aggregate − always-on − attributed); unreviewed, recorded here as prior-art claim only [registry rule 1; recorded 2026-09-20 during the contradiction trace].
 - Related reviewed facts: per-class level/dwell/duty priors exist to build the drift statistics on [`00_overview.md` §6]; the 4-year UK-DALE house makes the natural-drift pre-study feasible.
 
 ## Open questions

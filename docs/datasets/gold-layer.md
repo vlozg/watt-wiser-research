@@ -106,9 +106,10 @@ binarization for any device, not just the targets.
 ## Build + verify
 
     make gold          # resumable; gold-force rebuilds from fnd
-    make gold-check    # re-derives every table from fnd and compares
+    uv run python3 src/pipelines/03_gold_nilm/qa_gold.py
+                       # quality gate: re-derives every table from fnd and compares
 
-`gold_check` verifies rows, timestamp endpoints, and exact value sums
+`qa_gold` verifies rows, timestamp endpoints, and exact value sums
 against the fnd sources, checks that every labeled meter in
 `appliance_map.json` has a gold table under the documented naming rule with
 matching `label` / `canonical` identity, and recomputes every threshold.
@@ -128,5 +129,5 @@ matching `label` / `canonical` identity, and recomputes every threshold.
 `src/pipelines/03_gold_nilm/`: `_common.py` (map/manifest/threshold helpers,
 naming rule, shared write path), one self-contained builder per dataset
 (`gold_<dataset>.py`), and the `gold_all.py` driver. Manifests use the same
-resume bookkeeping as fnd (root=GOLD). `analysis/xcheck/gold_check.py` is
-the independent verifier.
+resume bookkeeping as fnd (root=GOLD). `src/pipelines/03_gold_nilm/qa_gold.py` is the
+independent verifier (quality-gate pattern, like `qa_raw.py` for fnd).

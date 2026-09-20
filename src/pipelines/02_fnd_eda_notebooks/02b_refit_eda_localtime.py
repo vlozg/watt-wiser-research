@@ -1896,7 +1896,7 @@ def _(mo):
       and the Issues-column definition), data/raw/REFIT/REFIT_Readme.txt (per-house
       channel lists and notes).
 
-    - Shared helpers: analysis/eda_fnd_lib.py (channel stats, episode detection,
+    - Shared helpers: src/pipelines/02_fnd_eda_notebooks/eda_fnd_lib.py (channel stats, episode detection,
       figure style).
 
     - All computations run live from the parquet files in this notebook; prose

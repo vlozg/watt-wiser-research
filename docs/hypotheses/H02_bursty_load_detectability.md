@@ -22,7 +22,7 @@ An enrolled, single-state, high-power, bursty device (kettle-class; candidate se
 
 ## Evidence so far
 
-- [quarantined] `baseline_runs/` R1: kettle episode F1 0.62 at 6 s (P 0.45 / R 0.98) on the calibration slice; recall 0.46-0.98 across all 5 houses; energy est/GT 0.94-0.99 on matched events. **Caveat:** signatures derived from clean submeter channels; upper bound.
+- [quarantined] `deprecated/baseline_runs/` R1: kettle episode F1 0.62 at 6 s (P 0.45 / R 0.98) on the calibration slice; recall 0.46-0.98 across all 5 houses; energy est/GT 0.94-0.99 on matched events. **Caveat:** signatures derived from clean submeter channels; upper bound.
 - [reviewed] The separability is real in the data: kettle p50-ON 1,760-2,946 W, dwell p50 100-200 s across datasets — magnitude + duration separate it from everything else in the priors table (`00_overview.md` §6).
 
 ## Open questions

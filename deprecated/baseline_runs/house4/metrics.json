@@ -1,0 +1,104 @@
+{
+ "protocol": {
+  "title": "UK-DALE FULL house4 (real mains, 6 s)",
+  "calibration_days": 7.0,
+  "reference_days_wall": 191.86,
+  "reference_days_rows": 138.46,
+  "dt_s": 6.0,
+  "always_on_W": 154.0,
+  "detector": "M0 threshold+hysteresis+dwell",
+  "notes": [
+   "channel_1 = real aggregate mains",
+   "calibration starts 2013-03-16 08:42:18: first 7-d window where aggregate + all archetype channels are dense (house rollout artifact)",
+   "house label for fridge is composite: freezer",
+   "house label for washing_machine is composite: washing_machine_microwave_breadmaker",
+   "house label for kettle is composite: kettle_radio"
+  ]
+ },
+ "signatures": {
+  "fridge": {
+   "on_W": 94.0,
+   "on_p10_W": 88.0,
+   "n_cal_episodes": 151,
+   "energy_share_pct": 6.4
+  },
+  "washing_machine": {
+   "on_W": 216.0,
+   "on_p10_W": 17.0,
+   "n_cal_episodes": 123,
+   "energy_share_pct": 2.8
+  },
+  "kettle": {
+   "on_W": 845.0,
+   "on_p10_W": 65.0,
+   "n_cal_episodes": 100,
+   "energy_share_pct": 3.7
+  }
+ },
+ "per_appliance": {
+  "fridge": {
+   "gt_episodes": 4522,
+   "det_episodes": 3665,
+   "matched": 1521,
+   "precision": 0.415,
+   "recall": 0.336,
+   "f1": 0.372,
+   "onset_err_s_p50": 0.0,
+   "onset_err_s_p90": 6.0,
+   "offset_err_s_p50": 6.0,
+   "energy_est_over_gt_p50": 1.02,
+   "gt_energy_kwh": 116.6
+  },
+  "washing_machine": {
+   "gt_episodes": 3599,
+   "det_episodes": 4349,
+   "matched": 255,
+   "precision": 0.059,
+   "recall": 0.071,
+   "f1": 0.064,
+   "onset_err_s_p50": 0.0,
+   "onset_err_s_p90": 12.0,
+   "offset_err_s_p50": 6.0,
+   "energy_est_over_gt_p50": 0.39,
+   "gt_energy_kwh": 55.0
+  },
+  "kettle": {
+   "gt_episodes": 707,
+   "det_episodes": 7830,
+   "matched": 353,
+   "precision": 0.045,
+   "recall": 0.499,
+   "f1": 0.083,
+   "onset_err_s_p50": 0.0,
+   "onset_err_s_p90": 6.0,
+   "offset_err_s_p50": 6.0,
+   "energy_est_over_gt_p50": 0.39,
+   "gt_energy_kwh": 52.8
+  }
+ },
+ "confusability": {
+  "fridge": {
+   "washing_machine": 4067,
+   "kettle": 1720
+  },
+  "washing_machine": {
+   "fridge": 3361,
+   "kettle": 2542
+  },
+  "kettle": {
+   "fridge": 706,
+   "washing_machine": 706
+  }
+ },
+ "negative_control": {
+  "detections_total": 15844,
+  "false_positives": 4630,
+  "fp_rate_pct": 29.2,
+  "fp_energy_kwh": 36.55
+ },
+ "residual": {
+  "above_always_on_kwh": 872.0,
+  "covered_pct_of_above_on": 99.3,
+  "residual_kwh": 6.0
+ }
+}

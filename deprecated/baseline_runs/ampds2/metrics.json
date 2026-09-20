@@ -1,0 +1,101 @@
+{
+ "protocol": {
+  "title": "AMPds2 single house 730 d (WHE + FGE/DWE/CWE)",
+  "calibration_days": 7.0,
+  "reference_days_wall": 723.0,
+  "reference_days_rows": 723.0,
+  "dt_s": 60.0,
+  "always_on_W": 369.5,
+  "detector": "M0 threshold+hysteresis+dwell",
+  "notes": [
+   "60 s rung: onset tol 120 s, min dwell 120 s",
+   "no kettle class in AMPds2; FRE = furnace fan, not used"
+  ]
+ },
+ "signatures": {
+  "fridge": {
+   "on_W": 127.0,
+   "on_p10_W": 7.0,
+   "n_cal_episodes": 282,
+   "energy_share_pct": 3.5
+  },
+  "dish_washer": {
+   "on_W": 727.0,
+   "on_p10_W": 7.0,
+   "n_cal_episodes": 12,
+   "energy_share_pct": 0.7
+  },
+  "washing_machine": {
+   "on_W": 117.0,
+   "on_p10_W": 11.100000000000001,
+   "n_cal_episodes": 6,
+   "energy_share_pct": 0.5
+  }
+ },
+ "per_appliance": {
+  "fridge": {
+   "gt_episodes": 28047,
+   "det_episodes": 7091,
+   "matched": 1051,
+   "precision": 0.148,
+   "recall": 0.037,
+   "f1": 0.06,
+   "onset_err_s_p50": 0.0,
+   "onset_err_s_p90": 120.0,
+   "offset_err_s_p50": 180.0,
+   "energy_est_over_gt_p50": 1.29,
+   "gt_energy_kwh": 876.0
+  },
+  "dish_washer": {
+   "gt_episodes": 2003,
+   "det_episodes": 11148,
+   "matched": 59,
+   "precision": 0.005,
+   "recall": 0.029,
+   "f1": 0.009,
+   "onset_err_s_p50": 60.0,
+   "onset_err_s_p90": 120.0,
+   "offset_err_s_p50": 180.0,
+   "energy_est_over_gt_p50": 1.2,
+   "gt_energy_kwh": 259.9
+  },
+  "washing_machine": {
+   "gt_episodes": 427,
+   "det_episodes": 7099,
+   "matched": 2,
+   "precision": 0.0,
+   "recall": 0.005,
+   "f1": 0.001,
+   "onset_err_s_p50": 120.0,
+   "onset_err_s_p90": 120.0,
+   "offset_err_s_p50": 2610.0,
+   "energy_est_over_gt_p50": 1.03,
+   "gt_energy_kwh": 75.6
+  }
+ },
+ "confusability": {
+  "fridge": {
+   "dish_washer": 21487,
+   "washing_machine": 27859
+  },
+  "dish_washer": {
+   "fridge": 1995,
+   "washing_machine": 1995
+  },
+  "washing_machine": {
+   "fridge": 427,
+   "dish_washer": 426
+  }
+ },
+ "negative_control": {
+  "detections_total": 25338,
+  "false_positives": 4652,
+  "fp_rate_pct": 18.4,
+  "fp_energy_kwh": 196.49
+ },
+ "residual": {
+  "above_always_on_kwh": 12859.6,
+  "covered_pct_of_above_on": 99.9,
+  "residual_kwh": 13.5
+ }
+}

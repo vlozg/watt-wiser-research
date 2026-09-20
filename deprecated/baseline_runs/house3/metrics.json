@@ -1,0 +1,50 @@
+{
+ "protocol": {
+  "title": "UK-DALE FULL house3 (real mains, 6 s)",
+  "calibration_days": 7.0,
+  "reference_days_wall": 25.73,
+  "reference_days_rows": 22.55,
+  "dt_s": 6.0,
+  "always_on_W": 109.0,
+  "detector": "M0 threshold+hysteresis+dwell",
+  "notes": [
+   "channel_1 = real aggregate mains",
+   "calibration starts 2013-03-06 11:45:29: first 7-d window where aggregate + all archetype channels are dense (house rollout artifact)"
+  ]
+ },
+ "signatures": {
+  "kettle": {
+   "on_W": 2908.0,
+   "on_p10_W": 2864.8,
+   "n_cal_episodes": 8,
+   "energy_share_pct": 0.8
+  }
+ },
+ "per_appliance": {
+  "kettle": {
+   "gt_episodes": 53,
+   "det_episodes": 735,
+   "matched": 34,
+   "precision": 0.046,
+   "recall": 0.642,
+   "f1": 0.086,
+   "onset_err_s_p50": 0.0,
+   "onset_err_s_p90": 6.0,
+   "offset_err_s_p50": 6.0,
+   "energy_est_over_gt_p50": 0.97,
+   "gt_energy_kwh": 3.4
+  }
+ },
+ "confusability": {},
+ "negative_control": {
+  "detections_total": 735,
+  "false_positives": 689,
+  "fp_rate_pct": 93.7,
+  "fp_energy_kwh": 183.09
+ },
+ "residual": {
+  "above_always_on_kwh": 249.4,
+  "covered_pct_of_above_on": 60.3,
+  "residual_kwh": 99.1
+ }
+}

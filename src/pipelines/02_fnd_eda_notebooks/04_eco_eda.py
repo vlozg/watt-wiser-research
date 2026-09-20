@@ -1423,7 +1423,7 @@ def _(mo):
     - Release documentation: data/raw/ECO/READ_ME_FIRST.txt plus per-house
       NN_doc.txt files (measured quantities, file naming, occupancy annotation).
 
-    - Shared helpers: analysis/eda_fnd_lib.py (channel stats, episode detection,
+    - Shared helpers: src/pipelines/02_fnd_eda_notebooks/eda_fnd_lib.py (channel stats, episode detection,
       resampling, figure style).
 
     - All computations run live from the parquet files in this notebook; prose

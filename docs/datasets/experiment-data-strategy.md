@@ -5,7 +5,7 @@
 **New artifacts (this document's siblings):**
 - `eda_shelly.py` -- the EDA battery + domain-shift judge, syntax-checked and run end-to-end twice.
 - `eda_reference_ukdale.json` -- the UK-DALE reference metrics it was calibrated on.
-- Demo outputs: `eda_runs/ukdale_reference/`, `eda_runs/synthetic_vs_reference/` (report.md, metrics.json, 4 figures each).
+- Demo outputs: `deprecated/eda_runs/ukdale_reference/`, `deprecated/eda_runs/synthetic_vs_reference/` (report.md, metrics.json, 4 figures each).
 
 ---
 
@@ -90,9 +90,9 @@ Three commands, nothing else:
 
 ```
 # once, reference already built:
-python3 eda_shelly.py ukdale --make-reference --out eda_runs/ukdale_reference
+python3 deprecated/analysis/eda_shelly.py ukdale --make-reference --out deprecated/eda_runs/ukdale_reference
 # when real data lands:
-python3 eda_shelly.py shelly_export.csv --reference eda_reference_ukdale.json --out eda_runs/real_shelly
+python3 deprecated/analysis/eda_shelly.py shelly_export.csv --reference deprecated/analysis/eda_reference_ukdale.json --out deprecated/eda_runs/real_shelly
 ```
 
 Expect on a 300 s Shelly feed: dt FLAG (by design -- that is the rate question answered in numbers), noise floor likely between the synthetic 14.6 W and UK-DALE's 1.0 W, and the simultaneity/PSI verdicts becoming the real household's fingerprint. The script is deliberately label-free (recomputes ON states from power), rate-agnostic, and needs only pandas + numpy + matplotlib.

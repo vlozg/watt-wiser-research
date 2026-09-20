@@ -243,7 +243,7 @@ Same time span, same axes, two datasets. This one exists to be looked at side by
 - **Real**: the kettle ramps on and off; the washing machine shows a multi-stage ramp with a plateau; the monitor is noisy and never returns exactly to zero; the fridge cycles continuously.
 - **Synthetic**: every appliance is a **perfect rectangle**. Exactly zero when off. Exactly constant when on. Washing machine capped at exactly 1500.0 W across the whole month.
 
-**The diagnostic tests, if you want them quantified** (all reproducible via `analysis/repo-forensics/analyze_synthetic.py`):
+**The diagnostic tests, if you want them quantified** (all reproducible via `deprecated/analysis/repo-forensics/analyze_synthetic.py`):
 
 | Test | Real data behaves | The synthetic CSV behaves |
 |---|---|---|

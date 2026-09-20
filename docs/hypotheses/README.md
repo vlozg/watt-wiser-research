@@ -12,7 +12,7 @@ One file per hypothesis: `H<nn>_<slug>.md`. Problem framing and vocabulary: `doc
 
 Rules:
 
-1. A status change requires evidence the **owner has reviewed**. Numbers from quarantined artifacts (`baseline_runs/`, unreviewed `analysis/`) never promote a hypothesis past *AI drafted*; they live in each file's "Evidence so far" as tagged claims.
+1. A status change requires evidence the **owner has reviewed**. Numbers from quarantined artifacts (`deprecated/baseline_runs/`, `deprecated/analysis/`) never promote a hypothesis past *AI drafted*; they live in each file's "Evidence so far" as tagged claims.
 2. Pass/fail criteria — margins over the baseline ladder (§6 of the problem statement), never pre-declared per-class bars [owner decision 2026-09-20] — are written into the hypothesis file **before** the verification run and are never tuned on test data.
 3. Evidence tags match `docs/PROBLEM_STATEMENTS.md` §0: **[reviewed]**, **[client]**, **[quarantined]**, **[none]**.
 

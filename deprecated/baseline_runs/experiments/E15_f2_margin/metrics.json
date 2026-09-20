@@ -1,0 +1,327 @@
+{
+ "id": "E15",
+ "slug": "f2_margin",
+ "hypothesis": "F2 + ambiguity margin (second-best/best >= 1.3)",
+ "cfg": {
+  "f2": true,
+  "f2_norm": "abs",
+  "f2_margin": 1.3,
+  "gt_gap_merge_s": 12
+ },
+ "substrates": {
+  "slice": {
+   "devices": {
+    "kettle": {
+     "gt": 171,
+     "det": 268,
+     "matched": 116,
+     "P": 0.433,
+     "R": 0.678,
+     "F1": 0.528
+    },
+    "washing_machine": {
+     "gt": 101,
+     "det": 669,
+     "matched": 1,
+     "P": 0.001,
+     "R": 0.01,
+     "F1": 0.003
+    }
+   },
+   "summary": {
+    "weak_mean_f1": 0.003,
+    "kettle_f1": 0.528,
+    "fridge_f1": null,
+    "all_mean_f1": 0.266,
+    "n_devices": 2,
+    "fp_rate_pct": null,
+    "seconds": 0.0
+   },
+   "f2_diag": {
+    "thr_W": 85.0,
+    "lib": [
+     "kettle",
+     "washing_machine"
+    ],
+    "events": 2058,
+    "reject_margin": 1121,
+    "reject_plaus": 0,
+    "event_correct": 333,
+    "event_spurious": 20,
+    "event_accuracy": 0.355
+   },
+   "confusion": {
+    "washing_machine": {
+     "kettle": 50
+    }
+   }
+  },
+  "house2": {
+   "devices": {
+    "dish_washer": {
+     "gt": 217,
+     "det": 23,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0
+    },
+    "kettle": {
+     "gt": 504,
+     "det": 33,
+     "matched": 30,
+     "P": 0.909,
+     "R": 0.06,
+     "F1": 0.112
+    },
+    "microwave": {
+     "gt": 417,
+     "det": 30,
+     "matched": 21,
+     "P": 0.7,
+     "R": 0.05,
+     "F1": 0.094
+    },
+    "rice_cooker": {
+     "gt": 45,
+     "det": 1247,
+     "matched": 2,
+     "P": 0.002,
+     "R": 0.044,
+     "F1": 0.003
+    },
+    "toaster": {
+     "gt": 20,
+     "det": 12,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0
+    },
+    "washing_machine": {
+     "gt": 162,
+     "det": 85,
+     "matched": 1,
+     "P": 0.012,
+     "R": 0.006,
+     "F1": 0.008
+    }
+   },
+   "summary": {
+    "weak_mean_f1": 0.004,
+    "kettle_f1": 0.112,
+    "fridge_f1": null,
+    "all_mean_f1": 0.036,
+    "n_devices": 6,
+    "fp_rate_pct": null,
+    "seconds": 0.1
+   },
+   "f2_diag": {
+    "thr_W": 84.5,
+    "lib": [
+     "dish_washer",
+     "kettle",
+     "microwave",
+     "rice_cooker",
+     "toaster",
+     "washing_machine"
+    ],
+    "events": 1744,
+    "reject_margin": 314,
+    "reject_plaus": 0,
+    "event_correct": 127,
+    "event_spurious": 0,
+    "event_accuracy": 0.089
+   },
+   "confusion": {
+    "dish_washer": {
+     "rice_cooker": 197
+    },
+    "kettle": {
+     "rice_cooker": 456
+    },
+    "microwave": {
+     "rice_cooker": 360,
+     "toaster": 3
+    },
+    "toaster": {
+     "rice_cooker": 20
+    },
+    "washing_machine": {
+     "kettle": 1,
+     "microwave": 1,
+     "rice_cooker": 127,
+     "toaster": 3
+    }
+   }
+  },
+  "house5": {
+   "devices": {
+    "electric_hob": {
+     "gt": 1009,
+     "det": 54,
+     "matched": 25,
+     "P": 0.463,
+     "R": 0.025,
+     "F1": 0.047
+    },
+    "hairdryer": {
+     "gt": 105,
+     "det": 33,
+     "matched": 2,
+     "P": 0.061,
+     "R": 0.019,
+     "F1": 0.029
+    },
+    "kettle": {
+     "gt": 153,
+     "det": 444,
+     "matched": 78,
+     "P": 0.176,
+     "R": 0.51,
+     "F1": 0.261
+    },
+    "nespresso_pixie": {
+     "gt": 80,
+     "det": 60,
+     "matched": 12,
+     "P": 0.2,
+     "R": 0.15,
+     "F1": 0.171
+    },
+    "steam_iron": {
+     "gt": 2,
+     "det": 43,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0
+    },
+    "toaster": {
+     "gt": 22,
+     "det": 47,
+     "matched": 1,
+     "P": 0.021,
+     "R": 0.045,
+     "F1": 0.029
+    }
+   },
+   "summary": {
+    "weak_mean_f1": null,
+    "kettle_f1": 0.261,
+    "fridge_f1": null,
+    "all_mean_f1": 0.09,
+    "n_devices": 6,
+    "fp_rate_pct": null,
+    "seconds": 0.1
+   },
+   "f2_diag": {
+    "thr_W": 464.5,
+    "lib": [
+     "electric_hob",
+     "hairdryer",
+     "kettle",
+     "nespresso_pixie",
+     "steam_iron",
+     "toaster"
+    ],
+    "events": 2401,
+    "reject_margin": 1720,
+    "reject_plaus": 0,
+    "event_correct": 143,
+    "event_spurious": 0,
+    "event_accuracy": 0.21
+   },
+   "confusion": {
+    "electric_hob": {
+     "hairdryer": 3,
+     "kettle": 250,
+     "nespresso_pixie": 8,
+     "steam_iron": 3,
+     "toaster": 19
+    },
+    "hairdryer": {
+     "kettle": 2,
+     "nespresso_pixie": 9,
+     "steam_iron": 1,
+     "toaster": 18
+    },
+    "nespresso_pixie": {
+     "electric_hob": 1,
+     "kettle": 2,
+     "steam_iron": 4,
+     "toaster": 1
+    },
+    "toaster": {
+     "hairdryer": 1,
+     "kettle": 8
+    }
+   }
+  },
+  "ampds2": {
+   "devices": {
+    "CDE": {
+     "gt": 628,
+     "det": 3239,
+     "matched": 29,
+     "P": 0.009,
+     "R": 0.046,
+     "F1": 0.015
+    },
+    "DWE": {
+     "gt": 2003,
+     "det": 6355,
+     "matched": 20,
+     "P": 0.003,
+     "R": 0.01,
+     "F1": 0.005
+    },
+    "MHE": {
+     "gt": 4,
+     "det": 24,
+     "matched": 0,
+     "P": 0.0,
+     "R": 0.0,
+     "F1": 0.0
+    }
+   },
+   "summary": {
+    "weak_mean_f1": 0.01,
+    "kettle_f1": null,
+    "fridge_f1": null,
+    "all_mean_f1": 0.007,
+    "n_devices": 3,
+    "fp_rate_pct": null,
+    "seconds": 0.2
+   },
+   "f2_diag": {
+    "thr_W": 344.0,
+    "lib": [
+     "CDE",
+     "DWE",
+     "MHE"
+    ],
+    "events": 11538,
+    "reject_margin": 1920,
+    "reject_plaus": 0,
+    "event_correct": 355,
+    "event_spurious": 0,
+    "event_accuracy": 0.037
+   },
+   "confusion": {
+    "CDE": {
+     "DWE": 7,
+     "MHE": 6
+    },
+    "DWE": {
+     "CDE": 1008,
+     "MHE": 43
+    },
+    "MHE": {
+     "CDE": 3,
+     "DWE": 3
+    }
+   }
+  }
+ }
+}

@@ -20,7 +20,7 @@ For each enrolled device there exists a session count K* such that detection per
 
 ## Evidence so far
 
-- [quarantined] `baseline_runs/R3_learning_curve/` claims the curve is flat from N=1 for single-state loads (kettle 0.62 throughout; fridge 0.50→0.51) and non-monotonic for washing machine (stabilizes around N≥10). **Caveat:** those signatures came from clean submeter channels — cleaner calibration than the product will ever have. Upper bound, not evidence.
+- [quarantined] `deprecated/baseline_runs/R3_learning_curve/` claims the curve is flat from N=1 for single-state loads (kettle 0.62 throughout; fridge 0.50→0.51) and non-monotonic for washing machine (stabilizes around N≥10). **Caveat:** those signatures came from clean submeter channels — cleaner calibration than the product will ever have. Upper bound, not evidence.
 - [none] under the button-press protocol.
 
 ## Open questions

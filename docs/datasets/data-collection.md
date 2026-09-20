@@ -172,7 +172,7 @@ Discovery tips that work from here:
    The baseline loader reads only this shape; every dataset drops in unchanged.
 4. Run the EDA battery; build the set's own reference; cross-compare vs `eda_reference_ukdale.json`
    (the domain-shift judge, PASS/FLAG bands).
-5. For non-academic sources (Kaggle etc.): run the replay checks (`analysis/repo-forensics/analyze_synthetic.py`
+5. For non-academic sources (Kaggle etc.): run the replay checks (`deprecated/analysis/repo-forensics/analyze_synthetic.py`
    logic) before trusting it.
 6. Record row counts, span, rate, unlabeled ratio in the 2 inventory.
 7. Wire into the baseline runs with a `dataset_id`; gates are re-derived per house/dataset on its
@@ -192,7 +192,7 @@ the Shelly setup:
 | mislabeled appliances | the calibration notes are the label source of truth | cross-check channel labels vs calibration session log |
 | aggregate-submeter disagreement | live polling (fast) vs history API (300 s buckets) mixing | detect source switches: quantization changes between 1-s and bucketed levels |
 | (REFIT-specific) | 30 VA measurement-floor quantization | step-size histogram vs the ~1.0 W reference noise floor |
-| (REFIT-specific) | replay artifacts (the old pipeline bug class) | the `analysis/repo-forensics/analyze_synthetic.py` check battery |
+| (REFIT-specific) | replay artifacts (the old pipeline bug class) | the `deprecated/analysis/repo-forensics/analyze_synthetic.py` check battery |
 
 Process per capture session: run checks -> **flag, do not delete** (flagged intervals keep a status
 column) -> ship the cleaned long table + `issues.md` per session (what was found, fixed, left as-is) ->

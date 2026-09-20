@@ -4,9 +4,9 @@
 only. The `02`-series reports are out of scope (stale, and low insight density).
 
 **Method.** Read the notebook cell by cell; re-derived every headline number directly from
-`data/fnd/ukdale/` using `analysis/eda_fnd_lib.py`; compared the statistic set against NILMTK's
+`data/fnd/ukdale/` using `src/pipelines/02_fnd_eda_notebooks/eda_fnd_lib.py`; compared the statistic set against NILMTK's
 standard EDA and metric surface, the UK-DALE data descriptor, public UK-DALE notebooks, and this
-repo's own client-side twin (`analysis/eda_shelly.py`, `analysis/eda_reference_ukdale.json`).
+repo's own client-side twin (`deprecated/analysis/eda_shelly.py`, `deprecated/analysis/eda_reference_ukdale.json`).
 
 ---
 
@@ -352,7 +352,7 @@ One paragraph suffices.
 | multi-state taxonomy | **no** | partial | no | n/a |
 | disaggregation metrics | no | `metrics.py` (full set) | no | n/a |
 
-The cleanest framing of what to add: `analysis/eda_reference_ukdale.json` already carries
+The cleanest framing of what to add: `deprecated/analysis/eda_reference_ukdale.json` already carries
 `steps.dP_p50_W`, `steps.steps_per_day_gt30/100/300_W`, `diurnal.lag1day_autocorr`,
 `diurnal.weekend_mean_W`, `overlap.frac_2plus_on_pct` and per-appliance `transition_step_p50_W`.
 **The client-side twin is richer than the UK-DALE side.** These two are meant to be twins. Bring
@@ -410,7 +410,7 @@ inventory agree.
 ## 9. Sources
 
 - `docs/reports/dataset_eda/00_overview.md`, `docs/reports/dataset_eda/01_ukdale_eda.ipynb`
-- `analysis/eda_fnd_lib.py`, `analysis/eda_shelly.py`, `analysis/eda_reference_ukdale.json`,
+- `src/pipelines/02_fnd_eda_notebooks/eda_fnd_lib.py`, `deprecated/analysis/eda_shelly.py`, `deprecated/analysis/eda_reference_ukdale.json`,
   `research-logs/eda_datasets_summary.json` (since removed)
 - Kelly & Knottenbelt, *The UK-DALE dataset, domestic appliance-level electricity demand and
   whole-house demand from five UK homes*, Scientific Data 2:150007 (2015) - quoted statistics (IAM
