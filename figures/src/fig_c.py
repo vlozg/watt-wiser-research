@@ -1,8 +1,13 @@
 
 import os
+
 os.environ.setdefault("MPLCONFIGDIR","/tmp/mplcfg"); os.makedirs("/tmp/mplcfg",exist_ok=True)
-import numpy as np, matplotlib
-matplotlib.use("Agg"); import matplotlib.pyplot as plt
+import matplotlib
+import numpy as np
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
 ROOT=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # repo root
 D=os.path.join(ROOT,"research-logs","sakunrasilka_nilm-test2")+os.sep
 FIG=os.path.join(ROOT,"figures")

@@ -1,9 +1,13 @@
 
 import os
+
 os.environ.setdefault("MPLCONFIGDIR","/tmp/mplcfg"); os.makedirs("/tmp/mplcfg",exist_ok=True)
-import numpy as np, matplotlib
-matplotlib.use("Agg"); import matplotlib.pyplot as plt
-from matplotlib.patches import Patch
+import matplotlib
+import numpy as np
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
 ROOT=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # repo root
 D=os.path.join(ROOT,"research-logs","sakunrasilka_nilm-test2")+os.sep
 FIG=os.path.join(ROOT,"figures")
@@ -81,7 +85,6 @@ for k,c in enumerate([2,3,4,5,6]):
     a.set_ylabel("W"); a.set_title("GROUND TRUTH  —  "+NAME[c]+"   (ON "+f"{100*st.mean():.1f}"+"% of the day, "+f"{len(on)}"+" events)",loc="left",fontsize=8.6,fontweight="bold",color=COL[c])
     a.set_ylim(0,max(60,np.percentile(p,99.5)*1.25))
 ax[-1].set_xlabel("time")
-import datetime as dt
 fig.suptitle("Figure 3 — One day, unrolled: the aggregate is the sum, and the sum is what hides the parts",fontsize=12,fontweight="bold",y=0.997)
 fig.text(0.5,0.004,"UK-DALE, 24 h at 6 s. Shaded bands mark ON intervals. Notice the washing machine: long multi-stage cycles, exactly the kind of load a single step size cannot describe.",
          ha="center",fontsize=7.8,color="#555")
@@ -123,6 +126,7 @@ ax[1,0].set_xlabel("size of the step this appliance makes (W)"); ax[1,0].set_yla
 # (d) simultaneity
 nc=sum((ch[c]>TH).astype(int) for c in [2,3,4,5,6])
 import collections
+
 cnt=collections.Counter(nc.tolist()); tot=len(nc)
 ks=sorted(cnt); vals=[100*cnt[k]/tot for k in ks]
 bars=ax[1,1].bar([str(k) for k in ks],vals,color=["#4c72b0","#55a868","#c44e52","#8172b3","#937860"][:len(ks)])

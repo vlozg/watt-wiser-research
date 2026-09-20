@@ -1,8 +1,15 @@
 
-import os, glob, json
+import glob
+import json
+import os
+
 os.environ.setdefault("MPLCONFIGDIR","/tmp/mplcfg"); os.makedirs("/tmp/mplcfg",exist_ok=True)
-import numpy as np, matplotlib
-matplotlib.use("Agg"); import matplotlib.pyplot as plt
+import matplotlib
+import numpy as np
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
 ROOT=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # repo root
 P=os.path.join(ROOT,"research-logs","vi","plaid_samples")+os.sep
 FIG=os.path.join(ROOT,"figures")
@@ -93,7 +100,7 @@ for ax,nm in zip(axs.ravel(),hpick):
     r=bys.get(nm)
     if r is None: ax.axis("off"); continue
     specs=[]
-    for vs,is_ in r["cy"][:8]:
+    for _vs,is_ in r["cy"][:8]:
         seg=is_-is_.mean()
         F=np.fft.rfft(seg)
         specs.append(np.abs(F))

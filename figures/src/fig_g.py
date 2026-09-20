@@ -1,8 +1,14 @@
 
-import os, glob, json
+import os
+
 os.environ.setdefault("MPLCONFIGDIR","/tmp/mplcfg"); os.makedirs("/tmp/mplcfg",exist_ok=True)
-import numpy as np, pandas as pd, matplotlib
-matplotlib.use("Agg"); import matplotlib.pyplot as plt
+import matplotlib
+import numpy as np
+import pandas as pd
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
 ROOT=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # repo root
 P=os.path.join(ROOT,"research-logs","vi","plaid_samples")+os.sep
 FIG=os.path.join(ROOT,"figures")
@@ -82,7 +88,7 @@ ax[0,0].set_ylabel("W"); ax[0,0].set_xlabel("hours")
 ax[0,1].plot(hs,S["active_power_W"],lw=0.8,color="#111"); ax[0,1].set_ylim(0,3400)
 ax[0,1].set_title("SYNTHETIC  —  WattWiser dataset, 24 h at 5 s",loc="left",fontsize=10,fontweight="bold")
 ax[0,1].set_ylabel("W"); ax[0,1].set_xlabel("hours")
-for k,(col,nm) in enumerate([("kettle_power_W","kettle"),("fridge_power_W","fridge"),
+for _,(col,nm) in enumerate([("kettle_power_W","kettle"),("fridge_power_W","fridge"),
                              ("microwave_power_W","microwave"),("washing_machine_power_W","washing")]):
     ax[1,1].plot(hs,S[col],lw=0.7,label=nm)
 ax[1,1].set_title("SYNTHETIC ground truth: perfectly rectangular, exactly zero when off",loc="left",fontsize=9.5,fontweight="bold")
