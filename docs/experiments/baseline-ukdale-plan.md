@@ -5,6 +5,16 @@
 (data caveats). This doc turns the calibration-mimicry idea into an executable experiment spec, and every
 design choice below traces to a specific earlier finding (see the grounding table in 0.1).
 
+> **Provenance correction 2026-09-21:** the "UK-DALE house-1 slice" this plan built on
+> (`research-logs/sakunrasilka_nilm-test2/`) is house-5 data relabeled house_1-style
+> (channels 2/3/4/6 = h5 fridge_freezer / dishwasher / kettle / i7_desktop, byte-exact;
+> channel 1 = sum of channels + flat about-27 W base, synthetic; channel 5 unmatched).
+> Every slice stat below (715 steps/day, 32.7% 2+ ON, noise floor 1.0 W, fridge 36.6%,
+> kettle 2890 W, monitor 49.3% / 80-82% duty, ratio 1.167) describes house 5, not
+> house 1. Authoritative UK-DALE numbers: `docs/reports/dataset_eda/01_ukdale_eda_review.md`.
+> Body kept unmodified per the quarantine status; read every "house-1" mention with
+> this correction.
+
 ## 0. Short answers
 
 - **What we build:** the v1 NILM baseline on the UK-DALE house-1 slice - a rules-based episode detector

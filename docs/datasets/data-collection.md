@@ -20,7 +20,7 @@ not any workspace-root `research_logs/`, which holds other-topic research only.
 
 | Set | Path | Shape | Caveats |
 |---|---|---|---|
-| UK-DALE slice | `research-logs/sakunrasilka_nilm-test2/` | house 1, channels 1-6, 6 s, 2014-06-30 -> 09-12 | NOT full: 6/53 labels, every channel capped at 2^20 rows; superseded by the full download |
+| UK-DALE slice | `research-logs/sakunrasilka_nilm-test2/` | house 5 channels relabeled house_1-style, 6 channels, 6 s, 2014-06-30 -> 09-12 | NOT house 1 (provenance forensics 2026-09-21: ch2/3/4/6 are verbatim house-5 fridge_freezer/dishwasher/kettle/i7_desktop; ch1 aggregate is synthetic = sum + flat base); every channel capped at 2^20 rows; superseded by the full download |
 | REDD @ 1 min | `research-logs/xingyang990210_nilm-datasets/building_1..6.csv` | `total` + appliance columns, 6 homes, ~1 month each (2011) | resampled minute-means; thin calibration supply; fine for R7 transfer |
 | REDD @ 3 s (Kaggle) | `data/redd-kaggle/` -> `research-logs/redd-kaggle/` | 35 chunk CSVs, 6 homes, ~12 d/home, 6-9 appliance cols + `main`, no timestamps | forensics below; timestamp-stripped derivative - align chunks before use |
 | Kaggle 1-min | `research-logs/kaggle_1min/household_power_1min.csv` | 1 home, 28 d (2024-06), `total` + fridge/ac/washer/tv/lights/base, 40,321 rows | provenance unverified - run replay checks before any use |

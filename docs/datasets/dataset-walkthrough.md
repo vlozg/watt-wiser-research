@@ -231,7 +231,7 @@ Bucketed onset gaps: under 1 s: 40, 1-3 s: 513, 3-5 s: 128, 5 s or more: 47.
 
 ### 5.2 A real UK-DALE house slice — how often are appliances on at once?
 
-A 75-day slice of UK-DALE house 1 (29 Jun - 12 Sep 2014), 1,048,573 samples at 6 s, five monitored loads: fridge, dishwasher, kettle, washing machine, "monitor" (a device that is on 80% of the time).
+A 75-day slice of UK-DALE (29 Jun - 12 Sep 2014), 1,048,573 samples at 6 s, five monitored loads: fridge, dishwasher, kettle, washing machine, "monitor" (a device that is on 80% of the time). Provenance corrected 2026-09-21: the signals are house-5 channels (fridge_freezer, dishwasher, kettle, and i7_desktop for the "monitor"; the washing-machine channel matches nothing verbatim), relabeled house_1-style - see the section 8 caveat.
 
 **Simultaneous operation:**
 
@@ -377,7 +377,7 @@ Under `projects/watt-wiser/research-logs/`:
 
 | Path | What it is |
 |---|---|
-| `sakunrasilka_nilm-test2/` | Real UK-DALE house-1 slice: 6 channels, 75 days, 6 s resolution, plus `labels.dat` |
+| `sakunrasilka_nilm-test2/` | UK-DALE **house-5** channels relabeled house_1-style: 6 channels, 75 days, 6 s resolution, plus `labels.dat` (provenance corrected 2026-09-21 - see the caveat below) |
 | `plaid/metadata_aggregated.json` | PLAID 2018 labels for the 575 multi-appliance records |
 | `plaid/metadata_submetered.json` | PLAID 2018 labels for the 1,876 single-appliance records |
 | `plaid/analyze.py` | Type / load / status census of both metadata files |
@@ -386,8 +386,8 @@ Under `projects/watt-wiser/research-logs/`:
 | `ukdale_demo3.py` | Simultaneous-ON analysis, visibility ladder, step overlap, fridge duty cycle |
 | `kaggle_1min/` | The suspect synthetic 1-minute set, kept as a negative example |
 
-### One caveat to record
+### One caveat to record (provenance corrected 2026-09-21)
 
-The UK-DALE slice's `channel_1` ("custom_aggregate") is **the sum of the five monitored channels**, not an independent mains reading — residual standard deviation 7.4 W. A real whole-home meter would carry 40+ unmonitored loads on top of these five.
+Signal forensics against the full download (`data/raw/ukdale-full/`) showed this slice is **not house 1**: `channel_2` = house-5 `fridge_freezer`, `channel_3` = house-5 `dishwasher`, `channel_4` = house-5 `kettle`, `channel_6` = house-5 `i7_desktop` (byte-exact copies of each channel's first 2^20 rows, rebased to a common start), relabeled house_1-style. `channel_5` ("washing_machine") matches no house_1-5 channel verbatim and is likely synthesized. `channel_1` ("custom_aggregate") is **the sum of the five channels plus a flat injected base** (residual mean about 27 W, standard deviation 7.4 W) - not any house's mains. A real whole-home meter would carry 40+ unmonitored loads on top of these five.
 
-So treat the **appliance-level** findings (step sizes, duty cycles, co-occurrence) as genuine UK-DALE measurements, and treat the aggregate-channel arithmetic as a methodological demonstration rather than a real aggregate. For the real thing, use the 16 kHz voltage/current stream from house 1.
+So the **appliance-level** findings above (step sizes, duty cycles, co-occurrence) are genuine UK-DALE measurements - of **house 5**, under wrong labels - and the aggregate channel is synthetic arithmetic, not a real aggregate. Every "house 1" attribution in this walkthrough inherits that mislabel; the authoritative UK-DALE house-1 numbers are in `docs/reports/dataset_eda/01_ukdale_eda_review.md`. For real aggregate work use the full download (house-1 mains) or the 16 kHz voltage/current stream.

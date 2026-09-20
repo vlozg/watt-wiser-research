@@ -89,7 +89,7 @@ Figures regenerate from `figures/src/` - one script per figure, `fig01_resolutio
 ## Conventions
 
 - Paths in docs are repo-relative and exact (`docs/...`, `analysis/...`, `research-logs/...`).
-- UK-DALE slice used for calibration: `research-logs/sakunrasilka_nilm-test2/` (6 s, 70.7 d, 5 channels + aggregate) - raw capture, re-downloadable from UK-DALE if ever lost.
+- UK-DALE slice used for calibration: `research-logs/sakunrasilka_nilm-test2/` (6 s, 70.7 d, 5 channels + aggregate) - raw capture, re-downloadable from UK-DALE if ever lost. Provenance corrected 2026-09-21: the signals are **house-5** channels relabeled house_1-style and channel 1 is a synthetic aggregate - see `docs/datasets/dataset-walkthrough.md` section 8.
 - `.scratch/` is throwaway-only: project assets belong in this folder.
 - `.gitignore` excludes the heavy raw data (`repo/`, everything under `data/`, the large
   `research-logs/` datasets, the extracted PLAID captures). Everything ignored is

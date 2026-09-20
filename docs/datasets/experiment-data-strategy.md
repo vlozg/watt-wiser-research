@@ -42,8 +42,8 @@ The experiment matrix is then: does each stage of the borrowing stack (analog-pr
 
 **Caveats, stated plainly:**
 - One UK home, 2012-2015, 230 V UK plug culture. Vietnamese 220 V homes differ (no UK-style storage heaters, different fridge duty). UK-DALE calibrates the *method*, not the *market*.
-- The local slice's channel 1 is `custom_aggregate` = the household's own sum, **not** the house mains -- 14.5% of its energy is unlabeled (see the reconciliation below). The full UK-DALE house-1 download (mains.dat) supplies the true aggregate for residual work. Until then, the residual is *understated*.
-- Reconciliation check (run this session): aggregate 306.0 kWh vs channels 2-6 sum 261.8 kWh over 70.66 days -> ratio 1.169, unlabeled 14.5%. Keep this number; it is the slice's honest "unknown bucket" size.
+- The local slice is UK-DALE **house-5** data (four channels verbatim: fridge_freezer, dishwasher, kettle, i7_desktop) relabeled house_1-style; its channel 1 is a synthetic aggregate = the sum of channels 2-6 plus a flat injected base (about 27 W, std 7.4 W), **not** any house's mains. The 14.5% reconciliation gap below is that injected base, not unmonitored household load. The full UK-DALE house-1 download (mains.dat) supplies the true aggregate for residual work. Provenance forensics 2026-09-21; authoritative house-1 numbers: `docs/reports/dataset_eda/01_ukdale_eda_review.md`.
+- Reconciliation check (run this session): aggregate 306.0 kWh vs channels 2-6 sum 261.8 kWh over 70.66 days -> ratio 1.169. Corrected 2026-09-21: the 14.5% gap is the synthetic aggregate's injected flat base (a constant about 27 W), not a household "unknown bucket" - do not quote it as residual-size evidence.
 
 ### Tier C -- live Shelly: acceptance test and dogfood rig
 
@@ -144,7 +144,7 @@ Dogfooding note: one Shelly on your own flat gives M4 (and C1 at n=1) almost imm
 | The borrowing stack (9 analog fields, what transfers) | analog-problems.md |
 | The loop-is-the-product reframe + KPI shift + energy tables | product-core-reframe.md |
 | Figure semantics + what each view can and cannot show | nilm-visual-reading.md + figures/ |
-| **Executable EDA + domain-shift battery, calibrated on real data** | **eda_shelly.py + eda_reference_ukdale.json (new today)** |
+| **Executable EDA + domain-shift battery, calibrated on the UK-DALE slice (house_5-derived - see caveat 1)** | **eda_shelly.py + eda_reference_ukdale.json (new today)** |
 
 **Verdict:** if "from zero" means lines of algorithm code, yes -- the repo contributes none, and today's script is the first executable piece. If it means the research program, no: the problem is formalized, the data strategy is tiered, the evaluation metrics are named, the first executable artifact exists, and the next three code steps are specified (Shelly-emulator rungs; residual monitor; threshold+hysteresis detector). The gap is engineering hours, not direction.
 
@@ -152,7 +152,7 @@ Dogfooding note: one Shelly on your own flat gives M4 (and C1 at n=1) almost imm
 
 ## Appendix -- validation numbers from today's runs
 
-- UK-DALE slice: 985,855 rows, 70.66 days, dt 6.0 s, steps/day >30 W = 715.0, 2+ ON = 32.7%; appliance table reproduces monitor duty 82.1% / median-ON 111 W, kettle 2890 W / step 2878 W, fridge duty 36.5%.
+- UK-DALE slice: 985,855 rows, 70.66 days, dt 6.0 s, steps/day >30 W = 715.0, 2+ ON = 32.7%; appliance table reproduces monitor duty 82.1% / median-ON 111 W, kettle 2890 W / step 2878 W, fridge duty 36.5% (slice is house_5-derived under house_1-style labels - see the caveat in section 1; "monitor" = h5 i7_desktop).
 - Synthetic: 518,400 rows, 30.00 days, dt 5.0 s, steps/day >30 W = 4290.5, 2+ ON = 1.7%, noise floor 14.6 W.
-- Reconciliation: aggregate 306.0 kWh vs submeters 261.8 kWh (ratio 1.169, unlabeled 14.5%) over the common window.
+- Reconciliation: aggregate 306.0 kWh vs submeters 261.8 kWh (ratio 1.169) over the common window; the 14.5% gap is the synthetic aggregate's injected flat base, not unlabeled household load.
 - Figures emitted per run: eda_fig01_ladder.png (three-rate ladder), eda_fig02_week.png, eda_fig03_day.png (appliances overlaid), eda_fig04_events.png (steps / hourly profile / transition ECDF / duration ECDF).
