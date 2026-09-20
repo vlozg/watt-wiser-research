@@ -10,7 +10,7 @@ export MPLCONFIGDIR
 PY ?= uv run python3
 FORCE ?=
 
-.PHONY: help setup download download-force raw-manifest extract extract-force labels gold gold-force fnd-check xcheck baseline plan-runs export-eda eda-pdfs
+.PHONY: help setup download download-force raw-manifest extract extract-force labels gold gold-force fnd-check xcheck baseline plan-runs export-eda export-gt-cycle eda-pdfs
 
 help: ## show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
@@ -75,4 +75,20 @@ eda-pdfs: ## export dataset EDA PDFs: all 6, or some via NOTEBOOK="02_refit_eda 
 	(cd /tmp && UV_CACHE_DIR=/tmp/uv-cache XDG_CONFIG_HOME=/tmp/xdg-config \
 		uv run --project $(CURDIR) python3 $(CURDIR)/src/pipelines/02_fnd_eda_notebooks/export_pdfs.py $(NOTEBOOK)) \
 	|| { echo "FAIL eda-pdfs"; exit 1; }
+
+GT_CYCLE_NOTEBOOKS := 01_ukdale_gt_cycle_eda 02_synthetic_shelly_cycle_eda
+
+export-gt-cycle: ## export GT-cycle EDA notebooks: all, or one via NOTEBOOK=01_ukdale_gt_cycle_eda
+	nb="$(NOTEBOOK)"; \
+	if [ -n "$$nb" ]; then list="$$nb"; else list="$(GT_CYCLE_NOTEBOOKS)"; fi; \
+	for n in $$list; do \
+		[ -f src/pipelines/04_eda_annot_gt_cycle/$$n.py ] || { echo "unknown notebook $$n"; exit 1; }; \
+		echo "=== exporting $$n ($$(date +%H:%M:%S))"; \
+		(cd /tmp && UV_CACHE_DIR=/tmp/uv-cache XDG_CONFIG_HOME=/tmp/xdg-config \
+			uv run --project $(CURDIR) marimo export ipynb --include-outputs \
+			-f $(CURDIR)/src/pipelines/04_eda_annot_gt_cycle/$$n.py \
+			-o $(CURDIR)/docs/reports/gt_cycle/$$n.ipynb) \
+		|| { echo "FAIL $$n"; exit 1; }; \
+		echo "=== done $$n ($$(date +%H:%M:%S))"; \
+	done
 
