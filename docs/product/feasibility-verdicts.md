@@ -3,7 +3,7 @@
 **Scope:** technical assessment of the calibration-to-detection plan as laid out in the calibration document and the 13-step user-journey diagram.
 **Status at time of writing:** no data collected; device purchased; the plan of record was to **synthesise training data using generative AI** while the product is built.
 **Read alongside:** research-brief.md
-**Correction (later):** see section 8. The "1 Hz" figure used throughout this document is an inference across the Shelly product line, not a Shelly EM Gen3 specification.
+**Correction (later):** see sections 8 and 9. Section 8 corrects the claimed 1 Hz rate; section 9 (2026-09-20) supersedes the second-CT recommendation (2.9, recommendation 5, Part B) and the nameplate-anchored acceptance clause in 2.7. The "1 Hz" figure used throughout this document is an inference across the Shelly product line, not a Shelly EM Gen3 specification.
 
 ---
 
@@ -70,7 +70,7 @@ More importantly, **the app has a sensor and does not use it to check the user's
 2. **Did total power actually step up when the user pressed "I've Started the Machine"?** The system can verify this in real time rather than trusting the button. If no step is detected within a few seconds, that is a failed calibration — say so **while the user is standing there**, not after post-processing. This is the single cheapest quality improvement available and it converts the flow from "trust the user" to "verify the user".
 
 **2.7 The "is the profile valid and reliable?" gate is undefined.**
-Figure 1 contains a decision diamond: *"Is the profile valid and reliable?"* with a failure branch (*"Calibration unsuccessful • Data is incomplete or inconsistent"*). The doc admits *"the mathematical form of this representation is not yet fixed."* So the flow contains a gate with no criterion behind it. Everything downstream depends on it, so it needs a **concrete, per-appliance numeric acceptance rule** — e.g. at least N valid sessions, and coefficient of variation of ΔP below some percentage, and the session's measured energy within some tolerance of the appliance's expected energy. Without that, "mark as calibrated" is meaningless.
+Figure 1 contains a decision diamond: *"Is the profile valid and reliable?"* with a failure branch (*"Calibration unsuccessful • Data is incomplete or inconsistent"*). The doc admits *"the mathematical form of this representation is not yet fixed."* So the flow contains a gate with no criterion behind it. Everything downstream depends on it, so it needs a **concrete, per-appliance numeric acceptance rule** — e.g. at least N valid sessions, and coefficient of variation of ΔP below some percentage, and the session's measured energy within some tolerance of the appliance's expected energy. Without that, "mark as calibrated" is meaningless. *(Corrected 2026-09-20 — see section 9.2: the nameplate-anchored clause is warn-only, and the flag rule itself is measured before anything is frozen.)*
 
 **2.8 The architecture has no data-ingestion layer.**
 Figure 2: *Website → Next.js APIs → Supabase / DB → Python processing → (Calibration → Appliance Profile) | (Detection → Prediction) → Database → Website.*
@@ -82,6 +82,7 @@ Two related concerns:
 - **The 1 Hz data is not recoverable if the poller stops.** The device only retains a **1-minute** onboard log for ~10 days. If continuous polling fails for an hour, that hour of detail is gone permanently. The architecture does not acknowledge this at all.
 
 **2.9 Nobody is using the second CT channel.**
+*(Corrected 2026-09-20 — see section 9.1: usable as evaluation instrumentation only; never as product input or a substitute for button-press calibration.)*
 The Shelly EM Gen3 has **two channels**. Every document treats it as a single whole-home meter.
 
 **This is the best constructive idea available to them.** The second CT clamp is free continuous ground truth. Options:
@@ -163,7 +164,7 @@ Then compute, per appliance: the ΔP step distribution (mean, standard deviation
 
 If yes — the ML is worth building, and they have a real baseline. If no — they have saved months and should reconsider the hardware (a faster meter, or more CT channels, which is what the community and the market both converged on).
 
-**Bonus, and the highest-value thing in this document:** run Part B with **CT2 clamped on the appliance's own circuit**, and compare the isolated signature against what the aggregate shows. That directly measures how much the whole-home signal costs you — and it is the experiment that would tell them whether the second channel is their real product.
+**Bonus, and the highest-value thing in this document:** run Part B with **CT2 clamped on the appliance's own circuit**, and compare the isolated signature against what the aggregate shows. That directly measures how much the whole-home signal costs you — and it is the experiment that would tell them whether the second channel is their real product. *(Corrected 2026-09-20 — see section 9.1: the measurement stands as an evaluation experiment; the product-scope question is settled — single aggregate signal.)*
 
 ---
 
@@ -173,7 +174,7 @@ If yes — the ML is worth building, and they have a real baseline. If no — th
 2. **Generating data with an LLM will not work, and it is unnecessary — UK-DALE and REFIT are real, labelled, free, and can be downsampled to exactly the rate the Shelly produces.** This is the single most useful finding to deliver.
 3. **Prove the sensor can do the job in one day before building anything else** — the timestamp histogram and the kettle test (section 5).
 4. **Start with the kettle, not the washing machine.** Cheapest calibration, most events, lowest variance, directly tests the core question.
-5. **Use the second CT channel** — continuous ground truth is available and unused.
+5. **Use the second CT channel** — continuous ground truth is available and unused. *(Corrected 2026-09-20 — see section 9.1: evaluation rig only; the product stays single-signal.)*
 6. **Reconcile the two flow diagrams: they disagree about who marks the event.** Confirm which one is implemented.
 7. **Make the app verify the user instead of trusting them** — confirm the device streamed, and confirm power actually stepped, while the user is still there.
 
@@ -386,5 +387,43 @@ putting to them:
 > projects with three different scopes."*
 
 ---
+
+## 9. Corrections — alignment with the reviewed problem statement (2026-09-20)
+
+Recorded after the problem-statement review pass (`docs/PROBLEM_STATEMENTS.md`) and the
+contradiction trace (`docs/reports/quarantine-contradiction-review.md`). This section
+supersedes the spots it names; the original text above is kept unmodified for the record.
+
+**9.1 The second CT channel is evaluation instrumentation, never product input** (corrects 2.9,
+recommendation 5, and the Part B bonus). The product stays single-signal end to end: the
+detector never sees a per-appliance or per-circuit channel [client §3 signal table; statement
+§2], and calibration is guided button-press sessions on the aggregate — no second clamp
+substitutes or augments them [owner decision]. What survives of 2.9: a bounded one-off session
+with CT2 clamped on one appliance's own circuit, to measure how much the aggregate smears a
+known signature, is the same species as the smart-plug spot rig the statement's FAQ Q13 allows —
+worth doing as an experiment. What does not survive: a permanently clamped reference channel as
+a training source, and "whether the second channel is their real product" — that scope question
+is settled.
+
+**9.2 Nameplate-anchored acceptance is warn-only** (corrects the third clause of 2.7). Session
+acceptance may not gate on "measured energy within some tolerance of the appliance's expected
+energy": expected values are nameplate-style priors, which the H07 ladder ranks at L1 —
+warn-only — with a hard constraint only as the L4 cautionary endpoint. What makes a session
+invalid is exactly what H06 must measure before anything is frozen, and per-class numeric pass
+bars are retired altogether [owner decision 2026-09-20; statement §7 principle 5]. The first two
+clauses of 2.7 (N valid sessions, CV of ΔP) remain plausible inputs to that measured flag rule.
+
+**9.3 The rolling-baseline critique is carried, not dropped** (2.5). It stands, and is now an
+ablation candidate on the H02 instrument freeze list; the protocol step itself (local baseline
+just before switch-on, client §5) is unchanged pending that measurement.
+
+**9.4 The provisional-verdict gap is acknowledged** (2.10). Kettle-vs-heater cannot be resolved
+at onset; whether the output contract gains a provisional mode is an open §4 decision, recorded
+in the contradiction trace (its section 2.4).
+
+**9.5 What stands unchanged.** Recommendations 1-4 and 6-7 are consistent with the reviewed
+statement (start with the kettle; verify the sensor on live data in a day — statement §3 item 1;
+the app verifies the step — H10's live check; real datasets, not synthetic). Section 8's hardware
+corrections stand.
 
 

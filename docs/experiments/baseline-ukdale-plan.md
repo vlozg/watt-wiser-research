@@ -1,6 +1,6 @@
 # Baseline experiment plan: UK-DALE as calibration substrate
 
-**Status:** plan, not yet implemented. **Read alongside:** `experiment-data-strategy.md` (three-tier data plan),
+**Status:** superseded 2026-09-20 — the campaign this plan specified has run, and its calibration side (submeter-mimicry signatures, first-7.0 d wall-clock) plus the §5.6 per-class pass gates are retired [owner decision]; the redo spec is the button-press calibration simulation (H02 "How to verify"). Kept unmodified as quarantined prior art. See docs/PROBLEM_STATEMENTS.md §6-§7 and docs/reports/quarantine-contradiction-review.md. **Read alongside:** `experiment-data-strategy.md` (three-tier data plan),
 `feasibility-verdicts.md` (verdict chain), `product-core-reframe.md` (the loop), `dataset-walkthrough.md`
 (data caveats). This doc turns the calibration-mimicry idea into an executable experiment spec, and every
 design choice below traces to a specific earlier finding (see the grounding table in 0.1).
@@ -29,8 +29,9 @@ design choice below traces to a specific earlier finding (see the grounding tabl
 - **Deliverable:** per-appliance episode precision/recall + onset/offset timing error + energy attribution,
   at three sampling rungs (6 / 60 / 300 s), plus the learning curve, a confusability matrix, and a rehearsed
   anomaly-loop demo on the real residual.
-- **Explicitly out of scope (v1):** whole-home disaggregation (FHMM, seq2seq), always-on / standby loads,
+- **Explicitly out of scope (v1):** whole-home joint disaggregation (FHMM, seq2seq), always-on / standby loads,
   sub-30 W detection, multi-house generalization, V-I waveform methods (separate hardware track).
+  Mains-consistency reconciliation (F4) is NOT banned - it is conditional (section 4).
 
 - **Literature position (9):** every component of this design exists in published NILM work; what the
   experiment claims is calibration economics + honest reporting + the loop demo, not method novelty.
@@ -61,8 +62,29 @@ design choice below traces to a specific earlier finding (see the grounding tabl
   `channel_1.dat` = custom aggregate, `channel_2..6.dat` = appliance submeters, `labels.dat` maps them
   (1 custom_aggregate, 2 fridge, 3 dish_washer, 4 kettle, 5 washing_machine, 6 monitor).
   Text format: space-separated `epoch_seconds watts`, 6 s sampling; loader already exists in `eda_shelly.py`.
+  Slice covers 2014-06-29 to 2014-09-07 (EDA-verified, `docs/reports/dataset_eda/01_ukdale_eda.ipynb`).
+  Note: `channel_1.dat` is a *custom* aggregate = sum of channels 2-6, so this slice has NO real residual
+  load - the full download's real mains are the R7 substrate for residual behavior.
 - **Slice stats (measured):** 985,855 rows / 70.66 days / 6.0 s; 715 steps/day > 30 W; 2+ appliances ON
-  simultaneously 32.7% of the time; aggregate noise floor ~1.0 W.
+  simultaneously 32.7% of the time; aggregate noise floor ~1.0 W. Reproduced in
+  `docs/reports/dataset_eda/01_ukdale_eda.ipynb` (span, cadence, gap fraction 0.0024, power distribution - all match
+  `deprecated/analysis/eda_reference_ukdale.json`).
+- **Staged dataset pool (EDA-verified, report set: `docs/reports/dataset_eda/`):**
+
+  | Dataset | Location | Cadence | Span / houses | Channels | Role in this plan |
+  |---|---|---|---|---|---|
+  | UK-DALE slice | `research-logs/sakunrasilka_nilm-test2/` | 6 s | 70.66 d (2014-06-29 to 09-07) | aggregate + 5 apps | baseline substrate (section 1) |
+  | UK-DALE full | `data/raw/ukdale-full/` | 6 s | 5 houses: h1 1,629 d / 53 ch; h2 235 d / 19; h3 39 d / 5; h4 206 d / 6; h5 137 d / 25 | per-house mains + appliances | R7 multi-house + real-residual checks |
+  | REDD | `data/raw/redd/redd.h5` | ~1 s | 6 buildings, 11-26 meters each; b1 mains 2011-04-18 to 05-24 | pytables store - read via `tables` (pandas.HDFStore metadata parse fails on this legacy file) | R7 secondary baseline |
+  | AMPds2 | `data/raw/AMPds2/Electricity_P.csv` | 60 s | 730 d (2012-04 onward), zero measured gaps | WHE aggregate + 20 appliance cols; mean 1,112 W | R7 multi-house |
+  | REFIT | `data/raw/REFIT/*.7z` (extract per use) | 3-4 s measured | 20 houses (numbering skips 14), 392-648 d each | Aggregate + Appliance1..9 | R7 multi-house |
+  | GREEND | `data/raw/GREEND_0-2_300615/` | 1 s | 8 buildings, 134-500 daily files each | plug-level MACs only - no aggregate column; bldg 4-5 contain mis-dated files | R7 high-rate |
+  | Kaggle 1-min | `research-logs/kaggle_1min/` | 60 s | 28 d, synthetic-looking | total + 6 substreams | artifact / replay checks only |
+  | PLAID vi | `research-logs/vi/` | 30 kHz | 17 extracted captures (archive lists 1,877 files) | V-I waveform pairs | V-I hardware track (out of scope here) |
+
+  Extension datasets are NOT part of the baseline campaign; they exist so R7 (cross-dataset matrix)
+  can run without new downloads. REFIT requires per-use extraction from the 7z archive (kept staged
+  in `data/raw/REFIT/`; nothing under `data/` is modified).
 - **Appliance set with materiality** (energy shares computed on this slice; submeters sum to 275.1 kWh,
   aggregate 321.1 kWh, ratio 1.167):
 
@@ -79,9 +101,11 @@ design choice below traces to a specific earlier finding (see the grounding tabl
   undetectable by episode methods (no step, no clean episodes) - so the baseline must report per-appliance
   materiality next to accuracy, and the product answer for monitor-class load is the always-on/UNKNOWN bucket,
   not detection.
-- **Temporal split:** calibration = first 40 days; test = final ~30.7 days. Never calibrate and test on the
-  same episode; never shuffle across time. With the counts above, N = 20 calibration episodes is available for
-  every target appliance even in the washer class (~1 window/day).
+- **Temporal split:** superseded by the deployment-parity split in section 3.0 - calibration = first
+  7.0 d wall-clock of the slice (signatures locked there), scoring on the remaining reference window
+  (~63.7 d wall / 61.6 d of sampled time after gaps). Never calibrate and test on the same episode; never
+  shuffle across time. Measured calibration episodes in the 7 d window: fridge 190, dish_washer 22,
+  kettle 24, washing_machine 76 - every target appliance still has N >= 20 calibration episodes.
 - **Citation:** UK-DALE (Kelly & Knottenbelt, Scientific Data 2015) and Neural NILM (arXiv 1507.06594) are
   already verified in `research-brief.md`. Hart 1992 (event-based NILM) remains flagged memory-cited.
 
@@ -113,6 +137,22 @@ active-query instantiation - so the measured gap between the passive curve (R3) 
 chosen episode order would buy is the loop's quantified value.
 
 ## 3. Data processing & feature engineering
+
+### 3.0 Deployment-parity split (the setup we simulate)
+
+The experiment must run the deployment story, not approximate it. At the client, runtime sees exactly
+two inputs: one aggregate channel and device signatures recorded during a calibration period. The
+UK-DALE stand-in therefore runs as - fixed before any run:
+
+- **Calibration period = first 7.0 d of the 70.66 d slice.** Signatures (3.2) are derived ONLY from
+  episodes inside this window, then locked. R3's learning curve draws its episodes from this window
+  too - it answers how much calibration runtime each appliance actually needs.
+- **Reference window = the remaining ~63.7 d, strictly after calibration.** Detection and every
+  headline metric (5.3) are computed here. Submeter channels are read ONLY by the scoring harness as
+  ground truth - the detector never sees them. This window is the narrowed reference the deliverable
+  reports on.
+- **Single-channel rule:** M0/M1 consume only the aggregate (plus the always-on floor from 3.3 and the
+  locked signatures). Any rung whose logic needs per-appliance streams at runtime is out of story.
 
 ### 3.1 Loading and alignment
 
@@ -166,7 +206,7 @@ the product needs an explainable detector.
 | F1: per-appliance binary episode detection | "Is appliance k ON in this window?" | M0: threshold + hysteresis + dwell rules from the signature | **v1 primary** |
 | F2: event-then-classify | "Something turned on - which?" | M1: match (step, dwell, level) against all signatures; nearest-signature with margin | v1 secondary; yields the confusability matrix |
 | F3: supervised onset classifier | per-candidate-step labeling | logistic / GBM on the 3.5 features | optional stretch; sklearn absent -> hand-rolled numpy logistic; likely unnecessary |
-| F4: joint disaggregation | "split mains into all appliances" | FHMM (per-appliance 2-state HMM + Viterbi), seq2seq NN | **out of scope** - 70 d / 1 house / 5 labeled appliances cannot support it; documented upgrade path |
+| F4: mains-consistency reconciliation | "do the parts add up?" | greedy subset match over F2 episodes against the aggregate (subtract highest-confidence first); remainder -> UNKNOWN | **conditional v1 rung** - triggered if R4/R5 attribution stalls on overlaps or the client demo needs the reconciled breakdown; evaluated inside R1/R2 alongside unreconciled. FHMM (per-appliance 2-state HMM + hand-rolled Viterbi; `hmmlearn` absent) and seq2seq stay the documented upgrade path - 70 d / 1 house / 5 labeled appliances cannot support seq2seq, and FHMM is unnecessary until reconciliation fails |
 
 - M0 is deliberately dumb: the baseline the client can understand, reproduce, and defend. It is also the
   tier-2 substrate piece: the same detector code later runs on synthetic fixtures (tier 1 unit tests) and on
