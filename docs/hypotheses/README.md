@@ -47,10 +47,13 @@ One-line glosses; the full story of each symbol lives in its home file.
 | [H10](H10_press_boundary_error.md) | Human press-boundary error is cheap up to the snap window; beyond it cost scales like error/dwell | AI drafted | [none] — raised in owner review 2026-09-20 |
 | [H11](H11_profile_pattern_drift.md) | Cross-session pattern templates improve detection; sustained drift from the profile flags device degradation | AI drafted | [none] — raised in owner review 2026-09-20 |
 | [H12](H12_calibration_contamination.md) | FAQ Q2 made measurable: real calibration-window contamination (raw vs boundary-harmful) across all six datasets | AI drafted | [reviewed] simultaneity hint only — analysis not yet run |
+| [H13](H13_user_mark_curation.md) | User-mark annotation: marks identify the device (measured 0.79); disaggregation from marks not demonstrated — and the mark corpus itself does not exist yet (20-mark WM seed only); annotating public datasets is the real data-collection task | AI drafted | [none — instrument exists, not owner-reviewed] GT-cycle EDA |
 
 ## The shared instrument
 
 One experiment settles H01, H02, H03, H04 and H06 at once: the **button-press calibration simulation** — ground-truth episode intervals stand in for user start/stop presses; profiles are derived *only* from the aggregate over those intervals (local baseline, ΔPower, interference flag), exactly as the product will; scoring is strictly held-out, episode-level. Its spec lives in H02 "How to verify"; every hypothesis file that uses it links there.
+
+A second instrument covers H13: the **GT-cycle EDA** (render `docs/reports/gt_cycle/`, source `src/pipelines/04_eda_annot_gt_cycle/`) — cycle-level marks curated on review sheets into `data/gold_annot/`, mark-derived profiles scored against submeter cycle GT, plus a recall-ceiling diagnostic. It validated device identification from marks; disaggregation is not demonstrated, and the mark corpus is the missing data (H13).
 
 ## Housekeeping
 
