@@ -22,7 +22,7 @@
 
 ### Tier A -- synthetic CSV: unit-test fixture (nothing more)
 
-Our repo-review verdict stands: single simulated day replayed 30 times, derived-by-arithmetic columns, perfect labels, 1.71% simultaneity, no unknown loads, white-noise frequency. Its remaining value is exactly the one a unit test has: deterministic input to check that plumbing (ETL, storage, the EDA script itself) does not crash and produces columns in the right shape. **Any feasibility conclusion drawn from it is void** -- that verdict is unchanged.
+Our repo-review verdict stands: one diurnal template repeated 30 times with fresh per-day noise and re-drawn appliance schedules (hourly-mean base corr 0.9998 across days; not a literal byte-replay, measured 2026-09-21), derived-by-arithmetic columns, perfect labels, 1.7% simultaneity, no unknown loads, white-noise frequency. Its remaining value is exactly the one a unit test has: deterministic input to check that plumbing (ETL, storage, the EDA script itself) does not crash and produces columns in the right shape. **Any feasibility conclusion drawn from it is void** -- that verdict is unchanged.
 
 ### Tier B -- UK-DALE + Shelly-emulation layer: the integration substrate
 
@@ -129,7 +129,7 @@ Dogfooding note: one Shelly on your own flat gives M4 (and C1 at n=1) almost imm
 
 | Asset | What it is worth |
 |---|---|
-| `data/raw/synthetic_shelly_data.csv` (49 MB, 518,400 rows, 5 s, 16 cols) | schema template + unit-test fixture; void as evidence |
+| `repo/WattWiser/data/raw/synthetic_shelly_data.csv` (49 MB, 518,400 rows, 5 s, 16 cols) | schema template + unit-test fixture; void as evidence |
 | `pipeline/processing/` inspect/process/validate/check_relationships | arithmetic ETL (VA=V*I, PF, diffs); reusable skeleton, nothing scientific |
 | `pipeline/features/create_features.py` | time-of-day, rolling stats; fine plumbing, no detector |
 | `backend/` Next.js 16 + Supabase (4 API routes) | the persistence shell; genuinely reusable |

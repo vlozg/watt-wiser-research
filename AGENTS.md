@@ -6,9 +6,21 @@ for US homes with Shelly EM Gen3 submeters.
 ## Layout
 - `docs/` - all analysis docs, grouped: `product/` (framing + assessments), `research/`
   (NILM methods + briefs), `knowledge/` (background primers: electricity + NILM feature basics),
-  `datasets/` (data strategy + collection), `experiments/`
-  (baseline campaign spec), `client/` (repo review + docx extraction; gitignored), `external/`
+  `datasets/` (data strategy + collection + layer docs), `experiments/`
+  (baseline campaign spec), `hypotheses/` (hypothesis registry, one `H<nn>_<slug>.md` per hypothesis
+  with status drafted/proved/rejected, index `hypotheses/README.md`, grounded by top-level
+  `PROBLEM_STATEMENTS.md` - problem inputs/outputs/calibration/FAQ with trust tags), `reports/`
+  (consolidated report set: `phase1-report-draft.md` +
+  `dataset_eda/` - 00 overview, per-dataset EDA notebooks (generated from the marimo
+  sources in `src/pipelines/02_fnd_eda_notebooks/` - edit the sources, re-export) + PDF
+  exports + review/peer-review notes) + `baseline/` (00_baseline experiment renders) +
+  `gt_cycle/` (GT-cycle EDA notebook renders, from `src/pipelines/04_eda_annot_gt_cycle/`),
+  `client/` (repo review + docx extraction; gitignored), `external/`
   (client-provided inputs; gitignored). Reading order: `README.md`.
+- `src/` - pipeline + experiment code: `pipelines/` (00 download, 01 extract,
+  02 fnd EDA notebook sources, 03 gold, 04 GT-cycle EDA notebook source) and `experiments/00_baseline` (baseline
+  scaffold: marimo notebook source + `baseline_lib.py` shared helpers; renders to
+  `docs/reports/baseline/` via `make export-baseline` - edit the source, re-export).
 - `deprecated/` - quarantined legacy trees the owner has not reviewed; do not extend.
   `deprecated/analysis/`: EDA judge (`eda_shelly.py` CLI + `eda_shelly_interactive.py`
   marimo UI + `eda_reference_ukdale.json`; schema-checked inputs, single implementation -
@@ -23,14 +35,27 @@ for US homes with Shelly EM Gen3 submeters.
   **Deprecated 2026-09-20:** kept as quarantined comparison points
   (upper-bound anchors cited by the hypothesis registry); superseded by the button-press
   calibration simulation (H02 spec) — do not extend.
+- `tests/` - pytest suite for the EDA battery in `deprecated/analysis/` (`uv run pytest tests/ -q` or `make test`;
+  data-dependent tests skip cleanly when user-staged data is absent).
 - `figures/` shipped figures + `src/`.
+- `ref/` - client-shared reference notebooks unrelated to NILM (`house-price/`,
+  `news-pred/`); pending a keep/drop decision - do not reference from code or docs.
 - `repo/` client code as received (read-only); forensics in `deprecated/analysis/repo-forensics/`.
 - `data/` - user-staged dataset downloads. Transient staging, gitignored, user-managed:
   never delete or reorganize anything in here without the user naming the exact files.
+  Exception: `data/gold_annot/` is git-tracked - the manual-curation store
+  (per-dataset hand-marked cycle annotations; layout + schema in
+  `data/gold_annot/README.md`, loaded via `baseline_lib.gold_annot_file`).
 - `research-logs/` - early-research archive: datasets + notes + fetch scripts,
-  including the V-I track (`vi/`, PLAID 30 kHz captures). Heavy dataset dirs are
-  gitignored; scripts and notes are tracked.
+  including the V-I track (`vi/`, PLAID 30 kHz captures).
+  Heavy dataset dirs are gitignored; scripts and notes are tracked.
 - `.scratch/` - throwaway scripts only; docs must never reference anything in here.
+- `.agents/` - vendored agent skills for marimo notebooks, from github.com/marimo-team/skills
+  (provenance + upstream commit in `.agents/PROVENANCE.md`), in the standard skills-CLI
+  layout `.agents/skills/<skill>/SKILL.md`: `marimo-notebook` (authoring),
+  `jupyter-to-marimo` (ipynb conversion), `marimo-batch` (headless/batch runs),
+  `wasm-compatibility` (browser-runnable sharing). Read the relevant SKILL.md before
+  authoring or converting marimo notebooks.
 
 ## Environment
 - Python deps tracked with uv (`pyproject.toml` + `uv.lock`). Setup: `uv sync`;

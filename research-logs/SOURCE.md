@@ -15,3 +15,12 @@ research phase; heavy data files are gitignored and re-downloadable.
 - `download_uk_dale_2017.sh`: wget/aria2 staging script for the full UK-DALE
   2017 release from the ceda host, moved here from `tools/` on 2026-09-19.
   Usage context: `docs/datasets/data-collection.md`.
+- `eda_datasets.ipynb` / `eda_datasets_summary.json`: executed staged-datasets EDA
+  sweep (2026-09-19) over the then-staged raw data, ending in the dataset-pool
+  inventory used by `docs/experiments/baseline-ukdale-plan.md`. Moved here from
+  `analysis/` on 2026-09-20, then removed 2026-09-20: the six fnd-layer dataset
+  sections were superseded by `docs/reports/dataset_eda/` (which also covers the
+  Kaggle 1-min synthetic replay fixture via `07_synthetic_shelly_eda`), and the
+  inventory JSON was stale (predates `data/fnd/`; ECO missing). The first-pass
+  PLAID vi section went with it; the 30 kHz captures and fetchers remain under
+  `vi/` (provenance in `vi/SOURCE.md`).

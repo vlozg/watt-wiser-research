@@ -25,7 +25,7 @@ not any workspace-root `research_logs/`, which holds other-topic research only.
 | REDD @ 3 s (Kaggle) | `data/redd-kaggle/` -> `research-logs/redd-kaggle/` | 35 chunk CSVs, 6 homes, ~12 d/home, 6-9 appliance cols + `main`, no timestamps | forensics below; timestamp-stripped derivative - align chunks before use |
 | Kaggle 1-min | `research-logs/kaggle_1min/household_power_1min.csv` | 1 home, 28 d (2024-06), `total` + fridge/ac/washer/tv/lights/base, 40,321 rows | provenance unverified - run replay checks before any use |
 | PLAID samples | `research-logs/vi/plaid_samples/` | 16 device captures @ 30 kHz | V-I track only |
-| Client synthetic | `repo/WattWiser/data/raw/synthetic_shelly_data.csv` | 1 s | 1 day replayed 30x; excluded (repo-review) |
+| Client synthetic | `repo/WattWiser/data/raw/synthetic_shelly_data.csv` | 5 s | diurnal template + per-day noise, re-drawn appliance schedules; excluded (repo-review) |
 
 ## 3. Download list, priority order
 
@@ -136,9 +136,8 @@ retained (user-managed, gitignored).
 - Pecan Street Dataport - login-walled; only if a later experiment needs utility-granularity US data.
 - UK HES - restricted access.
 
-Full EDA over all staged datasets (executed notebook with figures): `research-logs/eda_datasets.ipynb`
-(archived 2026-09-20; per-dataset sections superseded by `docs/reports/dataset_eda/`);
-machine-readable summary: `research-logs/eda_datasets_summary.json`.
+Full EDA over all staged datasets: `docs/reports/dataset_eda/` (00 overview + one executed
+notebook + PDF export per dataset; marimo sources in `src/pipelines/02_fnd_eda_notebooks/`).
 
 ## 4. Where to look for data (routes + status)
 

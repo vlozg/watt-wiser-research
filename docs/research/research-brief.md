@@ -1,7 +1,7 @@
 # WattWiser — Research Brief
 
 **Prepared for:** the WattWiser technical assessment.
-**Sources:** the project brief (AI_Engineer_Project_Brief.docx) plus ~4 hours of desk research into the field, the hardware, and the prior art
+**Sources:** the project brief plus ~4 hours of desk research into the field, the hardware, and the prior SOTA
 **Raw evidence:** projects/watt-wiser/research-logs/
 
 ---
