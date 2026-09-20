@@ -164,6 +164,8 @@ All [reviewed: `00_overview.md`]. In order of importance: (1) **the only ground 
 
 Standing findings that constrain any baseline [reviewed: `00_overview.md` §6]: cadence is the first-order design constraint; labels are incomplete and sometimes wrong (deduplicate canonicals; a vendor label alone earns no prior); residual mass is real and large and its composition is a per-house finding; simultaneity is low per bucket but high at events (~half of kettle/washer/dishwasher onsets begin while another target runs).
 
+**What no public dataset contains: user marks. The annotation-led flow is not validated, because its data does not exist yet.** One candidate core mechanism needs no extra hardware: a user marks the period a device ran; the mark forms a device profile; the profile disaggregates the aggregate. Its calibration input is hand annotation, and **no such marks exist anywhere in the repo beyond a 20-mark washing-machine seed** (`data/gold_annot/ukdale/house_1/cycles.csv`). Producing them - review-sheet annotation on the public datasets, UK-DALE first, about 20 calibration marks per device, provenance-tagged - is **real data collection** (human review labor) and is currently unplanned. Until that corpus exists, the mark → profile → disaggregate chain is measured only at the identification step (and that measurement is not owner-reviewed) [instrument: `docs/reports/gt_cycle/01_ukdale_gt_cycle_eda.ipynb`; tracked as H13]. Nothing downstream of identification may be quoted as demonstrated.
+
 ---
 
 ## 9. FAQ — the misunderstandings, settled
@@ -207,12 +209,15 @@ For estimating the device's signature, contamination never helps — a busy peri
 **Q13: Can we validate on real homes?**
 Not with ground truth — a deployed home has no per-device metering; that is the problem's boundary, not a flaw. What we can do: user confirmations (a product health metric, not science), physical consistency checks (the books, H05), and — if we choose to buy hardware — a **single smart plug on one device** during its normal life, giving per-device truth for that device only. A validation rig may use anything; it must simply never become a product input (deployment parity). The six public datasets remain the only full-truth laboratory.
 
+**Q14: Do we already have the data needed to validate the mark-based flow?**
+No - and this is the largest single gap in the evidence base. The public datasets provide aggregate + submeters; they contain **no user marks**. The mark corpus exists only as a 20-mark washing-machine seed in `data/gold_annot/` - enough to stabilize one scalar profile, not to validate the flow. Creating the corpus (annotating the public datasets by hand, about 20 marks per device, cycle-level, with a clean strictly-later test span) is real data collection and is H13's first step. Device identification from marks is measured and works; disaggregation from mark-derived profiles is not demonstrated anywhere yet.
+
 ---
 
 ## 10. Deliberately open (not settled here)
 
 From the client's own list [client §10]: which features matter; the profile's mathematical representation; rule-vs-ML for v1; session count; confidence/UNKNOWN threshold definition; handling complex/overlapping appliances.
-Ours, additional: the canonical target set (4 appliance classes used by the quarantined campaign vs the 5 canonicals of the reviewed EDA — microwave in or out); the exact interference-flag rule (H06); press-boundary robustness and the step-snapping search window (H10); placement policy — quiet-window guidance vs free choice, and salvage of contaminated sessions (H06); a passive calibration mode for non-button devices such as the fridge (product decision); whether to buy a smart-plug spot-validation rig (FAQ Q13); a device-health / anomaly use of profiles — pattern templates and drift-to-degradation signals (H11) — a candidate second feature, not MVP scope; the calibration-contamination reality check on all six datasets (H12) — the fastest hypothesis to settle.
+Ours, additional: the canonical target set (4 appliance classes used by the quarantined campaign vs the 5 canonicals of the reviewed EDA — microwave in or out); the exact interference-flag rule (H06); press-boundary robustness and the step-snapping search window (H10); placement policy — quiet-window guidance vs free choice, and salvage of contaminated sessions (H06); a passive calibration mode for non-button devices such as the fridge (product decision); whether to buy a smart-plug spot-validation rig (FAQ Q13); a device-health / anomaly use of profiles — pattern templates and drift-to-degradation signals (H11) — a candidate second feature, not MVP scope; the calibration-contamination reality check on all six datasets (H12) — the fastest hypothesis to settle; the user-mark annotation corpus (H13) — corpus size, annotator protocol, device coverage — the missing data piece for the annotation-led flow, and the real data-collection task on the public datasets.
 
 ---
 
