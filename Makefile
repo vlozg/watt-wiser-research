@@ -10,7 +10,7 @@ export MPLCONFIGDIR
 PY ?= uv run python3
 FORCE ?=
 
-.PHONY: help setup download download-force raw-manifest extract extract-force labels fnd-check xcheck baseline plan-runs export-eda eda-pdfs
+.PHONY: help setup download download-force raw-manifest extract extract-force labels gold gold-force fnd-check xcheck baseline plan-runs export-eda eda-pdfs
 
 help: ## show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
@@ -34,6 +34,12 @@ extract: ## run all six dataset extractors -> data/fnd/ (resumable; FORCE=--forc
 
 labels: ## rebuild data/gold/appliance_map.json + per-dataset slices
 	$(PY) src/pipelines/01_extract_dataset/labels.py
+
+gold: ## build gold NILM tables -> data/gold/<ds>/<building>/ (resumable; FORCE=--force to redo)
+	$(PY) src/pipelines/03_gold_nilm/gold_all.py $(FORCE)
+
+gold-force: ## rebuild every gold table from fnd
+	$(PY) src/pipelines/03_gold_nilm/gold_all.py --force
 
 fnd-check: ## verify every fnd parquet (rows / sizes vs the fnd manifests)
 	$(PY) analysis/xcheck/verify_all.py
