@@ -1,5 +1,6 @@
 # Kept out of git - heavy raw data (re-downloadable) + client-material analysis; see README
 #   repo/                  client clone, pinned in docs/client/repo-review.md (github.com/AdibReza/WattWiser @ d39f0e0)
+#   ref/                   client-shared reference notebooks (house-price/, news-pred/), keep/drop pending
 #   docs/client/           my analysis of the client's material (repo review, docx extraction)
 #   docs/external/         client-provided documents (brief, calibration deck)
 #   sakunrasilka_nilm-test2  UK-DALE slice, re-downloadable from the UK-DALE dataset
@@ -9,6 +10,7 @@
 #   data/                  fnd/ + gold/ layers and raw/ dataset downloads (gitignored)
 #                          raw/: ukdale-full/, REFIT/, AMPds2/, redd/, GREEND_0-2_300615/, ECO/
 repo/
+ref/
 docs/client/
 docs/external/
 research-logs/sakunrasilka_nilm-test2/
