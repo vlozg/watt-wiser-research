@@ -10,7 +10,7 @@ export MPLCONFIGDIR
 PY ?= uv run python3
 FORCE ?=
 
-.PHONY: help setup download download-force raw-manifest extract extract-force labels gold gold-force fnd-check xcheck baseline plan-runs export-eda export-gt-cycle eda-pdfs
+.PHONY: help setup download download-force raw-manifest extract extract-force labels gold gold-force fnd-check xcheck baseline plan-runs export-eda export-baseline export-gt-cycle eda-pdfs
 
 help: ## show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
@@ -88,6 +88,22 @@ export-gt-cycle: ## export GT-cycle EDA notebooks: all, or one via NOTEBOOK=01_u
 			uv run --project $(CURDIR) marimo export ipynb --include-outputs \
 			-f $(CURDIR)/src/pipelines/04_eda_annot_gt_cycle/$$n.py \
 			-o $(CURDIR)/docs/reports/gt_cycle/$$n.ipynb) \
+		|| { echo "FAIL $$n"; exit 1; }; \
+		echo "=== done $$n ($$(date +%H:%M:%S))"; \
+	done
+
+BASELINE_NOTEBOOKS := 01_ukdale_baseline
+
+export-baseline: ## export baseline experiment notebooks: all, or one via NOTEBOOK=01_ukdale_baseline
+	nb="$(NOTEBOOK)"; \
+	if [ -n "$$nb" ]; then list="$$nb"; else list="$(BASELINE_NOTEBOOKS)"; fi; \
+	for n in $$list; do \
+		[ -f src/experiments/00_baseline/$$n.py ] || { echo "unknown notebook $$n"; exit 1; }; \
+		echo "=== exporting $$n ($$(date +%H:%M:%S))"; \
+		(cd /tmp && UV_CACHE_DIR=/tmp/uv-cache XDG_CONFIG_HOME=/tmp/xdg-config \
+			uv run --project $(CURDIR) marimo export ipynb --include-outputs \
+			-f $(CURDIR)/src/experiments/00_baseline/$$n.py \
+			-o $(CURDIR)/docs/reports/baseline/$$n.ipynb) \
 		|| { echo "FAIL $$n"; exit 1; }; \
 		echo "=== done $$n ($$(date +%H:%M:%S))"; \
 	done
