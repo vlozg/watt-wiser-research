@@ -7,10 +7,10 @@ Medallion layout:
 """
 import os
 
-ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
-DATA = os.path.join(ROOT, 'data')
-RAW = os.path.join(DATA, 'raw')
-FND = os.path.join(DATA, 'fnd')
-GOLD = os.path.join(DATA, 'gold')
+ROOT: str = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
+DATA: str = os.path.join(ROOT, 'data')
+RAW: str = os.path.join(DATA, 'raw')
+FND: str = os.path.join(DATA, 'fnd')
+GOLD: str = os.path.join(DATA, 'gold')
 # transient scratch for extraction staging (never referenced by docs)
-STAGE = os.path.join(ROOT, '.scratch', 'extract_stage')
+STAGE: str = os.path.join(ROOT, '.scratch', 'extract_stage')
