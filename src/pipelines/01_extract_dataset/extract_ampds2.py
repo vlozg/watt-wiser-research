@@ -1,7 +1,7 @@
 """Extract AMPds2 CSVs (electricity channels + aggregate + gas/water/climate) to parquet.
 
 Source: data/raw/AMPds2/{Electricity,NaturalGas,Water,Climate}_*.csv. First column
-is unix seconds as stored by the dataset (Edmonton home; semantics preserved).
+is unix seconds as stored by the dataset (Burnaby, BC home; semantics preserved).
 Non-numeric timestamp columns (Climate) are parsed as datetime; an unparseable
 first column (row-label tables) is kept verbatim as a string column beside a
 null ts_us. Every other non-numeric column is kept verbatim as a nullable
