@@ -9,6 +9,7 @@
 #   ukdale-full            UK-DALE 2017 full download (CEDA), re-downloadable
 #   data/                  fnd/ + gold/ layers and raw/ dataset downloads (gitignored)
 #                          raw/: ukdale-full/, REFIT/, AMPds2/, redd/, GREEND_0-2_300615/, ECO/
+#                          EXCEPT data/gold_annot/ - tracked (manual curation, irreplaceable)
 repo/
 ref/
 docs/client/
@@ -19,7 +20,8 @@ research-logs/kaggle_1min/
 research-logs/plaid/
 research-logs/ukdale-full/
 research-logs/redd-kaggle/
-data/
+data/*
+!data/gold_annot/
 research-logs/vi/plaid_samples/
 .scratch/
 
