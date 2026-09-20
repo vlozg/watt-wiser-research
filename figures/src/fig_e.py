@@ -90,19 +90,24 @@ fig.tight_layout(rect=[0,0.018,1,0.962]); fig.savefig(FIG+"/fig07_harmonics.png"
 print("fig07 done")
 
 # ---------- FIG 8: waveform -> power bridge ----------
-r=[x for x in recs if x["name"]=="Washing Machine"][0]
-V=r["V"][:24]; I=r["I"][:24]
-cyc_p=np.array([np.mean(V[k]*I[k]) for k in range(len(V))])
+# the PLAID vacuum off-on capture: 12 idle cycles, then motor inrush decaying to the running plateau
+w8=np.loadtxt(glob.glob(P+"Vacuum__*.csv")[0],delimiter=",")
+if w8.ndim==1: w8=w8.reshape(-1,2)
+i8,v8=w8[:,0],w8[:,1]
+n8=len(i8)//CYC
+I8=i8[:n8*CYC].reshape(n8,CYC); V8=v8[:n8*CYC].reshape(n8,CYC)
+oncyc=np.flatnonzero(np.abs(I8).max(axis=1)>1.0)
+k0=oncyc[0]; kb=oncyc[len(oncyc)//2]
+cyc_p=np.array([np.mean(V8[k]*I8[k]) for k in range(n8)])
 fig,ax=plt.subplots(4,1,figsize=(12.5,9.6))
-k0=0
 t3=np.arange(3*CYC)/30000*1000
-ax[0].plot(t3,V[0:3].ravel(),lw=0.9,color="#333",label="voltage")
-ax[0].plot(t3,I[0:3].ravel()*30,lw=0.9,color="#d62728",label="current x30")
-ax[0].set_title("(a) raw capture — 30 000 samples/s  (3 cycles shown, 24 available)",loc="left",fontsize=9.5,fontweight="bold")
+ax[0].plot(t3,V8[k0-1:k0+2].ravel(),lw=0.9,color="#333",label="voltage")
+ax[0].plot(t3,I8[k0-1:k0+2].ravel()*30,lw=0.9,color="#d62728",label="current x30")
+ax[0].set_title("(a) raw capture — 30 000 samples/s  (3 of %d cycles shown, capture %.2f s)"%(n8,n8/60.0),loc="left",fontsize=9.5,fontweight="bold")
 ax[0].set_xlabel("ms"); ax[0].legend(fontsize=8,ncol=2); ax[0].set_ylabel("V / scaled A")
-ax[1].plot(np.arange(CYC)/30000*1000,V[k0],lw=1.0,color="#333",label="voltage")
-ax[1].plot(np.arange(CYC)/30000*1000,I[k0]*30,lw=1.0,color="#d62728",label="current x30")
-ax[1].set_title("(b) one cycle: instantaneous samples. A meter never sees this — it integrates",loc="left",fontsize=9.5,fontweight="bold")
+ax[1].plot(np.arange(CYC)/30000*1000,V8[kb],lw=1.0,color="#333",label="voltage")
+ax[1].plot(np.arange(CYC)/30000*1000,I8[kb]*30,lw=1.0,color="#d62728",label="current x30")
+ax[1].set_title("(b) one running cycle: instantaneous samples. A meter never sees this — it integrates",loc="left",fontsize=9.5,fontweight="bold")
 ax[1].set_xlabel("ms"); ax[1].legend(fontsize=8,ncol=2); ax[1].set_ylabel("V / scaled A")
 ax[2].plot(np.arange(len(cyc_p))/60.0,cyc_p,marker="o",ms=3.5,lw=1.0,color="#2ca02c")
 ax[2].set_title("(c) after one multiplication and one averaging step: WATTS. Sampling rate is now 60 Hz",loc="left",fontsize=9.5,fontweight="bold")
@@ -117,6 +122,6 @@ for dt_,c_,lab in [(1,"#1f77b4","1 s"),(5,"#ff7f0e","5 s  (the synthetic dataset
 ax[3].set_title("(d) the same record as the meter would report it — and this is the ENTIRE input to NILM",loc="left",fontsize=9.5,fontweight="bold")
 ax[3].set_xlabel("seconds"); ax[3].set_ylabel("W"); ax[3].legend(fontsize=8,ncol=4)
 fig.suptitle("Figure 8 — The bridge: how a waveform becomes a number, and what is destroyed at each step",fontsize=12.3,fontweight="bold",y=0.996)
-fig.text(0.5,0.004,"Real PLAID washing-machine capture. Panels (a)-(c) exist only on hardware that exports the raw waveform. A Shelly EM starts at panel (d).",ha="center",fontsize=8,color="#555")
+fig.text(0.5,0.004,"Real PLAID vacuum-cleaner capture: an off-on transient; the current clamp saturates at 28 A. Panels (a)-(c) exist only on hardware that exports the raw waveform. A Shelly EM starts at panel (d).",ha="center",fontsize=8,color="#555")
 fig.tight_layout(rect=[0,0.012,1,0.982]); fig.savefig(FIG+"/fig08_waveform_to_power.png",bbox_inches="tight"); plt.close(fig)
 print("fig08 done")

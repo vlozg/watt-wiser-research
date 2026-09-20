@@ -216,7 +216,7 @@ This figure shows exactly what is destroyed, and where, as raw samples become th
 | Panel | Available at | Contains |
 |---|---|---|
 | (a) raw waveform, 30 kHz | Only with waveform-exporting hardware | Everything: phase, harmonics, transients, inrush |
-| (b) one cycle | Same | The phase relationship, explicitly. Here the current peaks 0.6 ms after the voltage — a 14° inductive lag, which is the visual signature of a motor. |
+| (b) one cycle | Same | The phase relationship, explicitly. This is the inrush cycle — the clamp is flat-topping the current at 28 A — but the zero-crossings still show it: the current crosses zero ~0.9 ms (~20° at 60 Hz) behind the voltage, and once the motor is running the lag collapses to ~0.05 ms. A universal motor is mostly a resistive path; its signature here is the inrush and the rippled current shape, not a big steady-state phase shift. |
 | (c) watts at 60 Hz | Same, after one multiply and one average | The power signal *before* any downsampling. Note the vacuum's **inrush**: it spikes to 1.79 kW and decays to a 0.55 kW plateau over half a second. |
 | (d) 1 s and 5 s | Any meter, including the Shelly | The inrush is now two or three points. |
 
