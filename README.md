@@ -13,6 +13,7 @@ client's code + data as received.
 | `docs/client/` | My analysis of client material: `repo-review.md`, docx extraction (`brief-extract/`) - gitignored, kept out of history |
 | `docs/product/` | Product framing: use-case reassessment, core reframe, post-meeting assessment |
 | `docs/research/` | NILM research: `research-brief.md`, `nilm-visual-reading.md`, `analog-problems.md`, `vi-trajectory-hardware.md` |
+| `docs/knowledge/` | Background primers: `ELI5_NILM.md` (electricity basics), `ELI5_COMMON_NILM_FEATURES.md` (common NILM features, with repo figures) |
 | `docs/datasets/` | Data strategy: `data-collection.md`, `dataset-walkthrough.md`, `experiment-data-strategy.md` |
 | `docs/experiments/` | Baseline campaign: `baseline-ukdale-plan.md` (the spec: rungs, metrics, gates, run matrix) |
 | `analysis/` | All analysis code: EDA battery + domain-shift judge twins (`eda_shelly.py` CLI / `eda_shelly.ipynb` interactive; edit only the config cell in the notebook), UK-DALE reference metrics (`eda_reference_ukdale.json`), UK-DALE computation scripts (`q123_stats.py`, `q123_stats2.py`, `q123_cites.py`), notebook validator (`nb_validate.py`), client-repo forensics (`repo-forensics/`: `analyze_synthetic.py` (12 checks), `an1`-`an5.py`, `findings.txt`) |
@@ -25,6 +26,10 @@ client's code + data as received.
 | `AGENTS.md` | Working rules + layout conventions for agents |
 
 ## Reading order (docs)
+
+Optional primers: `docs/knowledge/ELI5_NILM.md` - electricity basics (V, I, W, kWh, AC,
+power factor) in plain language, then `docs/knowledge/ELI5_COMMON_NILM_FEATURES.md` -
+the features NILM methods compute (delta power, duty cycles, V-I trajectories).
 
 1. `docs/research/research-brief.md` - scope + literature
 2. `docs/product/feasibility-verdicts.md` - feasibility verdict chain

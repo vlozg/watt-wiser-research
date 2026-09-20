@@ -69,7 +69,7 @@ recs=[r for r in recs if r["db"] is not None]
 recs.sort(key=lambda r:-r["thd"])
 print("sorted by THD:", ", ".join("%s %.0f%%"%(r["name"],r["thd"]) for r in recs))
 
-fig,axs=plt.subplots(3,3,figsize=(13.5,8.6))
+fig,axs=plt.subplots(4,4,figsize=(13.5,11.2))   # 4x4: show ALL usable captures, kettle included
 for ax,r in zip(axs.ravel(),recs):
     k=np.arange(len(r["db"]))
     ax.bar(k,r["db"],color="#4c72b0",width=0.78)
@@ -81,7 +81,7 @@ for ax,r in zip(axs.ravel(),recs):
     ax.text(0.97,0.90,"THD %.0f%%"%(r["thd"]),transform=ax.transAxes,ha="right",fontsize=8.5,
             fontweight="bold",color="#c44e52",bbox=dict(fc="white",ec="#c44e52",alpha=0.9,pad=1.6))
 for ax in axs.ravel()[len(recs):]: ax.axis("off")
-for ax in axs.ravel()[-1*3:]:
+for ax in axs.ravel()[-4:]:
     if ax.has_data(): ax.set_xlabel("harmonic order (x 60 Hz)",fontsize=7.5)
 fig.suptitle("Figure 7 — Harmonic spectra: the same loads in the frequency domain (FFT of a synchronously-averaged mains cycle)",fontsize=12.3,fontweight="bold",y=0.995)
 fig.text(0.5,0.006,"Red bars mark EVEN harmonics, which should be absent from any symmetric load. Panels sorted by total harmonic distortion (THD). A resistive element dumps everything into the fundamental; "

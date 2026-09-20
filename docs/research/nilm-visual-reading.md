@@ -71,7 +71,7 @@ The reason is that the inverse problem has no unique solution: two different app
 
 ## 2. Figure 1 — The ladder: what you can see depends on the instrument
 
-![Figure 1](figures/fig01_resolution_ladder.png)
+![Figure 1](../../figures/fig01_resolution_ladder.png)
 
 Panels 1–4 are the **same evening window of the same house**, aggregated to coarser and coarser intervals. Read them top to bottom and watch information die.
 
@@ -94,7 +94,7 @@ To be precise about the hardware, because this matters and is easy to overstate:
 
 ## 3. Figures 2 and 3 — The poster, and one day unrolled
 
-![Figure 2](figures/fig02_nilm_poster_week.png)
+![Figure 2](../../figures/fig02_nilm_poster_week.png)
 
 This is the canonical NILM picture. The top trace is the only thing a meter records. The five below are the answer, obtained with separate clamps on each appliance.
 
@@ -107,7 +107,7 @@ This is the canonical NILM picture. The top trace is the only thing a meter reco
 
 That red band is the single most important annotation in this document. Your project's entire feasibility question lives in the gap between the aggregate trace and that band.
 
-![Figure 3](figures/fig03_one_day_zoom.png)
+![Figure 3](../../figures/fig03_one_day_zoom.png)
 
 Same data, 24 hours. Shaded bands mark ON intervals and the title of each panel gives the duty cycle and the event count.
 
@@ -122,7 +122,7 @@ Same data, 24 hours. Shaded bands mark ON intervals and the title of each panel 
 
 ## 4. Figure 4 — Reading events, not shapes
 
-![Figure 4](figures/fig04_event_view.png)
+![Figure 4](../../figures/fig04_event_view.png)
 
 This figure shows the view that algorithms actually use. If you take one thing from this masterclass about low-frequency NILM, take this.
 
@@ -140,7 +140,7 @@ This figure shows the view that algorithms actually use. If you take one thing f
 
 ## 5. Figures 5 and 6 — The 2D view: V-I trajectories
 
-![Figure 5](figures/fig05_vi_gallery.png)
+![Figure 5](../../figures/fig05_vi_gallery.png)
 
 **This is the answer to your question about treating signal data as images.** Sixteen real appliances, voltage on x, current on y, one loop per mains cycle. Twelve cycles overlaid per panel.
 
@@ -155,7 +155,7 @@ Nothing about this is a metaphor. These are 2D shapes, produced by a determinist
 | **Burst near the voltage peak** | Switch-mode supply: a rectifier charges a capacitor, so current only flows when the instantaneous voltage exceeds the capacitor voltage. | Laptop, CFL |
 | **Asymmetric / lopsided** | Half-wave rectification or a transformer under asymmetric load: the negative half-cycle is treated differently from the positive. | Microwave, hairdryer |
 
-![Figure 6](figures/fig06_vi_anatomy.png)
+![Figure 6](../../figures/fig06_vi_anatomy.png)
 
 Figure 6 enlarges six archetypes with the reading next to each. Work through them left to right, top to bottom.
 
@@ -183,7 +183,7 @@ A V-I trajectory is a **non-linear** transform: it plots `i` against `v` pointwi
 
 ## 6. Figure 7 — The frequency view, done properly
 
-![Figure 7](figures/fig07_harmonics.png)
+![Figure 7](../../figures/fig07_harmonics.png)
 
 You asked specifically whether people use FFT on electrical signals the way they do on speech. Here is the honest answer, with pictures.
 
@@ -191,7 +191,7 @@ You asked specifically whether people use FFT on electrical signals the way they
 
 **How to read it.** The fundamental (order 1) is normalised to 0 dB. Every other bar shows how much energy that harmonic carries *relative to the fundamental*. Panels are sorted by total harmonic distortion (THD).
 
-- **Water kettle, 2% THD.** Essentially all energy in the fundamental, nothing above −60 dB. This is a pure resistor. Its spectrum is a single spike and therefore carries almost no identity — it is the same spike any resistor would produce.
+- **Water kettle, 2% THD.** Essentially all energy in the fundamental — its tallest harmonic sits 38 dB below the fundamental. This is a pure resistor. Its spectrum is a single spike and therefore carries almost no identity — it is the same spike any resistor would produce.
 - **Laptop, 148% THD.** Harmonics as strong as the fundamental. This is a switch-mode supply, and its harmonic fingerprint is distinctive.
 - **Red bars mark even harmonics (2nd, 4th, 6th...).** In a symmetric load, even harmonics should be **absent** — a load that treats both half-cycles identically cannot generate them. When they appear, it means half-wave rectification. The CFL, laptop, blender and heater show them; the kettle and coffee maker do not.
 
@@ -209,7 +209,7 @@ That is worth remembering as a technique in its own right — it is how you extr
 
 ## 7. Figure 8 — The bridge: waveform to number
 
-![Figure 8](figures/fig08_waveform_to_power.png)
+![Figure 8](../../figures/fig08_waveform_to_power.png)
 
 This figure shows exactly what is destroyed, and where, as raw samples become the single number that NILM consumes. It is the most direct answer to "what can I actually see with the hardware I have?"
 
@@ -232,7 +232,7 @@ That is why the literature splits into high-frequency and low-frequency camps, w
 
 ## 8. Figure 9 — Real vs synthetic
 
-![Figure 9](figures/fig09_real_vs_synthetic.png)
+![Figure 9](../../figures/fig09_real_vs_synthetic.png)
 
 Same time span, same axes, two datasets. This one exists to be looked at side by side.
 

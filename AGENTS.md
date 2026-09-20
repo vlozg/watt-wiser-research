@@ -5,7 +5,8 @@ for US homes with Shelly EM Gen3 submeters.
 
 ## Layout
 - `docs/` - all analysis docs, grouped: `product/` (framing + assessments), `research/`
-  (NILM methods + briefs), `datasets/` (data strategy + collection), `experiments/`
+  (NILM methods + briefs), `knowledge/` (background primers: electricity + NILM feature basics),
+  `datasets/` (data strategy + collection), `experiments/`
   (baseline campaign spec), `client/` (repo review + docx extraction; gitignored), `external/`
   (client-provided inputs; gitignored). Reading order: `README.md`.
 - `analysis/` - all analysis code: EDA twins (`eda_shelly.py` / `.ipynb` +
