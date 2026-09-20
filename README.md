@@ -82,7 +82,8 @@ uv run python3 analysis/plan_runs.py --run all
 ```
 
 Interactive EDA: open `analysis/eda_shelly.ipynb`, edit the config cell, run top-to-bottom.
-Figures regenerate from `figures/src/fig_a.py` through `fig_g.py`; PLAID captures re-fetch via
+Figures regenerate from `figures/src/` - one script per figure, `fig01_resolution_ladder.py` through
+`fig09_real_vs_synthetic.py` (shared boot: `_figcommon.py`). PLAID captures re-fetch via
 `research-logs/vi/plaid_fetch.py`.
 
 ## Conventions

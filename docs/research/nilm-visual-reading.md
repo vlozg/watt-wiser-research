@@ -303,6 +303,6 @@ All figures regenerate from the scripts in this repository. The data they need:
 - `research-logs/vi/plaid_samples/` — 16 PLAID waveform captures, 30 kHz, extracted by HTTP range request from the Figshare archive. Regeneration script: `research-logs/vi/plaid_fetch.py`.
 - `repo/WattWiser/data/raw/synthetic_shelly_data.csv` — the synthetic dataset from the client repo, used only in Figure 9.
 
-Figure generation scripts are in `figures/src/fig_a.py` through `figures/src/fig_g.py`. Note that the PLAID captures are *transition* captures: the load may be OFF for most of the file. The metadata's `status` field (`off-on` / `on-off`) must be used to select the live portion, or you will FFT the standby state.
+Figure generation scripts live in `figures/src/`, one script per figure: `fig01_resolution_ladder.py` through `fig09_real_vs_synthetic.py`, plus the shared `_figcommon.py` boot module. Note that the PLAID captures are *transition* captures: the load may be OFF for most of the file. The metadata's `status` field (`off-on` / `on-off`) must be used to select the live portion, or you will FFT the standby state.
 
 Environment: uv-managed deps (`uv sync`, run with `uv run python3`), matplotlib with `Agg` and `MPLCONFIGDIR=/tmp/mplcfg`.
