@@ -100,9 +100,9 @@ This is the canonical NILM picture. The top trace is the only thing a meter reco
 
 **What to notice:**
 
-- The **fridge** pulses roughly 50 times a day at ~107 W. Look at the regularity — that is a compressor duty cycle, and it is the closest thing in a house to a clock.
+- The **fridge** pulses roughly every 50 minutes at ~107 W. Look at the regularity — that is a compressor duty cycle, and it is the closest thing in a house to a clock.
 - The **kettle** appears as isolated spikes of ~2.9 kW. High power, low frequency, trivially detectable.
-- The **monitor** is on for most of the day at 50–60 W with heavy variation. It is the kind of load that hides under a threshold.
+- The **monitor** is on around the clock at 50–60 W with heavy variation. It is the kind of load that hides under a threshold.
 - The red band at the bottom of the top trace is the **30 VA blind spot** of the Shelly EM Gen3. Everything below that line is invisible to the hardware the project intends to use. Now look at the monitor trace and the fridge trace and ask how much of them survives.
 
 That red band is the single most important annotation in this document. Your project's entire feasibility question lives in the gap between the aggregate trace and that band.
@@ -113,10 +113,10 @@ Same data, 24 hours. Shaded bands mark ON intervals and the title of each panel 
 
 **How to read a day:**
 
-- The **aggregate** is unreadable by eye. You can see that *something* happened around hour 22 but not what.
-- The **kettle** turns on 5 times. Each on-time is ~90 s. That is your easiest possible target.
-- The **washing machine** is the instructive one: a long multi-stage cycle with a ramp, a plateau, and a slow decay. A disaggregator that thinks in single step sizes cannot represent it. Neither can a synthetic generator that draws rectangles — compare Figure 9.
-- Duty cycles matter more than peak power. The fridge is on 32% of the day and the kettle 0.6%. A model that is 99% accurate can be 99% accurate by saying "everything is off".
+- The **aggregate** is unreadable by eye. You can see that *something* happened between about 4 a.m. and 10 a.m. and again around hour 13, but not what.
+- The **kettle** turns on 5 times. Each on-time is ~100 s. That is your easiest possible target.
+- The **washing machine** is the instructive one: three long multi-stage cycles that day, each with a ramp, a plateau, and a slow decay. A disaggregator that thinks in single step sizes cannot represent it. Neither can a synthetic generator that draws rectangles — compare Figure 9.
+- Duty cycles matter more than peak power. The fridge is on 36% of the day and the kettle 0.6%. A model that is 99% accurate can be 99% accurate by saying "everything is off".
 
 ---
 
