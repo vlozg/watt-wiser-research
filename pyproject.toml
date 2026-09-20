@@ -14,6 +14,16 @@ dependencies = [
     "pyarrow>=25.0.1",
     "pypdf>=6.19.0",
     "gdown>=6.4.0",
+    "marimo>=0.24.2",
+    "nbformat>=5.11.1",
+    "nbconvert>=7.16",
+    "playwright",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.16.8",
 ]
 
 [build-system]
@@ -22,3 +32,33 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/wattwiser"]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 120
+src = ["src"]
+extend-exclude = [
+    ".scratch",       # throwaway scripts
+    "research-logs",  # archived one-shot fetch scripts, deliberate one-liner style
+    "repo",           # client code as received (read-only)
+]
+
+[tool.ruff.lint]
+# E4/E7/E9 = core errors, F = pyflakes, I = import order, B = bugbear basics
+select = ["E4", "E7", "E9", "F", "I", "B"]
+extend-ignore = [
+    # deliberate compact style in research scripts
+    "E402", # imports after the matplotlib.use('Agg') call / sys.path setup
+    "E701", "E702", # one-line if / semicolon statements
+    "E741", # (s, l) = (start, length) episode tuples are a repo convention
+    "B905", # zip() of same-length paired lists (keys, names) is intentional
+]
+
+[tool.ruff.lint.per-file-ignores]
+# the notebook keeps a bare 'display' fallback for plain-python execution
+"analysis/*.ipynb" = ["B018"]
+
+[tool.pyrefly]
+preset = "basic"
+# eda_fnd_lib lives next to the marimo notebook sources and is imported at runtime
+search-path = ["src/pipelines/02_fnd_eda_notebooks"]

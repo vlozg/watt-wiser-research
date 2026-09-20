@@ -24,6 +24,7 @@ research-logs/vi/plaid_samples/
 # Transient
 .venv/
 __pycache__/
+__marimo__/
 *.pyc
 .ipynb_checkpoints/
 

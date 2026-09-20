@@ -10,7 +10,7 @@ export MPLCONFIGDIR
 PY ?= uv run python3
 FORCE ?=
 
-.PHONY: help setup download download-force raw-manifest extract extract-force labels fnd-check xcheck baseline plan-runs
+.PHONY: help setup download download-force raw-manifest extract extract-force labels fnd-check xcheck baseline plan-runs export-eda eda-pdfs
 
 help: ## show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
@@ -48,3 +48,25 @@ baseline: ## R1 baseline campaign on all substrates
 
 plan-runs: ## R2-R6 planned runs (plan section 6)
 	$(PY) analysis/plan_runs.py --run all
+
+EDA_NOTEBOOKS := 01_ukdale_eda 02_refit_eda 02b_refit_eda_localtime 03_redd_eda 04_eco_eda 05_greend_eda 06_ampds2_eda
+
+export-eda: ## export dataset EDA notebooks: all 7, or one via NOTEBOOK=01_ukdale_eda
+	nb="$(NOTEBOOK)"; \
+	if [ -n "$$nb" ]; then list="$$nb"; else list="$(EDA_NOTEBOOKS)"; fi; \
+	for n in $$list; do \
+		[ -f src/pipelines/02_fnd_eda_notebooks/$$n.py ] || { echo "unknown notebook $$n"; exit 1; }; \
+		echo "=== exporting $$n ($$(date +%H:%M:%S))"; \
+		(cd /tmp && UV_CACHE_DIR=/tmp/uv-cache XDG_CONFIG_HOME=/tmp/xdg-config \
+			uv run --project $(CURDIR) marimo export ipynb --include-outputs \
+			-f $(CURDIR)/src/pipelines/02_fnd_eda_notebooks/$$n.py \
+			-o $(CURDIR)/docs/reports/dataset_eda/$$n.ipynb) \
+		|| { echo "FAIL $$n"; exit 1; }; \
+		echo "=== done $$n ($$(date +%H:%M:%S))"; \
+	done
+
+eda-pdfs: ## export dataset EDA PDFs: all 6, or some via NOTEBOOK="02_refit_eda 06_ampds2_eda"
+	(cd /tmp && UV_CACHE_DIR=/tmp/uv-cache XDG_CONFIG_HOME=/tmp/xdg-config \
+		uv run --project $(CURDIR) python3 $(CURDIR)/src/pipelines/02_fnd_eda_notebooks/export_pdfs.py $(NOTEBOOK)) \
+	|| { echo "FAIL eda-pdfs"; exit 1; }
+
