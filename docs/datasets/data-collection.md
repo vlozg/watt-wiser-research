@@ -40,8 +40,8 @@ not any workspace-root `research_logs/`, which holds other-topic research only.
 `data/raw/GREEND_0-2_300615/`, `data/raw/ECO/`); paths below and in the extraction
 pipelines point there. Extraction into `data/fnd/` is unchanged. Reproducible staging:
 the user uploaded one zip per dataset to public Google Drive -
-`src/pipelines/00_download_dataset/download_all.py` downloads, extracts and verifies them
-(size-verified against `raw_manifest.json`); if a download fails, see `docs/Data source note.md`.
+`src/pipelines/00_download_dataset/download.py` downloads, extracts and verifies them
+(size-verified against `raw_manifest.json`); if a download fails, see the original-host list in section 3.
 Two zips mid-download (aria2): `ukdale.zip` = plain-text channels (the set our loader parses),
 `ukdale.h5.zip` = HDF5/NILMTK (needs pytables - absent; keep as archive). Plus readmes, per-building
 yamls, metadata. An armed watcher moves each zip to `data/raw/ukdale-full/` the moment its
@@ -136,8 +136,9 @@ retained (user-managed, gitignored).
 - Pecan Street Dataport - login-walled; only if a later experiment needs utility-granularity US data.
 - UK HES - restricted access.
 
-Full EDA over all staged datasets (executed notebook with figures): `analysis/eda_datasets.ipynb`;
-machine-readable summary: `analysis/eda_datasets_summary.json`.
+Full EDA over all staged datasets (executed notebook with figures): `research-logs/eda_datasets.ipynb`
+(archived 2026-09-20; per-dataset sections superseded by `docs/reports/dataset_eda/`);
+machine-readable summary: `research-logs/eda_datasets_summary.json`.
 
 ## 4. Where to look for data (routes + status)
 

@@ -18,8 +18,8 @@ the layout to `data/raw/<dataset>/`, and verifies the tree against `raw_manifest
 
 ```bash
 make download                                                    # all six (skips verified)
-uv run python3 src/pipelines/00_download_dataset/download_redd.py       # one dataset
-uv run python3 src/pipelines/00_download_dataset/download_redd.py --force  # re-download, replaces the tree
+uv run python3 src/pipelines/00_download_dataset/download.py redd        # one dataset
+uv run python3 src/pipelines/00_download_dataset/download.py redd --force  # re-download, replaces the tree
 ```
 
 `--force` moves an existing tree to `data/raw/.bak_<dataset>/` before staging the new
@@ -37,7 +37,7 @@ copy; the `.staging_<dataset>/` work dir is cleaned up automatically.
 
 ## If a download fails
 
-The original hosts are listed in `docs/Data source note.md`. Download the files there,
+The original hosts are listed in `docs/datasets/data-collection.md (original-host list in section 3)`. Download the files there,
 reproduce the layout under `data/raw/<dir>/`, then `uv run python3
 src/pipelines/00_download_dataset/make_manifest.py` if the content changed.
 
