@@ -19,10 +19,10 @@ setup: ## uv sync (install deps + wattwiser editable)
 	uv sync
 
 download: ## stage all six datasets from the Drive zips (skips verified trees)
-	$(PY) src/pipelines/00_download_dataset/download_all.py
+	$(PY) src/pipelines/00_download_dataset/download.py
 
 download-force: ## re-download + replace existing trees (old tree kept as .bak_<dataset>)
-	$(PY) src/pipelines/00_download_dataset/download_all.py --force
+	$(PY) src/pipelines/00_download_dataset/download.py --force
 
 raw-manifest: ## re-snapshot data/raw/ file sizes into raw_manifest.json
 	$(PY) src/pipelines/00_download_dataset/make_manifest.py
