@@ -7,16 +7,19 @@
 **We do not have enough data.** The annotation-led flow - a user marks
 the period a device ran; the mark forms a device profile; the profile
 disaggregates the aggregate - needs a corpus of hand-marked annotations
-on public datasets. **No such corpus exists.** The only marks in the
-repo are 20 washing-machine calibration cycles seeded into
-data/gold_annot/ukdale/house_1/cycles.csv during the GT-cycle EDA - a
-seed big enough to stabilize a scalar profile, far too small to validate
-the flow. Producing marks on the public datasets (UK-DALE first: about
-20 calibration marks per device, plus a strictly-later test span) is
-**real data collection** - human review labor, review sheets,
-provenance-tagged - and must be planned and resourced as such. Until it
-runs, nothing downstream of device identification may be quoted as
-validated.
+on public datasets. The repo's corpus is the UK-DALE GT-cycle tranche:
+360 provenance-tagged calibration cycles across houses 1, 2 and 5 -
+100 `manual_review_v1` marks (washing machine + dishwasher) plus 260
+`manual_review_v2` marks over 13 episodic devices
+(`data/gold_annot/ukdale/<house>/manual_cycles.csv`, device list in
+`data/gold_annot/README.md`) produced during the GT-cycle EDA - enough
+to stabilize a scalar profile per device, far too small to validate the
+flow, and houses 3-4 still contribute no marks. Producing marks on the
+public datasets (UK-DALE first: about 20 calibration marks per device,
+plus a strictly-later test span) is **real data collection** - human
+review labor, review sheets, provenance-tagged - and must be planned and
+resourced as such. Until it runs, nothing downstream of device
+identification may be quoted as validated.
 
 ## Statement (falsifiable)
 

@@ -1,0 +1,19 @@
+house,device,in_focus,class,thr_source,thr_used_w,dwell_s,merge_s,n_cycles,n_cycles_cal,dur_p50_min,energy_p50_wh,power_mean_w,power_peak_p50_w,power_peak_p95_w,on_power_p50_w,on_power_p99_w,notes
+house_2,washing_machine,True,program,gold,81.0,600.0,600.0,53,36,39.55,403.8886111111111,589.80389665396,2401.0,2617.4,259.0,2321.0,
+house_2,dishwasher,True,program,override,90.0,600.0,600.0,106,66,47.233333333333334,1112.205,1421.9060514744463,2101.5,3881.5,1984.0,2063.0,gold thr 984 W is heater-only (on-power p50 2001 W); 90 W keeps pump/fill phases
+house_2,kettle,True,burst,gold,1477.0,30.0,60.0,757,522,2.8,142.88694444444445,3075.3225806451615,3016.0,3924.0,2954.0,3085.3899999999994,
+house_2,microwave,True,burst,override,500.0,30.0,60.0,375,261,1.8,36.55,1373.7666666666667,1342.0,1961.5000000000002,1311.0,1370.0,"gold thr 13 W sits in standby noise (on-power p50 26 W); 8,320 samples > 1 kW confirm real use"
+house_2,fridge,True,duty,override,40.0,30.0,12.0,3839,2331,15.2,23.268333333333334,91.09101123595505,127.0,1295.0,88.0,102.0,gold thr 5.5 W inside standby noise (on-power p50 11 W); 40 W is the compressor floor
+house_2,cooker,False,manual,generic,20.0,30.0,60.0,5,1,3.183333333333333,2.0108333333333333,37.90052356020942,,,26.0,1042.7599999999989,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_2,laptop,False,electronics,generic,20.0,30.0,60.0,6449,5240,1.7333333333333334,0.28055555555555556,10.645161290322582,,,30.0,60.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_2,laptop2,False,electronics,generic,20.0,30.0,60.0,515,285,12.083333333333334,5.089722222222222,26.159049360146255,,,26.0,44.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_2,modem,False,always_on,generic,20.0,30.0,60.0,0,0,,,,,,137.0,231.7199999999998,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_2,monitor,False,electronics,generic,20.0,30.0,60.0,535,473,137.88333333333333,140.22833333333332,61.127253446447504,,,61.0,63.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_2,playstation,False,electronics,generic,20.0,30.0,60.0,6,3,7.625,7.189722222222223,41.61818782807194,,,32.0,110.96000000000004,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_2,rice_cooker,False,program,generic,20.0,30.0,60.0,59,38,28.316666666666666,139.64166666666668,301.1368173810922,,,397.0,417.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_2,router,False,always_on,generic,20.0,30.0,60.0,680,679,1.1,0.11083333333333334,6.0,,,23.0,25.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_2,running_machine,False,manual,generic,20.0,30.0,60.0,63,43,16.366666666666667,80.09722222222223,282.7981072555205,,,283.0,718.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_2,server,False,always_on,generic,20.0,30.0,60.0,1032,1032,1.1,0.14250000000000002,8.386353663887672,,,27.0,41.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_2,server_hdd,False,always_on,generic,20.0,30.0,60.0,0,0,,,,,,22.0,736.2799999999996,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_2,speakers,False,electronics,generic,20.0,30.0,60.0,2,2,0.5083333333333333,0.07083333333333333,8.361290322580645,,,22.0,24.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_2,toaster,False,burst,generic,20.0,30.0,60.0,30,25,1.7083333333333333,28.229583333333334,988.7766990291261,,,968.0,1194.4399999999973,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"

@@ -1,0 +1,6 @@
+house,device,in_focus,class,thr_source,thr_used_w,dwell_s,merge_s,n_cycles,n_cycles_cal,dur_p50_min,energy_p50_wh,power_mean_w,power_peak_p50_w,power_peak_p95_w,on_power_p50_w,on_power_p99_w,notes
+house_4,kettle,True,burst,gold,1083.0,30.0,60.0,674,502,2.0,79.56083333333333,2282.493650793651,2237.0,3001.35,2174.0,2975.0,
+house_4,microwave,True,burst,excluded,90.5,30.0,60.0,0,0,,,,,,,,mixed channel (washing_machine_microwave_breadmaker): contaminated by WM and breadmaker activations; not usable as microwave GT
+house_4,fridge,True,duty,gold,45.5,30.0,12.0,4828,3907,17.233333333333334,26.6525,93.0268205128205,130.0,1340.6499999999996,91.0,108.0,
+house_4,gas_boiler,False,heating,generic,20.0,30.0,60.0,608,443,41.233333333333334,67.61694444444444,98.92312717391034,,,104.0,109.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_4,tv_dvd_digibox_lamp,False,electronics,generic,20.0,30.0,60.0,336,292,5.966666666666667,4.435833333333333,45.55355711349822,,,55.0,101.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"

@@ -21,9 +21,11 @@ build dropping data. Everything is a native-sampling pass-through from
 `mains.parquet` is omitted when a dataset has no site meter (GREEND).
 
 Manual annotations that the gold build cannot derive are kept in a
-separate, git-tracked layer: `data/gold_annot/` (per-dataset
-hand-marked cycle annotations - schema, provenance convention and load
-contract in `data/gold_annot/README.md`).
+separate, git-tracked layer: `data/gold_annot/` (per-dataset hand-marked
+cycle marks plus rule-derived all-device metadata (`device_profile.csv`
+covers every gold channel with an `in_focus` focus flag), burst-cycle
+lists and the reserved test-span splits - schema, provenance convention
+and load contract in `data/gold_annot/README.md`).
 Appliance file names: the canonical label for target appliances
 (`kettle, fridge, microwave, washing_machine, dishwasher`), a slug of the
 original device label otherwise (`electric_oven`, `food_mixer`); a repeat

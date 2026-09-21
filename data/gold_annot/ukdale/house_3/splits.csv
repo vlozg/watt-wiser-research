@@ -1,0 +1,2 @@
+house,split_us,split_date_utc,basis
+house_3,1364515200000000,2013-03-29,floor to UTC midnight of t0 + 75% of mains span

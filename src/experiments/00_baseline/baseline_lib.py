@@ -34,6 +34,27 @@ def gold_annot_file(dataset: str, house: str, name: str) -> str:
     return os.path.join(ROOT, "data", "gold_annot", dataset, house, f"{name}.csv")
 
 
+def gt_cycles(dataset: str, house: str) -> pd.DataFrame:
+    """All GT cycle marks for one house: manual + rule, with a provenance column.
+
+    Union of manual_cycles.csv (human-curated, source manual_*) and
+    rule_cycles.csv (regenerable rule output, source rule_*); missing or
+    empty files are skipped. 'provenance' is 'manual' or 'rule'. See
+    data/gold_annot/README.md for the store policy.
+    """
+    frames = []
+    for name, prov in (("manual_cycles", "manual"), ("rule_cycles", "rule")):
+        try:
+            df = pd.read_csv(gold_annot_file(dataset, house, name))
+        except (FileNotFoundError, pd.errors.EmptyDataError):
+            continue
+        df["provenance"] = prov
+        frames.append(df)
+    if not frames:
+        return pd.DataFrame(columns=["device", "t_on_us", "t_off_us", "source", "provenance"])
+    return pd.concat(frames, ignore_index=True)
+
+
 def load_series(path: str) -> pd.DataFrame:
     """Load a gold parquet as a timestamp-sorted [ts_us, w] frame."""
     return pd.read_parquet(path)[["ts_us", "w"]].sort_values("ts_us").reset_index(drop=True)

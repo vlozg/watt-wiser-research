@@ -10,7 +10,7 @@ export MPLCONFIGDIR
 PY ?= uv run python3
 FORCE ?=
 
-.PHONY: help setup download download-force raw-manifest extract extract-force labels gold gold-force fnd-check xcheck baseline plan-runs export-eda export-baseline export-gt-cycle eda-pdfs lint check
+.PHONY: help setup download download-force raw-manifest extract extract-force labels gold gold-force fnd-check xcheck baseline plan-runs export-eda export-baseline export-gt-cycle build-gt-annot eda-pdfs lint check
 
 help: ## show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
@@ -92,7 +92,10 @@ export-baseline: ## export baseline experiment notebooks: all, or one via NOTEBO
 		echo "=== done $$n ($$(date +%H:%M:%S))"; \
 	done
 
-GT_CYCLE_NOTEBOOKS := 01_ukdale_gt_cycle_eda 02_synthetic_shelly_cycle_eda
+GT_CYCLE_NOTEBOOKS := 01_ukdale_gt_cycle_eda 02_synthetic_shelly_cycle_eda 03_ukdale_houses_gt_cycle_eda 04_ukdale_all_device_eda 05_fnd_button_press_eda
+
+build-gt-annot: ## rebuild the rule-derived gold_annot files (rule_cycles, device_profile, splits)
+	UV_CACHE_DIR=/tmp/uv-cache .venv/bin/python3 src/pipelines/04_eda_annot_gt_cycle/02_build_rule_profiles.py
 
 export-gt-cycle: ## export GT-cycle EDA notebooks: all, or one via NOTEBOOK=01_ukdale_gt_cycle_eda
 	nb="$(NOTEBOOK)"; \

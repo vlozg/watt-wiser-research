@@ -645,7 +645,7 @@ def _(mo):
     notebook generates the sheet itself (top calibration-span
     washing-machine candidates under the cycle rule, ranked by energy);
     the hand-picked selection is stored in the gold_annot cycle store
-    (data/gold_annot/ukdale/house_1/cycles.csv - schema and provenance in
+    (data/gold_annot/ukdale/house_1/manual_cycles.csv - schema and provenance in
     data/gold_annot/README.md) and loaded back from there. The bootstrap
     then answers how many marks the profile actually needs.
     """)
@@ -718,7 +718,7 @@ def _(bl, mo, pd, sheet_info):
 @app.cell
 def _(bl, cfg, pd):
     # --- Curated calibration marks (loaded from the gold_annot store) ------
-    # Operative store: data/gold_annot/ukdale/house_1/cycles.csv (schema,
+    # Operative store: data/gold_annot/ukdale/house_1/manual_cycles.csv (schema,
     # provenance, append-only convention: data/gold_annot/README.md). The
     # initial 20 washing-machine marks were picked BY EYE from the review
     # sheet above as unambiguous single-cycle washes (10 other candidates
@@ -727,11 +727,11 @@ def _(bl, cfg, pd):
     # append rows with a new source tag; this notebook picks them up. All
     # marks lie inside the calibration span (before the part F split), so
     # nothing here leaks into the test span.
-    _path = bl.gold_annot_file(cfg["dataset"], cfg["house"], "cycles")
+    _path = bl.gold_annot_file(cfg["dataset"], cfg["house"], "manual_cycles")
     curated_wm = pd.read_csv(_path)
     _need = {"device", "t_on_us", "t_off_us", "source"}
     if not _need.issubset(set(curated_wm.columns)):
-        raise ValueError(f"gold_annot cycles file missing columns {_need - set(curated_wm.columns)}: {_path}")
+        raise ValueError(f"gold_annot manual_cycles file missing columns {_need - set(curated_wm.columns)}: {_path}")
     curated_wm = curated_wm[curated_wm["device"] == "washing_machine"].reset_index(drop=True)
     if len(curated_wm) < 20:
         raise ValueError(f"expected at least 20 curated washing-machine marks, found {len(curated_wm)}: {_path}")
@@ -757,7 +757,7 @@ def _(bl, curated_wm, mo, pd):
         + bl.md_table(["#", "t_on (UTC)", "t_off (UTC)", "dur (min)"], _rows)
         + "\n\n" + _n_curated
         + " curated washing-machine marks loaded from "
-        "data/gold_annot/ukdale/house_1/cycles.csv (append-only store, "
+        "data/gold_annot/ukdale/house_1/manual_cycles.csv (append-only store, "
         "source tag manual_review_v1), all inside the calibration span. "
         "This is the worst-case fallback the working assumption allows: if "
         "algorithmic curation fails, a human annotates about 20 episodes "
@@ -1083,7 +1083,7 @@ def _(mo):
     stabilizes by about 10 marks and is tight at 20. Ship curation as a
     first-class, reproducible step: the review sheet above is regenerated
     by this notebook, and the kept marks live in the tracked gold_annot
-    cycle store (data/gold_annot/ukdale/house_1/cycles.csv).
+    cycle store (data/gold_annot/ukdale/house_1/manual_cycles.csv).
 
     4. **Identification from marks: yes.** Leave-one-out nearest-mark
     classification reaches far above chance on two scalar features

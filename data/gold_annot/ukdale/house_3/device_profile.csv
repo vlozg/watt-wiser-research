@@ -1,0 +1,5 @@
+house,device,in_focus,class,thr_source,thr_used_w,dwell_s,merge_s,n_cycles,n_cycles_cal,dur_p50_min,energy_p50_wh,power_mean_w,power_peak_p50_w,power_peak_p95_w,on_power_p50_w,on_power_p99_w,notes
+house_3,kettle,True,burst,gold,1475.0,30.0,60.0,55,34,1.8,94.28666666666666,3123.4666666666667,2996.0,3076.2,2952.0,3081.62,
+house_3,electric_heater,False,heating,generic,20.0,30.0,60.0,18,10,51.24166666666667,1767.6533333333332,2078.709461476385,,,1137.0,2258.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_3,laptop,False,electronics,generic,20.0,30.0,60.0,670,625,1.625,0.20430555555555555,7.999150815217391,,,33.0,2214.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_3,projector,False,electronics,generic,20.0,30.0,60.0,28,23,117.625,437.8986111111111,223.3397558677273,,,237.0,277.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"

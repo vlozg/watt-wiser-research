@@ -1,0 +1,25 @@
+house,device,in_focus,class,thr_source,thr_used_w,dwell_s,merge_s,n_cycles,n_cycles_cal,dur_p50_min,energy_p50_wh,power_mean_w,power_peak_p50_w,power_peak_p95_w,on_power_p50_w,on_power_p99_w,notes
+house_5,washing_machine,True,program,override,50.0,600.0,600.0,110,85,75.34166666666667,792.3284722222222,535.2330998033433,2146.5,2492.5,474.0,2180.0,gold thr 7.5 W is standby noise (9 day-scale mega-episodes); washer_dryer label - some cycles include a drying phase
+house_5,dishwasher,True,program,gold,48.5,600.0,600.0,47,38,89.5,1104.4580555555556,728.7022482524089,1706.0,1716.7,97.0,1697.0,
+house_5,kettle,True,burst,gold,1445.0,30.0,60.0,186,186,1.7,85.78347222222223,3066.371899224806,2934.0,3901.5,2891.0,3021.97,
+house_5,microwave,True,burst,excluded,25.0,30.0,60.0,0,0,,,,,,,,channel reads a constant ~50 W (p99 51 W) - no microwave signal; excluded
+house_5,fridge,True,duty,gold,54.0,30.0,12.0,2987,2352,21.85,39.980555555555554,110.16002490660026,128.0,769.7999999999993,108.0,127.0,
+house_5,24_inch_lcd,False,electronics,generic,20.0,30.0,60.0,307,307,43.88333333333333,19.033333333333335,26.336805555555554,,,27.0,30.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_5,24_inch_lcd_bedroom,False,electronics,generic,20.0,30.0,60.0,92,69,62.791666666666664,94.16361111111111,89.97755382189382,,,88.0,99.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_5,atom_pc,False,electronics,generic,20.0,30.0,60.0,1,1,100674.08333333333,40260.05111111111,23.994289162470647,,,24.0,26.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_5,core2_server,False,always_on,generic,20.0,30.0,60.0,1,1,155822.28333333333,212494.37555555557,81.82181816742727,,,81.0,116.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_5,electric_hob,False,manual,generic,20.0,30.0,60.0,260,214,5.05,38.14555555555556,498.48697973414687,,,1599.0,3765.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_5,hairdryer,False,burst,generic,20.0,30.0,60.0,65,44,4.733333333333333,82.28527777777778,1006.1849529780563,,,1096.0,1130.88,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_5,home_theatre_amp,False,electronics,generic,20.0,30.0,60.0,4,4,29493.85,14093.599722222221,28.7126158675062,,,25.0,51.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_5,i7_desktop,False,electronics,generic,20.0,30.0,60.0,58,55,652.4916666666667,914.8741666666667,91.54604059903079,,,85.0,190.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_5,nespresso_pixie,False,burst,generic,20.0,30.0,60.0,125,125,2.0166666666666666,22.07111111111111,560.2611940298508,,,775.5,1354.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_5,network_attached_storage,False,always_on,generic,20.0,30.0,60.0,241,241,1.2,0.2252777777777778,10.216216216216218,,,21.0,38.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_5,oven,False,manual,generic,20.0,30.0,60.0,116,93,26.541666666666668,672.9115277777778,1410.9447210360431,,,2105.0,2972.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_5,primary_tv,False,electronics,generic,20.0,30.0,60.0,201,173,65.45,73.06527777777778,66.85956790123457,,,68.0,89.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_5,ps4,False,electronics,generic,20.0,30.0,60.0,0,0,,,,,,,,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_5,sky_hd_box,False,electronics,generic,20.0,30.0,60.0,176,176,1.0,0.1126388888888889,7.000000000000001,,,21.0,38.0,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_5,steam_iron,False,manual,generic,20.0,30.0,60.0,7,7,8.05,171.2761111111111,1318.2352941176468,,,2232.5,2327.18,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_5,stereo_speakers_bedroom,False,electronics,generic,20.0,30.0,60.0,1,1,1.9166666666666667,3.193888888888889,99.98260869565219,,,105.0,133.95,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_5,toaster,False,burst,generic,20.0,30.0,60.0,23,23,2.05,39.406666666666666,1113.8805970149253,,,1086.0,1128.48,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_5,treadmill,False,manual,generic,20.0,30.0,60.0,62,55,16.908333333333335,127.64152777777778,436.13832114673926,,,410.0,983.3400000000001,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
+house_5,vacuum_cleaner,False,manual,generic,20.0,30.0,60.0,15,15,1.6,47.24527777777778,1845.8071748878922,,,1918.0,2007.32,"all-device metadata row: generic 20 W threshold, burst-shaped episodes"
