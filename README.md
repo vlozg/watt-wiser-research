@@ -34,6 +34,7 @@ Optional primers: `docs/knowledge/ELI5_NILM.md` - electricity basics (V, I, W, k
 power factor) in plain language, then `docs/knowledge/ELI5_COMMON_NILM_FEATURES.md` -
 the features NILM methods compute (delta power, duty cycles, V-I trajectories).
 
+0. `docs/START_HERE.md` - the one-page catch-up map: the outcome in a paragraph, where to read, state of play
 1. `docs/research/research-brief.md` - scope + literature
 2. `docs/product/feasibility-verdicts.md` - feasibility verdict chain
 3. `docs/PROBLEM_STATEMENTS.md` - the grounded problem statement: inputs, outputs, calibration protocol, evaluation contract, FAQ (every claim trust-tagged: reviewed / client / quarantined / owner)
