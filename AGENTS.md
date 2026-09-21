@@ -5,7 +5,7 @@ for US homes with Shelly EM Gen3 submeters.
 
 ## Layout
 - `docs/` - all analysis docs, grouped: `product/` (framing + assessments), `research/`
-  (NILM methods + briefs), `knowledge/` (background primers: electricity + NILM feature basics),
+  (NILM methods + briefs), `knowledge/` (background primers: electricity + NILM feature basics + phases/solar/aircon),
   `datasets/` (data strategy + collection + layer docs), `experiments/`
   (baseline campaign spec), `hypotheses/` (hypothesis registry, one `H<nn>_<slug>.md` per hypothesis
   with status drafted/proved/rejected, index `hypotheses/README.md`, grounded by top-level

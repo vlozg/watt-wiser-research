@@ -12,7 +12,7 @@ client's code + data as received.
 | `docs/client/` | My analysis of client material: `repo-review.md`, docx extraction (`brief-extract/`) - gitignored, kept out of history |
 | `docs/product/` | Product framing: use-case reassessment, core reframe, post-meeting assessment |
 | `docs/research/` | NILM research: `research-brief.md`, `nilm-visual-reading.md`, `analog-problems.md`, `vi-trajectory-hardware.md` |
-| `docs/knowledge/` | Background primers: `ELI5_NILM.md` (electricity basics), `ELI5_COMMON_NILM_FEATURES.md` (common NILM features, with repo figures) |
+| `docs/knowledge/` | Background primers: `ELI5_NILM.md` (electricity basics), `ELI5_COMMON_NILM_FEATURES.md` (common NILM features, with repo figures), `ELI5_PHASES_SOLAR.md` (phases, solar, aircon - why the wiring changes what the meter sees) |
 | `docs/datasets/` | Data strategy: `data-collection.md`, `dataset-walkthrough.md`, `experiment-data-strategy.md`, `parquet-foundations.md`, `gold-layer.md` |
 | `docs/experiments/` | Baseline campaign: `baseline-ukdale-plan.md` (the spec: rungs, metrics, gates, run matrix) |
 | `docs/reports/` | Report set: `phase1-report-draft.md` (consolidated phase-1 report draft) + `dataset_eda/` (00 overview, `01`-`07` per-dataset EDA notebooks + PDF exports + review/peer-review notes) + `baseline/` (00_baseline experiment renders) + `gt_cycle/` (GT-cycle EDA notebook renders) |
@@ -32,7 +32,10 @@ client's code + data as received.
 
 Optional primers: `docs/knowledge/ELI5_NILM.md` - electricity basics (V, I, W, kWh, AC,
 power factor) in plain language, then `docs/knowledge/ELI5_COMMON_NILM_FEATURES.md` -
-the features NILM methods compute (delta power, duty cycles, V-I trajectories).
+the features NILM methods compute (delta power, duty cycles, V-I trajectories). For the
+deployment context: `docs/knowledge/ELI5_PHASES_SOLAR.md` - single-phase vs three-phase,
+solar, and aircon: why the wiring changes what the meter sees, and whether our data
+transfers.
 
 0. `docs/START_HERE.md` - the one-page catch-up map: the outcome in a paragraph, where to read, state of play
 1. `docs/research/research-brief.md` - scope + literature
