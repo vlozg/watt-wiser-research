@@ -373,7 +373,7 @@ That residual gap is real but small, and a single day with the actual device clo
 
 ## 8. Files and artifacts from this investigation
 
-Under `projects/watt-wiser/research-logs/`:
+Under `research-logs/`:
 
 | Path | What it is |
 |---|---|

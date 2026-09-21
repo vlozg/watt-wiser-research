@@ -22,7 +22,7 @@ not any workspace-root `research_logs/`, which holds other-topic research only.
 |---|---|---|---|
 | UK-DALE slice | `research-logs/sakunrasilka_nilm-test2/` | house 5 channels relabeled house_1-style, 6 channels, 6 s, 2014-06-30 -> 09-12 | NOT house 1 (provenance forensics 2026-09-21: ch2/3/4/6 are verbatim house-5 fridge_freezer/dishwasher/kettle/i7_desktop; ch1 aggregate is synthetic = sum + flat base); every channel capped at 2^20 rows; superseded by the full download |
 | REDD @ 1 min | `research-logs/xingyang990210_nilm-datasets/building_1..6.csv` | `total` + appliance columns, 6 homes, ~1 month each (2011) | resampled minute-means; thin calibration supply; fine for R7 transfer |
-| REDD @ 3 s (Kaggle) | `data/redd-kaggle/` -> `research-logs/redd-kaggle/` | 35 chunk CSVs, 6 homes, ~12 d/home, 6-9 appliance cols + `main`, no timestamps | forensics below; timestamp-stripped derivative - align chunks before use |
+| REDD @ 3 s (Kaggle) | removed (was `data/redd-kaggle/` -> `research-logs/redd-kaggle/`) | was: 35 chunk CSVs, 6 homes, ~12 d/home, 6-9 appliance cols + `main`, no timestamps | forensics below; timestamp-stripped derivative; **removed - the real 1-s REDD (`data/raw/redd/redd.h5`) supersedes it** |
 | Kaggle 1-min | `research-logs/kaggle_1min/household_power_1min.csv` | 1 home, 28 d (2024-06), `total` + fridge/ac/washer/tv/lights/base, 40,321 rows | provenance unverified - run replay checks before any use |
 | PLAID samples | `research-logs/vi/plaid_samples/` | 16 device captures @ 30 kHz | V-I track only |
 | Client synthetic | `repo/WattWiser/data/raw/synthetic_shelly_data.csv` | 5 s | diurnal template + per-day noise, re-drawn appliance schedules; excluded (repo-review) |
@@ -109,8 +109,9 @@ retained (user-managed, gitignored).
   (furnace 0.69, microwave 0.74, washer dryer 0.73, heater 0.57, all one window: 2011-05-30 23:31 ->
   05-31 19:40) - so rate = 3 s, house numbering = REDD numbering, and chunk offsets are recoverable by
   the same correlation trick (+-1 min). Coverage is only ~12 d/house (house 5: 20 h) vs ~36-44 d in the
-  local 1-min set. **Verdict: keep as a supplementary high-rate cross-check (3 s is native for REDD
-  appliance channels); the 1-min local conversion stays the primary REDD set.** Kaggle source URL still
+  local 1-min set. **Verdict (superseded): was kept as a supplementary high-rate cross-check (3 s is
+  native for REDD appliance channels); removed once the real 1-s REDD was staged - `data/raw/redd/redd.h5`
+  and the 1-min local conversion are the REDD supply.** Kaggle source URL still
   needed for the provenance log; provenance chain = REDD -> third-party preprocess -> Kaggle upload.
   **Provenance supplied (user note): `kaggle.com/datasets/joragasy/redd-dataset`.**
 

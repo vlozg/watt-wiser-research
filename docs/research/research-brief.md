@@ -2,7 +2,7 @@
 
 **Prepared for:** the WattWiser technical assessment.
 **Sources:** the project brief plus ~4 hours of desk research into the field, the hardware, and the prior SOTA
-**Raw evidence:** projects/watt-wiser/research-logs/
+**Raw evidence:** `research-logs/`
 
 ---
 
@@ -252,7 +252,7 @@ A bounded **Stage 0: Technical Assessment** with a written deliverable:
 ## 10. Sources
 
 **The brief**
-- projects/watt-wiser/AI_Engineer_Project_Brief.docx (local)
+- AI_Engineer_Project_Brief.docx (local copy; extracted under `docs/client/brief-extract/`)
 
 **Device**
 - Shelly KB — Shelly EM Gen3: https://kb.shelly.cloud/knowledge-base/shelly-em-gen3 (1-min log / 10 days, 30 VA threshold, accuracy bands, 500 W CT calibration minimum)
@@ -275,4 +275,4 @@ A bounded **Stage 0: Technical Assessment** with a written deliverable:
 - arXiv 1510.08713 (how good is good enough); arXiv 2008.10985 (real vs denoised aggregates); arXiv 2103.12177 (generalisation unsolved); arXiv 1908.00941 (WaveNet disaggregation + on/off detection on REFIT); arXiv 1507.06594 (Neural NILM)
 - UK-DALE, Nature Scientific Data 2015; REFIT, Nature Scientific Data 2017; NILMTK dataset converters
 
-Full raw captures: projects/watt-wiser/research-logs/
+Full raw captures: `research-logs/`

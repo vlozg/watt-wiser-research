@@ -4,7 +4,7 @@
 
 **Status:** Every figure below is generated from real measurements — UK-DALE 6 s ground truth (70.7 days, one UK home, 5 appliances) and 16 real PLAID waveform captures (30 kHz, 60 Hz mains, MIT). No synthetic signal appears except in Figure 9, where it is the subject.
 
-**Read alongside:** `repo-review.md` (why the synthetic CSV in the client repo cannot support this work), `dataset-walkthrough.md` (what each public dataset contains), `projects/watt-wiser/research-logs/training-approaches.md` (how the literature attacks the problem these plots expose).
+**Read alongside:** `repo-review.md` (why the synthetic CSV in the client repo cannot support this work), `dataset-walkthrough.md` (what each public dataset contains), `research-logs/training-approaches.md` (how the literature attacks the problem these plots expose).
 
 ---
 
@@ -299,7 +299,7 @@ That is not a reason to abandon the project. It is a reason to state the target 
 
 All figures regenerate from the scripts in this repository. The data they need:
 
-- `projects/watt-wiser/research-logs/sakunrasilka_nilm-test2/` — UK-DALE slice (5 channels + custom aggregate), 6 s, 70.7 days. Provenance corrected 2026-09-21: house-5 channels under house_1-style labels, synthetic aggregate - see `docs/datasets/dataset-walkthrough.md` section 8.
+- `research-logs/sakunrasilka_nilm-test2/` — UK-DALE slice (5 channels + custom aggregate), 6 s, 70.7 days. Provenance corrected 2026-09-21: house-5 channels under house_1-style labels, synthetic aggregate - see `docs/datasets/dataset-walkthrough.md` section 8.
 - `research-logs/vi/plaid_samples/` — 16 PLAID waveform captures, 30 kHz, extracted by HTTP range request from the Figshare archive. Regeneration script: `research-logs/vi/plaid_fetch.py`.
 - `repo/WattWiser/data/raw/synthetic_shelly_data.csv` — the synthetic dataset from the client repo, used only in Figure 9.
 

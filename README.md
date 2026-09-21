@@ -9,7 +9,6 @@ client's code + data as received.
 | Path | What |
 |---|---|
 | `docs/` | All research + assessment docs (reading order below). Problem grounding: `PROBLEM_STATEMENTS.md`; hypothesis registry: `hypotheses/` |
-| `docs/external/` | Client-provided inputs: project brief + calibration deck (.docx) - gitignored |
 | `docs/client/` | My analysis of client material: `repo-review.md`, docx extraction (`brief-extract/`) - gitignored, kept out of history |
 | `docs/product/` | Product framing: use-case reassessment, core reframe, post-meeting assessment |
 | `docs/research/` | NILM research: `research-brief.md`, `nilm-visual-reading.md`, `analog-problems.md`, `vi-trajectory-hardware.md` |
@@ -38,7 +37,7 @@ the features NILM methods compute (delta power, duty cycles, V-I trajectories).
 1. `docs/research/research-brief.md` - scope + literature
 2. `docs/product/feasibility-verdicts.md` - feasibility verdict chain
 3. `docs/PROBLEM_STATEMENTS.md` - the grounded problem statement: inputs, outputs, calibration protocol, evaluation contract, FAQ (every claim trust-tagged: reviewed / client / quarantined / owner)
-4. `docs/hypotheses/` - the hypothesis registry (read the `README.md` index first): H01-H12, each with status drafted/proved/rejected
+4. `docs/hypotheses/` - the hypothesis registry (read the `README.md` index first): H01-H13, each with status drafted/proved/rejected
 5. `docs/datasets/dataset-walkthrough.md` - client data + UK-DALE / PLAID
 6. `docs/reports/dataset_eda/` - per-dataset EDA set (read `00_overview.md` first, then `01`-`07` in any order)
 7. `docs/product/product-core-reframe.md`, `docs/research/analog-problems.md`, `docs/product/use-case-reassessment.md` - the core loop
@@ -46,6 +45,14 @@ the features NILM methods compute (delta power, duty cycles, V-I trajectories).
 9. `docs/datasets/data-collection.md` - what to download, from where, intake procedure (live checklist)
 10. `docs/datasets/parquet-foundations.md` + `docs/datasets/gold-layer.md` - the parquet foundation and gold layers, with the NILMTK cross-check evidence
 11. `docs/experiments/baseline-ukdale-plan.md` - the baseline experiment spec: inputs, rungs, metrics, gates, run matrix, literature position
+
+## Prerequisites
+
+- **git** - this repo; plus the client repo subcheckout under `repo/WattWiser/` (read-only, keeps its own `.git`).
+- **[uv](https://docs.astral.sh/uv)** - the only Python requirement. `uv sync` builds `.venv` from `uv.lock` (pins Python >= 3.13); everything runs through `uv run` (`uv run python3`, `uv run pytest`, `uv run marimo`).
+- **make** - optional but convenient; `make help` lists the workflow targets (setup, download, extract, gold, fnd-check, lint, test, export-*).
+- **No display needed** - plotting is headless Agg; the Makefile exports `MPLCONFIGDIR=/tmp/mplcfg` for you (export it manually when running scripts outside make).
+- **Heavy data is not in git** - `data/`, `repo/` and the large `research-logs/` datasets are gitignored and re-downloadable (`make download`; intake in `docs/datasets/data-collection.md`). Docs and code review need none of it; the EDA and gold layers need the six datasets staged and extracted (`make extract`). REFIT alone extracts to ~6.7 GB in scratch - storage budget in `docs/datasets/data-collection.md` section 7.
 
 ## Reproduce
 

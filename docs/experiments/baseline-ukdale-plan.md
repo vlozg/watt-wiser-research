@@ -22,7 +22,8 @@ design choice below traces to a specific earlier finding (see the grounding tabl
 - **The one experiment that matters:** a calibration learning curve - calibrate each appliance from N episodes
   (N = 1, 2, 5, 10, 20, all) and plot episode precision/recall vs N. This answers, empirically, "how long must
   the client's real calibration session be?" - the question their calibration process exists to answer. It also
-  stress-tests their calibration script's stated floor ("minimum power allowed ... 500 W"): fridge-class loads
+  stress-tests a 500 W enrollment floor - the 500 W figure is Shelly's own device-calibration minimum
+  (KB article), not a rule in the client's code - used here as a hypothetical scope line: fridge-class loads
   sit far below that line, so the curve tells us whether such a floor silently excludes whole device classes.
 - **What baseline means here:** the floor every future model must beat. No neural nets in v1; deep models are
   documented as an upgrade path only.
@@ -43,7 +44,7 @@ design choice below traces to a specific earlier finding (see the grounding tabl
 | Feasible set only; no whole-home / standby / <30 W / multi-state promises | `feasibility-verdicts.md` verdict chain |
 | Monitor as negative control + energy-share-weighted reporting | detectability-vs-materiality finding (`dataset-walkthrough.md`) |
 | Rungs 6 / 60 / 300 s, 30 VA floor, +/-5% noise | tier-2 emulator (`experiment-data-strategy.md` 1) |
-| Calibration learning curve | the calibration-mimicry discussion + client calibration doc floor (500 W) |
+| Calibration learning curve | the calibration-mimicry discussion + a 500 W floor used as a hypothetical scope line (Shelly KB device-calibration minimum) |
 | UNKNOWN bucket, residual-honesty metric | `product-core-reframe.md` (loop is the product) |
 | Anomaly-loop rehearsal run (R6) | demo-vs-claims split (`experiment-data-strategy.md` 3): mechanics demoable now, "synthesize events on real baselines, never humans" |
 | Reuse of EDA loaders/primitives + domain-shift judge | `eda_shelly.py` + `eda_reference_ukdale.json` (no forking) |
@@ -123,7 +124,7 @@ Three questions this framing answers that the client's docs currently only asser
 1. How many episodes does calibration need (learning curve) - converts "calibrate a bit" into a measured
    session length. Prediction to verify: fridge saturates almost immediately (abundant episodes), washer
    keeps improving longest (83 episodes / 70 days).
-2. Does a calibration floor (their "minimum power allowed ... 500 W") hide fridge-class appliances? The fridge
+2. Does a 500 W enrollment floor (Shelly's device-calibration minimum, borrowed as a hypothetical; the client's code defines none) hide fridge-class appliances? The fridge
    learning curve is computed from the full submeter trace; a 500 W-capped version is run as an ablation
    (R4) and the recall gap is the answer.
 3. Do signatures survive the deployment sampling rate (60 s) and the 30 VA floor? Rung runs answer this

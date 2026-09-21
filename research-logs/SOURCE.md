@@ -24,3 +24,11 @@ research phase; heavy data files are gitignored and re-downloadable.
   inventory JSON was stale (predates `data/fnd/`; ECO missing). The first-pass
   PLAID vi section went with it; the 30 kHz captures and fetchers remain under
   `vi/` (provenance in `vi/SOURCE.md`).
+- Tracked scripts (this directory): the surviving one-shot fetch/inspection
+  scripts of the early phase - literature sweeps (`openalex.py`, `oa_abstracts.py`,
+  `oa_anomaly.py`, `s2_abstracts.py`, `arxiv.py`, `arxiv_probe.py`,
+  `ping_arxiv.py`, `bing.py`, `anomaly_lit.py`-`anomaly_lit3.py`, `lit2.py` /
+  `lit3.py`, `ha_topic.py`), UK-DALE inspection runs (`inspect_ukdale.py`,
+  `ukdale_demo.py`-`ukdale_demo3.py`, `check1min.py`), and extraction helpers
+  (`extract_docx.py`, `dump_media.py`). Separate one-shot chains, not recoveries
+  of the removed `tools/` scripts above - none touch the bibliography stores.
