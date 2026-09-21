@@ -35,6 +35,37 @@ copy; the `.staging_<dataset>/` work dir is cleaned up automatically.
   the originally staged copy (`757e694a4201...`), confirming the zips are faithful
   copies of the raw layout.
 
+## Shortcut: the processed FND layer (download_fnd_gdrive.py)
+
+`download_fnd_gdrive.py` restores the already-extracted parquet layer - the same trees
+`01_extract_dataset/` writes into `data/fnd/` - without the raw download (about 47 GB)
+and re-extraction. One zip per dataset (about 12 GB total), SHA-256-verified against
+`data/fnd_zips/SHA256SUMS`, unpacked into `data/fnd/`:
+
+| Zip | Restores | Size (zip) | Drive link |
+|---|---|---|---|
+| fnd-ampds2.zip | `data/fnd/ampds2/` | 236 MB | https://drive.google.com/file/d/1-iTDPl87CWyEwKpYTjJFG2X9-mboXTnv/view?usp=drive_link |
+| fnd-eco.zip | `data/fnd/eco/` | 5.40 GB | https://drive.google.com/file/d/1zSkZ1zYCV1CP-ChI4vGMqfnJZebyy-sx/view?usp=drive_link |
+| fnd-greend.zip | `data/fnd/greend/` | 1.20 GB | https://drive.google.com/file/d/1XREK4_-0n3ixesnXnWBzcvugOkpfiLfW/view?usp=drive_link |
+| fnd-redd.zip | `data/fnd/redd/` | 227 MB | https://drive.google.com/file/d/1EIduG1X7tbGYrRpZ7FFuENCKPlhQf66Z/view?usp=drive_link |
+| fnd-refit.zip | `data/fnd/refit/` | 1.08 GB | https://drive.google.com/file/d/1hpdgMzjuNL6f8PsxBqoMU_IWyLpxP5tZ/view?usp=drive_link |
+| fnd-ukdale.zip | `data/fnd/ukdale/` | 4.35 GB | https://drive.google.com/file/d/1zwRRS_55XxJxBa_DTkyXcW2tFfExSua1/view?usp=drive_link |
+| fnd-qa.zip | `data/fnd/qa/qa_report.json` | 95 KB | https://drive.google.com/file/d/14-KXzbjq8fihDLsjAdKdLCrfztlR8vwW/view?usp=drive_link |
+
+```bash
+uv run python3 src/pipelines/00_download_dataset/download_fnd_gdrive.py              # download + extract all
+uv run python3 src/pipelines/00_download_dataset/download_fnd_gdrive.py ukdale eco   # subset
+uv run python3 src/pipelines/00_download_dataset/download_fnd_gdrive.py --download-only   # fetch + verify, no unpack
+uv run python3 src/pipelines/00_download_dataset/download_fnd_gdrive.py --extract-only    # unpack local zips, no download
+uv run python3 src/pipelines/00_download_dataset/download_fnd_gdrive.py --check           # sha256-verify local zips only
+```
+
+Default: download -> sha256 check -> unpack into `data/` (recreating `data/fnd/<dataset>/`).
+Existing verified local zips skip the download; existing non-empty `data/fnd/<dataset>/`
+trees are never clobbered without `--force`. Share links also live in
+`data/fnd_zips/gdrive_ids.txt` (gitignored, next to the zips) which the script reads by
+default; `--mapping` / `--out-dir` / `--extract-to` override.
+
 ## If a download fails
 
 The original hosts are listed in `docs/datasets/data-collection.md (original-host list in section 3)`. Download the files there,

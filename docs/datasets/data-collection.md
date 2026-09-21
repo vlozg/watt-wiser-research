@@ -42,6 +42,13 @@ pipelines point there. Extraction into `data/fnd/` is unchanged. Reproducible st
 the user uploaded one zip per dataset to public Google Drive -
 `src/pipelines/00_download_dataset/download.py` downloads, extracts and verifies them
 (size-verified against `raw_manifest.json`); if a download fails, see the original-host list in section 3.
+**Processed-layer shortcut (2026-09-21):** the extracted parquet trees (`data/fnd/`, one
+zip per dataset, about 12 GB total) are also on public Google Drive -
+`src/pipelines/00_download_dataset/download_fnd_gdrive.py` downloads, SHA-256-verifies
+(against `data/fnd_zips/SHA256SUMS`) and unpacks them straight into `data/fnd/`; use
+`--download-only` / `--extract-only` to run just one step. Use this instead of the raw
+download + re-extract when only the processed layer is needed; links in
+`data/fnd_zips/gdrive_ids.txt` and `src/pipelines/00_download_dataset/README.md`.
 Two zips mid-download (aria2): `ukdale.zip` = plain-text channels (the set our loader parses),
 `ukdale.h5.zip` = HDF5/NILMTK (needs pytables - absent; keep as archive). Plus readmes, per-building
 yamls, metadata. An armed watcher moves each zip to `data/raw/ukdale-full/` the moment its
