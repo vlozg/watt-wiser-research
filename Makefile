@@ -92,6 +92,22 @@ export-baseline: ## export baseline experiment notebooks: all, or one via NOTEBO
 		echo "=== done $$n ($$(date +%H:%M:%S))"; \
 	done
 
+FHMM_NOTEBOOKS := 01_fhmm_session_supervised
+
+export-fhmm: ## export FHMM experiment notebooks: all, or one via NOTEBOOK=01_fhmm_session_supervised
+	nb="$(NOTEBOOK)"; \
+	if [ -n "$$nb" ]; then list="$$nb"; else list="$(FHMM_NOTEBOOKS)"; fi; \
+	for n in $$list; do \
+		[ -f src/experiments/01_fhmm/$$n.py ] || { echo "unknown notebook $$n"; exit 1; }; \
+		echo "=== exporting $$n ($$(date +%H:%M:%S))"; \
+		(cd /tmp && UV_CACHE_DIR=/tmp/uv-cache XDG_CONFIG_HOME=/tmp/xdg-config \
+			uv run --project $(CURDIR) marimo export ipynb --include-outputs \
+			-f $(CURDIR)/src/experiments/01_fhmm/$$n.py \
+			-o $(CURDIR)/docs/reports/fhmm/$$n.ipynb) \
+		|| { echo "FAIL $$n"; exit 1; }; \
+		echo "=== done $$n ($$(date +%H:%M:%S))"; \
+	done
+
 GT_CYCLE_NOTEBOOKS := 01_ukdale_gt_cycle_eda 02_synthetic_shelly_cycle_eda 03_ukdale_houses_gt_cycle_eda 04_ukdale_all_device_eda 05_fnd_button_press_eda
 
 build-gt-annot: ## rebuild the rule-derived gold_annot files (rule_cycles, device_profile, splits)
