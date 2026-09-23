@@ -48,6 +48,7 @@ One-line glosses; the full story of each symbol lives in its home file.
 | [H11](H11_profile_pattern_drift.md) | Cross-session pattern templates improve detection; sustained drift from the profile flags device degradation | AI drafted | [none] — raised in owner review 2026-09-20 |
 | [H12](H12_calibration_contamination.md) | FAQ Q2 made measurable: real calibration-window contamination (raw vs boundary-harmful) across all six datasets | AI drafted | [reviewed] simultaneity hint only — analysis not yet run |
 | [H13](H13_user_mark_curation.md) | User-mark annotation: marks identify the device (measured 0.79); disaggregation from marks not demonstrated — and the mark corpus itself does not exist yet (20-mark WM seed only); annotating public datasets is the real data-collection task | AI drafted | [none — instrument exists, not owner-reviewed] GT-cycle EDA |
+| [H14](H14_multi_state_fhmm.md) | Per-device multi-state emissions, clustered unsupervised inside the same calibration windows S_k, improve program devices (washer, dishwasher) at native cadence; no expected help at the rung | AI drafted | [none] — diagnosis from AI-run FHMM v1 outputs (docs/reports/fhmm/), owner review pending |
 
 ## The shared instrument
 
