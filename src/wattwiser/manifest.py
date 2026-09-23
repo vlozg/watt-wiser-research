@@ -53,6 +53,6 @@ def done(man: dict[str, Any], key: str) -> bool:
 def record(man: dict[str, Any], name: str, key: str, out: str, src: str, st: ParquetStats,
            t0: float, root: str = FND, **extra: Any) -> None:
     """Record one output entry (parquet stats `st` + timing) and persist."""
-    man['files'][key] = dict(asdict(st), path=out, src=src,
-                             secs=round(time.time() - t0, 1), **extra)
+    man['files'][key] = dict(st, path=out, src=src,
+                         secs=round(time.time() - t0, 1), **extra)
     save_manifest(name, man, root)

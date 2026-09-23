@@ -77,7 +77,7 @@ def extract(force: bool = False) -> None:
 def extract_labels() -> dict[str, UkdaleBuilding]:
     """Channel labels verbatim from house_N/labels.dat plus canonical mapping."""
     out: dict[str, UkdaleBuilding] = {}
-    for f in sorted(glob.glob(os.path.join(RAW, 'ukdale-full', 'house_*', 'labels.dat'))):
+    for f in sorted(glob.glob(os.path.join(FND, 'ukdale', 'house_*', 'labels.dat'))):
         house = 'house_' + re.search(r'house_(\d+)', f).group(1)
         channels: dict[str, DeviceLabel] = {}
         # each line: "channel_N  <free-text appliance name>"
