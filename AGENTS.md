@@ -18,9 +18,12 @@ for US homes with Shelly EM Gen3 submeters.
   `client/` (repo review + docx extraction; gitignored), `external/`
   (client-provided inputs; gitignored). Reading order: `README.md`.
 - `src/` - pipeline + experiment code: `pipelines/` (00 download, 01 extract,
-  02 fnd EDA notebook sources, 03 gold, 04 GT-cycle EDA notebook source) and `experiments/00_baseline` (baseline
+  02 fnd EDA notebook sources, 03 gold, 04 GT-cycle EDA notebook source), `experiments/00_baseline` (baseline
   scaffold: marimo notebook source + `baseline_lib.py` shared helpers; renders to
-  `docs/reports/baseline/` via `make export-baseline` - edit the source, re-export).
+  `docs/reports/baseline/` via `make export-baseline` - edit the source, re-export) and
+  `experiments/01_fhmm` (session-supervised FHMM: `fhmm_lib.py` shared helpers + frozen
+  runner `02_run_kcurve.py` + analysis notebook `01_fhmm_session_supervised.py`; renders to
+  `docs/reports/fhmm/` via `make export-fhmm` - edit the source, re-export).
 - `deprecated/` - quarantined legacy trees the owner has not reviewed; do not extend.
   `deprecated/analysis/`: EDA judge (`eda_shelly.py` CLI + `eda_shelly_interactive.py`
   marimo UI + `eda_reference_ukdale.json`; schema-checked inputs, single implementation -

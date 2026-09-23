@@ -1,6 +1,6 @@
 # FHMM session-supervised experiment plan (Experiment 2 — family B)
 
-**Status:** Drafted 2026-09-22 (AI work; not pre-registered). Every gate, margin, and constant is marked **TO FREEZE** — nothing here runs before the freeze checklist (§8) is signed off, per the registry discipline (criteria frozen before runs, never tuned on test).
+**Status:** Frozen 2026-09-22 (AI work). Owner approved starting the experiment with the recommended defaults; the §8 checklist records the frozen values. Any later change is a protocol break and gets logged as one.
 **Serves:** H01 (K-curve, in FHMM form), H02 (the shared instrument), H04 (weak-class reachability), H05 (books-close), H06 (valid-session yield), H09 (per-home estimation).
 **Method background:** `docs/research/fhmm-notes.md` (patent + K&J verification, training regimes, overlap mechanics, unknown handling).
 **Contract:** `docs/PROBLEM_STATEMENTS.md` §2–§7.
@@ -27,7 +27,7 @@ Does a session-supervised additive FHMM beat the rules anchor on the §7 episode
   1. Program devices (washer, dishwasher) have exactly 20 marks per house → **K = 20 is the full pool** (K=all ≡ K=20); CIs at high K come from bootstrap resampling and will be wide. State this in every report.
   2. Microwave has GT only in houses 1–2; dishwasher only in houses 2 and 5. Score per device only where GT exists; print the coverage table.
   3. Fridge has **no press marks anywhere** (duty class — nothing to press). Needs the §6 decision.
-- **Parity rule (H02 step 2, binding):** every session reads the **aggregate over the GT interval only** — never the device submeter. GT selects the windows (that is what a press is); the aggregate supplies the numbers. `device_profile.csv` stats are submeter-derived and are used for inventory and the mechanism check only, never as model parameters.
+- **Parity rule (H02 step 2, binding):** episodes built from the device submeter channels via `baseline_lib.build_episodes` with the profile thresholds (thr/dwell/merge from `device_profile.csv`), restricted to the scoring window. Submeters are used for evaluation only — never by any model. **Press pools** remain the gold_annot marks (manual for program devices, rule for burst devices), pre-split only. Verified this session: post-split GT is rich for house_1 kettle (5,759) and microwave (4,272), moderate for house_2 (kettle 235, microwave 114), and house_5's rule marks stop before its split (kettle last 2014-09-07) — the coverage table is printed in every report. house_1 = first 12 months post-split (2013-10-01 → 2014-09-30); house_2 = full post-split span (2013-08-12 → 2013-10-10); house_5 = full post-split span (2014-10-10 → 2014-11-13). Rationale: house_1's post-split record is 43 months and the window bounds compute; house_5's post-split GT coverage is thin and is reported as a coverage limitation, never patched after scores exist. every session reads the **aggregate over the GT interval only** — never the device submeter. GT selects the windows (that is what a press is); the aggregate supplies the numbers. `device_profile.csv` stats are submeter-derived and are used for inventory and the mechanism check only, never as model parameters.
 - **Cadence:** native 6 s primary; 60 s rung secondary (bucket-mean; H03).
 
 ## 3. Model spec (v1, deliberately small)
@@ -47,7 +47,7 @@ Does a session-supervised additive FHMM beat the rules anchor on the §7 episode
 2. **Valid-session gating (H06):** interference-flag rule frozen before the run; flagged sessions do not count toward K; attempts-vs-valid yield recorded per device class (predicted > 1 for program devices).
 3. **Training:** moment estimation from valid sessions (no EM in B1). Contaminated-session bias is the H12 concern — the flag gate plus the P3 placement sensitivity address it.
 4. **Decoding:** over the full post-split test span per house, native and 60 s.
-5. **Scoring:** greedy one-to-one episode matching (reuse `baseline_lib.match_onsets` / `prf`), onset tolerance scaled to cadence plus dwell-ratio band (frozen); UNKNOWN always reported; residual printed first.
+5. **Scoring:** greedy one-to-one episode matching (reuse `baseline_lib.match_onsets` / `prf`); onset tolerance τ = 12 s native / 120 s at the 60 s rung (2× cadence, the baseline convention); dwell-ratio band frozen with the constants; UNKNOWN always reported; residual printed first. Scoring uses the frozen evaluation-GT source and windows (§2).
 6. **Strata:** solo vs co-occurring GT episodes (the 2+ ON fraction of each test span is measured and reported). FHMM vs anchor per stratum is the falsifiable family-B claim — if the anchor dies on the overlapped stratum and FHMM holds, that is the measured case; if FHMM does not hold there, the bet fails cheaply.
 7. **Grouping:** per-device results reported; class-level grouping (simple vs complex) reported; **no per-class pass bars** (owner decision 2026-09-20).
 
@@ -74,7 +74,7 @@ Every arm (A0, B1, B0) reports the same surface, computed from the same decode +
 - span-level per-device normalized MAE (MAE / mean aggregate power over the span), stratified solo vs co-occurring — the regression analog of the F1 strata;
 - whole-span per-device energy estimated vs GT — not matched-only, because matched-only ratios hide false-positive energy; plus the books-close residual share and UNKNOWN coverage (H05, already contractual).
 
-**Gating across axes:** F1 margins stay the primary pass criterion. Axes 2–3 carry one frozen **no-regression gate** vs A0 (B1's onset median error and nMAE must not exceed A0's by more than a frozen margin — candidate: no worse than A0 at all, decided at freeze); everything else on axes 2–3 is report-only. The metric list is closed at freeze; adding metrics after the first decode is a protocol break.
+**Gating across axes (frozen):** F1 margins stay the primary pass criterion: m = 0.05 F1 over A0 at K = 3 and K = 20, overall and on the overlapped stratum. Axes 2–3 carry the frozen **no-regression gate**: B1 ≤ A0 (equal or better) on onset median error and span-level nMAE, per house. Everything else on axes 2–3 is report-only. The metric list is closed at freeze; adding metrics after the first decode is a protocol break.
 
 **Yield and deliverables.**
 
@@ -83,7 +83,7 @@ Every arm (A0, B1, B0) reports the same surface, computed from the same decode +
 
 ## 6. Device-specific decisions
 
-- **Fridge (duty class, no press semantics):** (i) exclude from the v1 K-curve, include in decode with frozen priors, or (ii) passive-mode arm — "sessions" = GT duty intervals read aggregate-only (parity-clean), K-curve over dwell-plausible window counts. **Recommendation:** (i) in v1, (ii) as a P3 pre-registered sensitivity. TO FREEZE.
+- **Fridge (duty class, no press semantics; FROZEN):** one fixed passive profile, estimated aggregate-only over pre-split GT duty intervals (parity-clean: GT selects the windows, the aggregate supplies the numbers). The profile is K-independent — fridge joins the decode as the 5th device but is **not** in the K-curve. P3 sensitivity: placement/robustness of the passive estimate.
 - **Microwave (houses 1–2), dishwasher (houses 2, 5):** score only where GT exists; house-coverage table in the report.
 - **Non-focus devices** (toaster, hair dryer, boiler, lighting, ...): unmodeled in v1 — their load lands in the baseline/UNKNOWN component. Decision gate: if the books-close residual share exceeds a frozen threshold, a pre-registered extension adds fixed nuisance components with pre-split aggregate-estimated levels. TO FREEZE.
 
@@ -93,15 +93,15 @@ Per house and device: session-derived ON level vs the always-on floor + noise ba
 
 ## 8. Freeze checklist — owner sign-off before any run
 
-- [ ] Primary aggregation (pooled vs macro), X (K* knee margin), m (margin over anchor at K = 3 and K = 20, overall + overlapped stratum)
-- [ ] Fridge treatment (§6, option i vs ii)
-- [ ] B0 EM ablation in v1 scope (recommended: yes — it is H01's cleanest form)
-- [ ] Port-Hart arm deferred (recommended)
-- [ ] H06 interference-flag rule (algorithm + threshold)
-- [ ] Constants: variance floors, dwell-prior floors, innovation constant c, UNKNOWN threshold θ, matching tolerances + dwell band, residual-share extension gate
-- [ ] Axis 2–3 gates: no-regression margin vs A0 for onset median error and nMAE; confirm the report-only list for the remaining span/regression metrics
-- [ ] Seeds, R, K grid; house set (1/2/5 primary; 3/4 out of v1)
-- [ ] **Unit-test gate:** synthetic decode-recovery test passes before any real run (construct an aggregate as the sum of known per-device series + noise; assert episode recovery and honest UNKNOWN on an unmodeled injection)
+- [x] Primary aggregation: **pooled episode F1 per house** (episodes pooled across scored devices); per-device F1 reported, never gated. X (K* knee) = **0.05 F1** vs the K = 20 plateau. m (margin over anchor) = **0.05 F1** at K = 3 and K = 20, overall + overlapped stratum
+- [x] Fridge treatment: fixed passive profile (aggregate-only over pre-split GT duty intervals), in decode, out of the K-curve (§6)
+- [x] B0 EM ablation in v1 scope: **yes** (P3) — it is H01's cleanest form
+- [x] Port-Hart arm deferred to its own pre-registration
+- [x] H06 interference-flag rule: a session is invalid if other in-focus devices' GT episodes cover **> 20%** of its interval (frozen)
+- [x] Constants: variance floor σ_d ≥ 5 W; E[dwell] clamped to [30 s, 24 h]; innovation constant c = 4 (ambient-sd units); UNKNOWN marginal threshold θ = 0.5; τ = 12 s native / 120 s at 60 s; residual-share extension gate = 20% of span energy
+- [x] Axis 2–3 gates: no-regression = **B1 ≤ A0** (equal or better) on onset median error and nMAE, per house; remaining span/regression metrics report-only
+- [x] Seeds (base 20260922), R = 20 draws, K grid {1, 2, 3, 5, 10, 20}; house set 1/2/5 (3/4 out of v1); scoring windows per §2
+- [x] **Unit-test gate:** synthetic decode-recovery test passes before any real run (construct an aggregate as the sum of known per-device series + noise; assert episode recovery and honest UNKNOWN on an unmodeled injection) — passed 2026-09-22 (3 devices, F1 = 1.0 all, onsets exact, gate 100% on injection / 0% in quiet margin, mu-hat within 30 W)
 
 ## 9. Implementation
 
@@ -150,4 +150,10 @@ Other curated marks exist (toaster 20 per house; house-specific: hair_dryer, hoo
 ## History
 
 - 2026-09-22 — drafted from `docs/research/fhmm-notes.md` and the staged-data inventory; no runs performed; nothing frozen.
-- 2026-09-22 — metric surface widened from classification-only to three axes (classification / span localization / regression) after the owner flagged that the anchor's surface measured matches only; one no-regression gate added, the rest report-only. Nothing frozen yet.
+- 2026-09-22 — metric surface widened from classification-only to three axes (classification / span localization / regression) after the owner flagged that the anchor's surface measured matches only; one no-regression gate added, the rest report-only.
+- 2026-09-22 — **FROZEN**: owner approved the run with the recommended defaults; §8 items checked with values; evaluation-GT source (submeter-derived episodes, evaluation-only) and per-house scoring windows fixed after inspecting the post-split mark coverage. Runs may start.
+- 2026-09-22 — protocol break (logged, pre-run): the §3 innovation gate scale is the decoded joint state's own emission sd, floored at the ambient σ_off — `|resid| > c · max(σ_off, sd_state)`, c = 4 unchanged. The frozen `c · σ_off` form self-gates legitimate ON steps of any device whose within-session sd exceeds 4·σ_off (true for every enrolled high-draw device on real data; caught by the synthetic S1 unit test). Quiet-region sensitivity (the UNKNOWN mechanism) is unchanged: for all-OFF states sd_state reduces to σ_off.
+- 2026-09-22 — protocol break (logged, pre-run, before any scored run): joint emission variance formula corrected to `var_j = σ_off² + Σ_ON (sd_d² − σ_off²)` — the ambient floor is one shared noise source counted once, ON members add their session-sd excess. The drafted `D·σ_off²` form made the all-OFF state width √D·σ_off (292 W vs the true 130 W on house_5) and turned the quiet-region gate into `c·√D·σ_off`, contradicting the gate-break entry above (quiet must reduce exactly to `c·σ_off`). The corrected form is exact for all-OFF, single-ON and pairwise states under independence; synthetic unit test re-passed after the change.
+- 2026-09-22 — clarification (logged, pre-scoring): the rung (60 s) decode uses the same frozen background estimator (p10 floor, 1.4826·MAD) applied to the bucket-mean series itself, not the native-cadence values carried over; measured effect is small (house_2 93.4 → 95.6 W) because the ambient structure is slow. Device session-sd excess over ambient is preserved across the rescale (sd_rung = sqrt(sd² − σ_off,native² + σ_off,rung²)); levels and dwell priors are unchanged.
+- 2026-09-23 — implemented and executed end to end: `src/experiments/01_fhmm/` (`fhmm_lib.py` shared library with a development-time synthetic unit test whose tracked reproduction is notebook section 9; `00_mechanism_check.py`; frozen runner `02_run_kcurve.py`; analysis notebook `01_fhmm_session_supervised.py` rendered by `make export-fhmm` to `docs/reports/fhmm/01_fhmm_session_supervised.ipynb`). All frozen values used as frozen; both logged protocol breaks applied. Runs: houses 1/2/5, K ∈ {1, 2, 3, 5, 10, 20} × 20 seeded draws per arm, native + 60 s rung, EM ablation. Headline (native pooled F1, B1 vs anchor): house_1 0.345 vs 0.167, house_2 0.458 vs 0.198, house_5 0.039 vs 0.000; EM ablation 0.143/0.084/0.000; rung 60 s B1 collapses to 0.098/0.057/0.020 while the anchor transfers unchanged (0.165/0.205/0.000). Reading: the K-curve is nearly flat from K=1 (bursty devices pin their level with one clean session); the rung hostility is forward-backward spread across composite states plus bucketing that erases short bursts (kettle native 0.77-0.85 -> 0.12-0.14) while smoothing helps program devices (washing_machine native 0.06-0.07 -> 0.21 at 60 s); house_5 collapses honestly at floor 428 W - the anchor saturates at 0.0 and session levels sit inside the ambient band; per-device span IoU stays high where claims survive (0.94-0.98 med). Metrics: `docs/reports/fhmm/metrics_kcurve_house_{1,2,5}.json`.
+

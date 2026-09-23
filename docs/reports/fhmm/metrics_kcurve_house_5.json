@@ -1,0 +1,3432 @@
+{
+ "house": "house_5",
+ "window": {
+  "t0_us": 1412899200000000,
+  "t1_us": 1415901144000001,
+  "days": 34.7
+ },
+ "floor_w": 428.0,
+ "sigma_off_w": 130.47,
+ "session_yield": [
+  {
+   "k": 1,
+   "draw": 0,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 0,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 0,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 1,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 1,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 1,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 2,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 2,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 2,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 3,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 3
+  },
+  {
+   "k": 1,
+   "draw": 3,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 3,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 4,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 4,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 4,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 5,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 5,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 5,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 6,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 6,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 6,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 7,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 7,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 2
+  },
+  {
+   "k": 1,
+   "draw": 7,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 8,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 8,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 8,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 9,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 9,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 9,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 10,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 10,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 10,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 11,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 11,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 11,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 12,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 12,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 12,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 13,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 13,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 13,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 14,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 14,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 14,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 15,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 15,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 15,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 16,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 16,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 16,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 17,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 17,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 17,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 18,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 18,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 18,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 19,
+   "device": "washing_machine",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 19,
+   "device": "dishwasher",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 1,
+   "draw": 19,
+   "device": "kettle",
+   "valid": 1,
+   "attempts": 1
+  },
+  {
+   "k": 2,
+   "draw": 0,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 4
+  },
+  {
+   "k": 2,
+   "draw": 0,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 4
+  },
+  {
+   "k": 2,
+   "draw": 0,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 1,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 1,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 1,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 2,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 4
+  },
+  {
+   "k": 2,
+   "draw": 2,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 2,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 3,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 3,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 3,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 4,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 4,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 4,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 5,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 5,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 5,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 6,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 4
+  },
+  {
+   "k": 2,
+   "draw": 6,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 6,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 7,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 7,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 7,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 8,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 8,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 4
+  },
+  {
+   "k": 2,
+   "draw": 8,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 9,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 4
+  },
+  {
+   "k": 2,
+   "draw": 9,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 9,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 10,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 4
+  },
+  {
+   "k": 2,
+   "draw": 10,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 10,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 11,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 11,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 11,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 12,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 12,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 12,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 13,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 13,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 13,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 14,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 14,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 14,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 4
+  },
+  {
+   "k": 2,
+   "draw": 15,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 15,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 4
+  },
+  {
+   "k": 2,
+   "draw": 15,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 16,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 16,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 16,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 17,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 17,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 17,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 18,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 18,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 18,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 19,
+   "device": "washing_machine",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 19,
+   "device": "dishwasher",
+   "valid": 2,
+   "attempts": 2
+  },
+  {
+   "k": 2,
+   "draw": 19,
+   "device": "kettle",
+   "valid": 2,
+   "attempts": 4
+  },
+  {
+   "k": 3,
+   "draw": 0,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 0,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 0,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 1,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 1,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 6
+  },
+  {
+   "k": 3,
+   "draw": 1,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 6
+  },
+  {
+   "k": 3,
+   "draw": 2,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 6
+  },
+  {
+   "k": 3,
+   "draw": 2,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 2,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 3,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 3,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 3,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 4,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 4,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 4,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 5,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 5,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 5,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 6,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 6,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 6,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 7,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 6
+  },
+  {
+   "k": 3,
+   "draw": 7,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 7,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 8,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 6
+  },
+  {
+   "k": 3,
+   "draw": 8,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 6
+  },
+  {
+   "k": 3,
+   "draw": 8,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 9,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 9,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 9,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 10,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 10,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 10,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 11,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 11,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 6
+  },
+  {
+   "k": 3,
+   "draw": 11,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 12,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 6
+  },
+  {
+   "k": 3,
+   "draw": 12,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 12,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 13,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 13,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 13,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 14,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 6
+  },
+  {
+   "k": 3,
+   "draw": 14,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 14,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 15,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 6
+  },
+  {
+   "k": 3,
+   "draw": 15,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 15,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 6
+  },
+  {
+   "k": 3,
+   "draw": 16,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 16,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 16,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 17,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 17,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 6
+  },
+  {
+   "k": 3,
+   "draw": 17,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 6
+  },
+  {
+   "k": 3,
+   "draw": 18,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 6
+  },
+  {
+   "k": 3,
+   "draw": 18,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 18,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 19,
+   "device": "washing_machine",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 19,
+   "device": "dishwasher",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 3,
+   "draw": 19,
+   "device": "kettle",
+   "valid": 3,
+   "attempts": 3
+  },
+  {
+   "k": 5,
+   "draw": 0,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 0,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 0,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 1,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 1,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 1,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 2,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 2,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 2,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 3,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 3,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 3,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 4,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 4,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 4,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 5,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 5,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 5,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 6,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 6,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 6,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 7,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 7,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 7,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 8,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 8,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 8,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 9,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 9,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 9,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 10,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 10,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 10,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 11,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 11,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 11,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 12,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 12,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 12,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 13,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 13,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 13,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 14,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 14,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 14,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 15,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 15,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 15,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 16,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 16,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 16,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 17,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 17,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 10
+  },
+  {
+   "k": 5,
+   "draw": 17,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 18,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 18,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 18,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 19,
+   "device": "washing_machine",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 19,
+   "device": "dishwasher",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 5,
+   "draw": 19,
+   "device": "kettle",
+   "valid": 5,
+   "attempts": 5
+  },
+  {
+   "k": 10,
+   "draw": 0,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 0,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 0,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 1,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 1,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 1,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 2,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 2,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 2,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 3,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 3,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 3,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 4,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 4,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 4,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 5,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 5,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 5,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 6,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 6,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 6,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 7,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 7,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 7,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 8,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 8,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 8,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 9,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 9,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 9,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 10,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 10,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 10,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 11,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 11,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 11,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 12,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 12,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 12,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 13,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 13,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 13,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 14,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 14,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 14,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 15,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 15,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 15,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 16,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 16,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 16,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 17,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 17,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 17,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 18,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 18,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 18,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 19,
+   "device": "washing_machine",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 10,
+   "draw": 19,
+   "device": "dishwasher",
+   "valid": 10,
+   "attempts": 20
+  },
+  {
+   "k": 10,
+   "draw": 19,
+   "device": "kettle",
+   "valid": 10,
+   "attempts": 10
+  },
+  {
+   "k": 20,
+   "draw": 0,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 0,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 0,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 1,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 1,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 1,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 2,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 2,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 2,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 20
+  },
+  {
+   "k": 20,
+   "draw": 3,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 20
+  },
+  {
+   "k": 20,
+   "draw": 3,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 3,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 4,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 4,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 4,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 5,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 5,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 5,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 6,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 6,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 6,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 7,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 7,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 7,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 8,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 8,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 8,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 20
+  },
+  {
+   "k": 20,
+   "draw": 9,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 9,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 9,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 10,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 10,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 10,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 20
+  },
+  {
+   "k": 20,
+   "draw": 11,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 11,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 11,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 12,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 20
+  },
+  {
+   "k": 20,
+   "draw": 12,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 20
+  },
+  {
+   "k": 20,
+   "draw": 12,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 13,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 13,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 13,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 14,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 14,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 20
+  },
+  {
+   "k": 20,
+   "draw": 14,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 15,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 15,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 15,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 16,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 16,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 16,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 17,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 17,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 17,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 20
+  },
+  {
+   "k": 20,
+   "draw": 18,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 18,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 18,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 20
+  },
+  {
+   "k": 20,
+   "draw": 19,
+   "device": "washing_machine",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 19,
+   "device": "dishwasher",
+   "valid": 20,
+   "attempts": 40
+  },
+  {
+   "k": 20,
+   "draw": 19,
+   "device": "kettle",
+   "valid": 20,
+   "attempts": 40
+  }
+ ],
+ "arms": {
+  "anchor": {
+   "native": {
+    "pooled": {
+     "n_pred": 523,
+     "n_gt": 670,
+     "n_matched": 0,
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    },
+    "per_device": {
+     "washing_machine": {
+      "n_pred": 1,
+      "n_gt": 25,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "span": null
+     },
+     "dishwasher": {
+      "n_pred": 1,
+      "n_gt": 9,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "span": null
+     },
+     "kettle": {
+      "n_pred": 520,
+      "n_gt": 0,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "span": null
+     },
+     "fridge": {
+      "n_pred": 1,
+      "n_gt": 636,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "span": null
+     }
+    },
+    "strata": {
+     "solo": {
+      "n_pred": 0,
+      "n_gt": 569,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "co": {
+      "n_pred": 0,
+      "n_gt": 101,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     }
+    },
+    "axis3": {
+     "den_w": 655.01,
+     "per_device": {
+      "washing_machine": {
+       "mae_w": 608.16,
+       "nmae": 0.9285,
+       "energy_wh": 470514.0
+      },
+      "dishwasher": {
+       "mae_w": 642.53,
+       "nmae": 0.9809,
+       "energy_wh": 470514.0
+      },
+      "kettle": {
+       "mae_w": null,
+       "nmae": null,
+       "energy_wh": 105329.4
+      },
+      "fridge": {
+       "mae_w": 608.75,
+       "nmae": 0.9294,
+       "energy_wh": 470514.0
+      }
+     },
+     "books_close": {
+      "total_wh": 470514.0,
+      "attributed_wh": 1516871.4,
+      "floor_wh": 284516.6,
+      "residual_wh": -1330874.0,
+      "residual_share": -2.828553454307417
+     }
+    },
+    "span": {
+     "n_pairs": 0
+    }
+   },
+   "60": {
+    "pooled": {
+     "n_pred": 337,
+     "n_gt": 670,
+     "n_matched": 0,
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    },
+    "per_device": {
+     "washing_machine": {
+      "n_pred": 1,
+      "n_gt": 25,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "span": null
+     },
+     "dishwasher": {
+      "n_pred": 1,
+      "n_gt": 9,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "span": null
+     },
+     "kettle": {
+      "n_pred": 334,
+      "n_gt": 0,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "span": null
+     },
+     "fridge": {
+      "n_pred": 1,
+      "n_gt": 636,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "span": null
+     }
+    },
+    "strata": {
+     "solo": {
+      "n_pred": 0,
+      "n_gt": 569,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "co": {
+      "n_pred": 0,
+      "n_gt": 101,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     }
+    },
+    "axis3": {
+     "den_w": 652.63,
+     "per_device": {
+      "washing_machine": {
+       "mae_w": 602.79,
+       "nmae": 0.9236,
+       "energy_wh": 470963.7
+      },
+      "dishwasher": {
+       "mae_w": 637.56,
+       "nmae": 0.9769,
+       "energy_wh": 470963.7
+      },
+      "kettle": {
+       "mae_w": 143.21,
+       "nmae": 0.2194,
+       "energy_wh": 103347.7
+      },
+      "fridge": {
+       "mae_w": 615.71,
+       "nmae": 0.9434,
+       "energy_wh": 470963.7
+      }
+     },
+     "books_close": {
+      "total_wh": 470963.7,
+      "attributed_wh": 1516238.7,
+      "floor_wh": 309026.6,
+      "residual_wh": -1354301.6,
+      "residual_share": -2.875596569332201
+     }
+    },
+    "span": {
+     "n_pairs": 0
+    }
+   }
+  },
+  "kcurve": {
+   "native": {
+    "1": {
+     "n_rows": 20,
+     "pooled_f1_mean": 0.0394,
+     "pooled_f1_std": 0.0052,
+     "per_device_f1_mean": {
+      "washing_machine": 0.0055,
+      "dishwasher": 0.0,
+      "kettle": 0.0,
+      "fridge": 0.0532
+     },
+     "strata_f1_mean": {
+      "solo": {
+       "washing_machine": 0.0774,
+       "dishwasher": 0.0774,
+       "kettle": 0.0774,
+       "fridge": 0.0774
+      },
+      "co": {
+       "washing_machine": 0.0067,
+       "dishwasher": 0.0067,
+       "kettle": 0.0067,
+       "fridge": 0.0067
+      }
+     },
+     "onset_med_s": 0.0,
+     "onset_p90_abs_s": 4.0,
+     "iou_med_med": 0.983,
+     "nmae_mean": {
+      "washing_machine": 0.1686,
+      "dishwasher": 0.0725,
+      "kettle": null,
+      "fridge": 0.0931
+     },
+     "unknown_share_mean": 0.0002,
+     "residual_share_mean": 0.0722
+    },
+    "2": {
+     "n_rows": 20,
+     "pooled_f1_mean": 0.0385,
+     "pooled_f1_std": 0.0032,
+     "per_device_f1_mean": {
+      "washing_machine": 0.0025,
+      "dishwasher": 0.0,
+      "kettle": 0.0,
+      "fridge": 0.0525
+     },
+     "strata_f1_mean": {
+      "solo": {
+       "washing_machine": 0.0766,
+       "dishwasher": 0.0766,
+       "kettle": 0.0766,
+       "fridge": 0.0766
+      },
+      "co": {
+       "washing_machine": 0.0029,
+       "dishwasher": 0.0029,
+       "kettle": 0.0029,
+       "fridge": 0.0029
+      }
+     },
+     "onset_med_s": -0.5,
+     "onset_p90_abs_s": 4.7,
+     "iou_med_med": 0.983,
+     "nmae_mean": {
+      "washing_machine": 0.1706,
+      "dishwasher": 0.0708,
+      "kettle": null,
+      "fridge": 0.0934
+     },
+     "unknown_share_mean": 0.0002,
+     "residual_share_mean": 0.0739
+    },
+    "3": {
+     "n_rows": 20,
+     "pooled_f1_mean": 0.0394,
+     "pooled_f1_std": 0.0032,
+     "per_device_f1_mean": {
+      "washing_machine": 0.0073,
+      "dishwasher": 0.0,
+      "kettle": 0.0,
+      "fridge": 0.0524
+     },
+     "strata_f1_mean": {
+      "solo": {
+       "washing_machine": 0.0769,
+       "dishwasher": 0.0769,
+       "kettle": 0.0769,
+       "fridge": 0.0769
+      },
+      "co": {
+       "washing_machine": 0.0088,
+       "dishwasher": 0.0088,
+       "kettle": 0.0088,
+       "fridge": 0.0088
+      }
+     },
+     "onset_med_s": -0.5,
+     "onset_p90_abs_s": 5.0,
+     "iou_med_med": 0.983,
+     "nmae_mean": {
+      "washing_machine": 0.1866,
+      "dishwasher": 0.0599,
+      "kettle": null,
+      "fridge": 0.0927
+     },
+     "unknown_share_mean": 0.0002,
+     "residual_share_mean": 0.0709
+    },
+    "5": {
+     "n_rows": 20,
+     "pooled_f1_mean": 0.0382,
+     "pooled_f1_std": 0.0034,
+     "per_device_f1_mean": {
+      "washing_machine": 0.0042,
+      "dishwasher": 0.0,
+      "kettle": 0.0,
+      "fridge": 0.0512
+     },
+     "strata_f1_mean": {
+      "solo": {
+       "washing_machine": 0.0749,
+       "dishwasher": 0.0749,
+       "kettle": 0.0749,
+       "fridge": 0.0749
+      },
+      "co": {
+       "washing_machine": 0.0069,
+       "dishwasher": 0.0069,
+       "kettle": 0.0069,
+       "fridge": 0.0069
+      }
+     },
+     "onset_med_s": -0.2,
+     "onset_p90_abs_s": 4.0,
+     "iou_med_med": 0.982,
+     "nmae_mean": {
+      "washing_machine": 0.186,
+      "dishwasher": 0.0618,
+      "kettle": null,
+      "fridge": 0.0927
+     },
+     "unknown_share_mean": 0.0002,
+     "residual_share_mean": 0.0714
+    },
+    "10": {
+     "n_rows": 20,
+     "pooled_f1_mean": 0.0393,
+     "pooled_f1_std": 0.0024,
+     "per_device_f1_mean": {
+      "washing_machine": 0.0034,
+      "dishwasher": 0.0,
+      "kettle": 0.0,
+      "fridge": 0.0521
+     },
+     "strata_f1_mean": {
+      "solo": {
+       "washing_machine": 0.0764,
+       "dishwasher": 0.0764,
+       "kettle": 0.0764,
+       "fridge": 0.0764
+      },
+      "co": {
+       "washing_machine": 0.0069,
+       "dishwasher": 0.0069,
+       "kettle": 0.0069,
+       "fridge": 0.0069
+      }
+     },
+     "onset_med_s": -1.0,
+     "onset_p90_abs_s": 5.6,
+     "iou_med_med": 0.982,
+     "nmae_mean": {
+      "washing_machine": 0.1907,
+      "dishwasher": 0.0638,
+      "kettle": null,
+      "fridge": 0.0929
+     },
+     "unknown_share_mean": 0.0002,
+     "residual_share_mean": 0.0694
+    },
+    "20": {
+     "n_rows": 20,
+     "pooled_f1_mean": 0.0388,
+     "pooled_f1_std": 0.003,
+     "per_device_f1_mean": {
+      "washing_machine": 0.0044,
+      "dishwasher": 0.0,
+      "kettle": 0.0,
+      "fridge": 0.0517
+     },
+     "strata_f1_mean": {
+      "solo": {
+       "washing_machine": 0.0761,
+       "dishwasher": 0.0761,
+       "kettle": 0.0761,
+       "fridge": 0.0761
+      },
+      "co": {
+       "washing_machine": 0.0068,
+       "dishwasher": 0.0068,
+       "kettle": 0.0068,
+       "fridge": 0.0068
+      }
+     },
+     "onset_med_s": -1.0,
+     "onset_p90_abs_s": 5.4,
+     "iou_med_med": 0.982,
+     "nmae_mean": {
+      "washing_machine": 0.1885,
+      "dishwasher": 0.0626,
+      "kettle": null,
+      "fridge": 0.093
+     },
+     "unknown_share_mean": 0.0002,
+     "residual_share_mean": 0.0718
+    }
+   },
+   "60": {
+    "1": {
+     "n_rows": 20,
+     "pooled_f1_mean": 0.0156,
+     "pooled_f1_std": 0.0033,
+     "per_device_f1_mean": {
+      "washing_machine": 0.0577,
+      "dishwasher": 0.0061,
+      "kettle": 0.0,
+      "fridge": 0.0109
+     },
+     "strata_f1_mean": {
+      "solo": {
+       "washing_machine": 0.0136,
+       "dishwasher": 0.0136,
+       "kettle": 0.0136,
+       "fridge": 0.0136
+      },
+      "co": {
+       "washing_machine": 0.0584,
+       "dishwasher": 0.0584,
+       "kettle": 0.0584,
+       "fridge": 0.0584
+      }
+     },
+     "onset_med_s": -49.0,
+     "onset_p90_abs_s": 110.4,
+     "iou_med_med": 0.766,
+     "nmae_mean": {
+      "washing_machine": 0.1599,
+      "dishwasher": 0.0796,
+      "kettle": 0.0186,
+      "fridge": 0.1036
+     },
+     "unknown_share_mean": 0.0006,
+     "residual_share_mean": 0.0202
+    },
+    "2": {
+     "n_rows": 20,
+     "pooled_f1_mean": 0.0166,
+     "pooled_f1_std": 0.0027,
+     "per_device_f1_mean": {
+      "washing_machine": 0.0658,
+      "dishwasher": 0.0013,
+      "kettle": 0.0,
+      "fridge": 0.0118
+     },
+     "strata_f1_mean": {
+      "solo": {
+       "washing_machine": 0.0147,
+       "dishwasher": 0.0147,
+       "kettle": 0.0147,
+       "fridge": 0.0147
+      },
+      "co": {
+       "washing_machine": 0.0612,
+       "dishwasher": 0.0612,
+       "kettle": 0.0612,
+       "fridge": 0.0612
+      }
+     },
+     "onset_med_s": -49.0,
+     "onset_p90_abs_s": 110.2,
+     "iou_med_med": 0.766,
+     "nmae_mean": {
+      "washing_machine": 0.1594,
+      "dishwasher": 0.0736,
+      "kettle": 0.0192,
+      "fridge": 0.1037
+     },
+     "unknown_share_mean": 0.0006,
+     "residual_share_mean": 0.0242
+    },
+    "3": {
+     "n_rows": 20,
+     "pooled_f1_mean": 0.0196,
+     "pooled_f1_std": 0.0031,
+     "per_device_f1_mean": {
+      "washing_machine": 0.085,
+      "dishwasher": 0.0057,
+      "kettle": 0.0,
+      "fridge": 0.0122
+     },
+     "strata_f1_mean": {
+      "solo": {
+       "washing_machine": 0.0152,
+       "dishwasher": 0.0152,
+       "kettle": 0.0152,
+       "fridge": 0.0152
+      },
+      "co": {
+       "washing_machine": 0.0824,
+       "dishwasher": 0.0824,
+       "kettle": 0.0824,
+       "fridge": 0.0824
+      }
+     },
+     "onset_med_s": -49.0,
+     "onset_p90_abs_s": 110.0,
+     "iou_med_med": 0.769,
+     "nmae_mean": {
+      "washing_machine": 0.1749,
+      "dishwasher": 0.0613,
+      "kettle": 0.0178,
+      "fridge": 0.1029
+     },
+     "unknown_share_mean": 0.0007,
+     "residual_share_mean": 0.0193
+    },
+    "5": {
+     "n_rows": 20,
+     "pooled_f1_mean": 0.019,
+     "pooled_f1_std": 0.0032,
+     "per_device_f1_mean": {
+      "washing_machine": 0.08,
+      "dishwasher": 0.0078,
+      "kettle": 0.0,
+      "fridge": 0.0122
+     },
+     "strata_f1_mean": {
+      "solo": {
+       "washing_machine": 0.0152,
+       "dishwasher": 0.0152,
+       "kettle": 0.0152,
+       "fridge": 0.0152
+      },
+      "co": {
+       "washing_machine": 0.0778,
+       "dishwasher": 0.0778,
+       "kettle": 0.0778,
+       "fridge": 0.0778
+      }
+     },
+     "onset_med_s": -49.0,
+     "onset_p90_abs_s": 110.2,
+     "iou_med_med": 0.768,
+     "nmae_mean": {
+      "washing_machine": 0.1717,
+      "dishwasher": 0.0629,
+      "kettle": 0.0184,
+      "fridge": 0.103
+     },
+     "unknown_share_mean": 0.0006,
+     "residual_share_mean": 0.0197
+    },
+    "10": {
+     "n_rows": 20,
+     "pooled_f1_mean": 0.0202,
+     "pooled_f1_std": 0.0022,
+     "per_device_f1_mean": {
+      "washing_machine": 0.0847,
+      "dishwasher": 0.0143,
+      "kettle": 0.0,
+      "fridge": 0.0125
+     },
+     "strata_f1_mean": {
+      "solo": {
+       "washing_machine": 0.0155,
+       "dishwasher": 0.0155,
+       "kettle": 0.0155,
+       "fridge": 0.0155
+      },
+      "co": {
+       "washing_machine": 0.0852,
+       "dishwasher": 0.0852,
+       "kettle": 0.0852,
+       "fridge": 0.0852
+      }
+     },
+     "onset_med_s": -49.0,
+     "onset_p90_abs_s": 109.8,
+     "iou_med_med": 0.768,
+     "nmae_mean": {
+      "washing_machine": 0.1738,
+      "dishwasher": 0.0615,
+      "kettle": 0.0169,
+      "fridge": 0.1028
+     },
+     "unknown_share_mean": 0.0008,
+     "residual_share_mean": 0.0204
+    },
+    "20": {
+     "n_rows": 20,
+     "pooled_f1_mean": 0.0198,
+     "pooled_f1_std": 0.0025,
+     "per_device_f1_mean": {
+      "washing_machine": 0.0824,
+      "dishwasher": 0.0162,
+      "kettle": 0.0,
+      "fridge": 0.0122
+     },
+     "strata_f1_mean": {
+      "solo": {
+       "washing_machine": 0.0152,
+       "dishwasher": 0.0152,
+       "kettle": 0.0152,
+       "fridge": 0.0152
+      },
+      "co": {
+       "washing_machine": 0.0843,
+       "dishwasher": 0.0843,
+       "kettle": 0.0843,
+       "fridge": 0.0843
+      }
+     },
+     "onset_med_s": -49.0,
+     "onset_p90_abs_s": 110.0,
+     "iou_med_med": 0.768,
+     "nmae_mean": {
+      "washing_machine": 0.1725,
+      "dishwasher": 0.061,
+      "kettle": 0.0175,
+      "fridge": 0.103
+     },
+     "unknown_share_mean": 0.0008,
+     "residual_share_mean": 0.0221
+    }
+   }
+  },
+  "em": {
+   "train": {
+    "t0_us": 1410307200000000,
+    "t1_us": 1412899200000000,
+    "loglik": -2830680.7319407463,
+    "components_mu_w": [
+     2729.9,
+     655.1,
+     2221.4,
+     2975.6
+    ],
+    "components_sd_w": [
+     1837.1,
+     663.6,
+     1136.0,
+     970.4
+    ],
+    "match_component_per_device": {
+     "washing_machine": 0,
+     "dishwasher": 3,
+     "kettle": 1,
+     "fridge": 2
+    }
+   },
+   "native": {
+    "pooled": {
+     "n_pred": 652,
+     "n_gt": 670,
+     "n_matched": 0,
+     "precision": 0.0,
+     "recall": 0.0,
+     "f1": 0.0
+    },
+    "per_device": {
+     "washing_machine": {
+      "n_pred": 0,
+      "n_gt": 25,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "span": null
+     },
+     "dishwasher": {
+      "n_pred": 13,
+      "n_gt": 9,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "span": null
+     },
+     "kettle": {
+      "n_pred": 298,
+      "n_gt": 0,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "span": null
+     },
+     "fridge": {
+      "n_pred": 341,
+      "n_gt": 636,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "span": null
+     }
+    },
+    "strata": {
+     "solo": {
+      "n_pred": 0,
+      "n_gt": 569,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     },
+     "co": {
+      "n_pred": 0,
+      "n_gt": 101,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     }
+    },
+    "axis3": {
+     "den_w": 655.01,
+     "per_device": {
+      "washing_machine": {
+       "mae_w": 50.03,
+       "nmae": 0.0764,
+       "energy_wh": 268.4
+      },
+      "dishwasher": {
+       "mae_w": 51.58,
+       "nmae": 0.0788,
+       "energy_wh": 27286.0
+      },
+      "kettle": {
+       "mae_w": null,
+       "nmae": null,
+       "energy_wh": 96410.0
+      },
+      "fridge": {
+       "mae_w": 86.97,
+       "nmae": 0.1328,
+       "energy_wh": 40841.8
+      }
+     },
+     "books_close": {
+      "total_wh": 470514.0,
+      "attributed_wh": 164806.3,
+      "floor_wh": 284516.6,
+      "residual_wh": 21191.100000000035,
+      "residual_share": 0.045038192274831426
+     }
+    },
+    "span": {
+     "n_pairs": 0
+    },
+    "unknown_share": 4.6081399489959466e-05
+   },
+   "60": {
+    "pooled": {
+     "n_pred": 161,
+     "n_gt": 670,
+     "n_matched": 3,
+     "precision": 0.018633540372670808,
+     "recall": 0.004477611940298508,
+     "f1": 0.007220216606498195
+    },
+    "per_device": {
+     "washing_machine": {
+      "n_pred": 1,
+      "n_gt": 25,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "span": null
+     },
+     "dishwasher": {
+      "n_pred": 3,
+      "n_gt": 9,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "span": null
+     },
+     "kettle": {
+      "n_pred": 101,
+      "n_gt": 0,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "span": null
+     },
+     "fridge": {
+      "n_pred": 56,
+      "n_gt": 636,
+      "n_matched": 3,
+      "precision": 0.05357142857142857,
+      "recall": 0.0047169811320754715,
+      "f1": 0.008670520231213872,
+      "span": {
+       "onset_err_s": [
+        -59.0,
+        30.0,
+        24.0
+       ],
+       "offset_err_s": [
+        -1051.0,
+        -60.0,
+        1162.0
+       ],
+       "dur_ratio": [
+        0.4401805869074492,
+        0.9433962264150944,
+        1.9964973730297724
+       ],
+       "iou": [
+        0.3937738940469689,
+        0.9433962264150944,
+        0.4852430555555556
+       ]
+      }
+     }
+    },
+    "strata": {
+     "solo": {
+      "n_pred": 3,
+      "n_gt": 569,
+      "n_matched": 3,
+      "precision": 1.0,
+      "recall": 0.005272407732864675,
+      "f1": 0.010489510489510488
+     },
+     "co": {
+      "n_pred": 0,
+      "n_gt": 101,
+      "n_matched": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+     }
+    },
+    "axis3": {
+     "den_w": 652.63,
+     "per_device": {
+      "washing_machine": {
+       "mae_w": 62.94,
+       "nmae": 0.0964,
+       "energy_wh": 10328.2
+      },
+      "dishwasher": {
+       "mae_w": 20.09,
+       "nmae": 0.0308,
+       "energy_wh": 3620.3
+      },
+      "kettle": {
+       "mae_w": 139.47,
+       "nmae": 0.2137,
+       "energy_wh": 100640.7
+      },
+      "fridge": {
+       "mae_w": 96.71,
+       "nmae": 0.1482,
+       "energy_wh": 45020.5
+      }
+     },
+     "books_close": {
+      "total_wh": 470963.7,
+      "attributed_wh": 159609.7,
+      "floor_wh": 309026.6,
+      "residual_wh": 2327.4000000000233,
+      "residual_share": 0.004941782137349488
+     }
+    },
+    "span": {
+     "n_pairs": 3,
+     "onset_med_s": 24.0,
+     "onset_p90_abs_s": 53.2,
+     "offset_med_s": -60.0,
+     "offset_p90_abs_s": 1139.8,
+     "dur_ratio_med": 0.9433962264150944,
+     "iou_med": 0.4852430555555556
+    },
+    "unknown_share": 7.217117295196435e-05
+   }
+  }
+ }
+}
