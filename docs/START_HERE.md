@@ -16,6 +16,7 @@ capture real data from the device, and run the approach on public data at full r
 | # | Doc | What it answers |
 |---|-----|-----------------|
 | 0 | `docs/knowledge/ELI5_NILM.md`, then `docs/knowledge/ELI5_COMMON_NILM_FEATURES.md` | New to NILM? Electricity basics (V, I, W, kWh, AC, power factor), then the features NILM methods compute. Skip if you know the basics. |
+| 0b | `docs/knowledge/NILM_GLOSSARY.md` | The recurring jargon of the experiment docs (GT, press, parity rule, floor, margin, arms) in one plain line each. Keep it open while reading. |
 | 1 | `docs/PROBLEM_STATEMENTS.md` | What problem are we actually solving — inputs, outputs, the calibration protocol, the evaluation contract. Every claim trust-tagged. |
 | 2 | `docs/research/research-brief.md` | What the field knows, what the hardware can do (section 4), and why the best-funded consumer product in this space quit. |
 | 3 | `docs/product/feasibility-verdicts.md` | Which versions of the product are feasible, which are not, and why. |
