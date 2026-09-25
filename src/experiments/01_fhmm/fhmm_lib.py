@@ -15,9 +15,19 @@ microseconds) and w (float64, watts). All timestamps are UTC microseconds.
 
 from __future__ import annotations
 
-import baseline_lib as bl
 import numpy as np
 import pandas as pd
+
+from wattwiser.experiments.data_loader import (
+    gold_parquet_path,
+    load_device_profiles,
+    load_gt_cycles,
+    load_power_series,
+    load_split_us,
+)
+from wattwiser.experiments.energy import step_energy_cumsum_wh, window_energy_wh
+from wattwiser.experiments.evaluation import match_onsets, precision_recall_f1
+from wattwiser.experiments.segmentation import build_episodes
 
 # ---------------------------------------------------------------------------
 # Frozen constants (plan SS8, 2026-09-22). Do not edit without a protocol-break entry.
@@ -50,61 +60,89 @@ FROZEN = {
 # House configuration and gold layers
 
 def house_config(dataset: str, house: str) -> dict:
-    """In-focus devices with frozen rule parameters, plus the split point."""
-    prof = pd.read_csv(bl.gold_annot_file(dataset, house, "device_profile"))
-    inf = prof[prof["in_focus"] == True]  # noqa: E712
+    """Per-house experiment setup: every in-focus device with its frozen
+    rule (thr_w = ON threshold in W, dwell_s = minimum episode length in s,
+    merge_s = gap merged into one episode in s, plus class), and split_us =
+    the train/test boundary timestamp. Evaluation scores only the span at
+    or after split_us; calibration stays strictly before it."""
+    # flow: profiles table -> in-focus rows -> {device: rule}; split table -> split_us
+    profiles = load_device_profiles(dataset, house)
+    in_focus = profiles[profiles["in_focus"] == True]  # noqa: E712
     devices = {
-        r["device"]: {
-            "class": r["class"],
-            "thr_w": float(r["thr_used_w"]),
-            "dwell_s": float(r["dwell_s"]),
-            "merge_s": float(r["merge_s"]),
+        row["device"]: {
+            "class": row["class"],
+            "thr_w": float(row["thr_used_w"]),
+            "dwell_s": float(row["dwell_s"]),
+            "merge_s": float(row["merge_s"]),
         }
-        for _, r in inf.iterrows()
+        for _, row in in_focus.iterrows()
     }
-    split_us = int(pd.read_csv(bl.gold_annot_file(dataset, house, "splits"))["split_us"].iloc[0])
+    split_us = load_split_us(dataset, house)
     return {"devices": devices, "split_us": split_us}
 
 
-def eval_episodes(dataset: str, house: str, device: str, dev: dict,
+def evaluation_gt_episodes(dataset: str, house: str, device: str, device_rule: dict,
                   t0_us: int | None = None, t1_us: int | None = None) -> pd.DataFrame:
-    """Evaluation GT: episodes from the device submeter channel with its
-    profile rule (submeters here are evaluation-only)."""
-    df = bl.load_series(bl.gold_file(dataset, house, device))
+    """Ground-truth episodes for evaluation: the device's own submeter
+    channel run through build_episodes with its profile rule. Submeters
+    are evaluation-only - never a model input. The [t0_us, t1_us) window
+    applies only when t0_us is not None."""
+    # flow: device submeter parquet (ts_us, w) -> optional window clip ->
+    #   threshold + dwell + merge rule -> episode table (t_on_us, t_off_us)
+    df = load_power_series(gold_parquet_path(dataset, house, device))
     if t0_us is not None:
         df = df[(df.ts_us >= t0_us) & (df.ts_us < t1_us)].reset_index(drop=True)
-    return bl.build_episodes(df, dev["thr_w"], min_dwell_s=dev["dwell_s"],
-                             merge_gap_s=dev["merge_s"],
+    return build_episodes(df, device_rule["thr_w"], min_dwell_s=device_rule["dwell_s"],
+                             merge_gap_s=device_rule["merge_s"],
                              max_hold_s=FROZEN["energy_hold_s"])
 
 
-def press_pool(dataset: str, house: str, device: str, before_us: int) -> pd.DataFrame:
-    """Pre-split gold_annot marks of one device = simulated start/stop presses."""
-    gt = bl.gt_cycles(dataset, house)
+def simulated_presses(dataset: str, house: str, device: str, before_us: int) -> pd.DataFrame:
+    """The H02 press instrument: every pre-split gold_annot cycle mark of
+    one device, read as a simulated start/stop button press. Rows are
+    cycle intervals (t_on_us, t_off_us) sorted by start, all strictly
+    before before_us - calibration never sees post-split marks."""
+    # flow: gt_cycles marks -> keep this device + t_on < before_us -> sorted rows
+    gt = load_gt_cycles(dataset, house)
     d = gt[gt["device"] == device]
     return d[d["t_on_us"] < before_us].sort_values("t_on_us").reset_index(drop=True)
 
 
-def background_estimates(dataset: str, house: str, t_end_us: int, subsample: int = 7) -> dict:
-    """Always-on floor (p10) and ambient sd (1.4826 x MAD of w - floor),
-    estimated aggregate-only over the pre-split span. MAD keeps a
-    minority-duty fridge from inflating the OFF emission width."""
-    df = bl.load_series(bl.gold_file(dataset, house, "mains"))
+def estimate_floor_noise(dataset: str, house: str, t_end_us: int, subsample: int = 7) -> dict:
+    """Always-on floor and ambient noise of the aggregate, estimated over
+    [series start, t_end_us) - in practice the split timestamp, so the
+    estimate covers exactly the pre-split span.
+
+    floor_w = 10th-percentile watts: the standby + always-on base load
+    (fridge etc.) that is never off. sigma_off_w = 1.4826 x MAD of the
+    watts above the floor - a robust ~1 sd estimate of the ambient noise
+    around that floor. MAD, not plain sd, keeps a minority-duty fridge
+    from inflating the OFF emission width. subsample thins the series for
+    speed. Returns {"floor_w", "sigma_off_w"}."""
+    # flow: mains watts < t_end -> thin 1-in-7 -> p10 floor -> watts above floor
+    #   -> {floor_w, sigma_off_w}
+    df = load_power_series(gold_parquet_path(dataset, house, "mains"))
     df = df[df.ts_us < t_end_us]
     w = df["w"].to_numpy(float)[::subsample]
     floor = float(np.percentile(w, 10))
     resid = w - floor
     mad = float(np.median(np.abs(resid - np.median(resid))))
+    # 1.4826 converts a MAD into a normal-consistent sd
     return {"floor_w": floor, "sigma_off_w": float(max(1.4826 * mad, 1.0))}
 
 
 # ---------------------------------------------------------------------------
 # Sessions -> parameters (H02 instrument; parity-clean by construction)
 
-def local_baseline(ts: np.ndarray, w: np.ndarray, t_on_us: int,
+def pre_press_level(ts: np.ndarray, w: np.ndarray, t_on_us: int,
                    span_s: float = 120.0, gap_s: float = 10.0,
                    fallback: float = 0.0) -> float:
-    """Median aggregate just before a press (the instrument's local level)."""
+    """Median aggregate watts just before a press: the local level the
+    device would rise from, over [t_on_us - span_s, t_on_us - gap_s).
+    Returns fallback when that window holds fewer than 3 samples.
+    Currently unused by the runner/notebook; kept pending a keep/drop
+    call."""
+    # flow: (ts, w) + press start -> median over [start - span_s, start - gap_s) -> scalar W
     i0 = int(np.searchsorted(ts, t_on_us - span_s * 1_000_000, side="left"))
     i1 = int(np.searchsorted(ts, t_on_us - gap_s * 1_000_000, side="left"))
     if i1 - i0 < 3:
@@ -117,6 +155,8 @@ def flag_interference(sessions: pd.DataFrame, others: dict[str, pd.DataFrame],
     """H06 rule (frozen): a session is invalid if other in-focus devices'
     GT episodes cover more than max_cover of its interval (per-device overlap
     summed; conservative)."""
+    # flow: session (t_on, t_off) + other devices' GT episodes -> overlap share
+    #   of the session covered -> bool mask (True = invalid session)
     t_on = sessions["t_on_us"].to_numpy(np.int64)
     t_off = sessions["t_off_us"].to_numpy(np.int64)
     dur = np.maximum(t_off - t_on, 1).astype(float)
@@ -132,23 +172,24 @@ def flag_interference(sessions: pd.DataFrame, others: dict[str, pd.DataFrame],
     return covers / dur > max_cover
 
 
-def sample_valid_sessions(pool: pd.DataFrame, k: int, rng: np.random.Generator,
+def sample_valid_sessions(presses: pd.DataFrame, k: int, rng: np.random.Generator,
                           others: dict[str, pd.DataFrame],
                           max_cover: float) -> tuple[pd.DataFrame, int]:
     """Bootstrap-draw sessions (with replacement) until k valid ones; flagged
     sessions do not count toward k. Returns (valid_df, attempts)."""
-    if len(pool) == 0 or k <= 0:
-        return pool.iloc[:0], 0
+    # flow: press pool -> repeat draws of k -> drop flagged rows -> concat, head(k)
+    if len(presses) == 0 or k <= 0:
+        return presses.iloc[:0], 0
     kept: list[pd.DataFrame] = []
     attempts = 0
     cap = max(4 * k, 8)  # yield guard
     while sum(len(x) for x in kept) < k and attempts < cap:
-        idx = rng.integers(0, len(pool), size=k)
-        draw = pool.iloc[idx]
+        idx = rng.integers(0, len(presses), size=k)
+        draw = presses.iloc[idx]
         attempts += len(draw)
         bad = flag_interference(draw, others, max_cover)
         kept.append(draw[~bad])
-    out = pd.concat(kept, ignore_index=True) if kept else pool.iloc[:0]
+    out = pd.concat(kept, ignore_index=True) if kept else presses.iloc[:0]
     return out.head(k), attempts
 
 
@@ -159,6 +200,8 @@ def estimate_device_params(ts: np.ndarray, w: np.ndarray, floor_w: float,
     interval only (parity rule). mu = mean level minus floor; sd = mean
     within-session sd; dwell from session durations, clamped. Returns None
     when the level does not clear the floor (not separable)."""
+    # flow: valid sessions + aggregate series -> per-session slice ->
+    #   (mean - floor, sd, duration) -> averaged -> {mu_w, sd_w, p_on_stay, dwell_s}
     if len(sessions) == 0:
         return None
     t_on = sessions["t_on_us"].to_numpy(np.int64)
@@ -166,51 +209,61 @@ def estimate_device_params(ts: np.ndarray, w: np.ndarray, floor_w: float,
     mus: list[float] = []
     sds: list[float] = []
     durs: list[float] = []
-    for a, b in zip(t_on, t_off):
-        i0 = int(np.searchsorted(ts, a + 10_000_000, side="left"))
-        i1 = int(np.searchsorted(ts, max(b - 10_000_000, a + 10_000_000), side="right"))
+    for on_us, off_us in zip(t_on, t_off):
+        # shave 10 s off each end so the slice holds steady ON watts, not ramp edges
+        i0 = int(np.searchsorted(ts, on_us + 10_000_000, side="left"))
+        i1 = int(np.searchsorted(ts, max(off_us - 10_000_000, on_us + 10_000_000), side="right"))
         if i1 - i0 < 2:
             continue
-        seg = w[i0:i1]
-        mus.append(float(seg.mean()) - floor_w)
-        sds.append(float(seg.std()))
-        durs.append((b - a) / 1e6)
+        seg_w = w[i0:i1]
+        mus.append(float(seg_w.mean()) - floor_w)
+        sds.append(float(seg_w.std()))
+        durs.append((off_us - on_us) / 1e6)
     if not mus:
         return None
     mu = float(np.mean(mus))
     if mu < FROZEN["mu_min_w"]:
         return None
     sd = max(float(np.mean(sds)), FROZEN["sigma_floor_w"])
+    # never let the emission width collapse below the frozen floor
     dwell = float(np.clip(float(np.mean(durs)), *FROZEN["dwell_clamp_s"]))
     return {
         "mu_w": mu,
         "sd_w": sd,
         "p_on_stay": 1.0 - 1.0 / max(dwell / cadence_s, 1.0),
+        # E[ON steps] = 1 / (1 - p_stay) = dwell / cadence, solved for p_stay
         "dwell_s": dwell,
     }
 
 
-def fridge_passive_params(dataset: str, house: str, dev: dict, floor_w: float,
+def fridge_passive_params(dataset: str, house: str, device_rule: dict, floor_w: float,
                           sigma_off_w: float,
                           before_us: int, cadence_s: float) -> dict | None:
     """Fridge profile: aggregate-only over pre-split GT duty intervals
     (parity-clean; K-independent). Median for robustness to co-occurring
-    loads."""
-    eps = eval_episodes(dataset, house, "fridge", dev, None, before_us)
-    if len(eps) == 0:
-        return None
-    df = bl.load_series(bl.gold_file(dataset, house, "mains"))
+    loads. sigma_off_w is unused here."""
+    # flow: pre-split fridge GT duty intervals -> median aggregate inside each
+    #   (minus floor) -> median over intervals -> {mu_w, sd_w, p_on_stay, dwell_s}
+    df = load_power_series(gold_parquet_path(dataset, house, "mains"))
     ts = df["ts_us"].to_numpy(np.int64)
     w = df["w"].to_numpy(float)
+    # window [series start, before_us): evaluation_gt_episodes clips only when
+    # t0_us is not None, so (None, before_us) silently read the full series and
+    # leaked post-split data into this profile
+    eps = evaluation_gt_episodes(dataset, house, "fridge", device_rule,
+                                 int(ts[0]), before_us)
+    if len(eps) == 0:
+        return None
     vals: list[float] = []
     durs: list[float] = []
-    for a, b in zip(eps["t_on_us"].to_numpy(np.int64), eps["t_off_us"].to_numpy(np.int64)):
-        i0 = int(np.searchsorted(ts, a, side="left"))
-        i1 = int(np.searchsorted(ts, b, side="right"))
+    for on_us, off_us in zip(eps["t_on_us"].to_numpy(np.int64), eps["t_off_us"].to_numpy(np.int64)):
+        # duty intervals, not presses: the fridge cycles too often to simulate
+        i0 = int(np.searchsorted(ts, on_us, side="left"))
+        i1 = int(np.searchsorted(ts, off_us, side="right"))
         if i1 <= i0:
             continue
         vals.append(float(np.median(w[i0:i1])) - floor_w)
-        durs.append((b - a) / 1e6)
+        durs.append((off_us - on_us) / 1e6)
     if not vals:
         return None
     mu = float(np.median(vals))
@@ -221,6 +274,7 @@ def fridge_passive_params(dataset: str, house: str, dev: dict, floor_w: float,
         "mu_w": mu,
         "sd_w": max(8.0, FROZEN["sigma_floor_w"]),
         "p_on_stay": 1.0 - 1.0 / max(dwell / cadence_s, 1.0),
+        # same stay math as the session estimate
         "dwell_s": dwell,
     }
 
@@ -230,11 +284,13 @@ def fridge_passive_params(dataset: str, house: str, dev: dict, floor_w: float,
 
 def _joint_maps(n_dev: int):
     j = np.arange(1 << n_dev, dtype=np.int64)
+    # joint state j in [0, 2^D): bit d of j = device d is ON in that state
     bits = ((j[None, :] >> np.arange(n_dev)[:, None]) & 1).astype(np.int8)  # (D, J)
     return bits, bits.T.astype(np.float32)  # (D, J), ON-indicator (J, D)
 
 
 def _gaussian_ll(obs: np.ndarray, mu: np.ndarray, sd: np.ndarray) -> np.ndarray:
+    """Gaussian log-likelihood of obs under N(mu, sd^2), fully broadcast."""
     return -0.5 * ((obs - mu) ** 2 / sd**2 + np.log(2.0 * np.pi * sd**2))
 
 
@@ -249,15 +305,19 @@ def decode_batch(ts: np.ndarray, w: np.ndarray, t0_us: int, t1_us: int,
     downstream in spans_to_episodes. Returns ts (T,), on (T,B,D) int8,
     marg (T,B,D) float32 posteriors P(device ON), gated (T,B) int8,
     loglik (B,)."""
+    # flow: (ts, w) aggregate + B parameter rows -> per timestep, per joint
+    #   state -> on/marg/gated arrays + loglik (shapes as in the docstring)
     mu = params["mu"].astype(np.float32)
     sd = params["sd"].astype(np.float32)
     p_on = params["p_on_stay"].astype(np.float32)
-    sig_off = params["sigma_off"].astype(np.float32)
+    sigma_off = params["sigma_off"].astype(np.float32)
     B, D = mu.shape
     J = 1 << D
     bits, ON = _joint_maps(D)
+    # bits (D, J): device bits of state j; ON (J, D): state -> member levels
 
     mu_on = mu @ ON.T                                 # (B, J)
+    # state level = sum of member mus: (B, D) @ (D, J) -> (B, J)
     # joint transition logT[b, i, j] = log P(next=j | cur=i), product of per-device 2x2 chains
     n_off_steps = max(FROZEN["off_dwell_prior_s"] / cadence_s, 1.0)
     p_oo = np.float32(1.0 - 1.0 / n_off_steps)
@@ -268,11 +328,14 @@ def decode_batch(ts: np.ndarray, w: np.ndarray, t0_us: int, t1_us: int,
             np.stack([(1.0 - p_on[:, d]).astype(np.float32), p_on[:, d]], axis=-1),
         ], axis=1))                                   # (B, 2, 2) rows=from
         logT += logT_d[:, bits[d], :][:, :, bits[d]]
+        # scatter the device's 2x2 chain onto every joint pair; independent
+        # devices -> their log-probabilities add
     # stationary init per chain (per device column)
     init = np.ones((B, J), np.float32)
     for d in range(D):
         rate_d = (1.0 - p_oo) / ((1.0 - p_oo) + (1.0 - p_on[:, d]))  # (B,)
         init *= np.where(bits[d][None, :] > 0, rate_d[:, None], 1.0 - rate_d[:, None])
+        # bit set -> multiply P(ON) in, else P(OFF); product across devices
     eT = np.exp(logT)
 
     g0 = int(np.searchsorted(ts, t0_us, side="left"))
@@ -288,6 +351,7 @@ def decode_batch(ts: np.ndarray, w: np.ndarray, t0_us: int, t1_us: int,
     loglik = np.zeros(B, np.float64)
     pos = 0
     while pos < T_total:
+        # decode [core | warmup] padding; only the core rows are kept
         core0, core1 = pos, min(pos + chunk, T_total)
         w0 = max(0, core0 - warm)
         w1 = min(T_total, core1 + warm)
@@ -305,11 +369,14 @@ def decode_batch(ts: np.ndarray, w: np.ndarray, t0_us: int, t1_us: int,
         # vs the true 130 W, and the quiet gate became c*sqrt(D)*sigma_off,
         # contradicting the frozen 'quiet reduces exactly to c*sigma_off'.)
         mean_j = mu_on                                   # (B, J)
-        var_j = sig_off[:, None]**2 + \
-            (np.maximum(sd**2 - sig_off[:, None]**2, 0.0) @ ON.T)  # (B, J)
+        var_j = sigma_off[:, None]**2 + \
+            (np.maximum(sd**2 - sigma_off[:, None]**2, 0.0) @ ON.T)  # (B, J)
         sd_j = np.sqrt(np.maximum(var_j, 1e-12))
         em = _gaussian_ll(seg_obs[None, None, :], mean_j[:, :, None], sd_j[:, :, None]).astype(np.float32)
+        # broadcast: obs (nseg,) against state means (B, J) -> loglik (B, J, nseg)
         # Viterbi
+        # prev = best path score per state (log domain, max-shifted);
+        # bp[t] = the winning previous state -> backtrack from the best end state
         bp = np.zeros((nseg, B, J), np.int8)
         prev = init + em[:, :, 0]
         prev -= prev.max(axis=1, keepdims=True)
@@ -323,6 +390,7 @@ def decode_batch(ts: np.ndarray, w: np.ndarray, t0_us: int, t1_us: int,
         bidx = np.arange(B)
         for t in range(nseg - 1, 0, -1):
             states[t - 1] = bp[t][bidx, states[t]]
+        # t-1's state = the pointer recorded when t was reached
         # forward-backward (scaled; per-step max-shift for numerical stability)
         em_max = em.max(axis=1)                          # (B, nseg)
         em_s = em - em_max[:, None, :]
@@ -343,6 +411,7 @@ def decode_batch(ts: np.ndarray, w: np.ndarray, t0_us: int, t1_us: int,
         gam = alpha * beta
         gam /= np.maximum(gam.sum(axis=2, keepdims=True), 1e-38)
         marg = gam @ ON                                  # (nseg, B, D)
+        # posteriors over joint states -> per-device marginals: (nseg, B, J) @ (J, D)
         # innovation gate: the residual is compared against the decoded
         # state's own emission spread, floored at the ambient sd. In quiet
         # (all-OFF) regions this reduces exactly to the frozen c*sigma_off
@@ -350,9 +419,10 @@ def decode_batch(ts: np.ndarray, w: np.ndarray, t0_us: int, t1_us: int,
         mu_seg = mu_on[bidx[None, :], states]            # (nseg, B)
         sd_seg = sd_j[bidx[None, :], states]             # (nseg, B)
         resid = seg_obs[:, None] - mu_seg
-        gate_sd = np.maximum(sd_seg, sig_off[None, :])
+        gate_sd = np.maximum(sd_seg, sigma_off[None, :])
         gated = (np.abs(resid) > FROZEN["innov_c"] * gate_sd).astype(np.int8)
         c0i, c1i = core0 - w0, core1 - w0
+        # copy the core rows into the outputs (warmup rows are scaffolding)
         on_out[core0:core1] = (states[c0i:c1i][:, :, None] >> np.arange(D)[None, None, :]) & 1
         marg_out[core0:core1] = marg[c0i:c1i]
         gated_out[core0:core1] = gated[c0i:c1i]
@@ -370,6 +440,7 @@ def _runs(ts: np.ndarray, on: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     if idx.size == 0:
         return np.empty(0, np.int64), np.empty(0, np.int64)
     brk = np.flatnonzero(np.diff(idx) > 1)
+    # sorted ON indices; a jump > 1 in index = a gap = a run boundary
     return np.r_[idx[0], idx[brk + 1]], np.r_[idx[brk], idx[-1]]
 
 
@@ -378,43 +449,50 @@ def _merge_runs(ts: np.ndarray, starts: np.ndarray, ends: np.ndarray,
                 gate_split_steps: int) -> tuple[np.ndarray, np.ndarray]:
     """Merge runs whose OFF gap is at most merge_gap_us - except gaps that
     carry at least gate_split_steps gated samples, which must split."""
+    # flow: run starts/ends -> new-group flags (gap too big OR gate-heavy)
+    #   -> group boundaries -> merged (t_on, t_off)
     t_on, t_off = ts[starts], ts[ends]
     new_run = np.concatenate(([True], (t_on[1:] - t_off[:-1]) > merge_gap_us))
+    # True = start a new group: the gap to the previous run exceeds merge_gap_us
     if gated_cum is not None and len(starts) > 1:
         gap_hi = np.searchsorted(ts, t_on[1:], side="left")
         gap_lo = np.searchsorted(ts, t_off[:-1], side="right")
         gated_in_gap = gated_cum[gap_hi] - gated_cum[gap_lo]
         new_run[1:] |= gated_in_gap >= gate_split_steps
-    bnd = np.flatnonzero(new_run)
-    grp_end = np.r_[bnd[1:] - 1, len(t_on) - 1]
-    return t_on[bnd], t_off[grp_end]
+    boundaries = np.flatnonzero(new_run)
+    group_last = np.r_[boundaries[1:] - 1, len(t_on) - 1]
+    return t_on[boundaries], t_off[group_last]
 
 
-def spans_to_episodes(dec: dict, b: int, devices: list[str], dev_params: dict,
+def spans_to_episodes(dec: dict, batch_idx: int, devices: list[str], dev_params: dict,
                       merge_us_by_dev: dict[str, int], dwell_s_by_dev: dict[str, float],
                       cadence_s: float) -> pd.DataFrame:
-    """Decoded state sequence -> per-device episodes for one batch element.
-    A timestep is claimed by device d when its state bit is ON, its posterior
-    marginal is >= theta, and it is not innovation-gated. Episodes merge over
-    gaps <= merge_gap_s unless a >= gate_split_s gated run sits in the gap; 
-    episodes shorter than min dwell are dropped."""
+    """Decoded state sequence -> per-device episodes for one batch row.
+    A timestep counts for that device when its state bit is ON, its posterior
+    marginal is >= unknown_theta, and it is not innovation-gated. ON runs merge
+    across gaps <= merge_gap_s unless gated samples of >= gate_split_s sit in
+    the gap; episodes shorter than the device's min dwell are dropped."""
+    # flow: decoded row -> per-device ON indicator (state bit + confident
+    #   posterior + not gated) -> runs -> merge -> dwell filter -> episodes
     ts = dec["ts"]
     gate_steps = max(int(FROZEN["gate_split_s"] / cadence_s), 1)
     rows = []
-    for d, dev in enumerate(devices):
-        on = (dec["on"][:, b, d] == 1) & (dec["marg"][:, b, d] >= FROZEN["unknown_theta"]) \
-             & (dec["gated"][:, b] == 0)
+    for di, device in enumerate(devices):
+        on = (dec["on"][:, batch_idx, di] == 1) & (dec["marg"][:, batch_idx, di] >= FROZEN["unknown_theta"]) \
+             & (dec["gated"][:, batch_idx] == 0)
+        # the three claim conditions: state bit, confident posterior, not gated
         starts, ends = _runs(ts, on)
         if len(starts) == 0:
             continue
-        gated_cum = np.concatenate(([0], np.cumsum(dec["gated"][:, b])))
-        t_on, t_off = _merge_runs(ts, starts, ends, merge_us_by_dev[dev],
+        gated_cum = np.concatenate(([0], np.cumsum(dec["gated"][:, batch_idx])))
+        # running gated count -> gated samples inside a gap = difference
+        t_on, t_off = _merge_runs(ts, starts, ends, merge_us_by_dev[device],
                                   gated_cum, gate_steps)
         dur_s = (t_off - t_on) / 1e6
-        keep = dur_s >= dwell_s_by_dev[dev]
-        for a, bnd in zip(t_on[keep], t_off[keep]):
-            rows.append({"device": dev, "t_on_us": int(a), "t_off_us": int(bnd),
-                         "mu_w": float(dev_params[dev]["mu_w"])})
+        keep = dur_s >= dwell_s_by_dev[device]
+        for on_us, off_us in zip(t_on[keep], t_off[keep]):
+            rows.append({"device": device, "t_on_us": int(on_us), "t_off_us": int(off_us),
+                         "mu_w": float(dev_params[device]["mu_w"])})
     if not rows:
         return pd.DataFrame(columns=["device", "t_on_us", "t_off_us", "mu_w"])
     return pd.DataFrame(rows)
@@ -427,21 +505,24 @@ def anchor_episodes(ts: np.ndarray, w: np.ndarray, t0_us: int, t1_us: int,
     min dwell + merge, on the aggregate. Vectorized state machine."""
     g0 = int(np.searchsorted(ts, t0_us, side="left"))
     g1 = int(np.searchsorted(ts, t1_us, side="right"))
-    seg = w[g0:g1]
-    gts = ts[g0:g1]
+    seg_w = w[g0:g1]
+    seg_ts = ts[g0:g1]
     thr_on = thr_w
     thr_off = thr_w * FROZEN["anchor_off_factor"]
-    mark = np.where(seg > thr_on, 1, np.where(seg < thr_off, 0, -1))
+    mark = np.where(seg_w > thr_on, 1, np.where(seg_w < thr_off, 0, -1))
+    # 1 = clearly on, 0 = clearly off, -1 = hysteresis band (undecided)
     force = mark != -1
     last = np.where(force, np.arange(len(mark)), -1)
     last = np.maximum.accumulate(last)
+    # carry the last decisive mark forward over undecided samples
     state = np.where(last >= 0, mark[np.maximum(last, 0)], 0)
-    starts, ends = _runs(gts, state == 1)
+    starts, ends = _runs(seg_ts, state == 1)
     if len(starts) == 0:
         return pd.DataFrame(columns=["device", "t_on_us", "t_off_us", "mu_w"])
-    t_on, t_off = _merge_runs(gts, starts, ends, int(merge_gap_s * 1e6), None, 0)
+    t_on, t_off = _merge_runs(seg_ts, starts, ends, int(merge_gap_s * 1e6), None, 0)
     dur_s = (t_off - t_on) / 1e6
     keep = dur_s >= min_dwell_s
+    # the anchor claims intervals, not levels: mu_w = thr_w, flat
     return pd.DataFrame({"device": "", "t_on_us": t_on[keep],
                          "t_off_us": t_off[keep], "mu_w": thr_w})
 
@@ -449,16 +530,16 @@ def anchor_episodes(ts: np.ndarray, w: np.ndarray, t0_us: int, t1_us: int,
 # ---------------------------------------------------------------------------
 # Metrics (three axes)
 
-def tag_cooccurring(gt_by_dev: dict[str, pd.DataFrame], device: str) -> np.ndarray:
+def tag_cooccurring(gt_by_device: dict[str, pd.DataFrame], device: str) -> np.ndarray:
     """Per GT episode of `device`: True when it overlaps any other device's
     GT episode (the overlapped stratum)."""
-    eps = gt_by_dev[device]
+    eps = gt_by_device[device]
     out = np.zeros(len(eps), bool)
     if eps.empty:
         return out
     e_on = eps["t_on_us"].to_numpy(np.int64)
     e_off = eps["t_off_us"].to_numpy(np.int64)
-    for other, df in gt_by_dev.items():
+    for other, df in gt_by_device.items():
         if other == device or df.empty:
             continue
         o_on = df["t_on_us"].to_numpy(np.int64)
@@ -475,6 +556,8 @@ def score_device(pred: pd.DataFrame, gt: pd.DataFrame, tau_us: float,
     Onset matching is greedy one-to-one within tau; matched pairs outside the
     dwell-ratio band count as a miss on BOTH sides (conservative). Onset/offset
     errors are signed (pred - gt)."""
+    # flow: pred episodes vs GT episodes -> greedy onset matches within tau ->
+    #   drop matches whose durations disagree -> P/R/F1 + span errors
     n_pred, n_gt = len(pred), len(gt)
     out = {"n_pred": n_pred, "n_gt": n_gt, "n_matched": 0,
            "precision": None, "recall": None, "f1": None, "span": None}
@@ -487,13 +570,14 @@ def score_device(pred: pd.DataFrame, gt: pd.DataFrame, tau_us: float,
     gt_off = gt["t_off_us"].to_numpy(np.int64)
     pr_on = pred["t_on_us"].to_numpy(np.int64)
     pr_off = pred["t_off_us"].to_numpy(np.int64)
-    gi, pi = bl.match_onsets(gt_on, pr_on, tau_us)
+    gi, pi = match_onsets(gt_on, pr_on, tau_us)
     keep = np.ones(len(gi), bool)
     if len(gi):
         ratio = (pr_off[pi] - pr_on[pi]) / np.maximum(gt_off[gi] - gt_on[gi], 1)
         keep = (ratio >= dwell_band[0]) & (ratio <= dwell_band[1])
+        # a matched pair with a wildly different duration is a miss on both sides
     out["n_matched"] = int(keep.sum())
-    p, r, f = bl.prf(out["n_matched"], n_pred, n_gt)
+    p, r, f = precision_recall_f1(out["n_matched"], n_pred, n_gt)
     out.update({"precision": p, "recall": r, "f1": f})
     if out["n_matched"]:
         g_on, g_off = gt_on[gi[keep]], gt_off[gi[keep]]
@@ -510,17 +594,20 @@ def score_device(pred: pd.DataFrame, gt: pd.DataFrame, tau_us: float,
 
 
 def nmae_for_device(grid_ts: np.ndarray, pred_power: np.ndarray,
-                    gt_dev: pd.DataFrame, agg_w_grid: np.ndarray) -> dict:
+                    gt_power: pd.DataFrame, agg_w_grid: np.ndarray) -> dict:
     """Axis 3: per-device nMAE over the decode grid (GT device power aligned
     by exact timestamp; denominator = mean aggregate power over the grid)."""
+    # flow: decode grid + pred power + GT device series -> exact-timestamp join
+    #   -> mean |pred - gt| -> {mae_w, nmae, n_common, den_w}
     den = float(np.mean(agg_w_grid)) if len(agg_w_grid) else float("nan")
-    if gt_dev.empty:
+    if gt_power.empty:
         return {"mae_w": None, "nmae": None, "n_common": 0, "den_w": den}
-    gt_ts = gt_dev["ts_us"].to_numpy(np.int64)
-    gt_w = gt_dev["w"].to_numpy(float)
+    gt_ts = gt_power["ts_us"].to_numpy(np.int64)
+    gt_w = gt_power["w"].to_numpy(float)
     pos = np.searchsorted(gt_ts, grid_ts)
     pos_c = np.minimum(pos, len(gt_ts) - 1)
     ok = (pos < len(gt_ts)) & (gt_ts[pos_c] == grid_ts)
+    # keep only grid stamps the GT series has exactly (no interpolation)
     if not ok.any():
         return {"mae_w": None, "nmae": None, "n_common": 0, "den_w": den}
     diff = np.abs(pred_power[ok] - gt_w[pos_c[ok]])
@@ -531,54 +618,66 @@ def nmae_for_device(grid_ts: np.ndarray, pred_power: np.ndarray,
 
 def energy_wh(ts: np.ndarray, w: np.ndarray, t0_us: int, t1_us: int) -> float:
     """Step-rule energy (Wh) of a series inside [t0, t1)."""
-    cum = bl.step_energy_cumsum_wh(ts, w, max_hold_s=FROZEN["energy_hold_s"])
-    return bl.window_energy_wh(ts, cum, t0_us, t1_us)
+    # flow: (ts, w) -> cumulative per-step Wh -> window slice sum
+    cum = step_energy_cumsum_wh(ts, w, max_hold_s=FROZEN["energy_hold_s"])
+    return window_energy_wh(ts, cum, t0_us, t1_us)
 
 
-def books_close(total_wh: float, attributed_wh: float, floor_wh: float) -> dict:
-    """Whole-span energy balance: residual = total - attributed - floor."""
+def energy_balance(total_wh: float, attributed_wh: float, floor_wh: float) -> dict:
+    """Whole-span energy balance: residual_wh = total_wh - attributed_wh -
+    floor_wh, and residual_share = residual / total. A large positive
+    residual means the claims under-cover the measured energy."""
+    # flow: (total, attributed, floor) Wh -> residual = total - attributed - floor
     resid = total_wh - attributed_wh - floor_wh
     return {"total_wh": total_wh, "attributed_wh": attributed_wh,
             "floor_wh": floor_wh, "residual_wh": resid,
             "residual_share": resid / total_wh if total_wh else None}
 
 
-def to_rung(ts: np.ndarray, w: np.ndarray, bucket_s: float) -> tuple[np.ndarray, np.ndarray]:
-    """Cadence rung (H03): bucket-mean the series onto a coarser grid; the
-    timestamp is the bucket midpoint."""
+def bucket_mean(ts: np.ndarray, w: np.ndarray, bucket_s: float) -> tuple[np.ndarray, np.ndarray]:
+    """Bucket-mean the series onto a coarser grid of bucket_s seconds; each
+    output timestamp is the bucket midpoint. Builds the 60 s observation
+    grid from the native cadence (H03 cadence ladder)."""
+    # flow: (N,) native (ts, w) -> bucket ids -> per-bucket mean -> (M,) midpoints + (M,) means
     bid = ts // int(bucket_s * 1e6)
     ub, first = np.unique(bid, return_index=True)
     counts = np.diff(np.r_[first, len(bid)]).astype(float)
+    # member count per bucket = diff of first-occurrence indices
     return ub * int(bucket_s * 1e6) + int(bucket_s * 1e6) // 2, np.add.reduceat(w, first) / counts
 
 
-def pred_power_series(dec: dict, b: int, d: int, mu_w: float) -> np.ndarray:
-    """Decoded power claim of device d in batch b: mu when claimed ON, else 0."""
-    return np.where((dec["on"][:, b, d] == 1)
-                    & (dec["marg"][:, b, d] >= FROZEN["unknown_theta"])
-                    & (dec["gated"][:, b] == 0), mu_w, 0.0)
+def pred_power_series(dec: dict, batch_idx: int, device_idx: int, mu_w: float) -> np.ndarray:
+    """Predicted power series of one device in one batch row: mu_w while
+    the device is claimed ON (and not gated), else 0."""
+    # flow: decoded on/marg/gated + mu -> (T,) series: mu where claimed, else 0
+    return np.where((dec["on"][:, batch_idx, device_idx] == 1)
+                    & (dec["marg"][:, batch_idx, device_idx] >= FROZEN["unknown_theta"])
+                    & (dec["gated"][:, batch_idx] == 0), mu_w, 0.0)
 
 
-def unknown_share(dec: dict, b: int, grid_w: np.ndarray) -> float:
-    """Share of window energy sitting on innovation-gated timesteps."""
+def unknown_share(dec: dict, batch_idx: int, grid_w: np.ndarray) -> float:
+    """Share of the window's energy that lands on innovation-gated
+    timesteps (0..1): the part of the aggregate the decoder cannot
+    explain and refuses to claim."""
+    # flow: per-step energy (watts x capped step) -> gated share of the window
     hold = np.minimum(np.diff(dec["ts"], append=dec["ts"][-1]),
                       FROZEN["energy_hold_s"] * 1_000_000)
     e = grid_w * hold
     tot = e.sum()
-    return float(e[dec["gated"][:, b] == 1].sum() / tot) if tot else 0.0
+    return float(e[dec["gated"][:, batch_idx] == 1].sum() / tot) if tot else 0.0
 
 
-def pooled_prf(scores: list[dict]) -> dict:
+def pooled_precision_recall_f1(scores: list[dict]) -> dict:
     """Pool per-device score dicts into one P/R/F1 (sum counts, then compute)."""
     n_pred = sum(s["n_pred"] for s in scores)
     n_gt = sum(s["n_gt"] for s in scores)
     n_m = sum(s["n_matched"] for s in scores)
-    p, r, f = bl.prf(n_m, n_pred, n_gt)
+    p, r, f = precision_recall_f1(n_m, n_pred, n_gt)
     return {"n_pred": n_pred, "n_gt": n_gt, "n_matched": n_m,
             "precision": p, "recall": r, "f1": f}
 
 
-def collect_span(scores: list[dict]) -> dict:
+def pooled_span_stats(scores: list[dict]) -> dict:
     """Pool span stats over matched pairs; signed medians + absolute p90s."""
     on = np.concatenate([s["span"]["onset_err_s"] for s in scores if s["span"]])
     off = np.concatenate([s["span"]["offset_err_s"] for s in scores if s["span"]])

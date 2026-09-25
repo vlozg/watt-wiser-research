@@ -60,23 +60,19 @@ def _(mo):
 
 @app.cell
 def _():
-    # Headless rendering + notebook-local lib (same directory). fhmm_lib needs
-    # baseline_lib from the sibling 00_baseline directory on sys.path.
+    # Headless rendering + fhmm_lib (same directory).
     import json
-    import os
-    import sys
     from pathlib import Path
-
-    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '00_baseline'))
 
     import matplotlib
     matplotlib.use("Agg")
-    import baseline_lib as bl
     import fhmm_lib as fl
     import matplotlib.pyplot as plt
     import numpy as np
     import pandas as pd
-    return Path, bl, fl, json, np, pd, plt
+
+    from wattwiser.paths import ROOT
+    return Path, ROOT, fl, json, np, pd, plt
 
 
 @app.cell
@@ -96,10 +92,10 @@ def _(fl):
 
 
 @app.cell
-def _(bl, Path, fhmm_dir, json):
+def _(Path, ROOT, fhmm_dir, json):
     # --- Load run outputs (computation) -------------------------------------
     # Anchored to the repo root so the notebook runs from any cwd.
-    _d = Path(bl.ROOT) / fhmm_dir
+    _d = Path(ROOT) / fhmm_dir
     metrics = {}
     for _p in sorted(_d.glob("metrics_kcurve_*.json")):
         with open(_p) as _fh:

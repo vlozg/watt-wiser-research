@@ -1,5 +1,10 @@
 # FHMM mechanism check (Phase 0, plan section 7)
-Frozen before any FHMM run. Levels are session-derived from the aggregate over GT intervals only (parity rule); floors are the pre-split p10/MAD estimates. Margin = (level - floor) / sigma_off.
+Frozen before any FHMM run. How to read the tables below:
+- Ground truth (GT): the hand-annotated device cycle marks; a press is one cycle read as a simulated start/stop button press.
+- Parity rule: calibration windows come from GT marks; the aggregate supplies the watts; submeters are never a model input.
+- floor / sigma_off: the aggregate's always-on base level (10th-percentile watts) and the noise width around it (1.4826 x MAD), estimated over the pre-split span.
+- margin: a device's mean ON level minus the floor, in sigmas of the noise. >= 4 clear, >= 2 marginal, else sub-noise: not separable from background.
+- Pair tables: when two devices run together, the predicted sum of their levels vs the observed median level - how close the additive model is.
 
 ## house_1
 floor 156.0 W, sigma_off 100.8 W

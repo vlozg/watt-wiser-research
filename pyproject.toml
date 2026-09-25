@@ -61,4 +61,8 @@ extend-ignore = [
 [tool.pyrefly]
 preset = "basic"
 # eda_fnd_lib lives next to the marimo notebook sources and is imported at runtime
-search-path = ["src/pipelines/02_fnd_eda_notebooks"]
+search-path = [
+    "src/pipelines/02_fnd_eda_notebooks",
+    "src/experiments/00_baseline",
+    "src/experiments/01_fhmm",
+]
