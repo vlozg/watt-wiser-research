@@ -65,6 +65,39 @@ Pre-registered prediction: kettle/washing_machine reproduce the v11
 decode exactly (0.302/0.335), microwave/fridge/dishwasher reproduce v5
 exactly (0.018/0.146/0.030), so min_device_f1 = 0.018 (+77% over v15,
 +150% over v5) with every secondary at or better than v15.
+
+v19 (synthetic context-mixing fine-tune of the dead microwave head; the
+i19 self-training family without its garbage-pseudo-label trap): run-18
+proved the min devices are not representation-limited - the mw ON head is
+simply dead on target calib (sigON p95 = 0.00 even with the v18 channels)
+and the dw gate is degenerate. The mw head needs TARGET-DISTRIBUTION
+training, but the only legal target signals are the 5 calib windows (GT,
+budget-capped) and the UNLABELED pre-split aggregate. v19 mines quiet
+backgrounds from the pre-split aggregate, injects SOURCE-house microwave
+waveforms (sanctioned pretrain labels) scaled to the target calib ON
+amplitude (calib ON p25-p90 = 1571-1613 W, tight), and fine-tunes ONLY
+the mw output filters - encoder frozen, and the mw-only loss leaves every
+other filter gradient at exactly zero (Adam's zero-grad step is exactly
+zero), so all other device outputs are bit-identical to v16. Negatives:
+quiet no-injection windows, plus windows whose max draw >= 1900 W (above
+the tight mw calib range; kettle sits at 2331 W) labeled mw=0 - amplitude
+separability is the teaching signal, and kettle-contaminated windows
+cannot enter the positive backgrounds (the quiet filter excludes any
+window containing a >= 1900 W draw). Data access disclosure: the
+pre-split aggregate is read from .auto/cache/house_1_pre.npz 'mains' KEY
+ONLY (the file also holds target GT device channels - never read); source
+waveforms come from ctx['pretrain'][*]['train']['devices']['microwave']
+(within the pretrain budget). No eval GT anywhere; no eval-derived
+parameters. The FT runs BEFORE the calib loop, so gates/amps/routing
+recalibrate on the FT'd head (calib-derived, as always). Any exception in
+the FT block falls back to exact v16 behavior with a printed note (run-19
+verified this fallback is bit-exact after a shape bug). Pre-registered:
+if the head comes alive on calib (sigON p95 > recomputed gate), mw routes
+MAP (vis 3.2 >= 1) and mw F1 should rise well above 0.018; if it stays
+dead the run reproduces v16 - a clean either-way readout.
+fridge/dishwasher expected bit-identical (direct path, untouched
+filters); kettle/washing_machine ~ v16 (small joint-MAP perturbation
+allowed via mw's changed emissions in the shared 32-state decode).
 """
 from __future__ import annotations
 
@@ -213,6 +246,113 @@ def build_and_train(ctx: dict):
             val_full = float((dv_full * dv_full).sum() / mva.sum().clamp(min=1.0))
         print(f'   epoch {epoch}: train_mse_on={tot_mse:.5f} bce={tot_bce:.5f}'
               f' val_mse_on={val_on:.5f} val_mse_full={val_full:.5f}')
+
+    # ---- v19: synthetic context-mixing fine-tune of the mw head ----
+    ft_note = 'skipped'
+    try:
+        z = np.load('.auto/cache/house_1_pre.npz')
+        pre_mains = np.nan_to_num(z['mains'].astype('float32'), nan=0.0)
+        z.close()
+        j_mw = devices.index('microwave')
+        thr_mw = float(thr['microwave'])
+        cw_mw = ctx['calib']['microwave']['device_win'].astype('float32')
+        on_cal = np.isfinite(cw_mw) & (np.nan_to_num(cw_mw, nan=0.0) > thr_mw)
+        amp_cal = float(np.median(cw_mw[on_cal])) if on_cal.any() else 0.0
+        rng_ft = np.random.default_rng(SEED)
+        segs = []
+        for h, d in ctx['pretrain'].items():
+            mw = np.nan_to_num(
+                d['train']['devices']['microwave'],
+                nan=0.0).astype('float32')
+            on_i = (mw > thr_mw).astype('int8')
+            st = np.flatnonzero((on_i[1:] == 1) & (on_i[:-1] == 0)) + 1
+            en = np.flatnonzero((on_i[1:] == 0) & (on_i[:-1] == 1)) + 1
+            if len(on_i) and on_i[0] == 1:
+                st = np.r_[0, st]
+            if len(on_i) and on_i[-1] == 1:
+                en = np.r_[en, len(on_i)]
+            for a, b in zip(st, en):
+                if 2 <= b - a <= w:
+                    seg = mw[a:b]
+                    if seg.min() > 0.5 * thr_mw:
+                        segs.append(seg)
+        vs = _valid_starts(pre_mains, w)
+        sel = rng_ft.choice(vs, size=min(3072, len(vs)), replace=False)
+        bg = _gather(pre_mains, sel, w)
+        p95b = np.percentile(bg, 95, axis=1)
+        p50b = np.percentile(bg, 50, axis=1)
+        quiet = bg[(p95b - p50b <= 250.0) & (bg.max(axis=1) <= 1900.0)]
+        high = bg[bg.max(axis=1) >= 1900.0]
+        if segs and len(quiet) >= 256 and len(high) >= 64 and amp_cal > 0:
+            n_pos = 1024
+            qi = rng_ft.choice(len(quiet), size=n_pos, replace=True)
+            si = rng_ft.choice(len(segs), size=n_pos, replace=True)
+            xp, yp, op = [], [], []
+            for k in range(n_pos):
+                seg = segs[si[k]] * float(np.clip(
+                    amp_cal / max(float(np.median(segs[si[k]])), 1.0),
+                    0.6, 1.6))
+                o = int(rng_ft.integers(0, w - len(seg) + 1))
+                win = quiet[qi[k]].copy()
+                win[o:o + len(seg)] += seg
+                yw = np.zeros(w, dtype='float32')
+                yw[o:o + len(seg)] = seg
+                xp.append(win)
+                yp.append(yw)
+                op.append(yw > thr_mw)
+            nq = rng_ft.choice(len(quiet), size=512, replace=True)
+            nh = rng_ft.choice(len(high), size=512, replace=True)
+            for k in nq:
+                xp.append(quiet[k])
+                yp.append(np.zeros(w, dtype='float32'))
+                op.append(np.zeros(w, dtype='bool'))
+            for k in nh:
+                xp.append(high[k])
+                yp.append(np.zeros(w, dtype='float32'))
+                op.append(np.zeros(w, dtype='bool'))
+            Xf = np.stack(xp).astype('float32')
+            Yf = np.stack(yp).astype('float32')
+            Of = np.stack(op).astype('float32')
+            ds_ft = torch.utils.data.TensorDataset(
+                torch.from_numpy((Xf / INPUT_SCALE)[:, :, None]),
+                torch.from_numpy(np.clip(
+                    Yf / max_w['microwave'], 0, 1.5)),
+                torch.from_numpy(Of))
+            dl_ft = torch.utils.data.DataLoader(
+                ds_ft, batch_size=512, shuffle=True,
+                generator=torch.Generator().manual_seed(SEED))
+            for p_ in net.enc.parameters():
+                p_.requires_grad_(False)
+            opt_ft = torch.optim.Adam(
+                list(net.head_on.parameters()) +
+                list(net.head_power.parameters()), lr=1e-4)
+            net.train()
+            for ep in range(4):
+                for xb, yb, ob in dl_ft:
+                    p, o = net(xb)
+                    pm, om = p[:, :, j_mw], o[:, :, j_mw]
+                    diff = (pm - yb) * ob
+                    mse = (diff * diff).sum() / ob.sum().clamp(min=1.0)
+                    bce = (F.binary_cross_entropy_with_logits(
+                        om, ob, pos_weight=pos_w[j_mw],
+                        reduction='none')).sum() / ob.sum().clamp(min=1.0)
+                    loss = mse + LAMBDA_BCE * bce
+                    opt_ft.zero_grad()
+                    loss.backward()
+                    torch.nn.utils.clip_grad_norm_(
+                        list(net.head_on.parameters()) +
+                        list(net.head_power.parameters()), GRAD_CLIP)
+                    opt_ft.step()
+            net.eval()
+            ft_note = (f'ok amp_cal={amp_cal:.0f}W segs={len(segs)} '
+                       f'quiet={len(quiet)} high={len(high)}')
+        else:
+            ft_note = (f'skipped segs={len(segs)} quiet={len(quiet)} '
+                       f'high={len(high)} amp_cal={amp_cal:.0f}')
+    except Exception as exc:  # fall back to exact v16 behavior
+        net.eval()
+        ft_note = f'error:{type(exc).__name__}:{exc}'
+    print('   v19 mw context-mix FT:', ft_note)
 
     # ---- calibrate per-device gate + amplitude from target-house calib ----
     gate_thr = np.zeros(len(devices), dtype='float32')
