@@ -298,8 +298,9 @@ def _dw30_runs(exc: np.ndarray, ev30_sorted: np.ndarray, prof: dict) -> list:
     gaps <= merge_n grid steps; each candidate is gated on span, heater
     p90, mean level, heat-time share, idle level (median exc below the
     heater threshold) and extracted-event density - the density gate is
-    what separates the quiet dw from the chattering wm. Returns [a, b)
-    grid-step pairs."""
+    what separates the quiet dw from the chattering wm (a ceiling for
+    dw; when the profile carries 'dens_lo', also a floor for wm so
+    quiet heater lookalikes fail). Returns [a, b) grid-step pairs."""
     out = []
     mask = exc >= prof['heat']
     if not mask.any():
@@ -325,7 +326,10 @@ def _dw30_runs(exc: np.ndarray, ev30_sorted: np.ndarray, prof: dict) -> list:
             continue
         ne = (int(np.searchsorted(ev30_sorted, b))
               - int(np.searchsorted(ev30_sorted, a)))
-        if ne / (span_s / 60.0) > prof['dens_hi']:
+        dens = ne / (span_s / 60.0)
+        if dens > prof['dens_hi']:
+            continue
+        if 'dens_lo' in prof and dens < prof['dens_lo']:
             continue
         out.append((a, b))
     return out
@@ -401,6 +405,91 @@ def _dw30_profile(exc: np.ndarray, cal: dict, mark_dw: dict,
              prof['amp_lo'], prof['mean_band'][0], prof['mean_band'][1],
              prof['hs_band'][0], prof['hs_band'][1], prof['idle_hi'],
              prof['dens_hi'], merge_n * DW30_GRID_S / 60, ext_s / 60))
+    return prof
+
+
+def _wm30_profile(exc: np.ndarray, cal: dict, mark_wm: dict,
+                  dw_amp: float, roll_s: float, ev30_sorted: np.ndarray,
+                  t0_us: int, cad_s: float):
+    """Derive the wm run-basis gate bands from the calibration marks on
+    the 30 s grid (same margin conventions as _dw30_profile: 0.6/1.25
+    span, 0.8/1.25 mean, 0.75/1.75 heat share, 2x ceilings for idle and
+    density). Two wm-specific differences. (1) A density FLOOR at 0.75x
+    the marks' min run density: the wm pump chatter (400-700 W draws
+    every 1-3 min inside the cycle) is what separates a wm heater
+    sequence from quiet heater lookalikes - dw30 runs sit at <=0.184
+    events/min while the wm mark runs hold 0.27-0.58/min, so the floor
+    rejects every dw30 run by construction. (2) The emission extension
+    is ASYMMETRIC: the wm heats at the very start of the cycle (the
+    mark runs begin ~3 min after the GT mask rise) but keeps pumping
+    below the heater threshold for ~45 min after the heater ends, so
+    the run needs a small back-extension to the mask rise and a large
+    forward one to the cycle end - the dw30 symmetric half-gap
+    extension would place the onset half a cycle early. The merge gap
+    is 1.25x the marks' max intra-window heater gap."""
+    heat = PROG_HEAT_AMP_FRAC * min(mark_wm['amp'], dw_amp)
+    pad_n = int(round(roll_s / DW30_GRID_S))
+    per = []
+    max_gap = 0.0
+    for lo_us, hi_us in cal['marks_us']:
+        j0 = max(0, int((lo_us - t0_us) / 1e6 / DW30_GRID_S))
+        j1 = max(j0 + 2, int((hi_us - t0_us) / 1e6 / DW30_GRID_S))
+        blocks = _runs(exc[j0:j1] >= heat)
+        if not blocks:
+            print('   wm sustained profile: a mark window has no heater '
+                  'blocks; sustained detector disabled')
+            return None
+        for k in range(len(blocks) - 1):
+            max_gap = max(max_gap, (blocks[k + 1][0] - blocks[k][1])
+                          * DW30_GRID_S)
+        per.append((j0, j1))
+    if max_gap > 0:
+        merge_n = max(1, int(round(1.25 * max_gap / DW30_GRID_S)))
+    else:
+        merge_n = int(round(4200.0 / DW30_GRID_S))
+    spans, p90s, means, hss, idles, denss, oss, oes = (
+        [], [], [], [], [], [], [], [])
+    for j0, j1 in per:
+        a, b = max(_merge_runs(_runs(exc[j0:j1] >= heat), merge_n),
+                   key=lambda r: r[1] - r[0])
+        seg = exc[j0 + a:j0 + b]
+        span_s = (b - a) * DW30_GRID_S
+        below = seg[seg < heat]
+        ne = (int(np.searchsorted(ev30_sorted, float(j0 + b)))
+              - int(np.searchsorted(ev30_sorted, float(j0 + a))))
+        spans.append(span_s)
+        p90s.append(float(np.percentile(seg, 90)))
+        means.append(float(seg.mean()))
+        hss.append(float((seg >= heat).mean()))
+        idles.append(float(np.median(below)) if len(below) else 0.0)
+        denss.append(ne / (span_s / 60.0))
+        # run offsets inside the GT cycle core (window minus the roll
+        # pads): run start vs core start, core end vs run end - the
+        # emission extension targets
+        oss.append((a - pad_n) * DW30_GRID_S)
+        oes.append((j1 - pad_n - j0 - b) * DW30_GRID_S)
+    ext_back_s = float(np.mean(oss))
+    ext_fwd_s = float(np.mean(oes))
+    prof = {'heat': heat,
+            'merge_n': merge_n,
+            'span_band': (0.6 * min(spans), 1.25 * max(spans)),
+            'amp_lo': min(p90s),
+            'mean_band': (0.8 * min(means), 1.25 * max(means)),
+            'hs_band': (0.75 * min(hss), 1.75 * max(hss)),
+            'idle_hi': 2.0 * max(idles),
+            'dens_hi': 2.0 * max(denss),
+            'dens_lo': 0.75 * min(denss),
+            'ext_back6': int(round(ext_back_s / cad_s)),
+            'ext_fwd6': int(round(ext_fwd_s / cad_s)),
+            'emit_w': mark_wm['mean_w']}
+    print('   wm sustained profile: span=%.0f-%.0fmin amp>=%.0fW '
+          'mean=%.0f-%.0fW hs=%.2f-%.2f idle<=%.0fW dens=%.3f-%.3f/min '
+          'heater_gap_merge=%dmin ext_back=%.1fmin ext_fwd=%.1fmin'
+          % (prof['span_band'][0] / 60, prof['span_band'][1] / 60,
+             prof['amp_lo'], prof['mean_band'][0], prof['mean_band'][1],
+             prof['hs_band'][0], prof['hs_band'][1], prof['idle_hi'],
+             prof['dens_lo'], prof['dens_hi'],
+             merge_n * DW30_GRID_S / 60, ext_back_s / 60, ext_fwd_s / 60))
     return prof
 
 
@@ -534,6 +623,35 @@ def build_and_train(ctx: dict):
     if dw30 is None:
         print('   dw sustained detector disabled (mark windows produced '
               'no heater runs)')
+
+    # wm sustained-run detector: the wm marks' heater blocks fuse into
+    # one run per cycle at the mark-derived merge; gated like the dw
+    # runs plus the pump-chatter density floor, with the ASYMMETRIC
+    # emission extension (the wm heats at the cycle start, then pumps
+    # below the heater threshold ~45 min). Candidates inside dw30 runs
+    # or a named program chain are already owned.
+    wm30 = _wm30_profile(exc30, ctx['calib']['washing_machine'],
+                         mark['washing_machine'],
+                         mark['dishwasher']['amp'], roll_s, ev30,
+                         int(ctx['pre']['ts_us'][0]), cad_s)
+    if wm30 is not None:
+        dw_spans6 = ([(a * stride, b * stride) for a, b in dw_runs]
+                     if dw30 is not None else [])
+        wm_cands = []
+        for a, b in _dw30_runs(exc30, ev30, wm30):
+            a6, b6 = a * stride, b * stride
+            if any(c0 < b6 and a6 < c1 for c0, c1 in dw_spans6):
+                continue
+            dup = False
+            for c0, c1 in named_spans:
+                if c0 < b6 and a6 < c1:
+                    dup = True
+                    break
+            if dup:
+                continue
+            wm_cands.append((a6, b6))
+        print(f'   wm sustained runs: {len(wm_cands)} net-new '
+              f'candidates ({len(wm_cands) / days:.3f}/day)')
 
     # kettle sustained-run detector: a real kettle draw is one isolated
     # flat run on the coarse grid - thr = 0.75x mark amp (the dw run
@@ -670,11 +788,14 @@ def build_and_train(ctx: dict):
         # rise (the run starts at the first heater block; the GT cycle
         # starts at the fill valve).
         stride = max(1, int(round(DW30_GRID_S / cad_s)))
-        if dw30 is not None or ket_prof is not None:
+        if dw30 is not None or ket_prof is not None                 or wm30 is not None:
             exc_e = _dw30_grid(f, cad_s)
-        if dw30 is not None:
+        if dw30 is not None or wm30 is not None:
             ev30_e = np.sort(on // stride)
+        dw_owned6 = []
+        if dw30 is not None:
             for a30, b30 in _dw30_runs(exc_e, ev30_e, dw30):
+                dw_owned6.append((stride * a30, stride * b30))
                 i0 = max(0, stride * a30 - dw30['ext6'])
                 i1 = min(len(f), stride * b30 + dw30['ext6'])
                 seg = out['dishwasher'][i0:i1]
@@ -707,6 +828,39 @@ def build_and_train(ctx: dict):
             out[d][on[a0]:off[a1 - 1]] = mark[d]['mean_w']
             ev_in_named[a0:a1] = True
             named_spans.append((on[a0], off[a1 - 1]))
+
+        # 1b) wm sustained runs (see _wm30_profile): the marks' heater
+        # blocks fuse into one run per cycle; gated on span, heater p90,
+        # mean, heat share, idle and the pump-chatter density FLOOR that
+        # rejects quiet heater lookalikes (every dw30 run sits below it
+        # by construction). Emission extends the run asymmetrically: a
+        # small back-extension to the GT mask rise (the wm heats at the
+        # cycle start) and a large forward one over the pump/spin tail
+        # that draws below the heater threshold. Runs inside dw30
+        # territory or a named program chain are already owned.
+        if wm30 is not None:
+            for a30, b30 in _dw30_runs(exc_e, ev30_e, wm30):
+                a6 = stride * a30
+                b6 = stride * b30
+                owned = False
+                for c0, c1 in dw_owned6:
+                    if c0 < b6 and a6 < c1:
+                        owned = True
+                        break
+                if owned:
+                    continue
+                dup = False
+                for c0, c1 in named_spans:
+                    if c0 < b6 and a6 < c1:
+                        dup = True
+                        break
+                if dup:
+                    continue
+                i0 = max(0, a6 - wm30['ext_back6'])
+                i1 = min(len(f), b6 + wm30['ext_fwd6'])
+                seg = out['washing_machine'][i0:i1]
+                out['washing_machine'][i0:i1] = np.maximum(
+                    seg, wm30['emit_w'])
 
         # 2) every event classifies independently (burst / duty bands).
         # Program heaters emit partial-duty draws (amp 1.3-1.9 kW) inside
