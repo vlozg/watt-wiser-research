@@ -1,5 +1,6 @@
 {
  "config": {
+  "benchmark": "v2-cycles",
   "target_house": "house_1",
   "devices": [
    "kettle",
@@ -15,92 +16,103 @@
    "washing_machine": 90.0,
    "dishwasher": 60.5
   },
-  "split_us": 1380585600000000,
-  "eval_days": 30,
+  "eval_days": 90,
   "cadence": "6s",
-  "window": 128,
-  "stride": 32,
   "k_calib": 5,
-  "tau_onset_us": 12000000,
+  "tau_onset_s": {
+   "kettle": 60.0,
+   "microwave": 60.0,
+   "fridge": 120.0,
+   "washing_machine": 600.0,
+   "dishwasher": 600.0
+  },
+  "dwell_s": {
+   "kettle": 30.0,
+   "microwave": 30.0,
+   "fridge": 30.0,
+   "washing_machine": 600.0,
+   "dishwasher": 600.0
+  },
+  "merge_s": {
+   "kettle": 60.0,
+   "microwave": 60.0,
+   "fridge": 12.0,
+   "washing_machine": 600.0,
+   "dishwasher": 600.0
+  },
   "duration_band": [
    0.3333333333333333,
    3.0
   ],
-  "source_houses": [
-   "house_2",
-   "house_5"
-  ]
+  "calibration": "aggregate-only marks (FAQ Q1)",
+  "press_jitter_s": 30,
+  "passive_fridge_h": 3
  },
  "devices": {
   "kettle": {
-   "n_gt": 299,
-   "n_pred": 211,
-   "n_matched": 79,
-   "precision": 0.3744075829383886,
-   "recall": 0.26421404682274247,
-   "f1": 0.3098039215686274,
-   "mae_w": 11.904058078927774,
-   "nmae": 0.034709177119657764,
-   "n_common": 362610,
-   "nonnull_frac": 0.839375
+   "n_gt": 366,
+   "n_pred": 84,
+   "n_matched": 80,
+   "precision": 0.9523809523809523,
+   "recall": 0.2185792349726776,
+   "f1": 0.3555555555555555,
+   "mae_w": 12.815221608386317,
+   "nmae": 0.03689626014472334,
+   "nonnull_frac": 0.805471450617284
   },
   "microwave": {
-   "n_gt": 262,
-   "n_pred": 116,
-   "n_matched": 9,
-   "precision": 0.07758620689655173,
-   "recall": 0.03435114503816794,
-   "f1": 0.04761904761904762,
-   "mae_w": 11.577106575112262,
-   "nmae": 0.03375587047580332,
-   "n_common": 359983,
-   "nonnull_frac": 0.8332939814814815
+   "n_gt": 286,
+   "n_pred": 240,
+   "n_matched": 93,
+   "precision": 0.3875,
+   "recall": 0.32517482517482516,
+   "f1": 0.3536121673003802,
+   "mae_w": 7.332496129792458,
+   "nmae": 0.021110964209776623,
+   "nonnull_frac": 0.8388510802469136
   },
   "fridge": {
-   "n_gt": 28034,
-   "n_pred": 20711,
-   "n_matched": 6275,
-   "precision": 0.3029790932354787,
-   "recall": 0.22383534279803097,
-   "f1": 0.25746230382603347,
-   "mae_w": 41.94482955048522,
-   "nmae": 0.12230035408671158,
-   "n_common": 352298,
-   "nonnull_frac": 0.8155046296296297
+   "n_gt": 2805,
+   "n_pred": 351,
+   "n_matched": 127,
+   "precision": 0.36182336182336183,
+   "recall": 0.04527629233511586,
+   "f1": 0.08048162230671735,
+   "mae_w": 37.72911809616029,
+   "nmae": 0.1086257732286072,
+   "nonnull_frac": 0.8287345679012346
   },
   "washing_machine": {
-   "n_gt": 2966,
-   "n_pred": 1860,
-   "n_matched": 810,
-   "precision": 0.43548387096774194,
-   "recall": 0.2730950775455158,
-   "f1": 0.33568172399502694,
-   "mae_w": 61.499998612440855,
-   "nmae": 0.1793182064926708,
-   "n_common": 360345,
-   "nonnull_frac": 0.8341319444444445
+   "n_gt": 80,
+   "n_pred": 17,
+   "n_matched": 4,
+   "precision": 0.23529411764705882,
+   "recall": 0.05,
+   "f1": 0.08247422680412371,
+   "mae_w": 36.688898709411156,
+   "nmae": 0.10563088119521742,
+   "nonnull_frac": 0.8326350308641975
   },
   "dishwasher": {
-   "n_gt": 1353,
-   "n_pred": 1750,
-   "n_matched": 46,
-   "precision": 0.026285714285714287,
-   "recall": 0.03399852180339985,
-   "f1": 0.029648727038349983,
-   "mae_w": 30.665836993746325,
-   "nmae": 0.08941370755092673,
-   "n_common": 364113,
-   "nonnull_frac": 0.8428541666666667
+   "n_gt": 28,
+   "n_pred": 15,
+   "n_matched": 1,
+   "precision": 0.06666666666666667,
+   "recall": 0.03571428571428571,
+   "f1": 0.046511627906976744,
+   "mae_w": 20.366896992215477,
+   "nmae": 0.05863826258562758,
+   "nonnull_frac": 0.8444212962962963
   }
  },
- "min_device_f1": 0.029648727038349983,
+ "mean_device_f1": 0.18372703997475068,
+ "min_device_f1": 0.046511627906976744,
  "min_device": "dishwasher",
- "mean_device_f1": 0.19604314480941706,
- "pooled_episode_f1": 0.2508251971786942,
- "mean_mae_w": 31.518365962142486,
- "worst_mae_w": 61.499998612440855,
- "mean_nmae": 0.09189946314515403,
- "coverage_pred_share": 0.4440556178838659,
- "coverage_true_share": 0.2581875673746769,
- "elapsed_s": 165.59625697135925
+ "pooled_cycle_f1": 0.14279026217228463,
+ "mean_mae_w": 22.986526307193138,
+ "worst_mae_w": 37.72911809616029,
+ "mean_nmae": 0.06618042827279044,
+ "coverage_pred_share": 0.0657778304575533,
+ "coverage_true_share": 0.25263950366526144,
+ "elapsed_s": 2.248877763748169
 }

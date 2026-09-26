@@ -1,0 +1,37 @@
+loading data (cached under .auto/cache) ...
+   calib kettle: 5 marks of 1160 pre-span cycles, jitter +- 30 s
+   calib microwave: 5 marks of 899 pre-span cycles, jitter +- 30 s
+   calib fridge: passive 3 h window
+   calib washing_machine: dropped 1 mark (recording gap)
+   calib washing_machine: 4 marks of 208 pre-span cycles, jitter +- 30 s
+   calib dishwasher: 5 marks of 94 pre-span cycles, jitter +- 30 s
+building model (src/experiments/04_autoresearch/model.py) ...
+   rules v0 profiles: kettle amp=2477W dur=2.2min; microwave amp=1583W dur=0.8min; fridge amp=50W dur=12.5min; washing_machine amp=2240W dur=101.0min; dishwasher amp=2164W dur=97.2min
+sanity gate: smoothed-perfect predictor under v2 cycle scoring
+   SANITY kettle: n_gt=366 f1=0.981
+   SANITY microwave: n_gt=286 f1=0.952
+   SANITY fridge: n_gt=2805 f1=0.915
+   SANITY washing_machine: n_gt=80 f1=1.000
+   SANITY dishwasher: n_gt=28 f1=1.000
+   SANITY_GATE=PASS (min 0.915)
+predicting eval span ...
+   prediction done in 0.1s
+
+device            n_cyc  n_pred  match     P      R      F1     MAE_W   nMAE
+kettle              366      84     80   0.952  0.219  0.356      12.8  0.0369
+microwave           286     240     93   0.388  0.325  0.354       7.3  0.0211
+fridge             2805     351    127   0.362  0.045  0.080      37.7  0.1086
+washing_machine      80      17      4   0.235  0.050  0.082      36.7  0.1056
+dishwasher           28      15      1   0.067  0.036  0.047      20.4  0.0586
+pooled cycles: n_gt=3565 n_pred=707 n_matched=305 F1=0.143
+coverage: pred=0.066 true=0.253 of aggregate
+
+METRIC mean_device_f1=0.183727
+METRIC min_device_f1=0.046512
+METRIC pooled_cycle_f1=0.142790
+METRIC mean_mae_w=22.9865
+METRIC worst_mae_w=37.7291
+METRIC mean_nmae=0.066180
+METRIC coverage_pred_share=0.065778
+METRIC coverage_true_share=0.252640
+elapsed 2s -> /root/longvdh/agent_space/projects/watt-wiser/.auto/last_bench.json

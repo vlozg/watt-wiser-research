@@ -1,0 +1,75 @@
+loading data (cached under .auto/cache) ...
+   calib kettle: 5 sessions of 2656 available
+   calib microwave: 5 sessions of 2055 available
+   calib fridge: 5 sessions of 191926 available
+   calib washing_machine: 5 sessions of 20322 available
+   calib dishwasher: 5 sessions of 9334 available
+building + training model (src/experiments/04_autoresearch/model.py) ...
+   [ch1] pool train: 40000 windows {'house_2': 25247, 'house_5': 14753}
+   [ch1] pool val: 8000 windows {'house_2': 5050, 'house_5': 2950}
+   [ch1] per-device pos_weight: {'kettle': 50.0, 'microwave': 50.0, 'fridge': 1.4, 'washing_machine': 39.4, 'dishwasher': 41.7}
+   [ch1] epoch 0: train_mse_on=6.35309 bce=67.70151 val_mse_on=0.01070 val_mse_full=0.15492
+   [ch1] epoch 1: train_mse_on=0.59885 bce=44.66807 val_mse_on=0.00898 val_mse_full=0.11660
+   [ch1] epoch 2: train_mse_on=0.50590 bce=40.70646 val_mse_on=0.00643 val_mse_full=0.10369
+   [ch1] epoch 3: train_mse_on=0.42055 bce=37.32216 val_mse_on=0.00464 val_mse_full=0.10299
+   [ch1] epoch 4: train_mse_on=0.33820 bce=35.63522 val_mse_on=0.00391 val_mse_full=0.11372
+   [ch1] epoch 5: train_mse_on=0.30541 bce=34.19570 val_mse_on=0.00353 val_mse_full=0.12390
+   [ch1] epoch 6: train_mse_on=0.32682 bce=33.69268 val_mse_on=0.00325 val_mse_full=0.12163
+   [ch1] epoch 7: train_mse_on=0.23870 bce=32.37717 val_mse_on=0.00295 val_mse_full=0.11673
+   [ch1] epoch 8: train_mse_on=0.22458 bce=31.21060 val_mse_on=0.00268 val_mse_full=0.13578
+   [ch1] epoch 9: train_mse_on=0.22028 bce=30.88781 val_mse_on=0.00408 val_mse_full=0.14938
+   [ch1] epoch 10: train_mse_on=0.21245 bce=30.59515 val_mse_on=0.00366 val_mse_full=0.14569
+   [ch1] epoch 11: train_mse_on=0.18464 bce=29.87168 val_mse_on=0.00307 val_mse_full=0.14880
+   [ch1] mw context-mix FT: ok amp_cal=1588W segs=496 quiet=2626 high=330
+   [ch1] calib-gate kettle: sigON p05/p50/p95=0.79/0.98/1.00 sigOFF p50/p95=0.00/0.95 gate=0.87 | amp med_pred=3020W med_true=2331W r=0.77 (x3996)
+   [ch1] calib-gate microwave: sigON p05/p50/p95=0.14/0.56/0.99 sigOFF p50/p95=0.07/0.83 gate=0.48 | amp med_pred=1680W med_true=1588W r=0.95 (x2668)
+   [ch1] calib-gate fridge: sigON p05/p50/p95=0.64/0.73/0.84 sigOFF p50/p95=0.50/0.64 gate=0.64 | amp med_pred=84W med_true=90W r=1.07 (x2048)
+   [ch1] calib-gate washing_machine: sigON p05/p50/p95=0.88/0.97/0.99 sigOFF p50/p95=0.89/0.99 gate=0.94 | amp med_pred=1383W med_true=1778W r=1.29 (x2974)
+   [ch1] calib-gate dishwasher: sigON p05/p50/p95=0.00/0.12/0.99 sigOFF p50/p95=0.78/0.84 gate=0.42 | amp med_pred=92W med_true=122W r=1.32 (x3964)
+   [ch1] gate_thr: {'kettle': 0.87, 'microwave': 0.48, 'fridge': 0.64, 'washing_machine': 0.94, 'dishwasher': 0.42}
+   [ch1] decode routing: sigma=497W vis= {'kettle': 4.69, 'microwave': 3.2, 'fridge': 0.18, 'washing_machine': 3.58, 'dishwasher': 0.25} live= {'kettle': True, 'microwave': True, 'fridge': True, 'washing_machine': True, 'dishwasher': True} mode= {'kettle': 'MAP', 'microwave': 'MAP', 'fridge': 'direct', 'washing_machine': 'MAP', 'dishwasher': 'direct'} amp= {'kettle': 2331, 'microwave': 1588, 'fridge': 90, 'washing_machine': 1778, 'dishwasher': 122}
+   [ch2] pool train: 40000 windows {'house_2': 25247, 'house_5': 14753}
+   [ch2] pool val: 8000 windows {'house_2': 5050, 'house_5': 2950}
+   [ch2] per-device pos_weight: {'kettle': 50.0, 'microwave': 50.0, 'fridge': 1.4, 'washing_machine': 39.4, 'dishwasher': 41.7}
+   [ch2] epoch 0: train_mse_on=6.65959 bce=65.41510 val_mse_on=0.01142 val_mse_full=0.19582
+   [ch2] epoch 1: train_mse_on=0.61554 bce=44.70803 val_mse_on=0.00830 val_mse_full=0.12699
+   [ch2] epoch 2: train_mse_on=0.49143 bce=40.81652 val_mse_on=0.00609 val_mse_full=0.12387
+   [ch2] epoch 3: train_mse_on=0.38294 bce=36.86068 val_mse_on=0.00440 val_mse_full=0.12225
+   [ch2] epoch 4: train_mse_on=0.33906 bce=34.71611 val_mse_on=0.00430 val_mse_full=0.10855
+   [ch2] epoch 5: train_mse_on=0.29343 bce=33.31800 val_mse_on=0.00355 val_mse_full=0.10833
+   [ch2] epoch 6: train_mse_on=0.29829 bce=32.98595 val_mse_on=0.00367 val_mse_full=0.10864
+   [ch2] epoch 7: train_mse_on=0.24487 bce=31.46509 val_mse_on=0.00298 val_mse_full=0.12221
+   [ch2] epoch 8: train_mse_on=0.22660 bce=30.23930 val_mse_on=0.00283 val_mse_full=0.12252
+   [ch2] epoch 9: train_mse_on=0.21323 bce=29.55531 val_mse_on=0.00403 val_mse_full=0.11995
+   [ch2] epoch 10: train_mse_on=0.20029 bce=29.13570 val_mse_on=0.00336 val_mse_full=0.11976
+   [ch2] epoch 11: train_mse_on=0.17927 bce=28.45805 val_mse_on=0.00273 val_mse_full=0.12030
+   [ch2] mw context-mix FT: ok amp_cal=1588W segs=496 quiet=2626 high=330
+   [ch2] calib-gate kettle: sigON p05/p50/p95=0.55/0.99/1.00 sigOFF p50/p95=0.00/0.89 gate=0.72 | amp med_pred=3051W med_true=2331W r=0.76 (x3996)
+   [ch2] calib-gate microwave: sigON p05/p50/p95=0.16/0.79/0.99 sigOFF p50/p95=0.02/0.91 gate=0.54 | amp med_pred=1719W med_true=1588W r=0.92 (x2668)
+   [ch2] calib-gate fridge: sigON p05/p50/p95=0.63/0.71/0.82 sigOFF p50/p95=0.60/0.68 gate=0.65 | amp med_pred=87W med_true=90W r=1.04 (x2048)
+   [ch2] calib-gate washing_machine: sigON p05/p50/p95=0.93/0.98/0.99 sigOFF p50/p95=0.92/0.99 gate=0.95 | amp med_pred=1360W med_true=1778W r=1.31 (x2974)
+   [ch2] calib-gate dishwasher: sigON p05/p50/p95=0.00/0.16/0.99 sigOFF p50/p95=0.76/0.90 gate=0.45 | amp med_pred=41W med_true=122W r=3.00 (x3964)
+   [ch2] gate_thr: {'kettle': 0.72, 'microwave': 0.54, 'fridge': 0.65, 'washing_machine': 0.95, 'dishwasher': 0.45}
+   [ch2] decode routing: sigma=497W vis= {'kettle': 4.69, 'microwave': 3.2, 'fridge': 0.18, 'washing_machine': 3.58, 'dishwasher': 0.25} live= {'kettle': True, 'microwave': True, 'fridge': True, 'washing_machine': True, 'dishwasher': True} mode= {'kettle': 'MAP', 'microwave': 'MAP', 'fridge': 'direct', 'washing_machine': 'MAP', 'dishwasher': 'direct'} amp= {'kettle': 2331, 'microwave': 1588, 'fridge': 90, 'washing_machine': 1778, 'dishwasher': 122}
+predicting eval span ...
+   prediction done in 10.0s
+
+device            n_gt   n_pred  match     P      R      F1     MAE_W   nMAE
+kettle              299     150     82   0.547  0.274  0.365       6.0  0.0175
+microwave           262     775    121   0.156  0.462  0.233      44.2  0.1290
+fridge            28034    3750    703   0.187  0.025  0.044      45.2  0.1318
+washing_machine    2966    1574    871   0.553  0.294  0.384      45.9  0.1337
+dishwasher         1353    1618     16   0.010  0.012  0.011      83.8  0.2443
+pooled: n_gt=32914 n_pred=7867 n_matched=1793 F1=0.088
+coverage: pred=0.638 true=0.258 of aggregate
+
+METRIC min_device_f1=0.010771
+METRIC mean_device_f1=0.207466
+METRIC pooled_episode_f1=0.087933
+METRIC mean_mae_w=45.0191
+METRIC worst_mae_w=83.7850
+METRIC mean_nmae=0.131264
+METRIC coverage_pred_share=0.637761
+METRIC coverage_true_share=0.258188
+METRIC min_device_f1=0.010771
+elapsed 583s -> /root/longvdh/agent_space/projects/watt-wiser/.auto/last_bench.json
