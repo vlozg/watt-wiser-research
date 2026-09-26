@@ -19,11 +19,22 @@ the population's own p5/p95 amp/dur bands replace the thin passive-
 window mark (3 pairs) whose amp sits below the true compressor mode.
 Known limits: chain naming still amp/mean-gated (phase sequences i28b);
 the population band still caps fridge recall at the extractor's
-capture rate (~1/3 of compressor ON time). Pre-span rules only;
-nothing is tuned on eval results."""
+capture rate (~1/3 of compressor ON time). Dishwasher cycles come from
+a sustained-run detector on a 30 s grid: the dw marks hold 2-5 events
+per ~100 min cycle (60-110 W pump draws, heater blocks ~54-58 min
+apart) so event chaining cannot assemble a dw cycle - the marks
+themselves fail the chain detector - and the dw idle sits below the
+swinging house base. The detector merges heater plateaus (>= 0.75x min
+mark amp) across 1.25x the marks' own max heater gap and gates the
+merged run on mark-derived run-basis bands (span/amp/mean/heat-share/
+idle-level/density). The chain detector keeps naming wm only: dw chain
+names drop when the sustained path is active, and a chattery chain that
+only the dw gates admit is junk by the marks' own quiet density.
+Pre-span rules only; nothing is tuned on eval results."""
 from __future__ import annotations
 
 import numpy as np
+import pandas as pd
 
 BASE_N = 10            # mark-segment baseline samples (60 s)
 SMOOTH_N = 5           # rolling-median smoothing (30 s at 6 s cadence)
@@ -52,6 +63,24 @@ PROG_SPAN_LO_WM = 0.35 # wm chain-span floor: soak pauses > the 600 s
 # splits at the SAME boundary, so wm fragments are GT granularity
 PROG_SPAN_LO_DW = 0.60 # dw floor: dw junk cluster sits at 0.35-0.55x
 PROG_SPAN_HI = 1.25    # span ceiling vs max mark span
+# --- dw sustained-run detector (30 s grid) ---
+# The dw calibration marks hold only 2-5 events per ~100 min cycle: tiny
+# 60-110 W pump draws with heater blocks 54-58 min apart (wash heater,
+# then final-rinse heater), so event chaining at the 600 s program gap
+# cannot assemble a dw cycle - the marks themselves fail the chain
+# detector. The dw idle draw is equally invisible: 60-110 W sits below
+# the 150-500 W swinging house base, and any local baseline absorbs it
+# (the mark runs' non-heater median is 0-72 W above a trailing p10).
+# What IS visible is the raw heater signature, so dw detection merges
+# heater-level plateaus on a coarse grid and gates the merged run.
+DW30_GRID_S = 30.0     # coarse grid for the sustained-run detector
+DW_BASE_WIN = 240      # 2 h trailing p10 baseline: a single ~100 min dw
+                       # cycle is ~8% of the window, so it cannot absorb
+                       # the baseline the way shorter windows would
+DW_BASE_MIN = 120      # min baseline samples before it is trusted
+DW_RUN_MIN_S = 1200.0  # ignore heater runs < 20 min (cooking bursts);
+                       # the marks' merged runs are 76-81.5 min
+FFILL_LIMIT = 10       # frozen bench protocol: max mains gap ffill
 DUTY_AMP_W = (40.0, 300.0)
 DUTY_DUR_S = (600.0, 2400.0)
 DUTY_CELL_MIN = 300    # min events per (amp, dur) cell over the mined span
@@ -216,6 +245,143 @@ def _profile_from_marks(cal: dict, cad_s: float, roll_s: float,
     return prof
 
 
+def _dw30_grid(mains: np.ndarray, cad_s: float) -> np.ndarray:
+    """Excitation signal on the DW30_GRID_S grid: smooth, downsample,
+    subtract a trailing 2 h p10 baseline (bfilled over the head). The
+    baseline is deliberately a LOW quantile over a LONG window - shorter
+    or median baselines flip to the dw's own idle level whenever local
+    duty exceeds their quantile share (i29 lesson on rolling medians)."""
+    s6 = pd.Series(mains).ffill(limit=FFILL_LIMIT).fillna(0.0)
+    sig6 = _roll_median(s6.to_numpy(dtype='float32'), SMOOTH_N)
+    stride = max(1, int(round(DW30_GRID_S / cad_s)))
+    sig30 = _roll_median(sig6, stride)[::stride]
+    base = (pd.Series(sig30).rolling(DW_BASE_WIN, min_periods=DW_BASE_MIN)
+            .quantile(0.10).bfill().to_numpy())
+    return np.nan_to_num(sig30 - base, nan=0.0).astype('float32')
+
+
+def _merge_runs(runs, gap_n: int):
+    out = []
+    for a, b in runs:
+        if out and a - out[-1][1] <= gap_n:
+            out[-1] = (out[-1][0], b)
+        else:
+            out.append((a, b))
+    return out
+
+
+def _dw30_runs(exc: np.ndarray, ev30_sorted: np.ndarray, prof: dict) -> list:
+    """Merged heater runs passing the mark-derived run-basis gates (see
+    _dw30_profile). A run is heater plateaus (exc >= heat) merged across
+    gaps <= merge_n grid steps; each candidate is gated on span, heater
+    p90, mean level, heat-time share, idle level (median exc below the
+    heater threshold) and extracted-event density - the density gate is
+    what separates the quiet dw from the chattering wm. Returns [a, b)
+    grid-step pairs."""
+    out = []
+    mask = exc >= prof['heat']
+    if not mask.any():
+        return out
+    for a, b in _merge_runs(_runs(mask), prof['merge_n']):
+        span_s = (b - a) * DW30_GRID_S
+        if span_s < DW_RUN_MIN_S:
+            continue
+        if not prof['span_band'][0] <= span_s <= prof['span_band'][1]:
+            continue
+        seg = exc[a:b]
+        if float(np.percentile(seg, 90)) < prof['amp_lo']:
+            continue
+        mean = float(seg.mean())
+        if not prof['mean_band'][0] <= mean <= prof['mean_band'][1]:
+            continue
+        hs = float((seg >= prof['heat']).mean())
+        if not prof['hs_band'][0] <= hs <= prof['hs_band'][1]:
+            continue
+        below = seg[seg < prof['heat']]
+        idle = float(np.median(below)) if len(below) else 0.0
+        if idle > prof['idle_hi']:
+            continue
+        ne = (int(np.searchsorted(ev30_sorted, b))
+              - int(np.searchsorted(ev30_sorted, a)))
+        if ne / (span_s / 60.0) > prof['dens_hi']:
+            continue
+        out.append((a, b))
+    return out
+
+
+def _dw30_profile(exc: np.ndarray, cal: dict, mark_dw: dict,
+                  wm_amp: float, roll_s: float, ev30_sorted: np.ndarray,
+                  t0_us: int, cad_s: float):
+    """Derive the dw run-basis gate bands from the calibration marks on
+    the 30 s grid. Every mark window must produce a merged heater run;
+    the runs' own stats (span, heater p90, mean level, heat-time share,
+    idle median, event density) set the bands with the same margin
+    conventions as _profile_from_marks (0.6/1.25 span, 0.8/1.25 mean,
+    0.75/1.75 heat share, 2x ceilings for idle and density). The heater
+    merge gap is 1.25x the marks' own max intra-window heater gap. The
+    emission extension is half the gap between the marks' GT-core span
+    (window minus the roll pads) and their run span: the run starts at
+    the first heater block while the GT cycle starts at the mask rise,
+    so a symmetric extension keeps onsets inside the 600 s matching
+    tolerance while bringing the emitted span back to the cycle length."""
+    heat = PROG_HEAT_AMP_FRAC * min(wm_amp, mark_dw['amp'])
+    per = []
+    max_gap = 0.0
+    for lo_us, hi_us in cal['marks_us']:
+        j0 = max(0, int((lo_us - t0_us) / 1e6 / DW30_GRID_S))
+        j1 = max(j0 + 2, int((hi_us - t0_us) / 1e6 / DW30_GRID_S))
+        blocks = _runs(exc[j0:j1] >= heat)
+        if not blocks:
+            print('   dw sustained profile: a mark window has no heater '
+                  'blocks; sustained detector disabled')
+            return None
+        for k in range(len(blocks) - 1):
+            max_gap = max(max_gap, (blocks[k + 1][0] - blocks[k][1])
+                          * DW30_GRID_S)
+        per.append((j0, j1))
+    if max_gap > 0:
+        merge_n = max(1, int(round(1.25 * max_gap / DW30_GRID_S)))
+    else:
+        merge_n = int(round(4200.0 / DW30_GRID_S))
+    spans, p90s, means, hss, idles, denss = [], [], [], [], [], []
+    for (lo_us, hi_us), (j0, j1) in zip(cal['marks_us'], per):
+        merged = _merge_runs(_runs(exc[j0:j1] >= heat), merge_n)
+        a, b = max(merged, key=lambda r: r[1] - r[0])
+        seg = exc[j0 + a:j0 + b]
+        span_s = (b - a) * DW30_GRID_S
+        below = seg[seg < heat]
+        ne = (int(np.searchsorted(ev30_sorted, float(j0 + b)))
+              - int(np.searchsorted(ev30_sorted, float(j0 + a))))
+        spans.append(span_s)
+        p90s.append(float(np.percentile(seg, 90)))
+        means.append(float(seg.mean()))
+        hss.append(float((seg >= heat).mean()))
+        idles.append(float(np.median(below)) if len(below) else 0.0)
+        denss.append(ne / (span_s / 60.0))
+    cycle_s = [(hi_us - lo_us) / 1e6 - 2.0 * roll_s
+               for lo_us, hi_us in cal['marks_us']]
+    ext_s = max(0.0, 0.5 * (float(np.mean(cycle_s))
+                            - float(np.mean(spans))))
+    prof = {'heat': heat,
+            'merge_n': merge_n,
+            'span_band': (0.6 * min(spans), 1.25 * max(spans)),
+            'amp_lo': min(p90s),
+            'mean_band': (0.8 * min(means), 1.25 * max(means)),
+            'hs_band': (0.75 * min(hss), 1.75 * max(hss)),
+            'idle_hi': 2.0 * max(idles),
+            'dens_hi': 2.0 * max(denss),
+            'ext6': int(round(ext_s / cad_s)),
+            'emit_w': mark_dw['mean_w']}
+    print('   dw sustained profile: span=%.0f-%.0fmin amp>=%.0fW '
+          'mean=%.0f-%.0fW hs=%.2f-%.2f idle<=%.0fW dens<=%.3f/min '
+          'heater_gap_merge=%dmin ext=%.1fmin'
+          % (prof['span_band'][0] / 60, prof['span_band'][1] / 60,
+             prof['amp_lo'], prof['mean_band'][0], prof['mean_band'][1],
+             prof['hs_band'][0], prof['hs_band'][1], prof['idle_hi'],
+             prof['dens_hi'], merge_n * DW30_GRID_S / 60, ext_s / 60))
+    return prof
+
+
 def _name_program(seed_amp: float, span_s: float, mean_lvl: float,
                   density: float, heat_share: float, mark: dict):
     """Name an hour-scale chain. Gates from the calib marks only: chain
@@ -243,6 +409,12 @@ def _name_program(seed_amp: float, span_s: float, mean_lvl: float,
             continue
         ok.append(d)
     if len(ok) == 1:
+        if (ok[0] == 'dishwasher'
+                and density > PROG_DENS_LO
+                * mark['dishwasher']['dens_band'][1]):
+            # dw marks are quiet (0.012-0.092 events/min): a chattery
+            # chain that fails the wm gates is junk, not a dw cycle
+            return None
         return ok[0]
     if len(ok) == 2:
         # both marks admit the chain (the mean bands overlap 440-698 W):
@@ -283,6 +455,20 @@ def build_and_train(ctx: dict):
     print(f'   mined {len(ev_on)} level-excursion events from {days:.0f} '
           'pre-span days')
 
+    # dw sustained-run detector: profile derived from the marks on the
+    # 30 s grid, then the pre-span mining print (structure check)
+    stride = max(1, int(round(DW30_GRID_S / cad_s)))
+    ev30 = np.sort(ev_on // stride)
+    exc30 = _dw30_grid(np.asarray(ctx['pre']['mains'], dtype='float32'),
+                       cad_s)
+    dw30 = _dw30_profile(exc30, ctx['calib']['dishwasher'],
+                         mark['dishwasher'], mark['washing_machine']['amp'],
+                         roll_s, ev30, int(ctx['pre']['ts_us'][0]), cad_s)
+    if dw30 is not None:
+        dw_runs = _dw30_runs(exc30, ev30, dw30)
+        print(f'   dw sustained runs: {len(dw_runs)} pass run-basis '
+              f'gates ({len(dw_runs) / days:.3f}/day)')
+
     # mined burst dur references: p50 dur of events in each mark amp band
     dur_ref = {}
     for d in ('kettle', 'microwave'):
@@ -315,10 +501,15 @@ def build_and_train(ctx: dict):
         dens = (a1 - a0) / (span / 60.0)
         hshare = float((sig[s_i:e_i] >= heat_thr).mean())
         d = _name_program(p90, span, lvl, dens, hshare, mark)
+        if d == 'dishwasher' and dw30 is not None:
+            d = None  # the sustained-run detector owns dw
         if d is not None:
             prog_named[d] += 1
     print(f'   mined program chains: {prog_total} pass structure, named '
           f'wm={prog_named["washing_machine"]} dw={prog_named["dishwasher"]}')
+    if dw30 is None:
+        print('   dw sustained detector disabled (mark windows produced '
+              'no heater runs)')
 
     # fridge: most-regular (amp x dur) duty cell among mined events
     dm = ((ev_amp >= DUTY_AMP_W[0]) & (ev_amp <= DUTY_AMP_W[1])
@@ -381,6 +572,21 @@ def build_and_train(ctx: dict):
             return out
         dur = (off - on) * cad_s
 
+        # 0) dw sustained runs (see _dw30_runs): emit the run span
+        # extended by the mark-derived ext on each side so onsets stay
+        # inside the 600 s matching tolerance of the GT cycle's mask
+        # rise (the run starts at the first heater block; the GT cycle
+        # starts at the fill valve).
+        if dw30 is not None:
+            exc_e = _dw30_grid(f, cad_s)
+            ev30_e = np.sort(on // max(1, int(round(DW30_GRID_S / cad_s))))
+            for a30, b30 in _dw30_runs(exc_e, ev30_e, dw30):
+                i0 = max(0, stride * a30 - dw30['ext6'])
+                i1 = min(len(f), stride * b30 + dw30['ext6'])
+                seg = out['dishwasher'][i0:i1]
+                out['dishwasher'][i0:i1] = np.maximum(
+                    seg, dw30['emit_w'])
+
         # 1) program chains emit spans; their events stay burst-eligible
         ev_in_named = np.zeros(len(on), dtype=bool)
         for a0, a1 in _chains(on, off, mg):
@@ -395,6 +601,12 @@ def build_and_train(ctx: dict):
             hshare = float((sig[s_i:e_i] >= heat_thr).mean())
             d = _name_program(p90, span, lvl, dens, hshare, mark)
             if d is None:
+                continue
+            if d == 'dishwasher' and dw30 is not None:
+                # the sustained-run detector owns dw; keep the mw
+                # suppression over the chain span (dw heater partial-
+                # duty draws sit in the mw amp band)
+                ev_in_named[a0:a1] = True
                 continue
             out[d][on[a0]:off[a1 - 1]] = mark[d]['mean_w']
             ev_in_named[a0:a1] = True
