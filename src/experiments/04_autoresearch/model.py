@@ -778,11 +778,16 @@ def build_and_train(ctx: dict):
     # Run amp window 0.8x passive-mark amp (same lo margin as every mean
     # band) to the population amp top; isolation level 3x the mark amp -
     # the smallest session-ratio level above the band top (2.1x) - with
-    # the kettle isolation window convention.
+    # the kettle isolation window convention. Run dur band: lo = the
+    # mark dur over REL_DUR lo (same 1/3 margin the event path uses
+    # against the mark), hi = the population band top (the extractor
+    # sees nothing above it to mine).
     if fridge_band is not None:
         fr_amp = mark['fridge']['amp']
         fridge_band['fr_run'] = {'amp_lo': 0.8 * fr_amp,
                                  'amp_hi': fridge_band['amp'][1],
+                                 'dur_lo': mark['fridge']['dur_s'] / 3.0,
+                                 'dur_hi': fridge_band['dur'][1],
                                  'iso_amp': 3.0 * fr_amp,
                                  'iso_win': KET_ISO_WIN_S}
         fr_ok = ((ev_amp >= fridge_band['amp'][0])
@@ -796,8 +801,8 @@ def build_and_train(ctx: dict):
                 _runs((exc30 >= fridge_band['fr_run']['amp_lo'])
                       & (exc30 <= fridge_band['fr_run']['amp_hi'])), 1):
             span_s = (b - a) * DW30_GRID_S
-            if not fridge_band['dur'][0] <= span_s \
-                    <= fridge_band['dur'][1]:
+            if not fridge_band['fr_run']['dur_lo'] <= span_s \
+                    <= fridge_band['fr_run']['dur_hi']:
                 continue
             if not _iso_clear(exc30, a, b, fridge_band['fr_run']['iso_amp'],
                               fridge_band['fr_run']['iso_win']):
@@ -989,8 +994,7 @@ def build_and_train(ctx: dict):
                     _runs((exc_e >= fb['amp_lo']) & (exc_e <= fb['amp_hi'])),
                     1):
                 span_s = (b - a) * DW30_GRID_S
-                if not fridge_band['dur'][0] <= span_s \
-                        <= fridge_band['dur'][1]:
+                if not fb['dur_lo'] <= span_s <= fb['dur_hi']:
                     continue
                 if not _iso_clear(exc_e, a, b, fb['iso_amp'], fb['iso_win']):
                     continue
