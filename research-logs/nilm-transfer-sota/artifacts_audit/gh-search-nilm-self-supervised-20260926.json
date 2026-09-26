@@ -1,0 +1,18 @@
+{
+  "query": "NILM self-supervised",
+  "results": [],
+  "resultCount": 0,
+  "total": 0,
+  "pagination": {
+    "pagesFetched": 1,
+    "hasMore": false
+  },
+  "rateLeft": 8,
+  "notes": [
+    "no hits - drop minStars/language or shorten the query"
+  ],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/artifacts_audit/gh-search-nilm-self-supervised-20260926.json",
+    "bytes": 250
+  }
+}

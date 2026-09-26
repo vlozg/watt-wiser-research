@@ -1,0 +1,41 @@
+{
+  "query": "all:contrastive AND all:\"energy disaggregation\"",
+  "sortBy": "submittedDate",
+  "sortOrder": "descending",
+  "results": [
+    {
+      "arxivId": "1809.03534",
+      "version": "1",
+      "title": "Energy Disaggregation via Deep Temporal Dictionary Learning",
+      "authors": [
+        "Mahdi Khodayar",
+        "Jianhui Wang",
+        "Zhaoyu Wang"
+      ],
+      "summary": "This paper addresses the energy disaggregation problem, i.e. decomposing the electricity signal of a whole home to its operating devices. First, we cast the problem as a dictionary learning (DL) problem where the key electricity patterns representing consumption behaviors are extracted for each device and stored in a dictionary matrix. The electricity signal of each device is then modeled by a linear combination of such patterns with sparse coefficients that determine the contribution of each device in the total electricity. Although popular, the classic DL approach is prone to high error in real-world applications including energy disaggregation, as it merely finds linear dictionaries. Moreover, this method lacks a recurrent structure; thus, it is unable to leverage the temporal structure of energy signals. Motivated by such shortcomings, we propose a novel optimization program where the dictionary and its sparse coefficients are optimized simultaneously with a deep neural model extracting powerful nonlinear features from the energy signals. A long short-term memory auto-encoder (LSTM-AE) is proposed with tunable time dependent states to capture the temporal behavior of energy signals for each device. We learn the dictionary in the space of temporal features captured by the LSTM-AE rather than the original space of the energy signals; hence, in contrast to the traditional DL, here, a nonlinear dictionary is learned using powerful temporal features extracted from our deep model. Real experiments on the publicly available Reference Energy Disaggregation Dataset (REDD) show significant improvement compared to the state-of-the-art methodologies in terms of the disaggregation accuracy and F-score metrics.",
+      "primaryCategory": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "stat.ML"
+      ],
+      "published": "2018-09-10T18:26:39Z",
+      "updated": "2018-09-10T18:26:39Z",
+      "absUrl": "https://arxiv.org/abs/1809.03534v1",
+      "pdfUrl": "https://arxiv.org/pdf/1809.03534v1",
+      "doi": null,
+      "comment": "8 pages, 7 figures",
+      "journalRef": null
+    }
+  ],
+  "resultCount": 1,
+  "totalResults": 1,
+  "pagination": {
+    "pagesFetched": 1,
+    "hasMore": false
+  },
+  "notes": [],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/arxiv2/arxiv-all-contrastive-and-all-energy-disaggregation-20260926.json",
+    "bytes": 2636
+  }
+}

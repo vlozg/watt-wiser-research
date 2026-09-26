@@ -1,0 +1,138 @@
+{
+  "query": "all:\"load disaggregation\" AND all:\"transfer\"",
+  "sortBy": "relevance",
+  "sortOrder": "descending",
+  "results": [
+    {
+      "arxivId": "2603.04998",
+      "version": "1",
+      "title": "Lightweight and Scalable Transfer Learning Framework for Load Disaggregation",
+      "authors": [
+        "L. E. Garcia-Marrero",
+        "G. Petrone",
+        "E. Monmasson"
+      ],
+      "summary": "Non-Intrusive Load Monitoring (NILM) aims to estimate appliance-level consumption from aggregate electrical signals recorded at a single measurement point. In recent years, the field has increasingly adopted deep learning approaches; however, cross-domain generalization remains a persistent challenge due to variations in appliance characteristics, usage patterns, and background loads across homes. Transfer learning provides a practical paradigm to adapt models with limited target data. However, existing methods often assume a fixed appliance set, lack flexibility for evolving real-world deployments, remain unsuitable for edge devices, or scale poorly for real-time operation. This paper proposes RefQuery, a scalable multi-appliance, multi-task NILM framework that conditions disaggregation on compact appliance fingerprints, allowing one shared model to serve many appliances without a fixed output set. RefQuery keeps a pretrained disaggregation network fully frozen and adapts to a target home by learning only a per-appliance embedding during a lightweight backpropagation stage. Experiments on three public datasets demonstrate that RefQuery delivers a strong accuracy-efficiency trade-off against single-appliance and multi-appliance baselines, including modern Transformer-based methods. These results support RefQuery as a practical path toward scalable, real-time NILM on resource-constrained edge devices.",
+      "primaryCategory": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-03-05T09:43:48Z",
+      "updated": "2026-03-05T09:43:48Z",
+      "absUrl": "https://arxiv.org/abs/2603.04998v1",
+      "pdfUrl": "https://arxiv.org/pdf/2603.04998v1",
+      "doi": null,
+      "comment": "This work has been submitted to the IEEE for possible publication",
+      "journalRef": null
+    },
+    {
+      "arxivId": "1912.06200",
+      "version": "1",
+      "title": "On Metrics to Assess the Transferability of Machine Learning Models in Non-Intrusive Load Monitoring",
+      "authors": [
+        "Christoph Klemenjak",
+        "Anthony Faustine",
+        "Stephen Makonin",
+        "Wilfried Elmenreich"
+      ],
+      "summary": "To assess the performance of load disaggregation algorithms it is common practise to train a candidate algorithm on data from one or multiple households and subsequently apply cross-validation by evaluating the classification and energy estimation performance on unseen portions of the dataset derived from the same households. With an emerging discussion of transferability in Non-Intrusive Load Monitoring (NILM), there is a need for domain-specific metrics to assess the performance of NILM algorithms on new test scenarios being unseen buildings. In this paper, we discuss several metrics to assess the generalisation ability of NILM algorithms. These metrics target different aspects of performance evaluation in NILM and are meant to complement the traditional performance evaluation approach. We demonstrate how our metrics can be utilised to evaluate NILM algorithms by means of two case studies. We conduct our studies on several energy consumption datasets and take into consideration five state-of-the-art as well as four baseline NILM solutions. Finally, we formulate research challenges for future work.",
+      "primaryCategory": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "stat.ML"
+      ],
+      "published": "2019-12-12T20:43:06Z",
+      "updated": "2019-12-12T20:43:06Z",
+      "absUrl": "https://arxiv.org/abs/1912.06200v1",
+      "pdfUrl": "https://arxiv.org/pdf/1912.06200v1",
+      "doi": null,
+      "comment": null,
+      "journalRef": null
+    },
+    {
+      "arxivId": "2212.04886",
+      "version": "2",
+      "title": "A Modified Sequence-to-point HVAC Load Disaggregation Algorithm",
+      "authors": [
+        "Kai Ye",
+        "Hyeonjin Kim",
+        "Yi Hu",
+        "Ning Lu",
+        "Di Wu",
+        "PJ Rehm"
+      ],
+      "summary": "This paper presents a modified sequence-to-point (S2P) algorithm for disaggregating the heat, ventilation, and air conditioning (HVAC) load from the total building electricity consumption. The original S2P model is convolutional neural network (CNN) based, which uses load profiles as inputs. We propose three modifications. First, the input convolution layer is changed from 1D to 2D so that normalized temperature profiles are also used as inputs to the S2P model. Second, a drop-out layer is added to improve adaptability and generalizability so that the model trained in one area can be transferred to other geographical areas without labelled HVAC data. Third, a fine-tuning process is proposed for areas with a small amount of labelled HVAC data so that the pre-trained S2P model can be fine-tuned to achieve higher disaggregation accuracy (i.e., better transferability) in other areas. The model is first trained and tested using smart meter and sub-metered HVAC data collected in Austin, Texas. Then, the trained model is tested on two other areas: Boulder, Colorado and San Diego, California. Simulation results show that the proposed modified S2P algorithm outperforms the original S2P model and the support-vector machine based approach in accuracy, adaptability, and transferability.",
+      "primaryCategory": "eess.SY",
+      "categories": [
+        "eess.SY"
+      ],
+      "published": "2022-12-09T14:40:14Z",
+      "updated": "2023-02-25T03:24:20Z",
+      "absUrl": "https://arxiv.org/abs/2212.04886v2",
+      "pdfUrl": "https://arxiv.org/pdf/2212.04886v2",
+      "doi": null,
+      "comment": "To be published in the proceedings of the 2023 IEEE PES General Meeting",
+      "journalRef": null
+    },
+    {
+      "arxivId": "2210.04176",
+      "version": "1",
+      "title": "Non-intrusive Load Monitoring based on Self-supervised Learning",
+      "authors": [
+        "Shuyi Chen",
+        "Bochao Zhao",
+        "Mingjun Zhong",
+        "Wenpeng Luan",
+        "Yixin Yu"
+      ],
+      "summary": "Deep learning models for non-intrusive load monitoring (NILM) tend to require a large amount of labeled data for training. However, it is difficult to generalize the trained models to unseen sites due to different load characteristics and operating patterns of appliances between data sets. For addressing such problems, self-supervised learning (SSL) is proposed in this paper, where labeled appliance-level data from the target data set or house is not required. Initially, only the aggregate power readings from target data set are required to pre-train a general network via a self-supervised pretext task to map aggregate power sequences to derived representatives. Then, supervised downstream tasks are carried out for each appliance category to fine-tune the pre-trained network, where the features learned in the pretext task are transferred. Utilizing labeled source data sets enables the downstream tasks to learn how each load is disaggregated, by mapping the aggregate to labels. Finally, the fine-tuned network is applied to load disaggregation for the target sites. For validation, multiple experimental cases are designed based on three publicly accessible REDD, UK-DALE, and REFIT data sets. Besides, state-of-the-art neural networks are employed to perform NILM task in the experiments. Based on the NILM results in various cases, SSL generally outperforms zero-shot learning in improving load disaggregation performance without any sub-metering data from the target data sets.",
+      "primaryCategory": "eess.SP",
+      "categories": [
+        "eess.SP"
+      ],
+      "published": "2022-10-09T06:00:01Z",
+      "updated": "2022-10-09T06:00:01Z",
+      "absUrl": "https://arxiv.org/abs/2210.04176v1",
+      "pdfUrl": "https://arxiv.org/pdf/2210.04176v1",
+      "doi": null,
+      "comment": "12 pages,10 figures",
+      "journalRef": null
+    },
+    {
+      "arxivId": "2605.24491",
+      "version": "1",
+      "title": "Mechanism-Dependent Antagonism of Auxiliary Information in Substation-Level Load Disaggregation for Distribution Network Planning",
+      "authors": [
+        "Xuanhao Mu",
+        "Kundan Thota",
+        "Nan Liu",
+        "Jianlei Liu",
+        "Thorsten Schlachter",
+        "Veit Hagenmeyer"
+      ],
+      "summary": "Open-source energy system models disaggregate zonal electricity demand to substations through Voronoi-based preprocessing pipelines that combine socioeconomic weighting with auxiliary spatial corrections. Whether the same auxiliary data helps or harms when the weighting component shifts from rule-based to learned has not been investigated. We fix Voronoi partitioning and cross two design axes on metered demand from 1,891 British primary substations: the demand-weighting method and the mechanism through which Nighttime Light (NTL) intensity and substation-proximity signals enter the allocation, giving 15 configurations. Mechanism-isolation experiments further test additive post-correction and random-noise controls to pinpoint the structural cause of any performance reversal. The same auxiliary data reduces RMSE by 41 % on the static base but increases it by 21 % on the GNN base under multiplicative post-correction (p < 0.001 for both); the best static pipeline outperforms the best GNN variant by 19 %. Post-correction on the GNN improves rank-order correlation (p < 0.001) yet worsens absolute error, so correlation-only evaluation masks the calibration penalty. The isolation experiments trace this reversal to the multiplicative correction form under demand conservation constraints, not to signal redundancy; switching to additive post-correction eliminates the antagonism entirely. A transfer check on 13 German primary substations confirms directional replication and shows amplified antagonism where the GNN baseline already explains over 95 % of demand variance. The NTL and proximity signals behind the 41 % static improvement are publicly available at no cost and should be adopted as default corrections in static pipelines; method evaluation should report RMSE and correlation jointly, as the two metrics diverge under post-correction on learned representations.",
+      "primaryCategory": "eess.SY",
+      "categories": [
+        "eess.SY"
+      ],
+      "published": "2026-05-23T09:48:10Z",
+      "updated": "2026-05-23T09:48:10Z",
+      "absUrl": "https://arxiv.org/abs/2605.24491v1",
+      "pdfUrl": "https://arxiv.org/pdf/2605.24491v1",
+      "doi": null,
+      "comment": null,
+      "journalRef": null
+    }
+  ],
+  "resultCount": 5,
+  "totalResults": 5,
+  "pagination": {
+    "pagesFetched": 1,
+    "hasMore": false
+  },
+  "notes": [],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/arxiv/arxiv-all-load-disaggregation-and-all-transfer-20260926.json",
+    "bytes": 11021
+  }
+}

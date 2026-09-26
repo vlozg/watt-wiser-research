@@ -1,0 +1,88 @@
+{
+  "query": "all:unsupervised AND all:\"load disaggregation\"",
+  "sortBy": "submittedDate",
+  "sortOrder": "descending",
+  "results": [
+    {
+      "arxivId": "2209.09165",
+      "version": "1",
+      "title": "An ICA-Based HVAC Load Disaggregation Method Using Smart Meter Data",
+      "authors": [
+        "Hyeonjin Kim",
+        "Kai Ye",
+        "Han Pyo Lee",
+        "Rongxing Hu",
+        "Ning Lu",
+        "Di Wu",
+        "PJ Rehm"
+      ],
+      "summary": "This paper presents an independent component analysis (ICA) based unsupervised-learning method for heat, ventilation, and air-conditioning (HVAC) load disaggregation using low-resolution (e.g., 15 minutes) smart meter data. We first demonstrate that electricity consumption profiles on mild-temperature days can be used to estimate the non-HVAC base load on hot days. A residual load profile can then be calculated by subtracting the mild-day load profile from the hot-day load profile. The residual load profiles are processed using ICA for HVAC load extraction. An optimization-based algorithm is proposed for post-adjustment of the ICA results, considering two bounding factors for enhancing the robustness of the ICA algorithm. First, we use the hourly HVAC energy bounds computed based on the relationship between HVAC load and temperature to remove unrealistic HVAC load spikes. Second, we exploit the dependency between the daily nocturnal and diurnal loads extracted from historical meter data to smooth the base load profile. Pecan Street data with sub-metered HVAC data were used to test and validate the proposed methods.Simulation results demonstrated that the proposed method is computationally efficient and robust across multiple customers.",
+      "primaryCategory": "eess.SY",
+      "categories": [
+        "eess.SY"
+      ],
+      "published": "2022-09-19T16:33:43Z",
+      "updated": "2022-09-19T16:33:43Z",
+      "absUrl": "https://arxiv.org/abs/2209.09165v1",
+      "pdfUrl": "https://arxiv.org/pdf/2209.09165v1",
+      "doi": null,
+      "comment": null,
+      "journalRef": null
+    },
+    {
+      "arxivId": "2104.03120",
+      "version": "1",
+      "title": "Unsupervised Disaggregation of Water Heater Load from Smart Meter Data Processing",
+      "authors": [
+        "Thierry Zufferey",
+        "Gustavo Valverde",
+        "Gabriela Hug"
+      ],
+      "summary": "In the residential sector, electric water heaters are appliances with a relatively high power consumption and a significant thermal inertia, which is particularly suitable for Demand Response schemes. The success of efficient DR schemes via the control of water heaters presupposes an accurate estimate of their power demand at each instant. Although the load of water heaters is rarely directly measured, a large penetration of Smart Meters (SMs) in distribution grids enables to indirectly infer this information on a large scale via load disaggregation. For that purpose, a considerable number of Non-Intrusive Load Monitoring (NILM) approaches are suggested in the literature. However, they require data streams at a time resolution in the range of one second or higher, which is not realistic for standard SMs. Hence, this paper proposes an unsupervised approach to detect and disaggregate the load profile of water heaters from standard SM data with a time resolution in the minute range. Evaluated on multiple real loads with sub-metering, the proposed approach achieves a Normalized Mean Absolute Error (NMAE) lower than 2% and a precision generally higher than 92% with time resolutions between 5 and 15 minutes.",
+      "primaryCategory": "eess.SY",
+      "categories": [
+        "eess.SY",
+        "eess.SP"
+      ],
+      "published": "2021-04-07T13:48:15Z",
+      "updated": "2021-04-07T13:48:15Z",
+      "absUrl": "https://arxiv.org/abs/2104.03120v1",
+      "pdfUrl": "https://arxiv.org/pdf/2104.03120v1",
+      "doi": null,
+      "comment": "6 pages, 5 figures, published in the Proceedings of the 2020 Mediterranean Conference on Power Generation, Transmission, Distribution and Energy Conversion (MEDPOWER 2020)",
+      "journalRef": null
+    },
+    {
+      "arxivId": "1412.2877",
+      "version": "2",
+      "title": "Autonomous Load Disaggregation Approach based on Active Power Measurements",
+      "authors": [
+        "Dominik Egarter",
+        "Wilfried Elmenreich"
+      ],
+      "summary": "With the help of smart metering valuable information of the appliance usage can be retrieved. In detail, non-intrusive load monitoring (NILM), also called load disaggregation, tries to identify appliances in the power draw of an household. In this paper an unsupervised load disaggregation approach is proposed that works without a priori knowledge about appliances. The proposed algorithm works autonomously in real time. The number of used appliances and the corresponding appliance models are learned in operation and are progressively updated. The proposed algorithm is considering each useful and suitable detected power state. The algorithm tries to detect power states corresponding to on/off appliances as well as to multi-state appliances based on active power measurements in 1s resolution. We evaluated the novel introduced load disaggregation approach on real world data by testing the possibility to disaggregate energy demand on appliance level.",
+      "primaryCategory": "cs.OH",
+      "categories": [
+        "cs.OH"
+      ],
+      "published": "2014-12-09T07:50:57Z",
+      "updated": "2014-12-14T11:59:05Z",
+      "absUrl": "https://arxiv.org/abs/1412.2877v2",
+      "pdfUrl": "https://arxiv.org/pdf/1412.2877v2",
+      "doi": "10.1109/PERCOMW.2015.7134051",
+      "comment": null,
+      "journalRef": null
+    }
+  ],
+  "resultCount": 3,
+  "totalResults": 3,
+  "pagination": {
+    "pagesFetched": 1,
+    "hasMore": false
+  },
+  "notes": [],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/arxiv2/arxiv-all-unsupervised-and-all-load-disaggregation-20260926.json",
+    "bytes": 5841
+  }
+}

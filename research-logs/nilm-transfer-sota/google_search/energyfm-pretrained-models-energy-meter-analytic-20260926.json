@@ -1,0 +1,237 @@
+{
+  "query": "EnergyFM pretrained models energy meter analytics IBM Tiny Time Mixers disaggregation",
+  "fetchedAt": "2026-09-26T15:50:43.454Z",
+  "aiOverview": {
+    "present": true,
+    "text": "EnergyFM\na collection of pre-trained time-series foundation models designed specifically for\n[EnergyFM: Pretrained Models for Energy Meter Data Analytics]\n\n\nCore Architecture & Models\n- Backbone Design: Built on IBM Research's lightweight and TSPulse architectures.\n[Tiny Time Mixers (TTM)]\n- Energy-TTM: Adapted for short-term load and day-ahead electricity demand forecasting.\n[EnergyFM/energy-ttm]\n- Energy-TSPulse: Supports downstream tasks including anomaly detection, data imputation, and classification.\n- Dataset Scale: Pretrained and curated using massive corpora (such as 1.26 billion hourly electricity consumption records across tens of thousands of buildings).\n\n\nKey Features & Analytics Capabilities\n- Lightweight & Efficient: Features compact parameter sizes (often starting under 1M–5M parameters), enabling execution on resource-constrained or CPU-only hardware.\n- Transfer Learning: Facilitates strong zero-shot and few-shot adaptation across heterogeneous buildings, regions, and operational sectors without needing custom training per building.\n- Disaggregation & Meter Analytics: Helps disaggregate load patterns, identify consumption anomalies, and process multi-scale temporal structures in smart meter data.\nsample code for fine-tuning Energy-TTM\nEnergy-TSPulse\nWould you like to explore\nor learn more about how\nhandles anomaly detection and imputation?\n- ACM Digital Library EnergyFM: Pretrained Models for Energy Meter Data Analytics The key contributions of this paper are: • We curate and release a large-scale dataset comprising 1.26 billion hourly electricity ...\n[EnergyFM: Pretrained Models for Energy Meter Data Analytics. Opens in new tab.]\n- Association for Computing Machinery Accepted Papers - ACM e Abstract Recent advances in pre-trained Time Series Foundation Models (TSFMs) offer a promising pathway to address these limitatio...\n[Accepted Papers - ACM e. Opens in new tab.]\n- Hugging Face EnergyFM/energy-ttm Energy-TTM Energy-TTM is a domain-specific Time Series Foundation Model (TSFM) for energy meter data analytics, pretrained on larg...\n[EnergyFM/energy-ttm. Opens in new tab.]",
+    "excerpt": "EnergyFM is a collection of pre-trained time-series foundation models designed specifically for . Core Architecture & Models Backbone Design: Built on IBM Research's lightweight and TSPulse architectures. Energy-TTM: Adapted for",
+    "sources": [
+      {
+        "name": "EnergyFM: Pretrained Models for Energy Meter Data Analytics",
+        "domain": "dl.acm.org"
+      },
+      {
+        "name": "Tiny Time Mixers (TTM)",
+        "domain": "research.ibm.com"
+      },
+      {
+        "name": "EnergyFM/energy-ttm",
+        "domain": "huggingface.co"
+      },
+      {
+        "name": "Accepted Papers - ACM e. Opens in new tab.",
+        "domain": "energy.acm.org"
+      }
+    ]
+  },
+  "results": [
+    {
+      "rank": 1,
+      "title": "Pretrained Models for Energy Meter Data Analytics ACM Digital Library",
+      "url": "https://dl.acm.org/doi/10.1145/3744255.3798119",
+      "domain": "dl.acm.org",
+      "site": "",
+      "snippet": "EnergyFM In this work, we introduce , a set of pre-trained models developed specifically for energy meter analytics. EnergyFM is built upon IBM's Tiny Time ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 2,
+      "title": "EnergyFM/energy-ttm",
+      "url": "https://huggingface.co/EnergyFM/energy-ttm",
+      "domain": "huggingface.co",
+      "site": "Hugging Face",
+      "snippet": "EnergyFM is intended for energy meter analytics Jul 31, 2025 — and has been pretrained on electricity consumption data. Performance may degrade when applied to ... disaggregation Missing: ‎| Show results with:",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 3,
+      "title": "Pretrained Models for Energy Meter Data Analytics",
+      "url": "https://www.researchgate.net/publication/407456837_EnergyFM_Pretrained_Models_for_Energy_Meter_Data_Analytics",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "Energy Dataset of an Community's Generation and Consumption with Appliance Allocation. Article. Full-text available. Sep 2022.",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 4,
+      "title": "Tiny Time Mixers (TTMs): Fast Pre-trained Models for ...",
+      "url": "https://research.ibm.com/publications/tiny-time-mixers-ttms-fast-pre-trained-models-for-enhanced-zerofew-shot-forecasting-of-multivariate-time-series--1",
+      "domain": "research.ibm.com",
+      "site": "IBM Research",
+      "snippet": "by E Vijay 2024 Cited by 308 — TTM outperforms existing popular benchmarks in zero/few-shot forecasting by (4-40%), while reducing computational requirements significantly. EnergyFM energy meter disaggregation Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 5,
+      "title": "Accepted Papers - ACM e-Energy 2026 Association for Computing Machinery",
+      "url": "https://energy.acm.org/conferences/eenergy/2026/pages/accepted-papers.php",
+      "domain": "energy.acm.org",
+      "site": "",
+      "snippet": "EnergyFM: Pretrained Models for Energy Meter Data Analytics . Pandarasamy ... EnergyFM builds on IBM's Tiny Time Mixers (TTM) and TSPulse as backbone ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 6,
+      "title": "Tiny Time Mixers (TTMs): Fast Pre-trained Models for ...",
+      "url": "https://arxiv.org/pdf/2401.03955",
+      "domain": "arxiv.org",
+      "site": "arXiv",
+      "snippet": "PDF pre-trained models time by V Ekambaram 2024 Cited by 306 — Abstract. Large excel in zero/few-shot learning for language and vision tasks but face chal- lenges in multivariate ... EnergyFM meter disaggregation Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 7,
+      "title": "IBM has a time-series model for every task",
+      "url": "https://research.ibm.com/blog/time-series-ai-enterprise",
+      "domain": "research.ibm.com",
+      "site": "IBM Research",
+      "snippet": "mixers Tiny Time Mixer models Mar 31, 2026 — Building on the (TTM), released in 2024, introduced the first lightweight time series for tasks across many ... EnergyFM energy disaggregation Missing: ‎ Tiny Time Mixers pre-trained models This paper introduces (TTMs), a family of compact for zero-shot and few-shot multivariate time-series ... EnergyFM meter IBM disaggregation Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 8,
+      "title": "This project demonstrates time series forecasting using the ...",
+      "url": "https://github.com/felixsuarez0727/TinyTimeMixerDemo",
+      "domain": "github.com",
+      "site": "GitHub",
+      "snippet": "time energy This project demonstrates series forecasting using the tsfm_public library and the TinyTimeMixer model. It loads consumption data, performs ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 9,
+      "title": "Forecast Energy Demand | IBM Granite",
+      "url": "https://www.ibm.com/granite/docs/use-cases/forecast-energy-demand",
+      "domain": "www.ibm.com",
+      "site": "IBM",
+      "snippet": "TinyTimeMixers (TTMs) are compact pre-trained models for multivariate time-series forecasting, open-sourced by IBM Research. With less than 1 million parameters ... EnergyFM disaggregation Missing: ‎ Time giới thiệu Foundation dành cho bài toán series forecasting Vài năm gần đây, foundation (mô hình nền tảng) không chỉ ... energy meter disaggregation Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 10,
+      "title": "Tiny Time Mixers (TTMs): Fast Pre-trained Models for ...",
+      "url": "https://openreview.net/forum?id=3O5YCEWETq",
+      "domain": "openreview.net",
+      "site": "OpenReview",
+      "snippet": "pre-trained models time by V Ekambaram Cited by 298 — Large excel in zero/few-shot learning for language and vision tasks but face challenges in multivariate series (TS) ... EnergyFM energy meter disaggregation Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 11,
+      "title": "Custom foundation models import support for Granite Time ...",
+      "url": "https://www.ibm.com/new/announcements/custom-foundation-models-import-support-for-granite-time-series-models",
+      "domain": "www.ibm.com",
+      "site": "IBM",
+      "snippet": "'s Tiny Time Mixer models Granite Time Series (TTMs) are compact for multivariate time-series forecasting, open-sourced by Research under the Apache 2.0 ... EnergyFM meter disaggregation Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 12,
+      "title": "TinyTimeMixerForecaster",
+      "url": "https://www.sktime.net/docs/api-reference/sktimeforecastingttmtinytimemixerforecaster/",
+      "domain": "www.sktime.net",
+      "site": "sktime",
+      "snippet": "tiny pre-trained models Time With less than 1 Million parameters, TTM introduces the notion of the first-ever “ ” for -Series Forecasting. Fit Strategies: Full, ... modeling Multi-level : TTM first trains on univariate sequences, then integrates cross-channel mixing during finetuning to learn multivariate ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 13,
+      "title": "Machine Learning in Time Series Forecasting",
+      "url": "https://www.pricepedia.it/en/magazine/article/2025/10/20/machine-learning-in-time-series-forecasting-enter-tiny-time-mixers/",
+      "domain": "www.pricepedia.it",
+      "site": "PricePedia",
+      "snippet": "Tiny Time Mixer pre-trained models Oct 20, 2025 — The experiment conducted with (TTM) clearly showed the potential of in time series forecasting, even in ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 14,
+      "title": "Tiny Time Mixers (TTM): A Powerful Zero-Shot Forecasting ...",
+      "url": "https://towardsdatascience.com/tiny-time-mixers-ttm-a-powerful-zero-shot-forecasting-model-by-ibm-576b0e0af583/",
+      "domain": "towardsdatascience.com",
+      "site": "Towards Data Science",
+      "snippet": "model models It's a lightweight that outperforms larger SOTA - including MOIRAI, on the M4 dataset. Plus, it's open source! This article discusses: The ... EnergyFM energy meter disaggregation Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 15,
+      "title": "Granite-TimeSeries-TTM-R2 Model Card",
+      "url": "https://modelscope.cn/models/ibm-granite/granite-timeseries-ttm-r2",
+      "domain": "modelscope.cn",
+      "site": "modelscope.cn",
+      "snippet": "TinyTimeMixers (TTMs) are compact pre-trained models Feb 26, 2025 — for Multivariate Time-Series Forecasting, open-sourced by IBM Research. With model sizes ... EnergyFM disaggregation Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 16,
+      "title": "Energy Demand Forecasting with Granite Timeseries (TTM)",
+      "url": "https://ibm.github.io/granite-workshop/lab-3/",
+      "domain": "ibm.github.io",
+      "site": "GitHub",
+      "snippet": "time Forecasting in series analysis allows data scientists to identify patterns by using machine learning and then generate forecasts about the future.",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    }
+  ],
+  "resultCount": 16,
+  "peopleAlsoAsk": [],
+  "peopleAlsoSearchFor": [],
+  "relatedSearches": [],
+  "pagination": {
+    "pagesFetched": 2,
+    "hasMore": true
+  },
+  "notes": [
+    "Snippets are reconstructed from the accessibility tree; inline bold-query emphasis may reorder text.",
+    "Some inline URLs inside snippets have no accessible text and are omitted."
+  ],
+  "pages": [
+    {
+      "start": 0,
+      "rawChars": 17711,
+      "resultsOnPage": 8,
+      "hrefsUpgraded": 6,
+      "hasMore": true
+    },
+    {
+      "start": 10,
+      "rawChars": 11021,
+      "resultsOnPage": 8,
+      "hrefsUpgraded": 8,
+      "hasMore": true
+    }
+  ],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/google_search/energyfm-pretrained-models-energy-meter-analytic-20260926.json",
+    "bytes": 12698
+  }
+}

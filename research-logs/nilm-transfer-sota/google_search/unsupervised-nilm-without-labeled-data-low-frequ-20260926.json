@@ -1,0 +1,225 @@
+{
+  "query": "unsupervised NILM without labeled data low frequency smart meter disaggregation",
+  "fetchedAt": "2026-09-26T16:05:04.586Z",
+  "aiOverview": {
+    "present": true,
+    "text": "breaks down a whole-house aggregate power signal into individual appliance or category loads without requiring expensive, manually labeled training data\n[ScienceDirect.com]\nUnsupervised Non-Intrusive Load Monitoring (NILM) for low-frequency smart meter data\n\n\nCore Approaches\n- Hidden Markov Models (HMM) & Factorial HMM: Model appliances as hidden states changing over time, inferred via statistical inference or expectation-maximization without labels.\n- Clustering & Event Detection: Use techniques like K-Means or DBSCAN combined with edge-detection to isolate ON/OFF operational states from low-resolution (minute or hourly) data signatures.\n- Load Profile & Activity Simulation: Combine statistical occupancy models or Bayesian inference with aggregate readings to probabilistically estimate usage patterns.\n\n\nKey Challenges & Trade-offs\n- Limited Resolution: Low-frequency data (such as 15-minute or 1-hour intervals) hides transient electrical signatures, making it hard to identify specific short-cycling devices.\n- Accuracy vs. Cost: Unsupervised models have higher uncertainty or lower accuracy than supervised deep learning models, but they completely eliminate the high labor cost of appliance-level labeling.\n- Scalability: They adapt better to unseen homes or changing appliance ownership because they rely on statistical rules or general priors rather than rigid training sets.\nIf you're working on a specific implementation, let me know:\n- What is your smart meter sampling rate (e.g., 1-minute, 15-minute, or 1-hour)?\n- Are you trying to disaggregate specific appliances (like a fridge or AC) or broader categories ?\n- ScienceDirect.com Unsupervised algorithm for disaggregating low-sampling-rate ... Non-intrusive load monitoring (NILM) has been extensively researched over the last decade. The objective of NILM is to identify th...\n[Unsupervised algorithm for disaggregating low-sampling-rate .... Opens in new tab.]\n- ScienceDirect.com Data mining of smart meters for load category based disaggregation ... Abstract Non-Intrusive Load Monitoring (NILM) techniques have been leveraged by new instrument and machine learning algorithms to ...\n[Data mining of smart meters for load category based disaggregation .... Opens in new tab.]\n- ScienceDirect.com Non-intrusive load disaggregation solutions for very low Cited by (83) Show abstract With the widespread deployment of smart meters worldwide, quantification of energy used by individual ...\n[Non-intrusive load disaggregation solutions for very low. Opens in new tab.]",
+    "excerpt": "Unsupervised Non-Intrusive Load Monitoring (NILM) for low-frequency smart meter data breaks down a whole-house aggregate power signal into individual appliance or category loads without requiring expensive, manually labeled trai",
+    "sources": [
+      {
+        "name": "ScienceDirect.com",
+        "domain": "www.sciencedirect.com"
+      }
+    ]
+  },
+  "results": [
+    {
+      "rank": 1,
+      "title": "Unsupervised algorithm for disaggregating low-sampling ...",
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S2352467719300748",
+      "domain": "www.sciencedirect.com",
+      "site": "ScienceDirect.com",
+      "snippet": "NILM by J Holweger 2019 Cited by 60 — In this paper, we present an alternative method that breaks down the aggregated power signal into categories of appliances. The ultimate goal is to use ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 2,
+      "title": "Unsupervised Disaggregation of Low Frequency Power ...",
+      "url": "https://www.researchgate.net/publication/220906940_Unsupervised_Disaggregation_of_Low_Frequency_Power_Measurements",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "smart meters data Although provide usage [8], they typically lack the ability to identify sources of energy waste or explain consumption patterns [9], limiting ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 3,
+      "title": "Non-Intrusive Load Monitoring (NILM) with ...",
+      "url": "https://www.dora.lib4ri.ch/empa/islandora/object/empa%3A41739/datastream/PDF/Chatterjee-2025-Non-Intrusive_Load_Monitoring_%28NILM%29_with-%28published_version%29.pdf",
+      "domain": "www.dora.lib4ri.ch",
+      "site": "Lib4RI",
+      "snippet": "PDF frequency NILM by A Chatterjee 2025 Cited by 14 — By analysing changes in the voltage, current, and/or power readings going into a home, algorithms can disaggregate the total ... 11 pages",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 4,
+      "title": "Unsupervised algorithm for disaggregating low-sampling ...",
+      "url": "https://sci-hub.red/10.1016/j.segan.2019.100244",
+      "domain": "sci-hub.red",
+      "site": "Sci-Hub RED",
+      "snippet": "NILM In this paper, we present an alternative method that breaks down the aggregated power signal into categories of appliances. The ultimate goal is to use ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 5,
+      "title": "Energy Disaggregation & Appliance Identification in a ...",
+      "url": "https://arxiv.org/html/2301.03018v2",
+      "domain": "arxiv.org",
+      "site": "arXiv",
+      "snippet": "NILM energy disaggregation Mar 14, 2024 — Non-intrusive load monitoring ( ) or aims to extract the load profiles of individual consumer electronic appliances, ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 6,
+      "title": "Non-Intrusive load monitoring and anomaly detection - STAX University of Strathclyde",
+      "url": "https://stax.strath.ac.uk/downloads/df65v831k",
+      "domain": "stax.strath.ac.uk",
+      "site": "",
+      "snippet": "PDF NILM low frequency smart meter data by M Khazaei 2025 — The overarching aim is to enhance performance on - by reducing computational complexity, improving transferability, and.",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 7,
+      "title": "A Bayesian Approach to Unsupervised, Non-Intrusive Load ...",
+      "url": "https://www.mdpi.com/1424-8220/22/12/4481",
+      "domain": "www.mdpi.com",
+      "site": "MDPI",
+      "snippet": "Unsupervised not labeled data disaggregation by L Massidda 2022 Cited by 32 — , conversely, are those methods that do use for . Among the supervised methods, those based on neural ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 8,
+      "title": "Non-Intrusive Load Monitoring Based on Unsupervised ...",
+      "url": "https://www.frontiersin.org/journals/energy-research/articles/10.3389/fenrg.2021.718916/full",
+      "domain": "www.frontiersin.org",
+      "site": "Frontiers",
+      "snippet": "unsupervised NILM by Y Liu 2021 Cited by 28 — Combining the learning based optimization with the supervised BPNN model, the proposed solution is able to identify the newly ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 9,
+      "title": "Non-Intrusive Load Monitoring Approaches for ... University of",
+      "url": "https://openresearch.surrey.ac.uk/view/pdfCoverPage?instCode=44SUR_INST&filePid=13140487550002346&download=true",
+      "domain": "openresearch.surrey.ac.uk",
+      "site": "Surrey",
+      "snippet": "PDF disaggregation labeled data Unsupervised Disaggregation Low Frequency by A Zoha Cited by 1371 — The supervised algorithms need adequate for learning the model parameters ... of . 817. Power ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 10,
+      "title": "[PDF] Non-Intrusive Load Monitoring (NILM) for Energy ...",
+      "url": "https://www.semanticscholar.org/paper/Non-Intrusive-Load-Monitoring-(NILM)-for-Energy-Puente-Palacios/4647e6b088ba981e6df0c0d448bab4d9e7f51dda",
+      "domain": "www.semanticscholar.org",
+      "site": "Semantic Scholar",
+      "snippet": "unsupervised disaggregation method This work proposes an based on a controlled dataset obtained using smart meters in a standard household, ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 11,
+      "title": "Non-Intrusive Load Monitoring: A Systematic Review of ... DTU Research Database",
+      "url": "https://orbit.dtu.dk/files/439947745/energies-19-01883-v2.pdf",
+      "domain": "orbit.dtu.dk",
+      "site": "",
+      "snippet": "PDF NILM energy by H Xiang 2026 Cited by 4 — Non-intrusive load monitoring ( ) technology can identify the operational states and decompose the consumption of individual electrical appliances ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 12,
+      "title": "Non-Intrusive Load Monitoring (NILM) with very low- ...",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0378778825007327",
+      "domain": "www.sciencedirect.com",
+      "site": "ScienceDirect.com",
+      "snippet": "NILM algorithms can disaggregate the total energy consumption by A Chatterjee 2025 Cited by 20 — By analysing changes in the voltage, current, frequency and/or power readings going into a home, ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 13,
+      "title": "A comprehensive review of machine learning and deep ... Springer Nature",
+      "url": "https://link.springer.com/article/10.1007/s10489-025-06921-4",
+      "domain": "link.springer.com",
+      "site": "Link",
+      "snippet": "NILM disaggregation by MH Saleem 2025 Cited by 21 — applies feature identification methods to analyse the operation to obtain the load profiles of the equipment and appliances ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 14,
+      "title": "An effective electrical load disaggregation approach for low ... ACM Digital Library",
+      "url": "https://dl.acm.org/doi/10.1145/3563357.3564070",
+      "domain": "dl.acm.org",
+      "site": "",
+      "snippet": "unsupervised The proposed solution is an approach which involves a series of steps that include composite event detection, iterative event pairing with dynamic ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 15,
+      "title": "Non-Intrusive Load Monitoring (NILM) for Energy ...",
+      "url": "https://sci-hub.box/10.3390/en13123117",
+      "domain": "sci-hub.box",
+      "site": "Sci-Hub",
+      "snippet": "unsupervised disaggregation method In this work, we propose an based on a controlled dataset obtained using smart meters in a standard household. By using soft ... labeled Missing: ‎| Show results with:",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 16,
+      "title": "(PDF) Deep learning based non-intrusive load monitoring ...",
+      "url": "https://www.researchgate.net/publication/364343343_Deep_learning_based_non-intrusive_load_monitoring_with_low_resolution_data_from_smart_meters",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "disaggregate low frequency smart meters Jul 21, 2026 — In this work we use a deep learning method to the energy signal generated directly by the new generation ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    }
+  ],
+  "resultCount": 16,
+  "peopleAlsoAsk": [],
+  "peopleAlsoSearchFor": [],
+  "relatedSearches": [],
+  "pagination": {
+    "pagesFetched": 2,
+    "hasMore": true
+  },
+  "notes": [
+    "Snippets are reconstructed from the accessibility tree; inline bold-query emphasis may reorder text.",
+    "Some inline URLs inside snippets have no accessible text and are omitted."
+  ],
+  "pages": [
+    {
+      "start": 0,
+      "rawChars": 20393,
+      "resultsOnPage": 9,
+      "hrefsUpgraded": 9,
+      "hasMore": true
+    },
+    {
+      "start": 10,
+      "rawChars": 10367,
+      "resultsOnPage": 10,
+      "hrefsUpgraded": 7,
+      "hasMore": true
+    }
+  ],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/google_search/unsupervised-nilm-without-labeled-data-low-frequ-20260926.json",
+    "bytes": 12454
+  }
+}

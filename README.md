@@ -11,7 +11,7 @@ client's code + data as received.
 | `docs/` | All research + assessment docs (reading order below). Problem grounding: `PROBLEM_STATEMENTS.md`; hypothesis registry: `hypotheses/` |
 | `docs/client/` | My analysis of client material: `repo-review.md`, docx extraction (`brief-extract/`) - gitignored, kept out of history |
 | `docs/product/` | Product framing: use-case reassessment, core reframe, post-meeting assessment |
-| `docs/research/` | NILM research: `research-brief.md`, `nilm-visual-reading.md`, `analog-problems.md`, `fhmm-notes.md` (Hart patent + FHMM training regimes, overlaps, unknowns), `vi-trajectory-hardware.md` |
+| `docs/research/` | NILM research: `research-brief.md`, `nilm-visual-reading.md`, `analog-problems.md`, `fhmm-notes.md` (Hart patent + FHMM training regimes, overlaps, unknowns), `vi-trajectory-hardware.md`, `transfer-learning-sota.md` (transfer/adaptation SOTA review + recommended direction, raw harvest in `research-logs/nilm-transfer-sota/`), `transfer-applicability-audit.md` (code/weight availability check + per-route fit to the problem statement, 2026-09-26) |
 | `docs/knowledge/` | Background primers: `ELI5_NILM.md` (electricity basics), `ELI5_COMMON_NILM_FEATURES.md` (common NILM features, with repo figures), `ELI5_PHASES_SOLAR.md` (phases, solar, aircon - why the wiring changes what the meter sees) |
 | `docs/datasets/` | Data strategy: `data-collection.md`, `dataset-walkthrough.md`, `experiment-data-strategy.md`, `parquet-foundations.md`, `gold-layer.md` |
 | `docs/experiments/` | Experiment specs: `fhmm-session-supervised-plan.md` (FHMM arm plan — drafted, pre-registration pending) + `baseline-ukdale-plan.md` (superseded 2026-09-20 baseline campaign spec) |
@@ -45,6 +45,8 @@ transfers.
 5. `docs/datasets/dataset-walkthrough.md` - client data + UK-DALE / PLAID
 6. `docs/reports/dataset_eda/` - per-dataset EDA set (read `00_overview.md` first, then `01`-`07` in any order)
 7. `docs/product/product-core-reframe.md`, `docs/research/analog-problems.md`, `docs/product/use-case-reassessment.md` - the core loop
+7b. `docs/research/transfer-learning-sota.md` - the transfer/adaptation SOTA (four method generations, 2019-2026) and the recommended pretrain-once / adapt-per-home direction; pairs with H09
+7c. `docs/research/transfer-applicability-audit.md` - reality check on 7b: which routes have runnable code, which have released weights, and which fit our problem statement (open-set, few-shot, 60 s-class, US 110 V); artifact evidence in `research-logs/nilm-transfer-sota/artifacts_audit/`
 8. `docs/datasets/experiment-data-strategy.md` - three-tier data plan + EDA usage
 9. `docs/datasets/data-collection.md` - what to download, from where, intake procedure (live checklist)
 10. `docs/datasets/parquet-foundations.md` + `docs/datasets/gold-layer.md` - the parquet foundation and gold layers, with the NILMTK cross-check evidence

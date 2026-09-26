@@ -1,0 +1,238 @@
+{
+  "query": "energyfm pretrained energy foundation model disaggregation e-Energy 2026",
+  "fetchedAt": "2026-09-26T15:49:34.019Z",
+  "aiOverview": {
+    "present": true,
+    "text": "EnergyFM\na set of pre-trained time series foundation models designed for energy meter analytics\n[ACM e-Energy 2026]\n[ACM Digital Library]\n, presented at the\nconference (The 17th ACM International Conference on Future and Sustainable Energy Systems).\n\n\nKey Details of EnergyFM\n- Backbone Architecture: Built on IBM's lightweight Tiny Time Mixers (TTM) and TSPulse architectures, making them efficient to pre-train using modest compute resources.\n[ACM Digital Library]\n- Supported Tasks: Designed for downstream applications like energy load forecasting, anomaly detection, classification, and meter analytics.\n- Performance: Demonstrates superior or comparable performance to traditional task-specific models while offering higher generalizability and versatility.\n- Open Source: The models and associated code are publicly available in the EnergyFM GitHub Repository .\n- Authors: Pandarasamy Arjunan, Naman Srivastava, Kajeeth Kumar, Arindam Jati, Vijay Ekambaram, and Pankaj Dayama (published June 2026).\nhow to fine-tune EnergyFM\nbackbone architectures (TTM/TSPulse)\nWould you like to explore\nfor a specific downstream task, or look into its\nin more detail?\n- ACM Digital Library EnergyFM: Pretrained Models for Energy Meter Data Analytics Abstract Recent advances in pre-trained Time Series Foundation Models (TSFMs) offer a promising pathway to address these limitatio...\n[EnergyFM: Pretrained Models for Energy Meter Data Analytics. Opens in new tab.]\n- ACM Digital Library EnergyFM: Pretrained Models for Energy Meter Data Analytics Page 1 This work is licensed under a Creative Commons Attribution 4.0 International License. E-Energy '26, Banff, AB, Canada © 202...\n[EnergyFM: Pretrained Models for Energy Meter Data Analytics. Opens in new tab.]",
+    "excerpt": "EnergyFM is a set of pre-trained time series foundation models designed for energy meter analytics , presented at the conference (The 17th ACM International Conference on Future and Sustainable Energy Systems). Key Details of En",
+    "sources": [
+      {
+        "name": "ACM e-Energy 2026",
+        "domain": "energy.acm.org"
+      },
+      {
+        "name": "ACM Digital Library",
+        "domain": "dl.acm.org"
+      }
+    ]
+  },
+  "results": [
+    {
+      "rank": 1,
+      "title": "Pretrained Models for Energy Meter Data Analytics ACM Digital Library",
+      "url": "https://dl.acm.org/doi/10.1145/3744255.3798119",
+      "domain": "dl.acm.org",
+      "site": "",
+      "snippet": "EnergyFM In this work, we introduce , a set of pre-trained models developed specifically for energy meter analytics. EnergyFM is built upon IBM's Tiny Time ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 2,
+      "title": "Accepted Papers - ACM e-Energy 2026 Association for Computing Machinery",
+      "url": "https://energy.acm.org/conferences/eenergy/2026/pages/accepted-papers.php",
+      "domain": "energy.acm.org",
+      "site": "",
+      "snippet": "pre-trained foundation models Recent advances in large offer a new perspective by providing ready-made knowledge learned from large-scale corpora. In this ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 3,
+      "title": "Building-Level Energy Disaggregation Using AI-Based ...",
+      "url": "https://www.mdpi.com/2673-2688/7/4/122",
+      "domain": "www.mdpi.com",
+      "site": "MDPI",
+      "snippet": "energy disaggregation by A Rubio-Bustos 2026 — This study addresses this gap by developing and evaluating multiple artificial intelligence approaches for across residential, commercial, ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 4,
+      "title": "OpenGridFM",
+      "url": "https://lfenergy.org/projects/opengridfm/",
+      "domain": "lfenergy.org",
+      "site": "LF Energy LF Energy",
+      "snippet": "foundation models Open source framework for in power grids. OpenGridFM is an open source framework to enable the emergence of for power grids. disaggregation e- Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 5,
+      "title": "Data sharing to support the training and development of AI ... ERRIN: European Regions Research and Innovation Network",
+      "url": "https://errin.eu/calls/data-sharing-support-training-and-development-ai-foundation-models-energy-sector",
+      "domain": "errin.eu",
+      "site": "",
+      "snippet": "foundation models energy Projects are expected to focus on developing, training and testing AI , using extensive data sets to accelerate the transition in key ... pretrained disaggregation Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 6,
+      "title": "Efficient Design of Energy Disaggregation Model with ...",
+      "url": "https://www.researchgate.net/publication/353593988_Efficient_Design_of_Energy_Disaggregation_Model_with_BERT-NILM_Trained_by_AdaX_Optimization_Method_for_Smart_Grid",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "energy disaggregation model Jul 16, 2021 — In this study, we first designed an efficient (ED) and evaluated it on the basis of publicly available benchmark ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 7,
+      "title": "PowerFM is an open-source repository ...",
+      "url": "https://github.com/Power-Agent/PowerFM",
+      "domain": "github.com",
+      "site": "GitHub",
+      "snippet": "PowerFM is an open-source repository for foundation models in the power and energy domain. It both maintains original projects and collects ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 8,
+      "title": "GridSFM: A new, small foundation model for the electric grid",
+      "url": "https://www.microsoft.com/en-us/research/blog/gridsfm-a-new-small-foundation-model-for-the-electric-grid/",
+      "domain": "www.microsoft.com",
+      "site": "Microsoft",
+      "snippet": "foundation models May 13, 2026 — It provides a for the community to build advanced power grid simulators and planning tools without recreating data or from ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 9,
+      "title": "1Introduction",
+      "url": "https://arxiv.org/html/2604.22328v1",
+      "domain": "arxiv.org",
+      "site": "arXiv.org",
+      "snippet": "models E energy For this purpose, we introduce the FETS (Foundation for nergy Time Series) benchmark, comprising a diverse set of -related data as well as ... disaggregation Missing: ‎| Show results with:",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 10,
+      "title": "E-ENERGY 2026 CFP & Deadlines — The 17th ACM ...",
+      "url": "https://conf.bd/conf/e-energy-the-17th-acm-international-conference-on-future-and-sustainable-energy-syste-acm-107",
+      "domain": "conf.bd",
+      "site": "conf.bd",
+      "snippet": "E-ENERGY 2026 Energy — The 17th ACM International Conference on Future and Sustainable Systems | Jun 22–25, TBA, Worldwide | CFP & Deadlines. pretrained disaggregation Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 11,
+      "title": "ENERGY-BASED TRANSFORMERS ARE SCALABLE ...",
+      "url": "https://proceedings.iclr.cc/paper_files/paper/2026/file/e19a65fd53b6f9a88b354da98813465d-Paper-Conference.pdf",
+      "domain": "proceedings.iclr.cc",
+      "site": "ICLR Proceedings",
+      "snippet": "PDF pretraining by A Gladstone 2026 Cited by 21 — We observe two key effects: (1) EBTs often outperform baselines at inference even with worse performance, demonstrating the importance of System 2 ... disaggregation Missing: ‎| Show results with:",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 12,
+      "title": "A Foundation Model for the electric grid (GridFM) NYU Tandon School of",
+      "url": "https://engineering.nyu.edu/events/2026/08/06/foundation-model-electric-grid-gridfm",
+      "domain": "engineering.nyu.edu",
+      "site": "Engineering",
+      "snippet": "Foundation Model pre-trained Aug 6, 2026 — In this presentation, we will introduce a (non-text) based for the electric grid (GridFM), which was on power flow ... Energy e-Energy 2026 The 17th ACM International Conference on Future and Sustainable Systems (ACM ) and its co-located tutorials and workshops will be held as ... pretrained foundation disaggregation Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 13,
+      "title": "ACM e-Energy 2026 - Fall Deadline",
+      "url": "https://eenergy26fall.hotcrp.com",
+      "domain": "eenergy26fall.hotcrp.com",
+      "site": "HotCRP.com",
+      "snippet": "Energy e-Energy 2026 Welcome to the The 17th ACM International Conference on Future and Sustainable Systems (ACM ) (ACM - Fall Deadline) ...",
+      "sitelinks": [],
+      "kind": "web"
+    },
+    {
+      "rank": 14,
+      "title": "(PDF) A twenty-year dataset of hourly energy generation ...",
+      "url": "https://www.researchgate.net/publication/387226651_A_twenty-year_dataset_of_hourly_energy_generation_and_consumption_from_district_campus_building_energy_systems",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "Dec 5, 2024 — The dataset includes supply-side data such as gas consumption from combined heating and power (CHP) units (fuel cell, gas engine), absorption ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 15,
+      "title": "Energy-Based Models: Representation, Inference, and ...",
+      "url": "https://energy-based-model.github.io",
+      "domain": "energy-based-model.github.io",
+      "site": "GitHub",
+      "snippet": "Energy Model energy An -Based (EBM) evaluates a proposed output for a given input and returns a single number, called its . Lower indicates a better fit to ... disaggregation 2026 Missing: ‎",
+      "sitelinks": [],
+      "kind": "web"
+    },
+    {
+      "rank": 16,
+      "title": "ACM e-Energy 2026 Tutorials Association for Computing Machinery",
+      "url": "https://energy.acm.org/conferences/eenergy/2026/pages/tutorials.php",
+      "domain": "energy.acm.org",
+      "site": "",
+      "snippet": "e-Energy 2026 Jun 22, 2026 — ACM SIGEnergy Conference - The 17th ACM International Conference on Future and Sustainable Systems. pretrained disaggregation Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 17,
+      "title": "Metadata for Energy Disaggregation",
+      "url": "https://www.opentrain.ai/papers/metadata-for-energy-disaggregation--arxiv-1403.5946/",
+      "domain": "www.opentrain.ai",
+      "site": "OpenTrain AI",
+      "snippet": "Energy Disaggregation Mar 1, 2014 — Find implementation resources, reproducibility signals, and linked technical artifacts for Metadata for .",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    }
+  ],
+  "resultCount": 17,
+  "peopleAlsoAsk": [],
+  "peopleAlsoSearchFor": [],
+  "relatedSearches": [],
+  "pagination": {
+    "pagesFetched": 2,
+    "hasMore": true
+  },
+  "notes": [
+    "Snippets are reconstructed from the accessibility tree; inline bold-query emphasis may reorder text.",
+    "Some inline URLs inside snippets have no accessible text and are omitted."
+  ],
+  "pages": [
+    {
+      "start": 0,
+      "rawChars": 16507,
+      "resultsOnPage": 9,
+      "hrefsUpgraded": 8,
+      "hasMore": true
+    },
+    {
+      "start": 10,
+      "rawChars": 10422,
+      "resultsOnPage": 9,
+      "hrefsUpgraded": 6,
+      "hasMore": true
+    }
+  ],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/google_search/energyfm-pretrained-energy-foundation-model-disa-20260926.json",
+    "bytes": 12137
+  }
+}

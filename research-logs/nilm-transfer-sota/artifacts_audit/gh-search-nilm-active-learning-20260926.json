@@ -1,0 +1,69 @@
+{
+  "query": "NILM active learning",
+  "results": [
+    {
+      "fullName": "UCA-Datalab/nilm-thresholding",
+      "owner": "UCA-Datalab",
+      "name": "nilm-thresholding",
+      "description": ":warning: This repository is no longer actively maintained. It previously dealt with Non-Intrusive Load Monitoring (NILM), focusing on predicting household appliance status from aggregated power load data. We explored different thresholding methods and evaluated deep learning models for regression and classification tasks.",
+      "stars": 40,
+      "forks": 6,
+      "watchers": 40,
+      "openIssues": 9,
+      "language": "Python",
+      "topics": [
+        "convolutional-neural-networks",
+        "deep-learning",
+        "domestic-appliances",
+        "gru",
+        "monitoring",
+        "neural-network",
+        "nilm",
+        "nilm-algorithms",
+        "pytorch",
+        "recurrent-neural-networks",
+        "tensorflow",
+        "thresholding",
+        "thresholding-methods"
+      ],
+      "license": null,
+      "archived": false,
+      "defaultBranch": "master",
+      "homepage": "https://doi.org/10.1007/s11227-023-05149-8",
+      "createdAt": "2020-04-29T14:54:25Z",
+      "pushedAt": "2023-09-14T09:33:37Z",
+      "url": "https://github.com/UCA-Datalab/nilm-thresholding"
+    },
+    {
+      "fullName": "GiuTan/WeaklySupervisedActiveLearning-for-NILM",
+      "owner": "GiuTan",
+      "name": "WeaklySupervisedActiveLearning-for-NILM",
+      "description": "",
+      "stars": 0,
+      "forks": 0,
+      "watchers": 0,
+      "openIssues": 0,
+      "language": "Python",
+      "topics": [],
+      "license": null,
+      "archived": false,
+      "defaultBranch": "main",
+      "homepage": null,
+      "createdAt": "2023-12-01T15:35:14Z",
+      "pushedAt": "2023-12-12T10:59:26Z",
+      "url": "https://github.com/GiuTan/WeaklySupervisedActiveLearning-for-NILM"
+    }
+  ],
+  "resultCount": 2,
+  "total": 2,
+  "pagination": {
+    "pagesFetched": 1,
+    "hasMore": false
+  },
+  "rateLeft": 7,
+  "notes": [],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/artifacts_audit/gh-search-nilm-active-learning-20260926.json",
+    "bytes": 2019
+  }
+}

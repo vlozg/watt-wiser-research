@@ -1,0 +1,19 @@
+{
+  "query": "abs:\"energy disaggregation\" AND abs:\"domain adaptation\"",
+  "sortBy": "submittedDate",
+  "sortOrder": "descending",
+  "results": [],
+  "resultCount": 0,
+  "totalResults": 0,
+  "pagination": {
+    "pagesFetched": 1,
+    "hasMore": false
+  },
+  "notes": [
+    "no hits - check field prefixes (ti:/au:/abs:/cat:), or loosen the query"
+  ],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/arxiv/arxiv-abs-energy-disaggregation-and-abs-domain-adaptat-20260926.json",
+    "bytes": 355
+  }
+}

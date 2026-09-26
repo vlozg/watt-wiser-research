@@ -1,0 +1,137 @@
+{
+  "query": "ti:\"non-intrusive load monitoring\" AND all:\"unseen\"",
+  "sortBy": "relevance",
+  "sortOrder": "descending",
+  "results": [
+    {
+      "arxivId": "1912.06200",
+      "version": "1",
+      "title": "On Metrics to Assess the Transferability of Machine Learning Models in Non-Intrusive Load Monitoring",
+      "authors": [
+        "Christoph Klemenjak",
+        "Anthony Faustine",
+        "Stephen Makonin",
+        "Wilfried Elmenreich"
+      ],
+      "summary": "To assess the performance of load disaggregation algorithms it is common practise to train a candidate algorithm on data from one or multiple households and subsequently apply cross-validation by evaluating the classification and energy estimation performance on unseen portions of the dataset derived from the same households. With an emerging discussion of transferability in Non-Intrusive Load Monitoring (NILM), there is a need for domain-specific metrics to assess the performance of NILM algorithms on new test scenarios being unseen buildings. In this paper, we discuss several metrics to assess the generalisation ability of NILM algorithms. These metrics target different aspects of performance evaluation in NILM and are meant to complement the traditional performance evaluation approach. We demonstrate how our metrics can be utilised to evaluate NILM algorithms by means of two case studies. We conduct our studies on several energy consumption datasets and take into consideration five state-of-the-art as well as four baseline NILM solutions. Finally, we formulate research challenges for future work.",
+      "primaryCategory": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "stat.ML"
+      ],
+      "published": "2019-12-12T20:43:06Z",
+      "updated": "2019-12-12T20:43:06Z",
+      "absUrl": "https://arxiv.org/abs/1912.06200v1",
+      "pdfUrl": "https://arxiv.org/pdf/1912.06200v1",
+      "doi": null,
+      "comment": null,
+      "journalRef": null
+    },
+    {
+      "arxivId": "2302.05565",
+      "version": "1",
+      "title": "MSDC: Exploiting Multi-State Power Consumption in Non-intrusive Load Monitoring based on A Dual-CNN Model",
+      "authors": [
+        "Jialing He",
+        "Jiamou Liu",
+        "Zijian Zhang",
+        "Yang Chen",
+        "Yiwei Liu",
+        "Bakh Khoussainov",
+        "Liehuang Zhu"
+      ],
+      "summary": "Non-intrusive load monitoring (NILM) aims to decompose aggregated electrical usage signal into appliance-specific power consumption and it amounts to a classical example of blind source separation tasks. Leveraging recent progress on deep learning techniques, we design a new neural NILM model Multi-State Dual CNN (MSDC). Different from previous models, MSDC explicitly extracts information about the appliance's multiple states and state transitions, which in turn regulates the prediction of signals for appliances. More specifically, we employ a dual-CNN architecture: one CNN for outputting state distributions and the other for predicting the power of each state. A new technique is invented that utilizes conditional random fields (CRF) to capture state transitions. Experiments on two real-world datasets REDD and UK-DALE demonstrate that our model significantly outperform state-of-the-art models while having good generalization capacity, achieving 6%-10% MAE gain and 33%-51% SAE gain to unseen appliances.",
+      "primaryCategory": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2023-02-11T01:56:54Z",
+      "updated": "2023-02-11T01:56:54Z",
+      "absUrl": "https://arxiv.org/abs/2302.05565v1",
+      "pdfUrl": "https://arxiv.org/pdf/2302.05565v1",
+      "doi": null,
+      "comment": null,
+      "journalRef": null
+    },
+    {
+      "arxivId": "2609.18315",
+      "version": "1",
+      "title": "Multi-Appliance Non-Intrusive Load Monitoring via Label-Preserving Aggregate Recomposition and Prediction Consistency",
+      "authors": [
+        "Jiangfeng Liu",
+        "Yanfang Fan"
+      ],
+      "summary": "Non-intrusive load monitoring (NILM) estimates appliance power sequences from aggregate power, but models trained on source households commonly lose accuracy in unseen households. Aggregate power also contains loads from other appliances and measurement error, so predictions may depend on the residual background that co-occurs with source-household targets. Time-aligned submetered measurements and the additive decomposition of aggregate power expose a relation unused by window-wise supervision: an aggregate window can be recomposed by replacing only its residual background while preserving all modeled target-appliance power sequences pointwise. We combine label-preserving aggregate recomposition with prediction consistency. Both windows receive complete power and operating-state supervision. For each appliance, disagreement between the two power predictions is penalized only when both satisfy a fixed reliability criterion and only to the extent that it exceeds a fixed margin. The proposed method is implemented using a multi-appliance architecture with two-stage shared-to-specific mixture-of-experts routing. On REDD, UK-DALE, and REFIT, the proposed method lowers appliance-averaged mean absolute error relative to single-window training from 14.75 to 13.14 W, from 8.88 to 8.51 W, and from 15.83 to 14.55 W. Label-preserving aggregate recomposition and prediction consistency are used only during training, and add no inference-time module or parameter.",
+      "primaryCategory": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-09-16T08:35:42Z",
+      "updated": "2026-09-16T08:35:42Z",
+      "absUrl": "https://arxiv.org/abs/2609.18315v1",
+      "pdfUrl": "https://arxiv.org/pdf/2609.18315v1",
+      "doi": null,
+      "comment": null,
+      "journalRef": null
+    },
+    {
+      "arxivId": "2210.04176",
+      "version": "1",
+      "title": "Non-intrusive Load Monitoring based on Self-supervised Learning",
+      "authors": [
+        "Shuyi Chen",
+        "Bochao Zhao",
+        "Mingjun Zhong",
+        "Wenpeng Luan",
+        "Yixin Yu"
+      ],
+      "summary": "Deep learning models for non-intrusive load monitoring (NILM) tend to require a large amount of labeled data for training. However, it is difficult to generalize the trained models to unseen sites due to different load characteristics and operating patterns of appliances between data sets. For addressing such problems, self-supervised learning (SSL) is proposed in this paper, where labeled appliance-level data from the target data set or house is not required. Initially, only the aggregate power readings from target data set are required to pre-train a general network via a self-supervised pretext task to map aggregate power sequences to derived representatives. Then, supervised downstream tasks are carried out for each appliance category to fine-tune the pre-trained network, where the features learned in the pretext task are transferred. Utilizing labeled source data sets enables the downstream tasks to learn how each load is disaggregated, by mapping the aggregate to labels. Finally, the fine-tuned network is applied to load disaggregation for the target sites. For validation, multiple experimental cases are designed based on three publicly accessible REDD, UK-DALE, and REFIT data sets. Besides, state-of-the-art neural networks are employed to perform NILM task in the experiments. Based on the NILM results in various cases, SSL generally outperforms zero-shot learning in improving load disaggregation performance without any sub-metering data from the target data sets.",
+      "primaryCategory": "eess.SP",
+      "categories": [
+        "eess.SP"
+      ],
+      "published": "2022-10-09T06:00:01Z",
+      "updated": "2022-10-09T06:00:01Z",
+      "absUrl": "https://arxiv.org/abs/2210.04176v1",
+      "pdfUrl": "https://arxiv.org/pdf/2210.04176v1",
+      "doi": null,
+      "comment": "12 pages,10 figures",
+      "journalRef": null
+    },
+    {
+      "arxivId": "2009.07756",
+      "version": "1",
+      "title": "Exploring Bayesian Surprise to Prevent Overfitting and to Predict Model Performance in Non-Intrusive Load Monitoring",
+      "authors": [
+        "Richard Jones",
+        "Christoph Klemenjak",
+        "Stephen Makonin",
+        "Ivan V. Bajic"
+      ],
+      "summary": "Non-Intrusive Load Monitoring (NILM) is a field of research focused on segregating constituent electrical loads in a system based only on their aggregated signal. Significant computational resources and research time are spent training models, often using as much data as possible, perhaps driven by the preconception that more data equates to more accurate models and better performing algorithms. When has enough prior training been done? When has a NILM algorithm encountered new, unseen data? This work applies the notion of Bayesian surprise to answer these questions which are important for both supervised and unsupervised algorithms. We quantify the degree of surprise between the predictive distribution (termed postdictive surprise), as well as the transitional probabilities (termed transitional surprise), before and after a window of observations. We compare the performance of several benchmark NILM algorithms supported by NILMTK, in order to establish a useful threshold on the two combined measures of surprise. We validate the use of transitional surprise by exploring the performance of a popular Hidden Markov Model as a function of surprise threshold. Finally, we explore the use of a surprise threshold as a regularization technique to avoid overfitting in cross-dataset performance. Although the generality of the specific surprise threshold discussed herein may be suspect without further testing, this work provides clear evidence that a point of diminishing returns of model performance with respect to dataset size exists. This has implications for future model development, dataset acquisition, as well as aiding in model flexibility during deployment.",
+      "primaryCategory": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "eess.SP"
+      ],
+      "published": "2020-09-16T15:39:08Z",
+      "updated": "2020-09-16T15:39:08Z",
+      "absUrl": "https://arxiv.org/abs/2009.07756v1",
+      "pdfUrl": "https://arxiv.org/pdf/2009.07756v1",
+      "doi": null,
+      "comment": null,
+      "journalRef": null
+    }
+  ],
+  "resultCount": 5,
+  "totalResults": 5,
+  "pagination": {
+    "pagesFetched": 1,
+    "hasMore": false
+  },
+  "notes": [],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/arxiv/arxiv-ti-non-intrusive-load-monitoring-and-all-unseen-20260926.json",
+    "bytes": 10520
+  }
+}

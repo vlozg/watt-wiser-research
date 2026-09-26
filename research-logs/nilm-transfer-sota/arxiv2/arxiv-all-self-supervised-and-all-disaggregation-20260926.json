@@ -1,0 +1,65 @@
+{
+  "query": "all:\"self-supervised\" AND all:disaggregation",
+  "sortBy": "submittedDate",
+  "sortOrder": "descending",
+  "results": [
+    {
+      "arxivId": "2404.08175",
+      "version": "1",
+      "title": "A Novel Vision Transformer based Load Profile Analysis using Load Images as Inputs",
+      "authors": [
+        "Hyeonjin Kim",
+        "Yi Hu",
+        "Kai Ye",
+        "Ning Lu"
+      ],
+      "summary": "This paper introduces ViT4LPA, an innovative Vision Transformer (ViT) based approach for Load Profile Analysis (LPA). We transform time-series load profiles into load images. This allows us to leverage the ViT architecture, originally designed for image processing, as a pre-trained image encoder to uncover latent patterns within load data. ViT is pre-trained using an extensive load image dataset, comprising 1M load images derived from smart meter data collected over a two-year period from 2,000 residential users. The training methodology is self-supervised, masked image modeling, wherein masked load images are restored to reveal hidden relationships among image patches. The pre-trained ViT encoder is then applied to various downstream tasks, including the identification of electric vehicle (EV) charging loads and behind-the-meter solar photovoltaic (PV) systems and load disaggregation. Simulation results illustrate ViT4LPA's superior performance compared to existing neural network models in downstream tasks. Additionally, we conduct an in-depth analysis of the attention weights within the ViT4LPA model to gain insights into its information flow mechanisms.",
+      "primaryCategory": "eess.SY",
+      "categories": [
+        "eess.SY"
+      ],
+      "published": "2024-04-12T00:44:15Z",
+      "updated": "2024-04-12T00:44:15Z",
+      "absUrl": "https://arxiv.org/abs/2404.08175v1",
+      "pdfUrl": "https://arxiv.org/pdf/2404.08175v1",
+      "doi": null,
+      "comment": null,
+      "journalRef": null
+    },
+    {
+      "arxivId": "2210.04176",
+      "version": "1",
+      "title": "Non-intrusive Load Monitoring based on Self-supervised Learning",
+      "authors": [
+        "Shuyi Chen",
+        "Bochao Zhao",
+        "Mingjun Zhong",
+        "Wenpeng Luan",
+        "Yixin Yu"
+      ],
+      "summary": "Deep learning models for non-intrusive load monitoring (NILM) tend to require a large amount of labeled data for training. However, it is difficult to generalize the trained models to unseen sites due to different load characteristics and operating patterns of appliances between data sets. For addressing such problems, self-supervised learning (SSL) is proposed in this paper, where labeled appliance-level data from the target data set or house is not required. Initially, only the aggregate power readings from target data set are required to pre-train a general network via a self-supervised pretext task to map aggregate power sequences to derived representatives. Then, supervised downstream tasks are carried out for each appliance category to fine-tune the pre-trained network, where the features learned in the pretext task are transferred. Utilizing labeled source data sets enables the downstream tasks to learn how each load is disaggregated, by mapping the aggregate to labels. Finally, the fine-tuned network is applied to load disaggregation for the target sites. For validation, multiple experimental cases are designed based on three publicly accessible REDD, UK-DALE, and REFIT data sets. Besides, state-of-the-art neural networks are employed to perform NILM task in the experiments. Based on the NILM results in various cases, SSL generally outperforms zero-shot learning in improving load disaggregation performance without any sub-metering data from the target data sets.",
+      "primaryCategory": "eess.SP",
+      "categories": [
+        "eess.SP"
+      ],
+      "published": "2022-10-09T06:00:01Z",
+      "updated": "2022-10-09T06:00:01Z",
+      "absUrl": "https://arxiv.org/abs/2210.04176v1",
+      "pdfUrl": "https://arxiv.org/pdf/2210.04176v1",
+      "doi": null,
+      "comment": "12 pages,10 figures",
+      "journalRef": null
+    }
+  ],
+  "resultCount": 2,
+  "totalResults": 2,
+  "pagination": {
+    "pagesFetched": 1,
+    "hasMore": false
+  },
+  "notes": [],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/arxiv2/arxiv-all-self-supervised-and-all-disaggregation-20260926.json",
+    "bytes": 4239
+  }
+}

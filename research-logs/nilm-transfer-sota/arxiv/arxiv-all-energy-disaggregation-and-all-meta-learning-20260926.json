@@ -1,0 +1,40 @@
+{
+  "query": "all:\"energy disaggregation\" AND all:\"meta learning\"",
+  "sortBy": "relevance",
+  "sortOrder": "descending",
+  "results": [
+    {
+      "arxivId": "2204.06767",
+      "version": "2",
+      "title": "Learning Task-Aware Energy Disaggregation: a Federated Approach",
+      "authors": [
+        "Ruohong Liu",
+        "Yize Chen"
+      ],
+      "summary": "We consider the problem of learning the energy disaggregation signals for residential load data. Such task is referred as non-intrusive load monitoring (NILM), and in order to find individual devices' power consumption profiles based on aggregated meter measurements, a machine learning model is usually trained based on large amount of training data coming from a number of residential homes. Yet collecting such residential load datasets require both huge efforts and customers' approval on sharing metering data, while load data coming from different regions or electricity users may exhibit heterogeneous usage patterns. Both practical concerns make training a single, centralized NILM model challenging. In this paper, we propose a decentralized and task-adaptive learning scheme for NILM tasks, where nested meta learning and federated learning steps are designed for learning task-specific models collectively. Simulation results on benchmark dataset validate proposed algorithm's performance on efficiently inferring appliance-level consumption for a variety of homes and appliances.",
+      "primaryCategory": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "eess.SY"
+      ],
+      "published": "2022-04-14T05:53:41Z",
+      "updated": "2022-11-27T06:01:16Z",
+      "absUrl": "https://arxiv.org/abs/2204.06767v2",
+      "pdfUrl": "https://arxiv.org/pdf/2204.06767v2",
+      "doi": null,
+      "comment": "Accepted to conference on decision and control (CDC) 2022, code is available at (github link: https://github.com/RuohLiuq/FedMeta.git.)",
+      "journalRef": null
+    }
+  ],
+  "resultCount": 1,
+  "totalResults": 1,
+  "pagination": {
+    "pagesFetched": 1,
+    "hasMore": false
+  },
+  "notes": [],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/arxiv/arxiv-all-energy-disaggregation-and-all-meta-learning-20260926.json",
+    "bytes": 2091
+  }
+}

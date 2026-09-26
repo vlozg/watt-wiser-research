@@ -1,0 +1,41 @@
+{
+  "query": "all:\"energy disaggregation\" AND all:\"synthetic data\"",
+  "sortBy": "relevance",
+  "sortOrder": "descending",
+  "results": [
+    {
+      "arxivId": "1312.5023",
+      "version": "1",
+      "title": "Contextually Supervised Source Separation with Application to Energy Disaggregation",
+      "authors": [
+        "Matt Wytock",
+        "J. Zico Kolter"
+      ],
+      "summary": "We propose a new framework for single-channel source separation that lies between the fully supervised and unsupervised setting. Instead of supervision, we provide input features for each source signal and use convex methods to estimate the correlations between these features and the unobserved signal decomposition. We analyze the case of $\\ell_2$ loss theoretically and show that recovery of the signal components depends only on cross-correlation between features for different signals, not on correlations between features for the same signal. Contextually supervised source separation is a natural fit for domains with large amounts of data but no explicit supervision; our motivating application is energy disaggregation of hourly smart meter data (the separation of whole-home power signals into different energy uses). Here we apply contextual supervision to disaggregate the energy usage of thousands homes over four years, a significantly larger scale than previously published efforts, and demonstrate on synthetic data that our method outperforms the unsupervised approach.",
+      "primaryCategory": "stat.ML",
+      "categories": [
+        "stat.ML",
+        "cs.LG",
+        "math.OC"
+      ],
+      "published": "2013-12-18T02:21:01Z",
+      "updated": "2013-12-18T02:21:01Z",
+      "absUrl": "https://arxiv.org/abs/1312.5023v1",
+      "pdfUrl": "https://arxiv.org/pdf/1312.5023v1",
+      "doi": null,
+      "comment": null,
+      "journalRef": null
+    }
+  ],
+  "resultCount": 1,
+  "totalResults": 1,
+  "pagination": {
+    "pagesFetched": 1,
+    "hasMore": false
+  },
+  "notes": [],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/arxiv/arxiv-all-energy-disaggregation-and-all-synthetic-data-20260926.json",
+    "bytes": 1998
+  }
+}

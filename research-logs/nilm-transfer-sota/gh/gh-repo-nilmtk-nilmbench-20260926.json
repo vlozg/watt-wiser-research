@@ -1,0 +1,25 @@
+{
+  "repo": "nilmtk/nilmbench",
+  "fullName": "nilmtk/nilmbench",
+  "owner": "nilmtk",
+  "name": "nilmbench",
+  "description": "",
+  "stars": 2,
+  "forks": 0,
+  "watchers": 0,
+  "openIssues": 0,
+  "language": "HTML",
+  "topics": [],
+  "license": null,
+  "archived": false,
+  "defaultBranch": "main",
+  "homepage": "https://nilmtk.github.io/nilmbench/",
+  "createdAt": "2026-06-15T05:35:15Z",
+  "pushedAt": "2026-07-20T16:04:18Z",
+  "url": "https://github.com/nilmtk/nilmbench",
+  "rateLeft": 59,
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/gh/gh-repo-nilmtk-nilmbench-20260926.json",
+    "bytes": 496
+  }
+}

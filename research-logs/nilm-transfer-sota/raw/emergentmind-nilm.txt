@@ -1,0 +1,273 @@
+ 
+ Non-Intrusive Load Monitoring (NILM) 
+ Papers 
+ Open Problems 
+ Labs 
+ API 
+ Agent Skills 
+ Pricing 
+ Log in 
+ Sign up 
+ Papers 
+ Open Problems 
+ Labs 
+ API 
+ Pricing 
+ Log in 
+ Sign up 
+ Agent Skills 
+ 0 }"
+ @focus="focused = true"
+ @click="focused = true; clicked = true; handleQueryChange()"
+ @click.away="clicked = false"
+ @keydown="focused = true"
+ @keydown.escape="setQuery(''); focused = false; clicked = false"
+ @input.debounce.100ms="handleQueryChange();"
+ @input="if ($event.target.value === '') { setQuery('') }"
+ @keyup="if ($event.target.value === '') { setQuery('') }"
+ @keydown.enter.prevent="if (!$event.shiftKey) { $refs.search_form.submit() } else { handleShiftEnter($event) }"
+ maxlength="2000"
+ >Non-Intrusive Load Monitoring (NILM) 
+ 0" class="autocomplete-section-title">Papers 
+ 0" x-text="`${addCommas(result.metric)} ${result.metric === 1 ? 'citation' : 'citations'}`"> 
+ 0" class="autocomplete-section-title">Topics 
+ 0" class="autocomplete-section-title">Authors 
+ 0" class="autocomplete-section-title flex items-center justify-between pr-4">
+ Recent 
+ View all 
+ Search
+ 2000 character limit reached
+ Chrome Extension
+ Install our Chrome Extension to automatically enhance arXiv.
+ Sponsor
+ Promote your business to millions of monthly visitors.
+ Non-Intrusive Load Monitoring (NILM)
+ Updated 23 February 2026
+ Non-Intrusive Load Monitoring (NILM) is a technique that disaggregates a building’s aggregate power signal into individual appliance usage profiles by solving a single-channel blind source separation problem. 
+ It employs methodologies such as event-based detection, combinatorial optimization, and deep learning architectures to extract appliance-level state information from aggregate power data. 
+ Recent advances focus on hybrid CNN–LSTM networks, feature engineering across different sampling rates, and federated learning approaches to improve scalability, accuracy, and privacy. 
+ Non-Intrusive Load Monitoring (NILM) is the process of disaggregating the total electricity consumption of a building—measured at a single point—into the constituent loads of individual appliances, thereby obviating the need for appliance-level submetering. NILM is formalized as a single-input blind source separation problem: given only the household aggregate power time series, one seeks to recover the power usage profiles or operational states (e.g., on/off, multi-state) of each appliance, up to noise and unmodeled loads. This methodology enables scalable, cost-effective monitoring and drives applications in demand response, consumer feedback, grid optimization, and energy efficiency ( Liu et al., 2024 , Faustine et al., 2017 , Klemenjak et al., 2016 ). 
+ 1. Mathematical Foundations and Problem Formulation 
+ The canonical NILM model is 
+ x ( t ) = ∑ i = 1 N s i ( t ) y i ( t ) + ε ( t ) x(t) = \sum_{i=1}^N s_i(t) y_i(t) + \varepsilon(t) x ( t ) = ∑ i = 1 N ​ s i ​ ( t ) y i ​ ( t ) + ε ( t ) 
+ where x ( t ) x(t) x ( t ) is total aggregate power at time t t t , y i ( t ) y_i(t) y i ​ ( t ) is the steady-state signature of appliance i i i , s i ( t ) ∈ { 0 , 1 } s_i(t) \in \{0,1\} s i ​ ( t ) ∈ { 0 , 1 } is its state (ON/OFF or multi-state), and ε ( t ) \varepsilon(t) ε ( t ) models noise and unknown loads. The goal is to estimate { y i ( t ) } \{y_i(t)\} { y i ​ ( t )} , or equivalently, the on/off or state vectors { s i ( t ) } \{s_i(t)\} { s i ​ ( t )} , given only { x ( t ) } \{x(t)\} { x ( t )} ( Liu et al., 2024 , Klemenjak et al., 2016 , Faustine et al., 2017 ). 
+ Alternative formulations model the aggregate as 
+ x ( t ) x(t) x ( t ) 0 
+ with x ( t ) x(t) x ( t ) 1 collecting unknown or untracked loads and x ( t ) x(t) x ( t ) 2 the measurement noise ( Xiong et al., 2023 ). 
+ NILM is inherently an ill-posed, single-channel blind source separation problem, necessitating additional structure (e.g., appliance models, priors, statistical learning) for tractable decomposition ( Zhang et al., 2021 ). 
+ 2. Algorithmic Approaches: Taxonomy and Architectures 
+ NILM algorithms are distinguished along several orthogonal axes: 
+ A. Signal Model: Event-Based vs. Steady-State 
+ Event-Based Approaches: Detect step-changes (edges) in the aggregate signal and classify them into appliance events using extracted features such as step magnitude, timing, and transient shape ( Faustine et al., 2017 , Azizi et al., 2020 , Lu et al., 2019 ). 
+ Steady-State Approaches: Model appliances by their quasi-stationary signatures (active/reactive power, V/I, harmonics) and reconstruct load assignments continuously ( Klemenjak et al., 2016 , Liu et al., 2024 ). 
+ B. Inference Strategy: Optimization, Machine Learning, Deep Learning 
+ Combinatorial Optimization (CO): Minimizes instantaneous error between aggregate and candidate appliance state combinations, often as a knapsack or set-cover problem ( Liu et al., 2024 , Batra et al., 2014 ). 
+ Factorial (Hidden) Markov Models (FHMMs): Model each appliance as a Markov chain; the joint state space is explored (often approximately) to infer appliance sequences ( Klemenjak et al., 2016 , Faustine et al., 2017 ). 
+ Classical Machine Learning: Supervised classifiers (SVM, KNN, random forests) or unsupervised clustering on edge features ( Faustine et al., 2017 , Khan et al., 2019 , Keramati et al., 2021 ). 
+ Deep Learning: CNNs, RNNs (LSTM, GRU), hybrid DNNs, autoencoders, and attention models learn end-to-end mappings from sliding aggregate windows to appliance-level outputs, using regression or classification objectives ( Wang et al., 2023 , Shin et al., 2018 , Naderian, 2021 , Zhang et al., 2021 , 2311.00000, Xiong et al., 2023 ). 
+ Modern deep learning architectures achieve state-of-the-art accuracy. For example, a hybrid CNN–LSTM network trained in sequence-to-sequence mode on 8s REFIT data achieved 95.93% accuracy and 80.93% F1-score (overall) over five appliances, with a parameter count of only 1.2M ( Naderian, 2021 ). 
+ 3. Feature Engineering and Data Requirements 
+ NILM relies on various features, depending on sampling rate and appliance characteristics: 
+ Low-Frequency (≈1 Hz): Active power, reactive power, voltage, current, power factor, steady-state and transient step magnitudes. 
+ High-Frequency (kHz–MHz): V–I trajectories, harmonics, electromagnetic interference, startup/stopwaveforms, and envelope shapes ( Toirov et al., 7 Jun 2025 , Liu et al., 2024 ). 
+ Contextual/Auxiliary: Weather, occupancy, time-of-day, and, for multi-modal NILM, signals such as coincidental water or gas consumption ( Keramati et al., 2021 ). 
+ Labeling requirements vary: 
+ Supervised methods need appliance-level time-aligned ground-truth for training. 
+ Event-only approaches require only switch-timing labels. 
+ Blind source separation/unsupervised approaches use only aggregate signal data ( Liu et al., 2024 , Faustine et al., 2017 ). 
+ 4. Benchmark Datasets and Evaluation Metrics 
+ Comprehensive public datasets underpin NILM research. Major datasets include: 
+ Dataset 
+ Houses 
+ Duration 
+ Sampling 
+ Channels 
+ REDD 
+ 6 
+ 2–4 weeks 
+ 15 kHz (agg), 3 s (appl) 
+ P, V, I 
+ UK-DALE 
+ 5 
+ 655 days 
+ 16 kHz (agg), 6 s (appl) 
+ P, Q, V, I, S 
+ REFIT 
+ 20 
+ 18 months 
+ 8 s 
+ P 
+ AMPds 
+ 1 
+ 2 years 
+ 1 min 
+ 21 appliances, 2 water, 2 gas 
+ Performance is measured using ( Liu et al., 2024 , Azad et al., 2023 ): 
+ Classification: Precision, Recall , F1-score (event/state detection) 
+ Regression: Mean Absolute Error ( MAE ), Root Mean Square Error (RMSE), Signal Aggregate Error (SAE), Fraction of Total Energy Correctly Assigned (FTE), FECA. 
+ For example, in ( Naderian, 2021 ) the LSTM–CNN hybrid achieved per-appliance F1 between 47.62% (microwave) to 96.16% (washing machine), and outperformed both earlier FHMM and pure CNN models at comparable or lower parameter counts. 
+ 5. Cutting-Edge Developments and Model Design A. Deep Learning and Model Innovations 
+ Recent advances blend convolutional and recurrent elements to exploit both short-term motifs and long-range dependencies (hybrid CNN–LSTM, dual-DNN) ( Naderian, 2021 , Zhang et al., 2021 ). Subtask-gated networks (SGN) combine parallel regression and on/off classification branches, applying gating to enforce physical interpretability and reduce spurious leakage in regression outputs ( Shin et al., 2018 ). 
+ Sparse evolutionary training (SET) prunes and regrows neural connections, achieving up to 20× parameter reduction with negligible loss in accuracy and substantial speedup in both CNN and DNN models ( Wang et al., 2023 ). 
+ Continual learning and self-supervised feature pretraining address the challenge of domain adaptation and catastrophic forgetting in rapidly-evolving load environments ( Toirov et al., 7 Jun 2025 ). 
+ B. Event-Driven and Hybrid Models 
+ Event-based algorithms with robust filtering, statistical or hybrid detectors can operate at both high and low sampling rates, leveraging outlier statistics, derivative analysis, and context-aware profile matching to achieve high recall (>94%) and nearly zero false positive rates across residential load types ( Lu et al., 2019 , Azizi et al., 2020 ). 
+ Unsupervised models such as Universal NILM (UNILM) use advanced filter pipelines, Gaussian step models, probabilistic knapsack assignment, and region-invariant partition labeling to achieve over 93% aggregate energy recovery on unseen data, without submetered training ( Rodriguez-Silva et al., 2019 ). 
+ 6. Privacy, Scalability, and Practical Deployment 
+ The adoption of federated learning aligns NILM with privacy and regulatory demands ( Wang et al., 2021 , Wang et al., 2021 ). In federated scenarios, local models are trained on-site with only model weights exchanged—never raw load data. Weighted averaging (FedAvg) yields a global model that closely matches centralized baselines while obviating privacy risks. Empirically, federated NILM often achieves F1-scores within 1–3% of fully centralized models across multiple appliances, with communication cost scaling linearly in client count and model size. 
+ Federated approaches such as Fed-NILM have demonstrated per-appliance MAE and F1-score improvements of up to 70% over purely local training, and near parity with centralized training on REFIT and industrial datasets ( Wang et al., 2021 ). Practical considerations include balanced communication costs, client asynchrony, and extensions for differential privacy, which remain open research topics. 
+ Scalability and real-time deployment at the edge are enabled by lightweight models and efficient windowing strategies. For example, a CNN–LSTM cascade with 70K parameters achieves real-time disaggregation at 1-minute sampling on embedded hardware (ESP32), outperforming heavier baselines ( Aghera et al., 2021 ). 
+ 7. Limitations, Open Problems, and Future Directions 
+ Current challenges include: 
+ Generalization: Most models are trained/evaluated on individual homes; cross-domain transfer and robustness to unknown appliances remain insufficiently addressed ( Naderian, 2021 , Azad et al., 2023 ). 
+ Scalability: Scaling from a handful of appliances to full-building or commercial loads—where events are frequent, loads are highly correlated, and VFDs result in continuous profiles—calls for models that capture synchronous transitions, schedule-dependencies, and variable-speed behavior ( Batra et al., 2014 ). 
+ Label Scarcity: Supervised models require large labeled datasets. Research on sample-efficient augmentation (e.g., operation profile scaling in MATNilm) and semi/unsupervised learning is ongoing ( Xiong et al., 2023 ). 
+ Privacy & Security: Federated and differentially private NILM are promising directions, yet securing strong privacy guarantees with minimal loss in accuracy demands further innovation ( Wang et al., 2021 , Wang et al., 2021 ). 
+ Benchmarking: Community consensus on universal benchmarks, cross-platform protocols, and reporting metrics is still evolving; NILMTK and emerging standards are addressing this gap but a universal baseline remains an open challenge ( Faustine et al., 2017 , Liu et al., 2024 ). 
+ A plausible implication is that future NILM systems will combine multi-modal signals (electricity, water, gas), leverage federated and continual learning frameworks, and integrate multi-label attention models to robustly disaggregate increasingly complex load environments at scale, under stringent privacy and resource constraints. 
+ References : 
+ ( Naderian, 2021 ) 
+ ( Wang et al., 2023 ) 
+ ( Wang et al., 2021 ) 
+ ( Liu et al., 2024 ) 
+ ( Zhang et al., 2021 ) 
+ ( Keramati et al., 2021 ) 
+ ( Rodriguez-Silva et al., 2019 ) 
+ ( Faustine et al., 2017 ) 
+ ( Batra et al., 2014 ) 
+ ( Shin et al., 2018 ) 
+ ( Azad et al., 2023 ) 
+ ( Toirov et al., 7 Jun 2025 ) 
+ ( Azizi et al., 2020 ) 
+ ( Khan et al., 2019 ) 
+ ( Xiong et al., 2023 ) 
+ ( Klemenjak et al., 2016 ) 
+ ( Wang et al., 2021 ) 
+ ( Aghera et al., 2021 ) 
+ ( Lu et al., 2019 ) 
+ Markdown 
+ Report Issue 
+ Upgrade to Chat 
+ Definition Search Book Streamline Icon: https://streamlinehq.com 
+ References (19) 
+ 1.
+ Non-Intrusive Load Monitoring in Smart Grids: A Comprehensive Review   
+ (2024) 
+ 2.
+ A Survey on Non-Intrusive Load Monitoring Methodies and Techniques for Energy Disaggregation Problem   
+ (2017) 
+ 3.
+ Non-Intrusive Load Monitoring: A Review and Outlook   
+ (2016) 
+ 4.
+ MATNilm: Multi-appliance-task Non-intrusive Load Monitoring with Limited Labeled Data   
+ (2023) 
+ 5.
+ More Behind Your Electricity Bill: a Dual-DNN Approach to Non-Intrusive Load Monitoring   
+ (2021) 
+ 6.
+ A Novel Event-based Non-intrusive Load Monitoring Algorithm   
+ (2020) 
+ 7.
+ A Hybrid Event Detection Approach for Non-Intrusive Load Monitoring   
+ (2019) 
+ 8.
+ A comparison of non-intrusive load monitoring methods for commercial and residential buildings   
+ (2014) 
+ 9.
+ Non-Intrusive Electrical Appliances Monitoring and Classification using K-Nearest Neighbors   
+ (2019) 
+ 10.
+ Incorporating Coincidental Water Data into Non-intrusive Load Monitoring   
+ (2021) 
+ 11.
+ Evolutionary Deep Nets for Non-Intrusive Load Monitoring   
+ (2023) 
+ 12.
+ Subtask Gated Networks for Non-Intrusive Load Monitoring   
+ (2018) 
+ 13.
+ A Novel Hybrid Deep Learning Approach for Non-Intrusive Load Monitoring of Residential Appliance Based on Long Short Term Memory and Convolutional Neural Networks   
+ (2021) 
+ 14.
+ Non-Intrusive Load Monitoring Based on Image Load Signatures and Continual Learning   
+ (2025) 
+ 15.
+ Non-Intrusive Load Monitoring (NILM) using Deep Neural Networks: A Review   
+ (2023) 
+ 16.
+ Universal Non-Intrusive Load Monitoring (UNILM) Using Filter Pipelines, Probabilistic Knapsack, and Labelled Partition Maps   
+ (2019) 
+ 17.
+ A Federated Learning Framework for Non-Intrusive Load Monitoring   
+ (2021) 
+ 18.
+ Fed-NILM: A Federated Learning-based Non-Intrusive Load Monitoring Method for Privacy-Protection   
+ (2021) 
+ 19.
+ A Deep Learning Technique using Low Sampling rate for residential Non Intrusive Load Monitoring   
+ (2021) 
+ Topic to Video (Beta) 
+ No one has generated a video about this topic yet. 
+ Sign Up to Generate 
+ All Videos 
+ Subscribe on YouTube 
+ Whiteboard 
+ No one has generated a whiteboard explanation for this topic yet. 
+ Sign Up to Generate 
+ Follow Topic 
+ Get notified by email when new papers are published related to Non-Intrusive Load Monitoring (NILM) . 
+ Sign Up to Follow Topic by Email 
+ Continue Learning 
+ What are the primary challenges in accurately disaggregating appliance-level data from aggregated power signals?   
+ How do event-based and steady-state approaches differ in their methodology and performance?   
+ In what ways do deep learning models improve the accuracy and robustness of NILM systems?   
+ How can federated learning and privacy-preserving techniques be effectively integrated into NILM applications?   
+ Find recent papers about federated NILM.   
+ Related Topics 
+ SIDED: Industrial Energy Disaggregation Dataset   
+ Energy Information Monitoring   
+ Non-Intrusive Load Monitoring (NILM) Algorithms   
+ Federated Learning Context   
+ Holistic Human Activity Analysis Pipeline   
+ Real-Time Adaptive Cognitive Load Control   
+ EV Charging Demand Forecasting   
+ CNN-BiLSTM-Attention Model Overview   
+ AI-Integrated Distribution Grids   
+ Smart-Home Sensor Data Insights   
+ smooth-scroll#scroll">
+ Content 
+ Overview 
+ References 
+ Topic to Video 
+ Whiteboard 
+ Follow Topic 
+ Continue Learning 
+ Related Topics 
+ Stay informed about trending AI papers:
+ About 
+ Whiteboards 
+ Videos 
+ Email Digest 
+ Chrome Extension 
+ RSS 
+ Terms 
+ Privacy 
+ Contact 
+ Twitter 
+ Discord 
+ YouTube 
+ Don't miss out on important new AI/ML research
+ See which papers are being discussed right now on X, Reddit, and more:
+ Explore Trending Papers 
+ “Emergent Mind helps me see which AI papers have caught fire online.”
+ Philip
+ Creator, AI Explained on YouTube
+ Sign up for free to explore the frontiers of research
+ Discover trending papers, chat with arXiv, and track the latest research shaping the future of science and technology. 
+ Discover trending papers, chat with arXiv, and more. 
+ Sign up with Google 
+ Sign up with Email 
+ “Emergent Mind helps me see which papers have caught fire online.”
+ Philip
+ Creator, AI Explained on YouTube

@@ -1,0 +1,65 @@
+{
+  "query": "all:\"non-intrusive load monitoring\" AND all:\"cross-dataset\"",
+  "sortBy": "submittedDate",
+  "sortOrder": "descending",
+  "results": [
+    {
+      "arxivId": "2204.02802",
+      "version": "4",
+      "title": "Dimensionality Expansion of Load Monitoring Time Series and Transfer Learning for EMS",
+      "authors": [
+        "Blaž Bertalanič",
+        "Jakob Jenko",
+        "Carolina Fortuna"
+      ],
+      "summary": "Energy management systems (EMS) rely on (non)-intrusive load monitoring (N)ILM to monitor and manage appliances and help residents be more energy efficient and thus more frugal. The robustness as well as the transfer potential of the most promising machine learning solutions for (N)ILM is not yet fully understood as they are trained and evaluated on relatively limited data. In this paper, we propose a new approach for load monitoring in building EMS based on dimensionality expansion of time series and transfer learning. We perform an extensive evaluation on 5 different low-frequency datasets. The proposed feature dimensionality expansion using video-like transformation and resource-aware deep learning architecture achieves an average weighted F1 score of 0.88 across the datasets with 29 appliances and is computationally more efficient compared to the state-of-the-art imaging methods. Investigating the proposed method for cross-dataset intra-domain transfer learning, we find that 1) our method performs with an average weighted F1 score of 0.80 while requiring 3-times fewer epochs for model training compared to the non-transfer approach, 2) can achieve an F1 score of 0.75 with only 230 data samples, and 3) our transfer approach outperforms the state-of-the-art in precision drop by up to 12 percentage points for unseen appliances.",
+      "primaryCategory": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "eess.SP"
+      ],
+      "published": "2022-04-06T13:13:24Z",
+      "updated": "2023-04-19T10:09:37Z",
+      "absUrl": "https://arxiv.org/abs/2204.02802v4",
+      "pdfUrl": "https://arxiv.org/pdf/2204.02802v4",
+      "doi": null,
+      "comment": "This paper has been withdrawn because it was significantly altered and does not fit as a replacement anymore",
+      "journalRef": null
+    },
+    {
+      "arxivId": "2009.07756",
+      "version": "1",
+      "title": "Exploring Bayesian Surprise to Prevent Overfitting and to Predict Model Performance in Non-Intrusive Load Monitoring",
+      "authors": [
+        "Richard Jones",
+        "Christoph Klemenjak",
+        "Stephen Makonin",
+        "Ivan V. Bajic"
+      ],
+      "summary": "Non-Intrusive Load Monitoring (NILM) is a field of research focused on segregating constituent electrical loads in a system based only on their aggregated signal. Significant computational resources and research time are spent training models, often using as much data as possible, perhaps driven by the preconception that more data equates to more accurate models and better performing algorithms. When has enough prior training been done? When has a NILM algorithm encountered new, unseen data? This work applies the notion of Bayesian surprise to answer these questions which are important for both supervised and unsupervised algorithms. We quantify the degree of surprise between the predictive distribution (termed postdictive surprise), as well as the transitional probabilities (termed transitional surprise), before and after a window of observations. We compare the performance of several benchmark NILM algorithms supported by NILMTK, in order to establish a useful threshold on the two combined measures of surprise. We validate the use of transitional surprise by exploring the performance of a popular Hidden Markov Model as a function of surprise threshold. Finally, we explore the use of a surprise threshold as a regularization technique to avoid overfitting in cross-dataset performance. Although the generality of the specific surprise threshold discussed herein may be suspect without further testing, this work provides clear evidence that a point of diminishing returns of model performance with respect to dataset size exists. This has implications for future model development, dataset acquisition, as well as aiding in model flexibility during deployment.",
+      "primaryCategory": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "eess.SP"
+      ],
+      "published": "2020-09-16T15:39:08Z",
+      "updated": "2020-09-16T15:39:08Z",
+      "absUrl": "https://arxiv.org/abs/2009.07756v1",
+      "pdfUrl": "https://arxiv.org/pdf/2009.07756v1",
+      "doi": null,
+      "comment": null,
+      "journalRef": null
+    }
+  ],
+  "resultCount": 2,
+  "totalResults": 2,
+  "pagination": {
+    "pagesFetched": 1,
+    "hasMore": false
+  },
+  "notes": [],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/arxiv/arxiv-all-non-intrusive-load-monitoring-and-all-cross--20260926.json",
+    "bytes": 4788
+  }
+}

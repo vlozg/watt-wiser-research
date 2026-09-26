@@ -1,0 +1,111 @@
+{
+  "query": "ti:\"load monitoring\" AND all:unsupervised",
+  "sortBy": "submittedDate",
+  "sortOrder": "descending",
+  "results": [
+    {
+      "arxivId": "2009.07756",
+      "version": "1",
+      "title": "Exploring Bayesian Surprise to Prevent Overfitting and to Predict Model Performance in Non-Intrusive Load Monitoring",
+      "authors": [
+        "Richard Jones",
+        "Christoph Klemenjak",
+        "Stephen Makonin",
+        "Ivan V. Bajic"
+      ],
+      "summary": "Non-Intrusive Load Monitoring (NILM) is a field of research focused on segregating constituent electrical loads in a system based only on their aggregated signal. Significant computational resources and research time are spent training models, often using as much data as possible, perhaps driven by the preconception that more data equates to more accurate models and better performing algorithms. When has enough prior training been done? When has a NILM algorithm encountered new, unseen data? This work applies the notion of Bayesian surprise to answer these questions which are important for both supervised and unsupervised algorithms. We quantify the degree of surprise between the predictive distribution (termed postdictive surprise), as well as the transitional probabilities (termed transitional surprise), before and after a window of observations. We compare the performance of several benchmark NILM algorithms supported by NILMTK, in order to establish a useful threshold on the two combined measures of surprise. We validate the use of transitional surprise by exploring the performance of a popular Hidden Markov Model as a function of surprise threshold. Finally, we explore the use of a surprise threshold as a regularization technique to avoid overfitting in cross-dataset performance. Although the generality of the specific surprise threshold discussed herein may be suspect without further testing, this work provides clear evidence that a point of diminishing returns of model performance with respect to dataset size exists. This has implications for future model development, dataset acquisition, as well as aiding in model flexibility during deployment.",
+      "primaryCategory": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "eess.SP"
+      ],
+      "published": "2020-09-16T15:39:08Z",
+      "updated": "2020-09-16T15:39:08Z",
+      "absUrl": "https://arxiv.org/abs/2009.07756v1",
+      "pdfUrl": "https://arxiv.org/pdf/2009.07756v1",
+      "doi": null,
+      "comment": null,
+      "journalRef": null
+    },
+    {
+      "arxivId": "2007.11819",
+      "version": "1",
+      "title": "A Non-Intrusive Load Monitoring Approach for Very Short Term Power Predictions in Commercial Buildings",
+      "authors": [
+        "Karoline Brucke",
+        "Stefan Arens",
+        "Jan-Simon Telle",
+        "Thomas Steens",
+        "Benedikt Hanke",
+        "Karsten von Maydell",
+        "Carsten Agert"
+      ],
+      "summary": "This paper presents a new algorithm to extract device profiles fully unsupervised from three phases reactive and active aggregate power measurements. The extracted device profiles are applied for the disaggregation of the aggregate power measurements using particle swarm optimization. Finally, this paper provides a new approach for short term power predictions using the disaggregation data. For this purpose, a state changes forecast for every device is carried out by an artificial neural network and converted into a power prediction afterwards by reconstructing the power regarding the state changes and the device profiles. The forecast horizon is 15 minutes. To demonstrate the developed approaches, three phase reactive and active aggregate power measurements of a multi-tenant commercial building are used. The granularity of data is 1 s. In this work, 52 device profiles are extracted from the aggregate power data. The disaggregation shows a very accurate reconstruction of the measured power with a percentage energy error of approximately 1 %. The developed indirect power prediction method applied to the measured power data outperforms two persistence forecasts and an artificial neural network, which is designed for 24h-day-ahead power predictions working in the power domain.",
+      "primaryCategory": "eess.SP",
+      "categories": [
+        "eess.SP",
+        "stat.ML"
+      ],
+      "published": "2020-07-23T06:37:55Z",
+      "updated": "2020-07-23T06:37:55Z",
+      "absUrl": "https://arxiv.org/abs/2007.11819v1",
+      "pdfUrl": "https://arxiv.org/pdf/2007.11819v1",
+      "doi": null,
+      "comment": "15 pages, 14 figures, 4 tables",
+      "journalRef": null
+    },
+    {
+      "arxivId": "1907.06299",
+      "version": "2",
+      "title": "Universal Non-Intrusive Load Monitoring (UNILM) Using Filter Pipelines, Probabilistic Knapsack, and Labelled Partition Maps",
+      "authors": [
+        "Alejandro Rodriguez-Silva",
+        "Stephen Makonin"
+      ],
+      "summary": "Being able to track appliances energy usage without the need of sensors can help occupants reduce their energy consumption to help save the environment all while saving money. Non-intrusive load monitoring (NILM) tries to do just that. One of the hardest problems NILM faces is the ability to run unsupervised -- discovering appliances without prior knowledge -- and to run independent of the differences in appliance mixes and operational characteristics found in various countries and regions. We propose a solution that can do this with the use of an advanced filter pipeline to preprocess the data, a Gaussian appliance model with a probabilistic knapsack algorithm to disaggregate the aggregate smart meter signal, and partition maps to label which appliances were found and how much energy they use no matter the country/region. Experimental results show that relatively complex appliance signals can be tracked accounting for 93.7% of the total aggregate energy consumed.",
+      "primaryCategory": "eess.SP",
+      "categories": [
+        "eess.SP"
+      ],
+      "published": "2019-07-15T00:05:55Z",
+      "updated": "2019-07-24T23:27:59Z",
+      "absUrl": "https://arxiv.org/abs/1907.06299v2",
+      "pdfUrl": "https://arxiv.org/pdf/1907.06299v2",
+      "doi": null,
+      "comment": null,
+      "journalRef": null
+    },
+    {
+      "arxivId": "1610.01191",
+      "version": "1",
+      "title": "Non-Intrusive Load Monitoring: A Review and Outlook",
+      "authors": [
+        "Christoph Klemenjak",
+        "Peter Goldsborough"
+      ],
+      "summary": "With the roll-out of smart meters the importance of effective non-intrusive load monitoring (NILM) techniques has risen rapidly. NILM estimates the power consumption of individual devices given their aggregate consumption. In this way, the combined consumption must only be monitored at a single, central point in the household, providing various advantages such as reduced cost for metering equipment. In this paper we discuss the fundamental building-blocks of NILM, first giving a taxonomy of appliance models and device signatures and then explaining common supervised and unsupervised learning methods. Furthermore, we outline a fundamental algorithm that tackles the task of NILM. Subsequently, this paper reviews recent research that has brought novel insight to the field and more effective techniques. Finally, we formulate future challenges in the domain of NILM and smart meters.",
+      "primaryCategory": "cs.OH",
+      "categories": [
+        "cs.OH"
+      ],
+      "published": "2016-10-04T20:37:04Z",
+      "updated": "2016-10-04T20:37:04Z",
+      "absUrl": "https://arxiv.org/abs/1610.01191v1",
+      "pdfUrl": "https://arxiv.org/pdf/1610.01191v1",
+      "doi": null,
+      "comment": "A shorter version of this paper was presented at the SKILL Students Conference 2016, part of the INFORMATIK2016 congress",
+      "journalRef": null
+    }
+  ],
+  "resultCount": 4,
+  "totalResults": 4,
+  "pagination": {
+    "pagesFetched": 1,
+    "hasMore": false
+  },
+  "notes": [],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/arxiv2/arxiv-ti-load-monitoring-and-all-unsupervised-20260926.json",
+    "bytes": 7996
+  }
+}

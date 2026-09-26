@@ -1,0 +1,42 @@
+{
+  "query": "all:NILM AND all:\"zero-shot\"",
+  "sortBy": "relevance",
+  "sortOrder": "descending",
+  "results": [
+    {
+      "arxivId": "2210.04176",
+      "version": "1",
+      "title": "Non-intrusive Load Monitoring based on Self-supervised Learning",
+      "authors": [
+        "Shuyi Chen",
+        "Bochao Zhao",
+        "Mingjun Zhong",
+        "Wenpeng Luan",
+        "Yixin Yu"
+      ],
+      "summary": "Deep learning models for non-intrusive load monitoring (NILM) tend to require a large amount of labeled data for training. However, it is difficult to generalize the trained models to unseen sites due to different load characteristics and operating patterns of appliances between data sets. For addressing such problems, self-supervised learning (SSL) is proposed in this paper, where labeled appliance-level data from the target data set or house is not required. Initially, only the aggregate power readings from target data set are required to pre-train a general network via a self-supervised pretext task to map aggregate power sequences to derived representatives. Then, supervised downstream tasks are carried out for each appliance category to fine-tune the pre-trained network, where the features learned in the pretext task are transferred. Utilizing labeled source data sets enables the downstream tasks to learn how each load is disaggregated, by mapping the aggregate to labels. Finally, the fine-tuned network is applied to load disaggregation for the target sites. For validation, multiple experimental cases are designed based on three publicly accessible REDD, UK-DALE, and REFIT data sets. Besides, state-of-the-art neural networks are employed to perform NILM task in the experiments. Based on the NILM results in various cases, SSL generally outperforms zero-shot learning in improving load disaggregation performance without any sub-metering data from the target data sets.",
+      "primaryCategory": "eess.SP",
+      "categories": [
+        "eess.SP"
+      ],
+      "published": "2022-10-09T06:00:01Z",
+      "updated": "2022-10-09T06:00:01Z",
+      "absUrl": "https://arxiv.org/abs/2210.04176v1",
+      "pdfUrl": "https://arxiv.org/pdf/2210.04176v1",
+      "doi": null,
+      "comment": "12 pages,10 figures",
+      "journalRef": null
+    }
+  ],
+  "resultCount": 1,
+  "totalResults": 1,
+  "pagination": {
+    "pagesFetched": 1,
+    "hasMore": false
+  },
+  "notes": [],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/arxiv/arxiv-all-nilm-and-all-zero-shot-20260926.json",
+    "bytes": 2408
+  }
+}

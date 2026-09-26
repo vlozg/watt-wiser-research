@@ -1,0 +1,223 @@
+{
+  "query": "continual learning non-intrusive load monitoring low frequency residential appliances incremental",
+  "fetchedAt": "2026-09-26T16:04:28.019Z",
+  "aiOverview": {
+    "present": true,
+    "text": "Continual and incremental learning\nenables smart meters—reading data every few seconds or minutes—to identify and adapt to new residential appliances over time without forgetting previously learned devices\n[MDPI]\nin low-frequency non-intrusive load monitoring (NILM)\n\n\nCore Challenges in Low-Frequency NILM\n- Catastrophic Forgetting: When a machine learning model learns a newly introduced appliance class, its accuracy on older, previously recognized appliances tends to degrade severely.\n- Static Label Spaces: Traditional supervised NILM models rely on fixed output categories, making them blind to new or custom appliances added by homeowners.\n- Data Scarcity & High Sampling Gaps: Low-frequency data (seconds to minutes) lacks rich transient waveforms (like high-frequency current harmonics), forcing models to rely mostly on steady-state active power changes.\n\n\nEmerging Solutions and Architectures\n- Analytic and Class-Incremental Methods: Techniques like Nearest Class Mean Forests (NCM-Forest) use dynamic centroid-based partitions and partial subtree retraining to incorporate new appliance signatures seamlessly.\n- Dual-Branch and Lightweight Models: Systems employ depthwise separable convolutions for simultaneous load identification and novelty detection (spotting when an unknown appliance turns on).\n- Collaborative and Distributed Frameworks: Confidence-based continual learning frameworks allow edge devices or smart meters to update local sub-models rapidly via one-time fine-tuning while resolving cross-client knowledge conflicts.\nincremental learning algorithm\npublic datasets\nWould you like to explore a specific\n(such as NCM-Forest or contrastive learning), or do you need details on\nused to test low-frequency NILM?\n- MDPI Analytic Continual Learning-Based Non-Intrusive Load ... Abstract Non-intrusive load monitoring (NILM) provides a cost-effective solution for smart services across numerous appliances by ...\n[Analytic Continual Learning-Based Non-Intrusive Load .... Opens in new tab.]\n- ResearchGate Appliance-Incremental Learning for Non-Intrusive Load ... Traditional appliance recognition models in non-intrusive load monitoring (NILM) are constrained by a static label space, making t...\n[Appliance-Incremental Learning for Non-Intrusive Load .... Opens in new tab.]\n- ScienceDirect.com An active learning framework for the low Abstract With the widespread deployment of smart meters worldwide, quantification of energy used by individual appliances via Non-\n[An active learning framework for the low. Opens in new tab.]",
+    "excerpt": "Continual and incremental learning in low-frequency non-intrusive load monitoring (NILM) enables smart meters—reading data every few seconds or minutes—to identify and adapt to new residential appliances over time without forget",
+    "sources": [
+      {
+        "name": "MDPI",
+        "domain": "www.mdpi.com"
+      },
+      {
+        "name": "Appliance-Incremental Learning for Non-Intrusive Load .... Opens in new tab.",
+        "domain": "www.researchgate.net"
+      },
+      {
+        "name": "An active learning framework for the low. Opens in new tab.",
+        "domain": "www.sciencedirect.com"
+      }
+    ]
+  },
+  "results": [
+    {
+      "rank": 1,
+      "title": "An active learning framework for the low-frequency Non ...",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0306261923004427",
+      "domain": "www.sciencedirect.com",
+      "site": "ScienceDirect.com",
+      "snippet": "Low frequency non intrusive load monitoring by T Todic 2023 Cited by 78 — - . NILM [2] consists of breaking down the total power consumption of a building into individual loads.",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 2,
+      "title": "Analytic Continual Learning-Based Non-Intrusive Load ...",
+      "url": "https://www.mdpi.com/2076-3417/15/12/6571",
+      "domain": "www.mdpi.com",
+      "site": "MDPI",
+      "snippet": "Non intrusive load monitoring appliances by C Lan 2025 Cited by 4 — - (NILM) provides a cost-effective solution for smart services across numerous by inferring ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 3,
+      "title": "Appliance-Incremental Learning for Non-Intrusive Load ...",
+      "url": "https://www.researchgate.net/publication/376281285_Appliance-Incremental_Learning_for_Non-Intrusive_Load_Monitoring",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "learning low frequency Non Intrusive Load Monitoring An active framework for the - problem. Article. Jul 2023; APPL ENERG. Tamara Todic. Scholarly articles for continual learning non-intrusive load monitoring low frequency residential appliances incremental … continual learning-based non-intrusive load monitoring … - ‎Lan - Cited by 4 … -incremental learning for non-intrusive load monitoring - ‎Tanoni - Cited by 14 … learning framework for non-intrusive load monitoring in … - ‎Lan - Cited by 4",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 4,
+      "title": "Non-Intrusive Load Monitoring Based on Image ...",
+      "url": "https://arxiv.org/pdf/2506.06637",
+      "domain": "arxiv.org",
+      "site": "arXiv",
+      "snippet": "PDF non intrusive load monitoring continual learning by O Toirov 2025 Cited by 4 — To this end, this paper proposes a new - method that integrates \"image load signature\" and . This method converts ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 5,
+      "title": "Confidence-Based, Collaborative, Distributed Continual ... National Institutes of Health (NIH)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12196696/",
+      "domain": "pmc.ncbi.nlm.nih.gov",
+      "site": "(.gov)",
+      "snippet": "continual learning Non Intrusive Load Monitoring by C Lan 2025 Cited by 4 — This study proposes a confidence-based, collaborative, framework for (NILM), which enables ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 6,
+      "title": "An active learning framework for the low-frequency Non ... RePEc: Research Papers in Economics",
+      "url": "https://ideas.repec.org/a/eee/appene/v341y2023ics0306261923004427.html",
+      "domain": "ideas.repec.org",
+      "site": "",
+      "snippet": "learning low frequency non intrusive load monitoring appliance's by T Todic 2023 Cited by 78 — An active framework for the - Non-Intrusive Load ... \"Can be used for identifying an anomalous ... continual Missing: ‎| Show results with: PDF non intrusive load monitoring by DC Bergman Cited by 69 — This paper describes and evaluates a distributed - algorithm that is split between a capable backend system and a typical smart ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 7,
+      "title": "On enabling collaborative non-intrusive load monitoring for ...",
+      "url": "https://www.nature.com/articles/s41598-023-33131-0",
+      "domain": "www.nature.com",
+      "site": "Nature",
+      "snippet": "Non intrusive load monitoring by Y Shi 2023 Cited by 28 — - (NILM) is a computing technique that estimates energy consumption in real-time and helps raise energy awareness ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 8,
+      "title": "An artificial intelligence‐based non‐intrusive load monitoring ... John",
+      "url": "https://ietresearch.onlinelibrary.wiley.com/doi/10.1049/smc2.12075",
+      "domain": "ietresearch.onlinelibrary.wiley.com",
+      "site": "Wiley",
+      "snippet": "appliances residential Non intrusive load monitoring learning by B Kommey 2024 Cited by 21 — ... non-intrusively in a facility. ... , et al.: via deep based user model and",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 9,
+      "title": "Non-intrusive load monitoring techniques for ... - Springer Nature Springer Nature",
+      "url": "https://link.springer.com/article/10.1186/s42162-022-00242-3",
+      "domain": "link.springer.com",
+      "site": "Link",
+      "snippet": "Non Intrusive Load Monitoring by M Castangia Cited by 3 — - (NILM) indicates a wide set of techniques aimed at extracting the power consumption of electrical devices from the ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 10,
+      "title": "An active learning framework for the low-frequency Non- ... University of Strathclyde",
+      "url": "https://pureportal.strath.ac.uk/en/publications/an-active-learning-framework-for-the-low-frequency-non-intrusive-/",
+      "domain": "pureportal.strath.ac.uk",
+      "site": "",
+      "snippet": "learning low frequency Non Intrusive Load Monitoring by T Todic 2023 Cited by 76 — An active framework for the - problem · Overview · Fingerprint · Projects · Datasets · Activities ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 11,
+      "title": "Non-Intrusive Load Monitoring techniques for the ...",
+      "url": "https://www.youtube.com/watch?v=kzd_LHO10dY",
+      "domain": "www.youtube.com",
+      "site": "· EnergyInformatics.Academy 3.9K+ views ·",
+      "snippet": "Non - Intrusive Load Monitoring techniques for the disaggregation of ON/OFF appliances ... DIY ESP32 AC Power Meter (with Home Assistant ...",
+      "sitelinks": [],
+      "kind": "video",
+      "videoDate": "4 years ago",
+      "urlSource": "html"
+    },
+    {
+      "rank": 12,
+      "title": "(PDF) An Effective Non-Intrusive Load Monitoring (NILM ...",
+      "url": "https://www.researchgate.net/publication/383038724_An_Effective_Non-Intrusive_Load_Monitoring_NILM_for_Residential_Appliances_using_Wavelet_Transform_and_Clustering",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "Non intrusive load monitoring Aug 12, 2024 — Nonintrusive Load Identification Considering Unknown Load Based on Bimodal Fusion and One-Class Clas... ... (NILM) ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 13,
+      "title": "An Implementation Framework Overview of Non-Intrusive ... SDEWES Centre",
+      "url": "https://www.sdewes.org/jsdewes/pid11.0471",
+      "domain": "www.sdewes.org",
+      "site": "",
+      "snippet": "non intrusive load monitoring by O Al-Khadher 2023 Cited by 12 — The overview explores the various techniques, methodologies, and algorithms employed in systems to achieve load identification and ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 14,
+      "title": "Low-Complexity Non-Intrusive Load | PDF",
+      "url": "https://www.scribd.com/document/1051086695/3-Low-Complexity-Non-Intrusive-Load",
+      "domain": "www.scribd.com",
+      "site": "Scribd",
+      "snippet": "low Non Intrusive Load Monitoring appliance This article discusses a -complexity unsupervised load monitoring algorithm designed for (NILM) using generalized ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 15,
+      "title": "A non-intrusive load decomposition method of resident by ...",
+      "url": "https://www.frontiersin.org/journals/energy-research/articles/10.3389/fenrg.2023.1091131/full",
+      "domain": "www.frontiersin.org",
+      "site": "Frontiers",
+      "snippet": "Non intrusive load monitoring home by J Dai 2023 Cited by 4 — Abstract. - (NILM) is one of the important technologies in energy management and power demand response scenario.",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    }
+  ],
+  "resultCount": 15,
+  "peopleAlsoAsk": [],
+  "peopleAlsoSearchFor": [],
+  "relatedSearches": [],
+  "pagination": {
+    "pagesFetched": 2,
+    "hasMore": true
+  },
+  "notes": [
+    "Snippets are reconstructed from the accessibility tree; inline bold-query emphasis may reorder text.",
+    "Some inline URLs inside snippets have no accessible text and are omitted."
+  ],
+  "pages": [
+    {
+      "start": 0,
+      "rawChars": 23525,
+      "resultsOnPage": 8,
+      "hrefsUpgraded": 8,
+      "hasMore": true
+    },
+    {
+      "start": 10,
+      "rawChars": 11475,
+      "resultsOnPage": 10,
+      "hrefsUpgraded": 7,
+      "hasMore": true
+    }
+  ],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/google_search/continual-learning-non-intrusive-load-monitoring-20260926.json",
+    "bytes": 12783
+  }
+}

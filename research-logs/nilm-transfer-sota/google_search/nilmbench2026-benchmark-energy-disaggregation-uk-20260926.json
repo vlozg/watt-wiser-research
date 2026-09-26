@@ -1,0 +1,256 @@
+{
+  "query": "NILMBENCH2026 benchmark energy disaggregation UK-DALE train test different buildings",
+  "fetchedAt": "2026-09-26T15:51:01.374Z",
+  "aiOverview": {
+    "present": true,
+    "text": "[NILMBENCH2026]\ntraining on buildings B1 and B2, and testing on building B4\n[ACM Digital Library]\ndefines cross-building generalization (Task T2) for the UK-DALE dataset by\n\n\nOverview of NILMBENCH2026 Generalization Tasks\n- T1 (Intra-Building): Trains and tests on disjoint time segments from the same home (e.g., train on 30 days from B1, test on 1 week from B1).\n- T2 (Cross-Building): Trains and tests on different homes within the same dataset to evaluate performance on unseen residential buildings. For UK-DALE, models train on B1 and B2 , then test on B4 .\n[ACM Digital Library]\n- T3 (Cross-Dataset): Transfers models across entirely different datasets, countries, and voltage standards (e.g., training in the US and testing in the UK).\n\n\nEvaluation Protocol\n- Static Splits: Used instead of full rotation cross-validation due to disjoint temporal coverage and data sparsity across specific residences.\n- Metrics: Evaluates regression accuracy (such as Mean Absolute Error - MAE) and event detection capabilities (F1 score), alongside operational costs like parameters, FLOPs, and runtime.\n- Resources: You can explore the for reference implementations and experiment frameworks.\n[NILMBench2026 GitHub Repository]\nIf you're working with the\n, let me know:\n- Which specific model architecture you want to test\n- Whether you need help setting up Task T1, T2, or T3 evaluation scripts\n- ACM Digital Library NILMBENCH2026: A Benchmark for Energy Disaggregation Jun 22, 2026 — We define three key generalization tasks: T1: Intra-Building Generalization. Train and test on disjoint time segments from the sam...\n[NILMBENCH2026: A Benchmark for Energy Disaggregation. Opens in new tab.]\n- ACM Digital Library NILMBENCH2026: A Benchmark for Energy Disaggregation Jun 22, 2026 — T2: Cross-Building Generalization. For UK-DALE, we train on B1, B2 and test on B4. For REDD, we train on B1, B2, B3 and test on B6...\n[NILMBENCH2026: A Benchmark for Energy Disaggregation. Opens in new tab.]\n- YouTube · Sustainability Lab IIT Gandhinagar A Benchmark for Energy Disaggregation (Best paper runner up) Jun 25, 2026 — management and a unified NIMTK exper experiment API So every model follows the same protocol. NIM has to work at user f\n[A Benchmark for Energy Disaggregation (Best paper runner up), Video, watch on YouTube]\nmanagement and a unified NIMTK exper experiment API So every model follows the same protocol. NIM has to work at user feedback. an...",
+    "excerpt": "defines cross-building generalization (Task T2) for the UK-DALE dataset by training on buildings B1 and B2, and testing on building B4 . Overview of NILMBENCH2026 Generalization Tasks T1 (Intra-Building): Trains and tests on dis",
+    "sources": [
+      {
+        "name": "NILMBENCH2026",
+        "domain": "dl.acm.org"
+      },
+      {
+        "name": "NILMBench2026 GitHub Repository",
+        "domain": "github.com"
+      },
+      {
+        "name": "A Benchmark for Energy Disaggregation (Best paper runner up), Video, watch on YouTube",
+        "domain": "www.youtube.com"
+      }
+    ]
+  },
+  "results": [
+    {
+      "rank": 1,
+      "title": "NILMBENCH2026: A Benchmark for Energy Disaggregation ACM Digital Library",
+      "url": "https://dl.acm.org/doi/10.1145/3744256.3812587",
+      "domain": "dl.acm.org",
+      "site": "",
+      "snippet": "Train and test on different homes within the same dataset to assess generalization to unseen buildings. For UK-DALE, we train on B1, B2 and test on B4. For ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 2,
+      "title": "nilmtk/nilmbench",
+      "url": "https://github.com/nilmtk/nilmbench",
+      "domain": "github.com",
+      "site": "GitHub",
+      "snippet": "experiment NILMBench2026 Benchmark Energy Disaggregation Reference implementation, runner, and project website for — A (BuildSys '26, Best Paper Candidate).",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 3,
+      "title": "NILMBENCH2026: A Benchmark for Energy Disaggregation",
+      "url": "https://www.researchgate.net/publication/407457249_NILMBENCH2026_A_Benchmark_for_Energy_Disaggregation",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "disaggregation test This study aimed to compare three approaches of the spatial of legacy soil maps based on DSMART decision trees to the hypothesis that the ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 4,
+      "title": "NILMBENCH2026: A Benchmark for Energy Disaggregation",
+      "url": "https://www.semanticscholar.org/paper/NILMBENCH2026%3A-A-Benchmark-for-Energy-Kuloor-Singh/4ae95f6b8efd0f77033c250617753bbf65efecf7",
+      "domain": "www.semanticscholar.org",
+      "site": "Semantic Scholar",
+      "snippet": "NILMBench2026 is presented, a large-scale benchmark that systematically evaluates sixteen models across regression accuracy, event detection capabilities, ... UK- DALE Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 5,
+      "title": "A Benchmark for Energy Disaggregation (Best paper runner up)",
+      "url": "https://www.youtube.com/watch?v=e77mtl_-I6g",
+      "domain": "www.youtube.com",
+      "site": "· Sustainability Lab IIT Gandhinagar 60+ views ·",
+      "snippet": "... NILMBench2026 , a large-scale benchmark that evaluates 16 NILM models across accuracy, efficiency, and cross-building generalization. Our ... UK- DALE train test Missing: ‎",
+      "sitelinks": [],
+      "kind": "video",
+      "videoDate": "3 months ago",
+      "urlSource": "html"
+    },
+    {
+      "rank": 6,
+      "title": "A Novel Benchmark For High-Frequency NILM Models",
+      "url": "https://www.techrxiv.org/doi/10.36227/techrxiv.173834807.74888368",
+      "domain": "www.techrxiv.org",
+      "site": "TechRxiv",
+      "snippet": "NILMbench ensures fair comparison by training, and testing energy disaggregation models by S Moghimian 2025 Cited by 2 — under identical conditions, including the same dataset, ... UK- DALE buildings Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 7,
+      "title": "Building-Level Energy Disaggregation Using AI-Based ...",
+      "url": "https://www.mdpi.com/2673-2688/7/4/122",
+      "domain": "www.mdpi.com",
+      "site": "MDPI",
+      "snippet": "Energy disaggregation different by A Rubio-Bustos 2026 — can be accomplished through two fundamentally approaches: Intrusive Load Monitoring (ILM) and Non-Intrusive Load Monitoring ( ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 8,
+      "title": "A comparison of non-intrusive load monitoring methods for ...",
+      "url": "https://arxiv.org/pdf/1408.6595",
+      "domain": "arxiv.org",
+      "site": "arXiv",
+      "snippet": "PDF buildings benchmark by N Batra 2014 Cited by 177 — Based on our observations, we discuss the required traits for a NILM system for commercial , and run residential NILM ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 9,
+      "title": "Fridge, Category 1, Train and test on UK-DALE house 1.",
+      "url": "https://www.researchgate.net/figure/Fridge-Category-1-Train-and-test-on-UK-DALE-house-1_tbl1_333086764",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "Energy Disaggregation is the task of decomposing a single meter aggregate energy reading into its appliance level subcomponents.",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 10,
+      "title": "NILMTK-contrib",
+      "url": "https://github.com/nilmtk/nilmtk-contrib",
+      "domain": "github.com",
+      "site": "GitHub",
+      "snippet": "disaggregation test This repository contains maintained NILMTK-compatible models. Use it to run, , or contribute an algorithm. Ecosystem repositories. Research ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 11,
+      "title": "Results of the electricity consumption (kWh) disaggregation ...",
+      "url": "https://www.researchgate.net/figure/Results-of-the-electricity-consumption-kWh-disaggregation-by-appliance_tbl3_370308835",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "UK DALE The results from the - and REDD datasets show that IPD-NILM achieves a 72% reduction in the number of trainable parameters and a 63% decrease in ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 12,
+      "title": "inesylla/energy-disaggregation-DL",
+      "url": "https://github.com/inesylla/energy-disaggregation-DL",
+      "domain": "github.com",
+      "site": "GitHub",
+      "snippet": "estimating the power demand of different appliances in a building NILM is the task of ... different train buildings. See samples of dishwasher consumption ... UK- DALE Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 13,
+      "title": "NILMFormer: Non-Intrusive Load Monitoring that Accounts ...",
+      "url": "https://www.researchgate.net/publication/392464227_NILMFormer_Non-Intrusive_Load_Monitoring_that_Accounts_for_Non-Stationarity",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "power This model disaggregates the aggregated signal into distinct signals corresponding to each appliance, providing precise appliance-level consumption ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 14,
+      "title": "Pictures of the Smart Living Testbed: (a) perspective view; (b) ...",
+      "url": "https://www.researchgate.net/figure/Pictures-of-the-Smart-Living-Testbed-a-perspective-view-b-outside-view-c-living_fig3_370308835",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "energy Nonintrusive load monitoring (NILM) is a process that disaggregates individual consumption based on the total consumption.",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 15,
+      "title": "A Comparative Study on UK-DALE and BLOND Datasets",
+      "url": "https://www.researchgate.net/publication/390401717_Enhanced_Appliance_Disaggregation_Using_UNet-NILM_A_Comparative_Study_on_UK-DALE_and_BLOND_Datasets",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "UK DALE energy The - dataset [31] is a detailed collection of consumption data from a set of homes in the United Kingdom. It includes high-frequency ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 16,
+      "title": "Is disaggregation the holy grail of energy efficiency? ...",
+      "url": "https://www.researchgate.net/publication/257126344_Is_disaggregation_the_holy_grail_of_energy_efficiency_The_case_of_electricity",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "energy buildings Its low cost and low complexity have made NILM a strong alternative to Intrusive Load Monitoring (ILM) for management solutions related to [4].",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 17,
+      "title": "(PDF) NILM Techniques for Intelligent Home Energy ...",
+      "url": "https://www.researchgate.net/publication/333686533_NILM_Techniques_for_Intelligent_Home_Energy_Management_and_Ambient_Assisted_Living_A_Review",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "Energy disaggregation separate May 24, 2026 — is intended to the total power consumption into specific appliance loads, which can be achieved by applying Non- ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 18,
+      "title": "A Public Data Set for Energy Disaggregation",
+      "url": "https://www.researchgate.net/publication/266597071_REDD_A_Public_Data_Set_for_Energy_Disaggregation_Research",
+      "domain": "www.researchgate.net",
+      "site": "Research ResearchGate",
+      "snippet": "REDD is one of the earliest benchmark datasets for energy disaggregation research Jul 15, 2026 — and has played an important role in promoting NILM studies; ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    }
+  ],
+  "resultCount": 18,
+  "peopleAlsoAsk": [],
+  "peopleAlsoSearchFor": [],
+  "relatedSearches": [],
+  "pagination": {
+    "pagesFetched": 2,
+    "hasMore": true
+  },
+  "notes": [
+    "Snippets are reconstructed from the accessibility tree; inline bold-query emphasis may reorder text.",
+    "Some inline URLs inside snippets have no accessible text and are omitted."
+  ],
+  "pages": [
+    {
+      "start": 0,
+      "rawChars": 19690,
+      "resultsOnPage": 9,
+      "hrefsUpgraded": 8,
+      "hasMore": true
+    },
+    {
+      "start": 10,
+      "rawChars": 10039,
+      "resultsOnPage": 10,
+      "hrefsUpgraded": 7,
+      "hasMore": true
+    }
+  ],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/google_search/nilmbench2026-benchmark-energy-disaggregation-uk-20260926.json",
+    "bytes": 13498
+  }
+}

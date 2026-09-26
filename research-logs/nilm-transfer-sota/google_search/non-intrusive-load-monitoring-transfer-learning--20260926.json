@@ -1,0 +1,267 @@
+{
+  "query": "non-intrusive load monitoring transfer learning cross-domain adaptation survey 2025",
+  "fetchedAt": "2026-09-26T15:49:16.703Z",
+  "aiOverview": {
+    "present": true,
+    "text": "leverage models trained on data-rich source homes or buildings to accurately disaggregate electricity consumption in target environments with scarce or missing labels\n[ResearchGate]\nNon-intrusive load monitoring (NILM) transfer learning and cross-domain adaptation\n\n\nOverview of Cross-Domain Adaptation in NILM\n- Definition : Cross-domain adaptation solves the performance drop that occurs when a NILM model trained in one location (source domain) is applied to a new environment (target domain) with different user habits, appliance models, or backgrou\n[DTU Research Database]\n: Cross-domain adaptation solves the performance drop that occurs when a NILM model trained in one location (source domain) is applied to a new environment (target domain) with different user habits, appliance models, or background loads.\n- Core Problem : Domain shift arises from variations in sampling rates, electrical noise, and appliance signatures across different households or commercial floors.\n\n\nKey Methodological Approaches\n- Unsupervised Domain Adaptation (UDA) : Utilizes adversarial networks and maximum mean discrepancy to align feature distributions between a labeled source domain and an unlabeled target domain.\n- Deep Feature Extractors and Contrastive Learning : Combines architectures like ResNet or Temporal Convolutional Networks (TCNs) with contrastive frameworks (e.g., SimCLR) to learn domain-invariant semantic representations of V-I trajectorie\n: Combines architectures like ResNet or Temporal Convolutional Networks (TCNs) with contrastive frameworks (e.g., SimCLR) to learn domain-invariant semantic representations of V-I trajectories or aggregate power sequences.\n- Label-Efficient and Zero-Shot Frameworks : Employs domain-stable feature gates or compact appliance fingerprints (such as RefQuery) to adapt shared disaggregation models using minimal target-side parameters or zero-shot inference across int\n[arXiv.org]\n: Employs domain-stable feature gates or compact appliance fingerprints (such as RefQuery) to adapt shared disaggregation models using minimal target-side parameters or zero-shot inference across international datasets (e.g., REDD, UK-DALE, REFIT).\nIf you'd like, I can dive deeper into:\n- Specific adversarial alignment architectures used for cross-household adaptation\n- Benchmarking performance on public datasets like REDD or UK-DALE\n- Transformer-based transfer learning models for multi-load disaggregation\nLet me know how you want to proceed.\n- SSRN eLibrary Label-Efficient Transferable Learning for Commercial Building ... Non-intrusive load monitoring (NILM) for commercial buildings provides low-cost visibility of controllable loads from low-frequenc...\n[Label-Efficient Transferable Learning for Commercial Building .... Opens in new tab.]\n- ScienceDirect.com Non-intrusive load monitoring for smart residential buildings A central contribution of this work is the comprehensive cross-dataset and cross-country evaluation conducted on four widely used ...\n[Non-intrusive load monitoring for smart residential buildings. Opens in new tab.]\n- arXiv.org Lightweight and Scalable Transfer Learning Framework for ... Non-Intrusive Load Monitoring (NILM) aims to estimate appliance-level consumption from aggregate electrical signals recorded at a ...\n[Lightweight and Scalable Transfer Learning Framework for .... Opens in new tab.]\n\n\nScholarly articles for non-intrusive load monitoring transfer learning cross-domain adaptation survey 2025\n[Scholarly articles for non-intrusive load monitoring transfer learning cross-domain adaptation survey 2025]\n\n\n… learning techniques for non-intrusive load monitoring - ‎Annysha - Cited by 15\n[… learning techniques for non-intrusive load monitoring]\n\n\n… in non-intrusive load monitoring for the industrial … - ‎Yaniv - Cited by 21\n[… in non-intrusive load monitoring for the industrial …]\n\n\nNon-Intrusive Load Monitoring: A Systematic Review of … - ‎Xiang - Cited by 4\n[Non-Intrusive Load Monitoring: A Systematic Review of …]",
+    "excerpt": "Non-intrusive load monitoring (NILM) transfer learning and cross-domain adaptation leverage models trained on data-rich source homes or buildings to accurately disaggregate electricity consumption in target environments with sca",
+    "sources": [
+      {
+        "name": "ResearchGate",
+        "domain": "www.researchgate.net"
+      },
+      {
+        "name": "DTU Research Database",
+        "domain": "orbit.dtu.dk"
+      },
+      {
+        "name": "arXiv.org",
+        "domain": "arxiv.org"
+      },
+      {
+        "name": "Label-Efficient Transferable Learning for Commercial Building .... Opens in new tab.",
+        "domain": "papers.ssrn.com"
+      },
+      {
+        "name": "Non-intrusive load monitoring for smart residential buildings. Opens in new tab.",
+        "domain": "www.sciencedirect.com"
+      },
+      {
+        "name": "Scholarly articles for non-intrusive load monitoring transfer learning cross-domain adaptation survey 2025",
+        "domain": "scholar.google.com.vn"
+      }
+    ]
+  },
+  "results": [
+    {
+      "rank": 1,
+      "title": "Non-Intrusive Load Monitoring Model Based on SimCLR ...",
+      "url": "https://www.mdpi.com/1424-8220/26/4/1230",
+      "domain": "www.mdpi.com",
+      "site": "MDPI",
+      "snippet": "non intrusive load monitoring by T Chen 2026 Cited by 2 — In summary, this paper designed and implemented a - model that integrates visualized color V-I trajectories, SimCLR contrastive ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 2,
+      "title": "Non-intrusive load monitoring for smart residential buildings",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0378778826006924",
+      "domain": "www.sciencedirect.com",
+      "site": "ScienceDirect.com",
+      "snippet": "study by P Moghadam 2026 — This presents an AI-based NILM framework designed for real-time smart home applications and edge-integrated deployment. The proposed framework operates on ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 3,
+      "title": "(PDF) Non-Intrusive Load Monitoring (NILM): A Systematic ...",
+      "url": "https://www.researchgate.net/publication/401005792_Non-Intrusive_Load_Monitoring_NILM_A_Systematic_Review_of_Observability_Regimes_Methods_and_Evaluation_Paradigms",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "Non Intrusive Load Monitoring Jul 14, 2026 — This paper presents a systematic review of - (NILM), analyzing its scientific, methodological, ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 4,
+      "title": "Non-Intrusive Load Monitoring: A Systematic Review of Methods ...",
+      "url": "https://openurl.ebsco.com/fulltext/gcd:193438223?sid=ebsco:plink:crawler-gcd&id=ebsco:gcd:193438223&crl=f&jrnl=19961073",
+      "domain": "openurl.ebsco.com",
+      "site": "ebsco.com",
+      "snippet": "Non intrusive load monitoring - (NILM), as a key technology for decomposing power loads by analyzing aggregate electrical signals, holds significant ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 5,
+      "title": "Lightweight and Scalable Transfer Learning Framework for ...",
+      "url": "https://arxiv.org/html/2603.04998v1",
+      "domain": "arxiv.org",
+      "site": "arXiv.org",
+      "snippet": "Non Intrusive Load Monitoring Mar 5, 2026 — - (NILM) aims to estimate appliance-level consumption from aggregate electrical signals recorded at a single ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 6,
+      "title": "Self-Adaptive Deep Learning Framework for Non-Intrusive ...",
+      "url": "https://ieeexplore.ieee.org/iel8/6287639/10820123/11044358.pdf",
+      "domain": "ieeexplore.ieee.org",
+      "site": "IEEE Xplore",
+      "snippet": "Non intrusive load monitoring learning Jun 26, 2025 — - (NILM) has been identified as a promising solution, particularly with the use of deep techniques.",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 7,
+      "title": "Label-Efficient Transferable Learning for Commercial ... SSRN eLibrary",
+      "url": "https://papers.ssrn.com/sol3/Delivery.cfm/11457b51-9c20-46cc-b794-a68d94225fc4-MECA.pdf?abstractid=7477835&mirid=1",
+      "domain": "papers.ssrn.com",
+      "site": "",
+      "snippet": "PDF provides low-cost visibility of controllable loads Non-intrusive load monitoring (NILM) for commercial buildings from low-frequency aggregate meter data, ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 8,
+      "title": "Non-Intrusive Load Monitoring: A Systematic Review of ... DTU Research Database",
+      "url": "https://orbit.dtu.dk/files/439947745/energies-19-01883-v2.pdf",
+      "domain": "orbit.dtu.dk",
+      "site": "",
+      "snippet": "PDF Non intrusive load monitoring by H Xiang 2026 Cited by 4 — - (NILM), as a key technology for decomposing power loads by analyzing aggregate electrical signals, holds significant ... 32 pages",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 9,
+      "title": "A comprehensive review of machine learning and deep ... Springer Nature",
+      "url": "https://link.springer.com/article/10.1007/s10489-025-06921-4",
+      "domain": "link.springer.com",
+      "site": "Link",
+      "snippet": "learning non intrusive load monitoring by MH Saleem 2025 Cited by 21 — A comprehensive review of machine and deep models for - : performance, analyses, practical insights ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 10,
+      "title": "Federated learning-enhanced generative models for non ...",
+      "url": "https://www.nature.com/articles/s41598-025-11403-1",
+      "domain": "www.nature.com",
+      "site": "Nature",
+      "snippet": "Non Intrusive Load Monitoring by Y Lu 2025 Cited by 4 — - (NILM) estimates load-specific power by disaggregating household-level power data, enabling smart grids to ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 11,
+      "title": "Synthetic-to-Real Domain Adaptation for Nonintrusive Load ...",
+      "url": "https://www.researchgate.net/publication/380951970_Synthetic-to-Real_Domain_Adaptation_for_Nonintrusive_Load_Monitoring_via_Reconstruction-Based_Transfer_Learning",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "transfer learning Our experimental results demonstrate that the proposed network shows promise for the from a synthetic dataset to a real dataset, and its ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 12,
+      "title": "A Comprehensive Review and Outlook of Non-Intrusive ... ACM Digital Library",
+      "url": "https://dl.acm.org/doi/10.1145/3814607",
+      "domain": "dl.acm.org",
+      "site": "",
+      "snippet": "Non Intrusive Load Monitoring - (NILM) enables the disaggregation of aggregate electrical consumption in residential, commercial, and industrial settings to ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 13,
+      "title": "Adversarial Domain Adaptation for Non-Intrusive LOAD Monitoring",
+      "url": "https://www.semanticscholar.org/paper/959f2bc300825643f9430db04ef11d6b37c5b91f",
+      "domain": "www.semanticscholar.org",
+      "site": "Semantic Scholar",
+      "snippet": "2025 Domain Adaptation Non Intrusive Load Monitoring Transfer Learning ... Deep for - Based on a Knowledge Network ... Journal of machine learning research. 2016.",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 14,
+      "title": "Fine-tuning non-intrusive load monitoring model through ...",
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0306261925006737",
+      "domain": "www.sciencedirect.com",
+      "site": "ScienceDirect.com",
+      "snippet": "Transfer learning by G Pusceddu 2025 Cited by 9 — effectively enhances model generalization to unseen households using limited user-labeled data. •. High accuracy in appliance ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 15,
+      "title": "A weakly supervised active learning framework for non ...",
+      "url": "https://journals.sagepub.com/doi/full/10.3233/ICA-240738",
+      "domain": "journals.sagepub.com",
+      "site": "Sage Journals",
+      "snippet": "Non Intrusive Load Monitoring by G Tanoni 2025 Cited by 4 — - is a software-based technique to monitor individual appliances inside a building from a single aggregate meter reading and recent ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 16,
+      "title": "Dr Mingjun Zhong University of Aberdeen",
+      "url": "https://www.abdn.ac.uk/people/mingjun.zhong?count=50",
+      "domain": "www.abdn.ac.uk",
+      "site": "",
+      "snippet": "2025 Domain Adaptation Nonintrusive Load Monitoring Transfer Learning Intrusive Load Monitoring -2026 ... Multisource for",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 17,
+      "title": "Confidence-Based, Collaborative, Distributed Continual ... National Institutes of Health (NIH)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12196696/",
+      "domain": "pmc.ncbi.nlm.nih.gov",
+      "site": "(.gov)",
+      "snippet": "study learning Non Intrusive Load Monitoring by C Lan 2025 Cited by 4 — This proposes a confidence-based, collaborative, continual framework for (NILM), which enables ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 18,
+      "title": "Synthetic-to-Real Domain Adaptation for Nonintrusive ... Harvard University",
+      "url": "https://ui.adsabs.harvard.edu/abs/2024ITIM...7306779H/abstract",
+      "domain": "ui.adsabs.harvard.edu",
+      "site": "",
+      "snippet": "transfer learning by P Hao 2024 Cited by 26 — Our experimental results demonstrate that the proposed network shows promise for the from a synthetic dataset to a real dataset, and its ... cross- 2025 Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    }
+  ],
+  "resultCount": 18,
+  "peopleAlsoAsk": [],
+  "peopleAlsoSearchFor": [],
+  "relatedSearches": [],
+  "pagination": {
+    "pagesFetched": 2,
+    "hasMore": true
+  },
+  "notes": [
+    "Snippets are reconstructed from the accessibility tree; inline bold-query emphasis may reorder text.",
+    "Some inline URLs inside snippets have no accessible text and are omitted."
+  ],
+  "pages": [
+    {
+      "start": 0,
+      "rawChars": 21489,
+      "resultsOnPage": 9,
+      "hrefsUpgraded": 9,
+      "hasMore": true
+    },
+    {
+      "start": 10,
+      "rawChars": 10407,
+      "resultsOnPage": 10,
+      "hrefsUpgraded": 9,
+      "hasMore": true
+    }
+  ],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/google_search/non-intrusive-load-monitoring-transfer-learning--20260926.json",
+    "bytes": 15488
+  }
+}

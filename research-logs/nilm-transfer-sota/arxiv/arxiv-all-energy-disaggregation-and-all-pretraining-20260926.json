@@ -1,0 +1,19 @@
+{
+  "query": "all:\"energy disaggregation\" AND all:\"pretraining\"",
+  "sortBy": "submittedDate",
+  "sortOrder": "descending",
+  "results": [],
+  "resultCount": 0,
+  "totalResults": 0,
+  "pagination": {
+    "pagesFetched": 1,
+    "hasMore": false
+  },
+  "notes": [
+    "no hits - check field prefixes (ti:/au:/abs:/cat:), or loosen the query"
+  ],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/arxiv/arxiv-all-energy-disaggregation-and-all-pretraining-20260926.json",
+    "bytes": 349
+  }
+}

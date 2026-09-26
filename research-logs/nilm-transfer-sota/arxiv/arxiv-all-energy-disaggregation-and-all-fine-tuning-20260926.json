@@ -1,0 +1,47 @@
+{
+  "query": "all:\"energy disaggregation\" AND all:\"fine-tuning\"",
+  "sortBy": "relevance",
+  "sortOrder": "descending",
+  "results": [
+    {
+      "arxivId": "2301.03018",
+      "version": "2",
+      "title": "Energy Disaggregation & Appliance Identification in a Smart Home: Transfer Learning enables Edge Computing",
+      "authors": [
+        "M. Hashim Shahab",
+        "Hasan Mujtaba Buttar",
+        "Ahsan Mehmood",
+        "Waqas Aman",
+        "M. Mahboob Ur Rahman",
+        "M. Wasim Nawaz",
+        "Haris Pervaiz",
+        "Qammer H. Abbasi"
+      ],
+      "summary": "Non-intrusive load monitoring (NILM) or energy disaggregation aims to extract the load profiles of individual consumer electronic appliances, given an aggregate load profile of the mains of a smart home. This work proposes a novel deep-learning and edge computing approach to solve the NILM problem and a few related problems as follows. 1) We build upon the reputed seq2-point convolutional neural network (CNN) model to come up with the proposed seq2-[3]-point CNN model to solve the (home) NILM problem and site-NILM problem (basically, NILM at a smaller scale). 2) We solve the related problem of appliance identification by building upon the state-of-the-art (pre-trained) 2D-CNN models, i.e., AlexNet, ResNet-18, and DenseNet-121, which are fine-tuned two custom datasets that consist of Wavelets and short-time Fourier transform (STFT)-based 2D electrical signatures of the appliances. 3) Finally, we do some basic qualitative inference about an individual appliance's health by comparing the power consumption of the same appliance across multiple homes. Low-frequency REDD dataset is used for all problems, except site-NILM where REFIT dataset has been used. As for the results, we achieve a maximum accuracy of 94.6\\% for home-NILM, 81\\% for site-NILM, and 88.9\\% for appliance identification (with Resnet-based model).",
+      "primaryCategory": "eess.SP",
+      "categories": [
+        "eess.SP",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2023-01-08T10:59:44Z",
+      "updated": "2024-03-14T08:50:35Z",
+      "absUrl": "https://arxiv.org/abs/2301.03018v2",
+      "pdfUrl": "https://arxiv.org/pdf/2301.03018v2",
+      "doi": null,
+      "comment": "10 pages, 4 figures, 3 tables, under review with a journal",
+      "journalRef": null
+    }
+  ],
+  "resultCount": 1,
+  "totalResults": 1,
+  "pagination": {
+    "pagesFetched": 1,
+    "hasMore": false
+  },
+  "notes": [],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/arxiv/arxiv-all-energy-disaggregation-and-all-fine-tuning-20260926.json",
+    "bytes": 2489
+  }
+}

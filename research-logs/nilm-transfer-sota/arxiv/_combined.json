@@ -1,0 +1,322 @@
+[
+ {
+  "tag": "q1",
+  "id": "2603.04998",
+  "date": "2026-03-05",
+  "title": "Lightweight and Scalable Transfer Learning Framework for Load Disaggregation",
+  "cats": "cs.LG",
+  "abs": "Non-Intrusive Load Monitoring (NILM) aims to estimate appliance-level consumption from aggregate electrical signals recorded at a single measurement point. In recent years, the field has increasingly adopted deep learning approaches; however, cross-domain generalization remains a persistent challenge due to variations in appliance characteristics, usage patterns, and background loads across homes. Transfer learning provides a practical paradigm to adapt models with limited target data. However, existing methods often assume a fixed appliance set, lack flexibility for evolving real-world deployments, remain unsuitable for edge devices, or scale poorly for real-time operation. This paper proposes RefQuery, a scalable multi-appliance, multi-task NILM framework that conditions disaggregation on compact appliance fingerprints, allowing one shared model to serve many appliances without a fixed output set. RefQuery keeps a pretrained disaggregation network fully frozen and adapts to a target home by learning only a per-appliance embedding during a lightweight backpropagation stage. Experiments on three public datasets demonstrate that RefQuery delivers a strong accuracy-efficiency trade-off against single-appliance and multi-appliance baselines, including modern Transformer-based methods. These results support RefQuery as a practical path toward scalable, real-time NILM on resource-constrained edge devices."
+ },
+ {
+  "tag": "q1",
+  "id": "2301.03018",
+  "date": "2023-01-08",
+  "title": "Energy Disaggregation & Appliance Identification in a Smart Home: Transfer Learning enables Edge Computing",
+  "cats": "eess.SP,cs.AI,cs.LG",
+  "abs": "Non-intrusive load monitoring (NILM) or energy disaggregation aims to extract the load profiles of individual consumer electronic appliances, given an aggregate load profile of the mains of a smart home. This work proposes a novel deep-learning and edge computing approach to solve the NILM problem and a few related problems as follows. 1) We build upon the reputed seq2-point convolutional neural network (CNN) model to come up with the proposed seq2-[3]-point CNN model to solve the (home) NILM problem and site-NILM problem (basically, NILM at a smaller scale). 2) We solve the related problem of appliance identification by building upon the state-of-the-art (pre-trained) 2D-CNN models, i.e., AlexNet, ResNet-18, and DenseNet-121, which are fine-tuned two custom datasets that consist of Wavelets and short-time Fourier transform (STFT)-based 2D electrical signatures of the appliances. 3) Finally, we do some basic qualitative inference about an individual appliance's health by comparing the power consumption of the same appliance across multiple homes. Low-frequency REDD dataset is used for all problems, except site-NILM where REFIT dataset has been used. As for the results, we achieve a maximum accuracy of 94.6\\% for home-NILM, 81\\% for site-NILM, and 88.9\\% for appliance identification (with Resnet-based model)."
+ },
+ {
+  "tag": "q1",
+  "id": "2204.02802",
+  "date": "2022-04-06",
+  "title": "Dimensionality Expansion of Load Monitoring Time Series and Transfer Learning for EMS",
+  "cats": "cs.LG,eess.SP",
+  "abs": "Energy management systems (EMS) rely on (non)-intrusive load monitoring (N)ILM to monitor and manage appliances and help residents be more energy efficient and thus more frugal. The robustness as well as the transfer potential of the most promising machine learning solutions for (N)ILM is not yet fully understood as they are trained and evaluated on relatively limited data. In this paper, we propose a new approach for load monitoring in building EMS based on dimensionality expansion of time series and transfer learning. We perform an extensive evaluation on 5 different low-frequency datasets. The proposed feature dimensionality expansion using video-like transformation and resource-aware deep learning architecture achieves an average weighted F1 score of 0.88 across the datasets with 29 appliances and is computationally more efficient compared to the state-of-the-art imaging methods. Investigating the proposed method for cross-dataset intra-domain transfer learning, we find that 1) our method performs with an average weighted F1 score of 0.80 while requiring 3-times fewer epochs for model training compared to the non-transfer approach, 2) can achieve an F1 score of 0.75 with only 230 data samples, and 3) our transfer approach outperforms the state-of-the-art in precision drop by up to 12 percentage points for unseen appliances."
+ },
+ {
+  "tag": "q1",
+  "id": "2106.07751",
+  "date": "2021-06-07",
+  "title": "FedNILM: Applying Federated Learning to NILM Applications at the Edge",
+  "cats": "cs.LG",
+  "abs": "Non-intrusive load monitoring (NILM) helps disaggregate the household's main electricity consumption to energy usages of individual appliances, thus greatly cutting down the cost in fine-grained household load monitoring. To address the arisen privacy concern in NILM applications, federated learning (FL) could be leveraged for NILM model training and sharing. When applying the FL paradigm in real-world NILM applications, however, we are faced with the challenges of edge resource restriction, edge model personalization and edge training data scarcity. In this paper we present FedNILM, a practical FL paradigm for NILM applications at the edge client. Specifically, FedNILM is designed to deliver privacy-preserving and personalized NILM services to large-scale edge clients, by leveraging i) secure data aggregation through federated learning, ii) efficient cloud model compression via filter pruning and multi-task learning, and iii) personalized edge model building with unsupervised transfer learning. Our experiments on real-world energy data show that, FedNILM is able to achieve personalized energy disaggregation with the state-of-the-art accuracy, while ensuring privacy preserving at the edge client."
+ },
+ {
+  "tag": "q1",
+  "id": "1902.08835",
+  "date": "2019-02-23",
+  "title": "Transfer Learning for Non-Intrusive Load Monitoring",
+  "cats": "cs.LG,stat.ML",
+  "abs": "Non-intrusive load monitoring (NILM) is a technique to recover source appliances from only the recorded mains in a household. NILM is unidentifiable and thus a challenge problem because the inferred power value of an appliance given only the mains could not be unique. To mitigate the unidentifiable problem, various methods incorporating domain knowledge into NILM have been proposed and shown effective experimentally. Recently, among these methods, deep neural networks are shown performing best. Arguably, the recently proposed sequence-to-point (seq2point) learning is promising for NILM. However, the results were only carried out on the same data domain. It is not clear if the method could be generalised or transferred to different domains, e.g., the test data were drawn from a different country comparing to the training data. We address this issue in the paper, and two transfer learning schemes are proposed, i.e., appliance transfer learning (ATL) and cross-domain transfer learning (CTL). For ATL, our results show that the latent features learnt by a `complex' appliance, e.g., washing machine, can be transferred to a `simple' appliance, e.g., kettle. For CTL, our conclusion is that the seq2point learning is transferable. Precisely, when the training and test data are in a similar domain, seq2point learning can be directly applied to the test data without fine tuning; when the training and test data are in different domains, seq2point learning needs fine tuning before applying to the test data. Interestingly, we show that only the fully connected layers need fine tuning for transfer learning. Source code can be found at https://github.com/MingjunZhong/transferNILM."
+ },
+ {
+  "tag": "q3",
+  "id": "2603.04998",
+  "date": "2026-03-05",
+  "title": "Lightweight and Scalable Transfer Learning Framework for Load Disaggregation",
+  "cats": "cs.LG",
+  "abs": "Non-Intrusive Load Monitoring (NILM) aims to estimate appliance-level consumption from aggregate electrical signals recorded at a single measurement point. In recent years, the field has increasingly adopted deep learning approaches; however, cross-domain generalization remains a persistent challenge due to variations in appliance characteristics, usage patterns, and background loads across homes. Transfer learning provides a practical paradigm to adapt models with limited target data. However, existing methods often assume a fixed appliance set, lack flexibility for evolving real-world deployments, remain unsuitable for edge devices, or scale poorly for real-time operation. This paper proposes RefQuery, a scalable multi-appliance, multi-task NILM framework that conditions disaggregation on compact appliance fingerprints, allowing one shared model to serve many appliances without a fixed output set. RefQuery keeps a pretrained disaggregation network fully frozen and adapts to a target home by learning only a per-appliance embedding during a lightweight backpropagation stage. Experiments on three public datasets demonstrate that RefQuery delivers a strong accuracy-efficiency trade-off against single-appliance and multi-appliance baselines, including modern Transformer-based methods. These results support RefQuery as a practical path toward scalable, real-time NILM on resource-constrained edge devices."
+ },
+ {
+  "tag": "q3",
+  "id": "2505.05478",
+  "date": "2025-04-23",
+  "title": "OccuEMBED: Occupancy Extraction Merged with Building Energy Disaggregation for Occupant-Responsive Operation at Scale",
+  "cats": "eess.SP,cs.LG,eess.SY",
+  "abs": "Buildings account for a significant share of global energy consumption and emissions, making it critical to operate them efficiently. As electricity grids become more volatile with renewable penetration, buildings must provide flexibility to support grid stability. Building automation plays a key role in enhancing efficiency and flexibility via centralized operations, but it must prioritize occupant-centric strategies to balance energy and comfort targets. However, incorporating occupant information into large-scale, centralized building operations remains challenging due to data limitations. We investigate the potential of using whole-building smart meter data to infer both occupancy and system operations. Integrating these insights into data-driven building energy analysis allows more occupant-centric energy-saving and flexibility at scale. Specifically, we propose OccuEMBED, a unified framework for occupancy inference and system-level load analysis. It combines two key components: a probabilistic occupancy profile generator, and a controllable and interpretable load disaggregator supported by Kolmogorov-Arnold Networks (KAN). This design embeds knowledge of occupancy patterns and load-occupancy-weather relationships into deep learning models. We conducted comprehensive evaluations to demonstrate its effectiveness across synthetic and real-world datasets compared to various occupancy inference baselines. OccuEMBED always achieved average F1 scores above 0.8 in discrete occupancy inference and RMSE within 0.1-0.2 for continuous occupancy ratios. We further demonstrate how OccuEMBED integrates with building load monitoring platforms to display occupancy profiles, analyze system-level operations, and inform occupant-responsive strategies. Our model lays a robust foundation in scaling occupant-centric building management systems to meet the challenges of an evolving energy system."
+ },
+ {
+  "tag": "q3",
+  "id": "2307.10209",
+  "date": "2023-07-14",
+  "title": "On the Sensitivity of Deep Load Disaggregation to Adversarial Attacks",
+  "cats": "cs.CR,cs.LG",
+  "abs": "Non-intrusive Load Monitoring (NILM) algorithms, commonly referred to as load disaggregation algorithms, are fundamental tools for effective energy management. Despite the success of deep models in load disaggregation, they face various challenges, particularly those pertaining to privacy and security. This paper investigates the sensitivity of prominent deep NILM baselines to adversarial attacks, which have proven to be a significant threat in domains such as computer vision and speech recognition. Adversarial attacks entail the introduction of imperceptible noise into the input data with the aim of misleading the neural network into generating erroneous outputs. We investigate the Fast Gradient Sign Method (FGSM), a well-known adversarial attack, to perturb the input sequences fed into two commonly employed CNN-based NILM baselines: the Sequence-to-Sequence (S2S) and Sequence-to-Point (S2P) models. Our findings provide compelling evidence for the vulnerability of these models, particularly the S2P model which exhibits an average decline of 20\\% in the F1-score even with small amounts of noise. Such weakness has the potential to generate profound implications for energy management systems in residential and industrial sectors reliant on NILM models."
+ },
+ {
+  "tag": "q3",
+  "id": "2210.04176",
+  "date": "2022-10-09",
+  "title": "Non-intrusive Load Monitoring based on Self-supervised Learning",
+  "cats": "eess.SP",
+  "abs": "Deep learning models for non-intrusive load monitoring (NILM) tend to require a large amount of labeled data for training. However, it is difficult to generalize the trained models to unseen sites due to different load characteristics and operating patterns of appliances between data sets. For addressing such problems, self-supervised learning (SSL) is proposed in this paper, where labeled appliance-level data from the target data set or house is not required. Initially, only the aggregate power readings from target data set are required to pre-train a general network via a self-supervised pretext task to map aggregate power sequences to derived representatives. Then, supervised downstream tasks are carried out for each appliance category to fine-tune the pre-trained network, where the features learned in the pretext task are transferred. Utilizing labeled source data sets enables the downstream tasks to learn how each load is disaggregated, by mapping the aggregate to labels. Finally, the fine-tuned network is applied to load disaggregation for the target sites. For validation, multiple experimental cases are designed based on three publicly accessible REDD, UK-DALE, and REFIT data sets. Besides, state-of-the-art neural networks are employed to perform NILM task in the experiments. Based on the NILM results in various cases, SSL generally outperforms zero-shot learning in improving load disaggregation performance without any sub-metering data from the target data sets."
+ },
+ {
+  "tag": "q3",
+  "id": "2111.05120",
+  "date": "2021-11-07",
+  "title": "A Deep Learning Technique using Low Sampling rate for residential Non Intrusive Load Monitoring",
+  "cats": "eess.SP,cs.AI,cs.LG",
+  "abs": "Individual device loads and energy consumption feedback is one of the important approaches for pursuing users to save energy in residences. This can help in identifying faulty devices and wasted energy by devices when left On unused. The main challenge is to identity and estimate the energy consumption of individual devices without intrusive sensors on each device. Non-intrusive load monitoring (NILM) or energy disaggregation, is a blind source separation problem which requires a system to estimate the electricity usage of individual appliances from the aggregated household energy consumption. In this paper, we propose a novel deep neural network-based approach for performing load disaggregation on low frequency power data obtained from residential households. We combine a series of one-dimensional Convolutional Neural Networks and Long Short Term Memory (1D CNN-LSTM) to extract features that can identify active appliances and retrieve their power consumption given the aggregated household power value. We used CNNs to extract features from main readings in a given time frame and then used those features to classify if a given appliance is active at that time period or not. Following that, the extracted features are used to model a generation problem using LSTM. We train the LSTM to generate the disaggregated energy consumption of a particular appliance. Our neural network is capable of generating detailed feedback of demand-side, providing vital insights to the end-user about their electricity consumption. The algorithm was designed for low power offline devices such as ESP32. Empirical calculations show that our model outperforms the state-of-the-art on the Reference Energy Disaggregation Dataset (REDD)."
+ },
+ {
+  "tag": "q3",
+  "id": "2107.12582",
+  "date": "2021-07-27",
+  "title": "Event-driven Two-stage Solution to Non-intrusive Load Monitoring",
+  "cats": "eess.SP",
+  "abs": "Existing methods of non-intrusive load monitoring (NILM) in literatures generally suffer from high computational complexity and/or low accuracy in identifying working household appliances. This paper proposes an event-driven Factorial Hidden Markov model (eFHMM) for multiple appliances with multiple states in a household, aiming for low computational complexity and high load disaggregation accuracy. The proposed eFHMM decreases the computational complexity to be linear to the event number, which ensures online load disaggregation. Furthermore, the eFHMM is solved in two stages, where the first stage identifies state-changing appliance using transient signatures and the second stage confirms the inferred states using steady-state signatures. The combination of transient and steady-state signatures, which are extracted from transient and steady periods segmented by detected events, enhances the uniqueness of each state transition and associated appliances, which ensures accurate load disaggregation. The event-driven two-stage NILM solution, termed as eFHMM-TS, is naturally fit into an edge-cloud framework, which makes possible the real-world application of NILM. The proposed eFHMM-TS method is validated on the LIFTED and synD datasets. Results demonstrate that the eFHMM-TS method outperforms other methods and can be applied in practice."
+ },
+ {
+  "tag": "q3",
+  "id": "2104.03120",
+  "date": "2021-04-07",
+  "title": "Unsupervised Disaggregation of Water Heater Load from Smart Meter Data Processing",
+  "cats": "eess.SY,eess.SP",
+  "abs": "In the residential sector, electric water heaters are appliances with a relatively high power consumption and a significant thermal inertia, which is particularly suitable for Demand Response schemes. The success of efficient DR schemes via the control of water heaters presupposes an accurate estimate of their power demand at each instant. Although the load of water heaters is rarely directly measured, a large penetration of Smart Meters (SMs) in distribution grids enables to indirectly infer this information on a large scale via load disaggregation. For that purpose, a considerable number of Non-Intrusive Load Monitoring (NILM) approaches are suggested in the literature. However, they require data streams at a time resolution in the range of one second or higher, which is not realistic for standard SMs. Hence, this paper proposes an unsupervised approach to detect and disaggregate the load profile of water heaters from standard SM data with a time resolution in the minute range. Evaluated on multiple real loads with sub-metering, the proposed approach achieves a Normalized Mean Absolute Error (NMAE) lower than 2% and a precision generally higher than 92% with time resolutions between 5 and 15 minutes."
+ },
+ {
+  "tag": "q3",
+  "id": "2011.03519",
+  "date": "2020-11-04",
+  "title": "A Data-Driven Machine Learning Approach for Consumer Modeling with Load Disaggregation",
+  "cats": "eess.SP,cs.CE,cs.LG,eess.SY",
+  "abs": "While non-parametric models, such as neural networks, are sufficient in the load forecasting, separate estimates of fixed and shiftable loads are beneficial to a wide range of applications such as distribution system operational planning, load scheduling, energy trading, and utility demand response programs. A semi-parametric estimation model is usually required, where cost sensitivities of demands must be known. Existing research work consistently uses somewhat arbitrary parameters that seem to work best. In this paper, we propose a generic class of data-driven semiparametric models derived from consumption data of residential consumers. A two-stage machine learning approach is developed. In the first stage, disaggregation of the load into fixed and shiftable components is accomplished by means of a hybrid algorithm consisting of non-negative matrix factorization (NMF) and Gaussian mixture models (GMM), with the latter trained by an expectation-maximization (EM) algorithm. The fixed and shiftable loads are subject to analytic treatment with economic considerations. In the second stage, the model parameters are estimated using an L2-norm, epsilon-insensitive regression approach. Actual energy usage data of two residential customers show the validity of the proposed method."
+ },
+ {
+  "tag": "q3",
+  "id": "2009.12355",
+  "date": "2020-09-25",
+  "title": "Sequence-to-Sequence Load Disaggregation Using Multi-Scale Residual Neural Network",
+  "cats": "cs.LG,eess.SP",
+  "abs": "With the increased demand on economy and efficiency of measurement technology, Non-Intrusive Load Monitoring (NILM) has received more and more attention as a cost-effective way to monitor electricity and provide feedback to users. Deep neural networks has been shown a great potential in the field of load disaggregation. In this paper, firstly, a new convolutional model based on residual blocks is proposed to avoid the degradation problem which traditional networks more or less suffer from when network layers are increased in order to learn more complex features. Secondly, we propose dilated convolution to curtail the excessive quantity of model parameters and obtain bigger receptive field, and multi-scale structure to learn mixed data features in a more targeted way. Thirdly, we give details about generating training and test set under certain rules. Finally, the algorithm is tested on real-house public dataset, UK-DALE, with three existing neural networks. The results are compared and analysed, the proposed model shows improvements on F1 score, MAE as well as model complexity across different appliances."
+ },
+ {
+  "tag": "q3",
+  "id": "1912.00759",
+  "date": "2019-11-15",
+  "title": "Improving Non-Intrusive Load Disaggregation through an Attention-Based Deep Neural Network",
+  "cats": "cs.LG,eess.SP,stat.ML",
+  "abs": "Energy disaggregation, known in the literature as Non-Intrusive Load Monitoring (NILM), is the task of inferring the power demand of the individual appliances given the aggregate power demand recorded by a single smart meter which monitors multiple appliances. In this paper, we propose a deep neural network that combines a regression subnetwork with a classification subnetwork for solving the NILM problem. Specifically, we improve the generalization capability of the overall architecture by including an encoder-decoder with a tailored attention mechanism in the regression subnetwork. The attention mechanism is inspired by the temporal attention that has been successfully applied in neural machine translation, text summarization, and speech recognition. The experiments conducted on two publicly available datasets--REDD and UK-DALE--show that our proposed deep neural network outperforms the state-of-the-art in all the considered experimental conditions. We also show that modeling attention translates into the network's ability to correctly detect the turning on or off an appliance and to locate signal sections with high power consumption, which are of extreme interest in the field of energy disaggregation."
+ },
+ {
+  "tag": "q3",
+  "id": "1903.09180",
+  "date": "2019-03-21",
+  "title": "A Hybrid Event Detection Approach for Non-Intrusive Load Monitoring",
+  "cats": "eess.SP",
+  "abs": "Non-Intrusive Load Monitoring (NILM) is a practical method to provide appliance-level electricity consumption information. Event detection, as an important part of event-based NILM methods, has a direct impact on the accuracy of the ultimate load disaggregation results in the entire NILM framework. This paper presents a hybrid event detection approach for relatively complex household load datasets that include appliances with long transients, high fluctuations, and/or near-simultaneous actions. The proposed approach includes a base algorithm based on moving average change with time limit, and two auxiliary algorithms based on derivative analysis and filtering analysis. The structure, steps, and working principle of this approach are described in detail. The proposed approach does not require additional information about household appliances, nor does it require any training sets. Case studies on different datasets are conducted to evaluate the performance of the proposed approach in comparison with several existing approaches including log likelihood ratio detector with maxima (LLD-Max) approach, active window-based (AWB) approach, and generalized likelihood ratio (GLR) approach. Results show that the proposed approach works well in detecting events in complex household load datasets and performs better than the existing approaches."
+ },
+ {
+  "tag": "q3",
+  "id": "1409.4438",
+  "date": "2014-09-15",
+  "title": "An In Depth Study into Using EMI Signatures for Appliance Identification",
+  "cats": "eess.SY",
+  "abs": "Energy conservation is a key factor towards long term energy sustainability. Real-time end user energy feedback, using disaggregated electric load composition, can play a pivotal role in motivating consumers towards energy conservation. Recent works have explored using high frequency conducted electromagnetic interference (EMI) on power lines as a single point sensing parameter for monitoring common home appliances. However, key questions regarding the reliability and feasibility of using EMI signatures for non-intrusive load monitoring over multiple appliances across different sensing paradigms remain unanswered. This work presents some of the key challenges towards using EMI as a unique and time invariant feature for load disaggregation. In-depth empirical evaluations of a large number of appliances in different sensing configurations are carried out, in both laboratory and real world settings. Insights into the effects of external parameters such as line impedance, background noise and appliance coupling on the EMI behavior of an appliance are realized through simulations and measurements. A generic approach for simulating the EMI behavior of an appliance that can then be used to do a detailed analysis of real world phenomenology is presented. The simulation approach is validated with EMI data from a router. Our EMI dataset - High Frequency EMI Dataset (HFED) is also released."
+ },
+ {
+  "tag": "q5",
+  "id": "2204.06767",
+  "date": "2022-04-14",
+  "title": "Learning Task-Aware Energy Disaggregation: a Federated Approach",
+  "cats": "cs.LG,eess.SY",
+  "abs": "We consider the problem of learning the energy disaggregation signals for residential load data. Such task is referred as non-intrusive load monitoring (NILM), and in order to find individual devices' power consumption profiles based on aggregated meter measurements, a machine learning model is usually trained based on large amount of training data coming from a number of residential homes. Yet collecting such residential load datasets require both huge efforts and customers' approval on sharing metering data, while load data coming from different regions or electricity users may exhibit heterogeneous usage patterns. Both practical concerns make training a single, centralized NILM model challenging. In this paper, we propose a decentralized and task-adaptive learning scheme for NILM tasks, where nested meta learning and federated learning steps are designed for learning task-specific models collectively. Simulation results on benchmark dataset validate proposed algorithm's performance on efficiently inferring appliance-level consumption for a variety of homes and appliances."
+ },
+ {
+  "tag": "q6",
+  "id": "2204.02802",
+  "date": "2022-04-06",
+  "title": "Dimensionality Expansion of Load Monitoring Time Series and Transfer Learning for EMS",
+  "cats": "cs.LG,eess.SP",
+  "abs": "Energy management systems (EMS) rely on (non)-intrusive load monitoring (N)ILM to monitor and manage appliances and help residents be more energy efficient and thus more frugal. The robustness as well as the transfer potential of the most promising machine learning solutions for (N)ILM is not yet fully understood as they are trained and evaluated on relatively limited data. In this paper, we propose a new approach for load monitoring in building EMS based on dimensionality expansion of time series and transfer learning. We perform an extensive evaluation on 5 different low-frequency datasets. The proposed feature dimensionality expansion using video-like transformation and resource-aware deep learning architecture achieves an average weighted F1 score of 0.88 across the datasets with 29 appliances and is computationally more efficient compared to the state-of-the-art imaging methods. Investigating the proposed method for cross-dataset intra-domain transfer learning, we find that 1) our method performs with an average weighted F1 score of 0.80 while requiring 3-times fewer epochs for model training compared to the non-transfer approach, 2) can achieve an F1 score of 0.75 with only 230 data samples, and 3) our transfer approach outperforms the state-of-the-art in precision drop by up to 12 percentage points for unseen appliances."
+ },
+ {
+  "tag": "q6",
+  "id": "2009.07756",
+  "date": "2020-09-16",
+  "title": "Exploring Bayesian Surprise to Prevent Overfitting and to Predict Model Performance in Non-Intrusive Load Monitoring",
+  "cats": "cs.AI,eess.SP",
+  "abs": "Non-Intrusive Load Monitoring (NILM) is a field of research focused on segregating constituent electrical loads in a system based only on their aggregated signal. Significant computational resources and research time are spent training models, often using as much data as possible, perhaps driven by the preconception that more data equates to more accurate models and better performing algorithms. When has enough prior training been done? When has a NILM algorithm encountered new, unseen data? This work applies the notion of Bayesian surprise to answer these questions which are important for both supervised and unsupervised algorithms. We quantify the degree of surprise between the predictive distribution (termed postdictive surprise), as well as the transitional probabilities (termed transitional surprise), before and after a window of observations. We compare the performance of several benchmark NILM algorithms supported by NILMTK, in order to establish a useful threshold on the two combined measures of surprise. We validate the use of transitional surprise by exploring the performance of a popular Hidden Markov Model as a function of surprise threshold. Finally, we explore the use of a surprise threshold as a regularization technique to avoid overfitting in cross-dataset performance. Although the generality of the specific surprise threshold discussed herein may be suspect without further testing, this work provides clear evidence that a point of diminishing returns of model performance with respect to dataset size exists. This has implications for future model development, dataset acquisition, as well as aiding in model flexibility during deployment."
+ },
+ {
+  "tag": "q8",
+  "id": "2609.23146",
+  "date": "2026-09-19",
+  "title": "Ask for Any Appliance: A Prompt-Programmable Foundation Model for Non-Intrusive Load Monitoring",
+  "cats": "cs.LG,eess.SP",
+  "abs": "Non-intrusive load monitoring (NILM) estimates appliance-level consumption from a whole-home meter, but appliance-specific models and fixed output inventories make coverage costly to extend. We present FM4NILM (Foundation Model for NILM), a single prompt-programmable model that estimates a requested appliance's power trajectory from aggregate measurements, a natural-language description, and optional activation exemplars. A lightweight cadence-aware transformer is pretrained by masked reconstruction on 645k sequences from seven public corpora spanning 1-60 s sampling intervals, then aligned with appliance requests using observation-masked losses for partially labeled households. A Bernoulli-lognormal decoder separates activity detection from conditional power estimation. On held-out households and time periods from REDD, UK-DALE, and REFIT, one frozen text-prompted model serves twelve appliance-corpus requests, achieving 0.556 event F1, 0.625 AUPRC, and the lowest active-window MAE (251.8 W) among seven appliance-specific baselines. Streaming score aggregation raises event F1 to 0.582 with a 60 s aggregation delay. In a separate category-held-out evaluation, adding ten activation exemplars raises microwave AUPRC from 0.132 to 0.214 without parameter updates. Input-intervention ablations probe the model's dependence on appliance requests and aggregate measurements. These results demonstrate competitive disaggregation with one shared model and support extending appliance coverage through prompts and examples rather than additional specialist networks."
+ },
+ {
+  "tag": "q8",
+  "id": "2603.04998",
+  "date": "2026-03-05",
+  "title": "Lightweight and Scalable Transfer Learning Framework for Load Disaggregation",
+  "cats": "cs.LG",
+  "abs": "Non-Intrusive Load Monitoring (NILM) aims to estimate appliance-level consumption from aggregate electrical signals recorded at a single measurement point. In recent years, the field has increasingly adopted deep learning approaches; however, cross-domain generalization remains a persistent challenge due to variations in appliance characteristics, usage patterns, and background loads across homes. Transfer learning provides a practical paradigm to adapt models with limited target data. However, existing methods often assume a fixed appliance set, lack flexibility for evolving real-world deployments, remain unsuitable for edge devices, or scale poorly for real-time operation. This paper proposes RefQuery, a scalable multi-appliance, multi-task NILM framework that conditions disaggregation on compact appliance fingerprints, allowing one shared model to serve many appliances without a fixed output set. RefQuery keeps a pretrained disaggregation network fully frozen and adapts to a target home by learning only a per-appliance embedding during a lightweight backpropagation stage. Experiments on three public datasets demonstrate that RefQuery delivers a strong accuracy-efficiency trade-off against single-appliance and multi-appliance baselines, including modern Transformer-based methods. These results support RefQuery as a practical path toward scalable, real-time NILM on resource-constrained edge devices."
+ },
+ {
+  "tag": "q8",
+  "id": "2508.14600",
+  "date": "2025-08-20",
+  "title": "Energy Injection Identification enabled Disaggregation with Deep Multi-Task Learning",
+  "cats": "cs.LG,eess.SP",
+  "abs": "Non-Intrusive Load Monitoring (NILM) offers a cost-effective method to obtain fine-grained appliance-level energy consumption in smart homes and building applications. However, the increasing adoption of behind-the-meter (BTM) energy sources such as solar panels and battery storage poses new challenges for conventional NILM methods that rely solely on at-the-meter data. The energy injected from the BTM sources can obscure the power signatures of individual appliances, leading to a significant decrease in NILM performance. To address this challenge, we present DualNILM, a deep multi-task learning framework designed for the dual tasks of appliance state recognition and injected energy identification. Using a Transformer-based architecture that integrates sequence-to-point and sequence-to-sequence strategies, DualNILM effectively captures multiscale temporal dependencies in the aggregate power consumption patterns, allowing for accurate appliance state recognition and energy injection identification. Extensive evaluation on self-collected and synthesized datasets demonstrates that DualNILM maintains an excellent performance for dual tasks in NILM, much outperforming conventional methods. Our work underscores the framework's potential for robust energy disaggregation in modern energy systems with renewable penetration. Synthetic photovoltaic augmented datasets with realistic injection simulation methodology are open-sourced at https://github.com/MathAdventurer/PV-Augmented-NILM-Datasets."
+ },
+ {
+  "tag": "q8",
+  "id": "2506.05880",
+  "date": "2025-06-06",
+  "title": "NILMFormer: Non-Intrusive Load Monitoring that Accounts for Non-Stationarity",
+  "cats": "cs.LG,eess.SP",
+  "abs": "Millions of smart meters have been deployed worldwide, collecting the total power consumed by individual households. Based on these data, electricity suppliers offer their clients energy monitoring solutions to provide feedback on the consumption of their individual appliances. Historically, such estimates have relied on statistical methods that use coarse-grained total monthly consumption and static customer data, such as appliance ownership. Non-Intrusive Load Monitoring (NILM) is the problem of disaggregating a household's collected total power consumption to retrieve the consumed power for individual appliances. Current state-of-the-art (SotA) solutions for NILM are based on deep-learning (DL) and operate on subsequences of an entire household consumption reading. However, the non-stationary nature of real-world smart meter data leads to a drift in the data distribution within each segmented window, which significantly affects model performance. This paper introduces NILMFormer, a Transformer-based architecture that incorporates a new subsequence stationarization/de-stationarization scheme to mitigate the distribution drift and that uses a novel positional encoding that relies only on the subsequence's timestamp information. Experiments with 4 real-world datasets show that NILMFormer significantly outperforms the SotA approaches. Our solution has been deployed as the backbone algorithm for EDF's (Electricité De France) consumption monitoring service, delivering detailed insights to millions of customers about their individual appliances' power consumption. This paper appeared in KDD 2025."
+ },
+ {
+  "tag": "q8",
+  "id": "2505.04367",
+  "date": "2025-05-07",
+  "title": "Deep Learning Innovations for Energy Efficiency: Advances in Non-Intrusive Load Monitoring and EV Charging Optimization for a Sustainable Grid",
+  "cats": "cs.LG",
+  "abs": "The global energy landscape is undergoing a profound transformation, often referred to as the energy transition, driven by the urgent need to mitigate climate change, reduce greenhouse gas emissions, and ensure sustainable energy supplies. However, the undoubted complexity of new investments in renewables, as well as the phase out of high CO2-emission energy sources, hampers the pace of the energy transition and raises doubts as to whether new renewable energy sources are capable of solely meeting the climate target goals. This highlights the need to investigate alternative pathways to accelerate the energy transition, by identifying human activity domains with higher/excessive energy demands. Two notable examples where there is room for improvement, in the sense of reducing energy consumption and consequently CO2 emissions, are residential energy consumption and road transport. This dissertation investigates the development of novel Deep Learning techniques to create tools which solve limitations in these two key energy domains. Reduction of residential energy consumption can be achieved by empowering end-users with the user of Non-Intrusive Load Monitoring, whereas optimization of EV charging with Deep Reinforcement Learning can tackle road transport decarbonization."
+ },
+ {
+  "tag": "q8",
+  "id": "2504.16142",
+  "date": "2025-04-22",
+  "title": "A Non-Invasive Load Monitoring Method for Edge Computing Based on MobileNetV3 and Dynamic Time Regulation",
+  "cats": "eess.SP,cs.AI,cs.LG",
+  "abs": "In recent years, non-intrusive load monitoring (NILM) technology has attracted much attention in the related research field by virtue of its unique advantage of utilizing single meter data to achieve accurate decomposition of device-level energy consumption. Cutting-edge methods based on machine learning and deep learning have achieved remarkable results in load decomposition accuracy by fusing time-frequency domain features. However, these methods generally suffer from high computational costs and huge memory requirements, which become the main obstacles for their deployment on resource-constrained microcontroller units (MCUs). To address these challenges, this study proposes an innovative Dynamic Time Warping (DTW) algorithm in the time-frequency domain and systematically compares and analyzes the performance of six machine learning techniques in home electricity scenarios. Through complete experimental validation on edge MCUs, this scheme successfully achieves a recognition accuracy of 95%. Meanwhile, this study deeply optimizes the frequency domain feature extraction process, which effectively reduces the running time by 55.55% and the storage overhead by about 34.6%. The algorithm performance will be further optimized in future research work. Considering that the elimination of voltage transformer design can significantly reduce the cost, the subsequent research will focus on this direction, and is committed to providing more cost-effective solutions for the practical application of NILM, and providing a solid theoretical foundation and feasible technical paths for the design of efficient NILM systems in edge computing environments."
+ },
+ {
+  "tag": "q8",
+  "id": "2410.12861",
+  "date": "2024-10-12",
+  "title": "Scaled and Inter-token Relation Enhanced Transformer for Sample-restricted Residential NILM",
+  "cats": "cs.CL,cs.AI",
+  "abs": "Transformers have demonstrated exceptional performance across various domains due to their self-attention mechanism, which captures complex relationships in data. However, training on smaller datasets poses challenges, as standard attention mechanisms can over-smooth attention scores and overly prioritize intra-token relationships, reducing the capture of meaningful inter-token dependencies critical for tasks like Non-Intrusive Load Monitoring (NILM). To address this, we propose a novel transformer architecture with two key innovations: inter-token relation enhancement and dynamic temperature tuning. The inter-token relation enhancement mechanism removes diagonal entries in the similarity matrix to improve attention focus on inter-token relations. The dynamic temperature tuning mechanism, a learnable parameter, adapts attention sharpness during training, preventing over-smoothing and enhancing sensitivity to token relationships. We validate our method on the REDD dataset and show that it outperforms the original transformer and state-of-the-art models by 10-15\\% in F1 score across various appliance types, demonstrating its efficacy for training on smaller datasets."
+ },
+ {
+  "tag": "q8",
+  "id": "2410.03758",
+  "date": "2024-10-02",
+  "title": "Towards a Deeper Understanding of Transformer for Residential Non-intrusive Load Monitoring",
+  "cats": "eess.SY,cs.AI",
+  "abs": "Transformer models have demonstrated impressive performance in Non-Intrusive Load Monitoring (NILM) applications in recent years. Despite their success, existing studies have not thoroughly examined the impact of various hyper-parameters on model performance, which is crucial for advancing high-performing transformer models. In this work, a comprehensive series of experiments have been conducted to analyze the influence of these hyper-parameters in the context of residential NILM. This study delves into the effects of the number of hidden dimensions in the attention layer, the number of attention layers, the number of attention heads, and the dropout ratio on transformer performance. Furthermore, the role of the masking ratio has explored in BERT-style transformer training, providing a detailed investigation into its impact on NILM tasks. Based on these experiments, the optimal hyper-parameters have been selected and used them to train a transformer model, which surpasses the performance of existing models. The experimental findings offer valuable insights and guidelines for optimizing transformer architectures, aiming to enhance their effectiveness and efficiency in NILM applications. It is expected that this work will serve as a foundation for future research and development of more robust and capable transformer models for NILM."
+ },
+ {
+  "tag": "q8",
+  "id": "2403.13246",
+  "date": "2024-03-20",
+  "title": "Divide-Conquer Transformer Learning for Predicting Electric Vehicle Charging Events Using Smart Meter Data",
+  "cats": "cs.LG,cs.CY",
+  "abs": "Predicting electric vehicle (EV) charging events is crucial for load scheduling and energy management, promoting seamless transportation electrification and decarbonization. While prior studies have focused on EV charging demand prediction, primarily for public charging stations using historical charging data, home charging prediction is equally essential. However, existing prediction methods may not be suitable due to the unavailability of or limited access to home charging data. To address this research gap, inspired by the concept of non-intrusive load monitoring (NILM), we develop a home charging prediction method using historical smart meter data. Different from NILM detecting EV charging that has already occurred, our method provides predictive information of future EV charging occurrences, thus enhancing its utility for charging management. Specifically, our method, leverages a self-attention mechanism-based transformer model, employing a ``divide-conquer'' strategy, to process historical meter data to effectively and learn EV charging representation for charging occurrence prediction. Our method enables prediction at one-minute interval hour-ahead. Experimental results demonstrate the effectiveness of our method, achieving consistently high accuracy of over 96.81\\% across different prediction time spans. Notably, our method achieves high prediction performance solely using smart meter data, making it a practical and suitable solution for grid operators."
+ },
+ {
+  "tag": "q8",
+  "id": "2402.17809",
+  "date": "2024-02-27",
+  "title": "Event Detection for Non-intrusive Load Monitoring using Tukey s Fences",
+  "cats": "eess.SP",
+  "abs": "The primary objective of non-intrusive load monitoring (NILM) techniques is to monitor and track power consumption within residential buildings. This is achieved by approximating the consumption of each individual appliance from the aggregate energy measurements. Event-based NILM solutions are generally more accurate than other methods. Our paper introduces a novel event detection algorithm called Tukey's Fences-based event detector (TFED). This algorithm uses the fast Fourier transform in conjunction with the Tukey fences rule to detect variations in the aggregated current signal. The primary benefit of TFED is its superior ability to accurately pinpoint the start times of events, as demonstrated through simulations. Our findings reveal that the proposed algorithm boasts an impressive 99% accuracy rate, surpassing the accuracy of other recent works in the literature such as the Cepstrum and $χ^2$ GOF statistic-based analyses, which only achieved 98% accuracy."
+ },
+ {
+  "tag": "q8",
+  "id": "2306.05012",
+  "date": "2023-06-08",
+  "title": "Sequence-to-Sequence Model with Transformer-based Attention Mechanism and Temporal Pooling for Non-Intrusive Load Monitoring",
+  "cats": "eess.SP,cs.CV,cs.LG",
+  "abs": "This paper presents a novel Sequence-to-Sequence (Seq2Seq) model based on a transformer-based attention mechanism and temporal pooling for Non-Intrusive Load Monitoring (NILM) of smart buildings. The paper aims to improve the accuracy of NILM by using a deep learning-based method. The proposed method uses a Seq2Seq model with a transformer-based attention mechanism to capture the long-term dependencies of NILM data. Additionally, temporal pooling is used to improve the model's accuracy by capturing both the steady-state and transient behavior of appliances. The paper evaluates the proposed method on a publicly available dataset and compares the results with other state-of-the-art NILM techniques. The results demonstrate that the proposed method outperforms the existing methods in terms of both accuracy and computational efficiency."
+ },
+ {
+  "tag": "q8",
+  "id": "2301.03018",
+  "date": "2023-01-08",
+  "title": "Energy Disaggregation & Appliance Identification in a Smart Home: Transfer Learning enables Edge Computing",
+  "cats": "eess.SP,cs.AI,cs.LG",
+  "abs": "Non-intrusive load monitoring (NILM) or energy disaggregation aims to extract the load profiles of individual consumer electronic appliances, given an aggregate load profile of the mains of a smart home. This work proposes a novel deep-learning and edge computing approach to solve the NILM problem and a few related problems as follows. 1) We build upon the reputed seq2-point convolutional neural network (CNN) model to come up with the proposed seq2-[3]-point CNN model to solve the (home) NILM problem and site-NILM problem (basically, NILM at a smaller scale). 2) We solve the related problem of appliance identification by building upon the state-of-the-art (pre-trained) 2D-CNN models, i.e., AlexNet, ResNet-18, and DenseNet-121, which are fine-tuned two custom datasets that consist of Wavelets and short-time Fourier transform (STFT)-based 2D electrical signatures of the appliances. 3) Finally, we do some basic qualitative inference about an individual appliance's health by comparing the power consumption of the same appliance across multiple homes. Low-frequency REDD dataset is used for all problems, except site-NILM where REFIT dataset has been used. As for the results, we achieve a maximum accuracy of 94.6\\% for home-NILM, 81\\% for site-NILM, and 88.9\\% for appliance identification (with Resnet-based model)."
+ },
+ {
+  "tag": "q8",
+  "id": "2207.05463",
+  "date": "2022-07-12",
+  "title": "IMG-NILM: A Deep learning NILM approach using energy heatmaps",
+  "cats": "cs.LG,eess.SP",
+  "abs": "Energy disaggregation estimates appliance-by-appliance electricity consumption from a single meter that measures the whole home's electricity demand. Compared with intrusive load monitoring, NILM (Non-intrusive load monitoring) is low cost, easy to deploy, and flexible. In this paper, we propose a new method, coined IMG-NILM, that utilises convolutional neural networks (CNN) to disaggregate electricity data represented as images. Instead of the traditional approach of dealing with electricity data as time series, IMG-NILM transforms time series into heatmaps with higher electricity readings portrayed as 'hotter' colours. The image representation is then used in CNN to detect the signature of an appliance from aggregated data. IMG-NILM is robust and flexible with consistent performance on various types of appliances; including single and multiple states. It attains a test accuracy of up to 93% on the UK-Dale dataset within a single house, where a substantial number of appliances are present. In more challenging settings where electricity data is collected from different houses, IMG-NILM attains also a very good average accuracy of 85%."
+ },
+ {
+  "tag": "q8",
+  "id": "2204.02802",
+  "date": "2022-04-06",
+  "title": "Dimensionality Expansion of Load Monitoring Time Series and Transfer Learning for EMS",
+  "cats": "cs.LG,eess.SP",
+  "abs": "Energy management systems (EMS) rely on (non)-intrusive load monitoring (N)ILM to monitor and manage appliances and help residents be more energy efficient and thus more frugal. The robustness as well as the transfer potential of the most promising machine learning solutions for (N)ILM is not yet fully understood as they are trained and evaluated on relatively limited data. In this paper, we propose a new approach for load monitoring in building EMS based on dimensionality expansion of time series and transfer learning. We perform an extensive evaluation on 5 different low-frequency datasets. The proposed feature dimensionality expansion using video-like transformation and resource-aware deep learning architecture achieves an average weighted F1 score of 0.88 across the datasets with 29 appliances and is computationally more efficient compared to the state-of-the-art imaging methods. Investigating the proposed method for cross-dataset intra-domain transfer learning, we find that 1) our method performs with an average weighted F1 score of 0.80 while requiring 3-times fewer epochs for model training compared to the non-transfer approach, 2) can achieve an F1 score of 0.75 with only 230 data samples, and 3) our transfer approach outperforms the state-of-the-art in precision drop by up to 12 percentage points for unseen appliances."
+ },
+ {
+  "tag": "q8",
+  "id": "2203.16537",
+  "date": "2022-03-29",
+  "title": "Efficient Localness Transformer for Smart Sensor-Based Energy Disaggregation",
+  "cats": "cs.LG,cs.AI,eess.SP",
+  "abs": "Modern smart sensor-based energy management systems leverage non-intrusive load monitoring (NILM) to predict and optimize appliance load distribution in real-time. NILM, or energy disaggregation, refers to the decomposition of electricity usage conditioned on the aggregated power signals (i.e., smart sensor on the main channel). Based on real-time appliance power prediction using sensory technology, energy disaggregation has great potential to increase electricity efficiency and reduce energy expenditure. With the introduction of transformer models, NILM has achieved significant improvements in predicting device power readings. Nevertheless, transformers are less efficient due to O(l^2) complexity w.r.t. sequence length l. Moreover, transformers can fail to capture local signal patterns in sequence-to-point settings due to the lack of inductive bias in local context. In this work, we propose an efficient localness transformer for non-intrusive load monitoring (ELTransformer). Specifically, we leverage normalization functions and switch the order of matrix multiplication to approximate self-attention and reduce computational complexity. Additionally, we introduce localness modeling with sparse local attention heads and relative position encodings to enhance the model capacity in extracting short-term local patterns. To the best of our knowledge, ELTransformer is the first NILM model that addresses computational complexity and localness modeling in NILM. With extensive experiments and quantitative analyses, we demonstrate the efficiency and effectiveness of the the proposed ELTransformer with considerable improvements compared to state-of-the-art baselines."
+ },
+ {
+  "tag": "q8",
+  "id": "2106.02352",
+  "date": "2021-06-04",
+  "title": "COLD: Concurrent Loads Disaggregator for Non-Intrusive Load Monitoring",
+  "cats": "eess.SP,cs.LG",
+  "abs": "The global effort toward renewable energy and the electrification of energy-intensive sectors have significantly increased the demand for electricity, making energy efficiency a critical focus. Non-intrusive load monitoring (NILM) enables detailed analyses of household electricity usage by disaggregating the total power consumption into individual appliance-level data. In this paper, we propose COLD (Concurrent Loads Disaggregator), a transformer-based model specifically designed to address the challenges of disaggregating high-frequency data with multiple simultaneously working devices. COLD supports up to 42 devices and accurately handles scenarios with up to 11 concurrent loads, achieving 95% load identification accuracy and 82% disaggregation performance on the test data. In addition, we introduce a new fully labeled high-frequency NILM dataset for load disaggregation derived from the UK-DALE 16 kHz dataset. Finally, we analyze the decline in NILM model performance as the number of concurrent loads increases."
+ },
+ {
+  "tag": "q8",
+  "id": "2102.04808",
+  "date": "2021-02-09",
+  "title": "Smart non-intrusive appliance identification using a novel local power histogramming descriptor with an improved k-nearest neighbors classifier",
+  "cats": "cs.CY",
+  "abs": "Non-intrusive load monitoring (NILM) is a key cost-effective technology for monitoring power consumption and contributing to several challenges encountered when transiting to an efficient, sustainable, and competitive energy efficiency environment. This paper proposes a smart NILM system based on a novel local power histogramming (LPH) descriptor, in which appliance power signals are transformed into 2D space and short histograms are extracted to represent each device. Specifically, short local histograms are drawn to represent individual appliance consumption signatures and robustly extract appliance-level data from the aggregated power signal. Furthermore, an improved k-nearest neighbors (IKNN) algorithm is presented to reduce the learning computation time and improve the classification performance. This results in highly improving the discrimination ability between appliances belonging to distinct categories. A deep evaluation of the proposed LPH-IKNN based solution is investigated under different data sets, in which the proposed scheme leads to promising performance. An accuracy of up to 99.65% and 98.51% has been achieved on GREEND and UK-DALE data sets, respectively. While an accuracy of more than 96% has been attained on both WHITED and PLAID data sets. This proves the validity of using 2D descriptors to accurately identify appliances and create new perspectives for the NILM problem."
+ },
+ {
+  "tag": "q10",
+  "id": "2409.00062",
+  "date": "2024-08-22",
+  "title": "HiFAKES: Synthetic High-Frequency NILM Data for NILM Models Diagnostics and Generalization Testing",
+  "cats": "eess.SP",
+  "abs": "Monitoring electricity consumption at the appliance level is crucial for increasing energy efficiency in residential and commercial buildings. Using a single meter, the non-intrusive load monitoring (NILM) breaks down household consumption down to appliance-level, providing comprehensive insights into end-user electricity behavior. NILM models are trained on a household's total power consumption paired with submetered appliance labels. When sampled at high frequencies ($\\geq$ 1 kHz), these datasets capture the full waveform characteristics, significantly improving disaggregation accuracy and model generalization. Nevertheless, such datasets are scarce, collected from a limited number of households, and rarely include labels for power estimation, which complicates their use for model training, evaluation, or debugging. We propose HiFAKES, a pre-trained synthetic data generator that can instantly generate unlimited amounts of fully labeled high-frequency NILM data, including aggregated and submetered current signatures. The data is ready-to-use and annotated for load identification (classification) and power estimation (regression). It allows simulating seen and completely unseen scenarios of appliances' behavior with full control over the number of appliance classes, operational modes, class similarity, brand diversity, and the number of concurrently running devices. We propose a structured methodology to test the generalization of NILM models on simulated unseen households. The reliability of the HiFAKES synthetic data is assessed using a domain-agnostic 3-dimensional metric. The generated signatures achieve high realism (93\\% authenticity), closely resemble real-world data (84\\% fidelity), and include a reasonable portion of unseen signatures (5\\%)."
+ },
+ {
+  "tag": "q10",
+  "id": "2210.04176",
+  "date": "2022-10-09",
+  "title": "Non-intrusive Load Monitoring based on Self-supervised Learning",
+  "cats": "eess.SP",
+  "abs": "Deep learning models for non-intrusive load monitoring (NILM) tend to require a large amount of labeled data for training. However, it is difficult to generalize the trained models to unseen sites due to different load characteristics and operating patterns of appliances between data sets. For addressing such problems, self-supervised learning (SSL) is proposed in this paper, where labeled appliance-level data from the target data set or house is not required. Initially, only the aggregate power readings from target data set are required to pre-train a general network via a self-supervised pretext task to map aggregate power sequences to derived representatives. Then, supervised downstream tasks are carried out for each appliance category to fine-tune the pre-trained network, where the features learned in the pretext task are transferred. Utilizing labeled source data sets enables the downstream tasks to learn how each load is disaggregated, by mapping the aggregate to labels. Finally, the fine-tuned network is applied to load disaggregation for the target sites. For validation, multiple experimental cases are designed based on three publicly accessible REDD, UK-DALE, and REFIT data sets. Besides, state-of-the-art neural networks are employed to perform NILM task in the experiments. Based on the NILM results in various cases, SSL generally outperforms zero-shot learning in improving load disaggregation performance without any sub-metering data from the target data sets."
+ },
+ {
+  "tag": "q10",
+  "id": "1507.06594",
+  "date": "2015-07-23",
+  "title": "Neural NILM: Deep Neural Networks Applied to Energy Disaggregation",
+  "cats": "cs.NE",
+  "abs": "Energy disaggregation estimates appliance-by-appliance electricity consumption from a single meter that measures the whole home's electricity demand. Recently, deep neural networks have driven remarkable improvements in classification performance in neighbouring machine learning fields such as image classification and automatic speech recognition. In this paper, we adapt three deep neural network architectures to energy disaggregation: 1) a form of recurrent neural network called `long short-term memory' (LSTM); 2) denoising autoencoders; and 3) a network which regresses the start time, end time and average power demand of each appliance activation. We use seven metrics to test the performance of these algorithms on real aggregate power data from five appliances. Tests are performed against a house not seen during training and against houses seen during training. We find that all three neural nets achieve better F1 scores (averaged over all five appliances) than either combinatorial optimisation or factorial hidden Markov models and that our neural net algorithms generalise well to an unseen house."
+ }
+]

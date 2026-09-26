@@ -1,0 +1,43 @@
+{
+  "query": "all:\"non-intrusive load monitoring\" AND all:\"personalization\"",
+  "sortBy": "relevance",
+  "sortOrder": "descending",
+  "results": [
+    {
+      "arxivId": "2106.07751",
+      "version": "1",
+      "title": "FedNILM: Applying Federated Learning to NILM Applications at the Edge",
+      "authors": [
+        "Yu Zhang",
+        "Guoming Tang",
+        "Qianyi Huang",
+        "Yi Wang",
+        "Xudong Wang",
+        "Jiadong Lou"
+      ],
+      "summary": "Non-intrusive load monitoring (NILM) helps disaggregate the household's main electricity consumption to energy usages of individual appliances, thus greatly cutting down the cost in fine-grained household load monitoring. To address the arisen privacy concern in NILM applications, federated learning (FL) could be leveraged for NILM model training and sharing. When applying the FL paradigm in real-world NILM applications, however, we are faced with the challenges of edge resource restriction, edge model personalization and edge training data scarcity. In this paper we present FedNILM, a practical FL paradigm for NILM applications at the edge client. Specifically, FedNILM is designed to deliver privacy-preserving and personalized NILM services to large-scale edge clients, by leveraging i) secure data aggregation through federated learning, ii) efficient cloud model compression via filter pruning and multi-task learning, and iii) personalized edge model building with unsupervised transfer learning. Our experiments on real-world energy data show that, FedNILM is able to achieve personalized energy disaggregation with the state-of-the-art accuracy, while ensuring privacy preserving at the edge client.",
+      "primaryCategory": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2021-06-07T04:05:19Z",
+      "updated": "2021-06-07T04:05:19Z",
+      "absUrl": "https://arxiv.org/abs/2106.07751v1",
+      "pdfUrl": "https://arxiv.org/pdf/2106.07751v1",
+      "doi": null,
+      "comment": "9 pages, 5 figures, 3 tables",
+      "journalRef": null
+    }
+  ],
+  "resultCount": 1,
+  "totalResults": 1,
+  "pagination": {
+    "pagesFetched": 1,
+    "hasMore": false
+  },
+  "notes": [],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/arxiv/arxiv-all-non-intrusive-load-monitoring-and-all-person-20260926.json",
+    "bytes": 2194
+  }
+}

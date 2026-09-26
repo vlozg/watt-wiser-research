@@ -1,0 +1,114 @@
+[
+ {
+  "title": "Transfer Learning for Non-Intrusive Load Monitoring",
+  "year": 2019,
+  "cit": 328,
+  "doi": "https://doi.org/10.1109/tsg.2019.2938068",
+  "venue": "IEEE Transactions on Smart Grid",
+  "abstract": "Non-intrusive load monitoring (NILM) is a technique to recover source appliances from only the recorded mains in a household. NILM is unidentifiable and thus a challenge problem because the inferred power value of an appliance given only the mains could not be unique. To mitigate the unidentifiable problem, various methods incorporating domain knowledge into NILM have been proposed and shown effective experimentally. Recently, among these methods, deep neural networks are shown performing best. Arguably, the recently proposed sequence-to-point (seq2point) learning is promising for NILM. However, the results were only carried out on the same data domain. It is not clear if the method could be generalised or transferred to different domains, e.g., the test data were drawn from a different country comparing to the training data. We address this issue in the paper, and two transfer learning schemes are proposed, i.e., appliance transfer learning (ATL) and cross-domain transfer learning (CTL). For ATL, our results show that the latent features learnt by a `complex' appliance, e.g., washing machine, can be transferred to a `simple' appliance, e.g., kettle. For CTL, our conclusion is that the seq2point learning is transferable. Precisely, when the training and test data are in a similar domain, seq2point learning can be directly applied to the test data without fine tuning; when the training and test data are in different domains, seq2point learning needs fine tuning before applying to the test data. Interestingly, we show that only the fully connected layers need fine tuning for transfer learning. Source code can be found at https://github.com/MingjunZhong/transferNILM."
+ },
+ {
+  "title": "Deep Domain Adaptation for Non-Intrusive Load Monitoring Based on a Knowledge Transfer Learning Network",
+  "year": 2021,
+  "cit": 89,
+  "doi": "https://doi.org/10.1109/tsg.2021.3115910",
+  "venue": "IEEE Transactions on Smart Grid",
+  "abstract": "Understanding customers\u2019 energy consumption at the individual appliances level is crucial for the planning and implementation of demand response (DR) programs. The appliances\u2019 usage profiles can be disaggregated from whole-house energy consumption data using non-intrusive load monitoring (NILM) methods. The appliance load patterns of each customer are considerably different, which make it challenging to train a model with strong generalization ability. In this paper, a novel methodology using transfer knowledge between domains for NILM is proposed. A temporal convolutional network is developed to learn the dynamic features of individual appliance load. A domain adaption loss is used to quantify the domain distribution discrepancy between source and target domain representation. By jointly optimizing domain adaptation and energy disaggregation, an invariant representation across domains for the individual appliance states can be learned. Data experiments on ground truth data validate the accuracy and the robustness of the proposed model, and demonstrate its superior transferability and application potential under those scenarios of data shortage."
+ },
+ {
+  "title": "An active learning framework for the low-frequency Non-Intrusive Load Monitoring problem",
+  "year": 2023,
+  "cit": 67,
+  "doi": "https://doi.org/10.1016/j.apenergy.2023.121078",
+  "venue": "Applied Energy",
+  "abstract": "With the widespread deployment of smart meters worldwide, quantification of energy used by individual appliances via Non-Intrusive Load Monitoring (NILM), i.e., virtual submetering, is an emerging application to inform energy management within buildings. Low-frequency NILM refers to NILM algorithms designed to perform load disaggregation at sampling rates in the order of seconds and minutes, as per smart meter data availability. Recently, many deep learning solutions for NILM have appeared in the literature, with promising results. However, besides requiring large, labelled datasets, the proposed deep learning models are not flexible and usually under-perform when tested in a new environment, affecting scalability. The dynamic nature of appliance ownership and usage inhibits the performance of the developed supervised NILM models and requires large amounts of training data. Transfer learning approaches are commonly used to overcome this issue, but they often assume availability of good quality labelled data from the new environment. We propose an active learning framework, that is able to learn and update the deep learning NILM model from small amounts of data, for transfer to a new environment. We explore the suitability of different types of acquisition functions, which determines which function inputs are most valuable. Finally, we perform a sensitivity analysis of the hyperparameters on model performance. In addition, we propose a modification to the state-of-the-art BatchBALD acquisition function, to address its high computational complexity. Our proposed framework achieves optimal accuracy-labelling effort trade-off with only 5%\u201315% of the query pool labelled. The results on the REFIT dataset, demonstrate the potential of the proposed active learning to improve transferability and reduce the cost of labelling. Unlike the common approach of retraining the entire model once a new set of labels is provided, we demonstrate that full re-training is not necessary, since a fine-tuning approach can offer a good trade-off between performance achieved and computational resources needed."
+ },
+ {
+  "title": "Pre-Trained Models for Non-Intrusive Appliance Load Monitoring",
+  "year": 2021,
+  "cit": 53,
+  "doi": "https://doi.org/10.1109/tgcn.2021.3087702",
+  "venue": "IEEE Transactions on Green Communications and Networking",
+  "abstract": "Non-intrusive load monitoring (NILM) is to estimate individual appliance\u2019s power consumption from aggregated smart meter data, which is useful for optimized energy management and provisioning of customized services. While deep learning (DL) has achieved state-of-the-art NILM performance, it is still constrained by the dependency on large amounts of data and intensive computations on training. In this paper, we propose a pre-training approach to address the generalization of DL models for NILM. We develop a meta-learning based approach and an ensemble learning based approach, which pre-train a base model and then fine-tune it with few-short learning when applied to an unknown dataset. The models are validated with two real-world datasets and shown to achieve a superior transferability performance compared with traditional DL and transfer learning methods."
+ },
+ {
+  "title": "Generative Adversarial Networks and Transfer Learning for Non-Intrusive Load Monitoring in Smart Grids",
+  "year": 2020,
+  "cit": 36,
+  "doi": "https://doi.org/10.1109/smartgridcomm47815.2020.9302933",
+  "venue": null,
+  "abstract": "Non-intrusive load monitoring (NILM) objective is to disaggregate the total power consumption of a building into individual appliance-level profiles. This gives insights to consumers to efficiently use energy and realizes smart grid efficiency outcomes. While many studies focus on achieving accurate models, few of them address the models generalizability. This paper proposes two approaches based on generative adversarial networks to achieve high-accuracy load disaggregation. Concurrently, the paper addresses the model generalizability in two ways, the first is by transfer learning by parameter sharing and the other is by learning compact common representations between source and target domains. This paper also quantitatively evaluate the worth of these transfer learning approaches based on the similarity between the source and target domains. The models are evaluated on three open-access datasets and outperformed recent machine-learning methods."
+ },
+ {
+  "title": "An Embedded Deep Learning NILM System: A Year-Long Field Study in Real Houses",
+  "year": 2023,
+  "cit": 32,
+  "doi": "https://doi.org/10.1109/tim.2023.3328085",
+  "venue": "IEEE Transactions on Instrumentation and Measurement",
+  "abstract": "Nonintrusive load monitoring (NILM) systems are used to identify the energy consumption patterns of individual devices in an electrical system, but broadening their market availability is a significant challenge. In this paper, a NILM system using edge processing is proposed, in which energy consumption data are processed directly on the device installed at the monitored facility. Specifically, it uses a sequence-to-point approach based on a convolutional neural network implemented on an Arm Cortex-M7 microcontroller. This paper also reports the results of an extensive 12-month testing phase. The NILM system was installed in two real houses in central Italy to evaluate its installation and potential application in real-world scenarios. This study presents a promising solution that enables the widespread adoption of NILM systems by reducing their implementation cost and complexity and addresses the privacy concerns associated with cloud-based data processing. The results of our real-world testing provide compelling evidence of the potential of the proposed NILM system in various applications, including smart homes, building automation, and industrial energy management."
+ },
+ {
+  "title": "Knowledge Distillation for Scalable Nonintrusive Load Monitoring",
+  "year": 2023,
+  "cit": 25,
+  "doi": "https://doi.org/10.1109/tii.2023.3328436",
+  "venue": "IEEE Transactions on Industrial Informatics",
+  "abstract": "Smart meters allow the grid to interface with individual buildings and extract detailed consumption information using nonintrusive load monitoring (NILM) algorithms applied to the acquired data. Deep neural networks, which represent the state of the art for NILM, are affected by scalability issues since they require high computational and memory resources, and by reduced performance when training and target domains mismatched. This article proposes a knowledge distillation approach for NILM, in particular for multilabel appliance classification, to reduce model complexity and improve generalization on unseen data domains. The approach uses weak supervision to reduce labeling effort, which is useful in practical scenarios. Experiments, conducted on U.K.-DALE and REFIT datasets, demonstrated that a low-complexity network can be obtained for deployment on edge devices while maintaining high performance on unseen data domains. The proposed approach outperformed benchmark methods in unseen target domains achieving a$F_{1}$-score 0.14 higher than a benchmark model 78 times more complex."
+ },
+ {
+  "title": "A Semi-Supervised Approach for Improving Generalization in Non-Intrusive Load Monitoring",
+  "year": 2023,
+  "cit": 20,
+  "doi": "https://doi.org/10.3390/s23031444",
+  "venue": "Sensors",
+  "abstract": "Non-intrusive load monitoring (NILM) considers different approaches for disaggregating energy consumption in residential, tertiary, and industrial buildings to enable smart grid services. The main feature of NILM is that it can break down the bulk electricity demand, as recorded by conventional smart meters, into the consumption of individual appliances without the need for additional meters or sensors. Furthermore, NILM can identify when an appliance is in use and estimate its real-time consumption based on its unique consumption patterns. However, NILM is based on machine learning methods and its performance is dependent on the quality of the training data for each appliance. Therefore, a common problem with NILM systems is that they may not generalize well to new environments where the appliances are unknown, which hinders their widespread adoption and more significant contributions to emerging smart grid services. The main goal of the presented research is to apply a domain adversarial neural network (DANN) approach to improve the generalization of NILM systems. The proposed semi-supervised algorithm utilizes both labeled and unlabeled data and was tested on data from publicly available REDD and UK-DALE datasets. The results show a 3% improvement in generalization performance on highly uncorrelated data, indicating the potential for real-world applications."
+ },
+ {
+  "title": "Load Recognition With Few-Shot Transfer Learning Based on Meta-Learning and Relational Network in Non-Intrusive Load Monitoring",
+  "year": 2024,
+  "cit": 19,
+  "doi": "https://doi.org/10.1109/tsg.2024.3390441",
+  "venue": "IEEE Transactions on Smart Grid",
+  "abstract": "Non-intrusive load monitoring (NILM) monitors the operating status and power consumption of residential appliances with only one main meter, providing a new measure for energy management. Deep learning (DL) shows outperformance in NILM. However, the lack of appliance data caused by rapid growth appliance types and high-cost data sampling reduces the DL-based load recognition accuracy. Transfer learning (TL) enables DL-based model generalization. However, the generalization would be limited when data in the target domain are insufficient. Therefore, a non-intrusive load recognizing (NILR) few-shot TL based on meta-learning and relational network is proposed to improve the load recognition generalization performance, named MRNILR-TL. First, the method constructs an episode task dataset by task sampling to provide diverse learnable tasks for few-shot load recognition training. Afterward, a multi-classification load recognition model based on meta-learning and relational network is constructed, and a meta-learning based relational network enhances the ability to learn the laws of similarity among appliance features from few-shot data. Finally, achieving the few-shot multi-classification load recognition generalization by directly transferring the source task knowledge and strategies to the target task. Experimental results in four transfer scenes demonstrate the proposed method achieves generalization and outperforms most existing NILM TL methods."
+ },
+ {
+  "title": "Taming the Domain Shift in Multi-source Learning for Energy Disaggregation",
+  "year": 2023,
+  "cit": 6,
+  "doi": "https://doi.org/10.1145/3580305.3599910",
+  "venue": null,
+  "abstract": "Non-intrusive load monitoring (NILM) is a cost-effective energy disaggregation means to estimate the energy consumption of individual appliances from a central load reading. Learning-based methods are the new trends in NILM implementations but require large labeled data to work properly at end-user premises. We first formulate an unsupervised multi-source domain adaptation problem to address this challenge by leveraging rich public datasets for building the NILM model. Then, we prove a new generalization bound for the target domain under multi-source settings. A hybrid loss-driven multi-source domain adversarial network (HLD-MDAN) is developed by approximating and optimizing the bound to tackle the domain shift between source and target domains. We conduct extensive experiments on three real-world residential energy datasets to evaluate the effectiveness of HLD-MDAN, showing that it is superior to other methods in single-source and multi-source learning scenarios."
+ },
+ {
+  "title": "Non-intrusive load disaggregation via a fully convolutional neural network: improving the accuracy on unseen household",
+  "year": 2020,
+  "cit": 4,
+  "doi": "https://doi.org/10.1109/ieses45645.2020.9210661",
+  "venue": null,
+  "abstract": "The application of load disaggregation techniques based on neural networks is often limited to users included in the training dataset. A methodology based on techniques typical of the semantic segmentation of images has been proposed for this task, which allows to obtain a high accuracy and good generalization. We introduce here a novel data augmentation technique for improving forecasts for unmonitored houses that does not require any interaction with the user, nor further measurements of consumption of household appliances."
+ },
+ {
+  "title": "Synthetic-to-Real Dataset Transfer Learning for Non-Intrusive Load Monitoring",
+  "year": 2023,
+  "cit": 4,
+  "doi": "https://doi.org/10.1109/amps59207.2023.10297255",
+  "venue": null,
+  "abstract": "The deep neural networks (DNNs) have been widely adopted in non-intrusive load monitoring (NILM) to analyze appliance-level power usage based on aggregate power consumption. Recently, transfer learning has gained attention in NILM as it improves the generalization of DNN models, particularly when transferring knowledge from one real-world dataset to another. However, due to the significant cost and time required for real-world data collection, synthetic datasets have emerged as a viable alternative for NILM research. Nevertheless, it remains unclear whether a well-trained DNN model on synthetic data can be effectively transferred to a real dataset, and which types of networks perform well when using transfer learning strategies. In this paper, we explore these crucial issues by investigating the generalization of different DNNs between synthetic and real datasets using two transfer learning schemes: direct transfer learning and transfer learning with strategy. Our results demonstrate that the sequence-to-point network shows promise for the transfer strategy from a synthetic dataset to a real dataset, and its performance relies on the similarity of probability mass functions between the two datasets."
+ },
+ {
+  "title": "Prompting Large Language Models for Training-Free Non-Intrusive Load Monitoring",
+  "year": 2025,
+  "cit": 4,
+  "doi": "https://doi.org/10.1145/3736425.3770094",
+  "venue": null,
+  "abstract": "Non-intrusive load monitoring (NILM) aims to disaggregate total electricity consumption into individual appliance usage, thus enabling more effective energy management. While deep learning has advanced NILM, it remains limited by its dependence on labeled data, restricted generalization, and lack of explainability. This paper introduces the first prompt-based NILM framework that leverages large language models (LLMs) with in-context learning. We design and evaluate prompt strategies that integrate appliance features, contextual information, and representative time-series examples through extensive case studies. Extensive experiments on the REDD and UK-DALE datasets show that LLMs guided solely by prompts deliver only basic NILM capabilities, with performance that lags behind traditional deep-learning models in complex scenarios. However, the experiments also demonstrate strong generalization across different houses and even regions by simply adapting the injected appliance features. It also provides clear, human-readable explanations for the inferred appliance states. Our findings define the capability boundaries of using prompt-only LLMs for NILM tasks."
+ },
+ {
+  "title": "Investigating Domain Bias in NILM",
+  "year": 2024,
+  "cit": 3,
+  "doi": "https://doi.org/10.1145/3671127.3699532",
+  "venue": null,
+  "abstract": "Enhancing household energy efficiency is crucial, and Non-intrusive Load Monitoring (NILM) offers a valuable solution by giving consumers insights into their energy use without individual device monitoring. However, the deployment of NILM models in new settings is challenging due to their training on domain-specific data."
+ }
+]

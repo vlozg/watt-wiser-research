@@ -1,0 +1,25 @@
+{
+  "repo": "EDF-Lab/NILMFormer",
+  "fullName": "EDF-Lab/NILMFormer",
+  "owner": "EDF-Lab",
+  "name": "NILMFormer",
+  "description": "[KDD 2025] NILMFormer: A Sequence-To-Sequence Non-Stationarity Aware Transformer for Non-Intrusive Load Monitoring",
+  "stars": 4,
+  "forks": 1,
+  "watchers": 0,
+  "openIssues": 0,
+  "language": "Python",
+  "topics": [],
+  "license": "NOASSERTION",
+  "archived": false,
+  "defaultBranch": "main",
+  "homepage": null,
+  "createdAt": "2026-06-24T07:25:33Z",
+  "pushedAt": "2026-06-24T07:27:10Z",
+  "url": "https://github.com/EDF-Lab/NILMFormer",
+  "rateLeft": 56,
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/artifacts_audit/gh-repo-EDF-Lab-NILMFormer-20260926.json",
+    "bytes": 596
+  }
+}

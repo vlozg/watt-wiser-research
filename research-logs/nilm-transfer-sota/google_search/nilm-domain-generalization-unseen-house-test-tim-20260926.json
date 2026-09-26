@@ -1,0 +1,240 @@
+{
+  "query": "NILM domain generalization unseen house test-time adaptation 2025",
+  "fetchedAt": "2026-09-26T15:49:52.452Z",
+  "aiOverview": {
+    "present": true,
+    "text": "enables a trained energy disaggregation model to adapt to unseen households during deployment without requiring target-domain labels or access to source data\n[IEEE Xplore]\nTest-time adaptation (TTA) for non-intrusive load monitoring (NILM)\n\n\nCore Challenges in Unseen House Generalization\n- Distribution Shifts: Electrical signatures, appliance models, and baseline noise vary significantly between houses.\n- Behavioral Variability: Occupant habits change how and when appliances operate, causing severe accuracy drops in zero-shot cross-domain settings.\n- Data Scarcity: Collecting appliance-level ground truth data for every new residential deployment is costly and impractical.\n\n\nEmerging 2025–2026 Solutions\n- Label-Free Synthetic Adaptation: Frameworks like adapt models during testing using unlabeled aggregate streams from the target house.\n[SDA-NILM]\n[IEEE Xplore]\n- Causal and Invariant Features: Techniques such as apply causal representation learning to isolate appliance-specific features from environment-specific noise.\n[CR-MAT]\n[MDPI]\n- Lightweight Edge Adaptation: Methods like allow rapid few-shot or zero-shot adaptation suitable for resource-constrained smart meter hardware.\n[Weighted Transferable Random Forest]\n[ResearchGate]\nIf you're working on a specific implementation, let me know:\n- What sampling rate (high-frequency or low-frequency) your data uses\n- Which target appliances you are trying to disaggregate\nI can suggest the most appropriate adaptation strategy or benchmark.\n- IEEE Xplore A Label Page 1 * Abstract—Non-Intrusive Load Monitoring (NILM) is a key * enabling technology for smart home energy services, providing * ...\n[A Label. Opens in new tab.]\n- ScienceDirect.com Non Abstract To the best of our knowledge, this is among the first works to systematically examine the generalizability of a deployabl...\n[Non. Opens in new tab.]\n- ResearchGate A Generalizable Load Recognition Method in NILM Based on ... Jul 13, 2026 — Abstract Practical applications of non-intrusive load monitoring (NILM) require load recognition models that generalize to unseen ...\n[A Generalizable Load Recognition Method in NILM Based on .... Opens in new tab.]",
+    "excerpt": "Test-time adaptation (TTA) for non-intrusive load monitoring (NILM) enables a trained energy disaggregation model to adapt to unseen households during deployment without requiring target-domain labels or access to source data .",
+    "sources": [
+      {
+        "name": "IEEE Xplore",
+        "domain": "ieeexplore.ieee.org"
+      },
+      {
+        "name": "CR-MAT",
+        "domain": "www.mdpi.com"
+      },
+      {
+        "name": "Weighted Transferable Random Forest",
+        "domain": "www.researchgate.net"
+      },
+      {
+        "name": "Non. Opens in new tab.",
+        "domain": "www.sciencedirect.com"
+      }
+    ]
+  },
+  "results": [
+    {
+      "rank": 1,
+      "title": "Non-intrusive load monitoring for smart residential buildings",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0378778826006924",
+      "domain": "www.sciencedirect.com",
+      "site": "ScienceDirect.com",
+      "snippet": "NILM time home by P Moghadam 2026 — This study presents an AI-based framework designed for real- smart applications and edge-integrated deployment. The proposed framework operates on ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 2,
+      "title": "A Label-Free and Transferable NILM Framework for Smart ...",
+      "url": "https://ieeexplore.ieee.org/iel8/30/8306365/11655889.pdf",
+      "domain": "ieeexplore.ieee.org",
+      "site": "IEEE Xplore",
+      "snippet": "adaptation Domain generalization by P Hao 2026 — (a) Domain utilizes both source domain and target domain data during training. (b) trains models using only source domain data ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 3,
+      "title": "NILM Domain Adaptation: When Does It Work?",
+      "url": "https://www.researchgate.net/publication/384559417_NILM_Domain_Adaptation_When_Does_It_Work?_tp=eyJjb250ZXh0Ijp7InBhZ2UiOiJzY2llbnRpZmljQ29udHJpYnV0aW9ucyIsInByZXZpb3VzUGFnZSI6bnVsbCwic3ViUGFnZSI6bnVsbH19",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "domain domain adaptation generalization To address cross- discrepancies, recent research suggests strategies to enhance of models trained on one to other ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 4,
+      "title": "Improved Test-Time Adaptation for Domain Generalization",
+      "url": "https://arxiv.org/abs/2304.04494",
+      "domain": "arxiv.org",
+      "site": "arXiv.org",
+      "snippet": "domain generalization test by L Chen 2023 Cited by 115 — The main challenge in (DG) is to handle the distribution shift problem that lies between the training and data. NILM unseen house 2025 Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 5,
+      "title": "A Survey of Traditional and Emerging Deep Learning ...",
+      "url": "https://www.mdpi.com/2673-2688/6/9/213",
+      "domain": "www.mdpi.com",
+      "site": "MDPI",
+      "snippet": "NILM by A Huzzat 2025 Cited by 14 — The review outlined key features, categorizing them into steady-state, transient-state, and non-traditional features such as weather, ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 6,
+      "title": "NILM Domain Adaptation: When Does It Work?",
+      "url": "https://www.semanticscholar.org/paper/NILM-Domain-Adaptation%3A-When-Does-It-Work-Muaz-Zinnikus/456fcdc2e1cc84a8ed8720b3e1a704b6652f1c9b",
+      "domain": "www.semanticscholar.org",
+      "site": "Semantic Scholar",
+      "snippet": "domain adaptation NILM The research concludes that is feasible but warns against potential overfitting scenarios, which could guide future studies, ... unseen test- Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 7,
+      "title": "A comprehensive review of machine learning and deep ... Springer Nature",
+      "url": "https://link.springer.com/article/10.1007/s10489-025-06921-4",
+      "domain": "link.springer.com",
+      "site": "Link",
+      "snippet": "NILM by MH Saleem 2025 Cited by 21 — applies feature identification methods to analyse the disaggregation operation to obtain the load profiles of the equipment and appliances ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 8,
+      "title": "adrienpetralia/NILMFormer: [KDD 2025] ...",
+      "url": "https://github.com/adrienpetralia/NILMFormer",
+      "domain": "github.com",
+      "site": "GitHub",
+      "snippet": "NILMFormer This repository contains the source code of , as well as the code needed to reproduce the experimental evaluation from our paper. It also includes 10 ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 9,
+      "title": "NILMBENCH2026: A Benchmark for Energy Disaggregation ACM Digital Library",
+      "url": "https://dl.acm.org/doi/pdf/10.1145/3744256.3812587?download=true",
+      "domain": "dl.acm.org",
+      "site": "",
+      "snippet": "test homes generalization unseen Train and on different within the same dataset to assess buildings. For UK-DALE, we train on B1, B2 and on B4. For.",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 10,
+      "title": "Final Thesis of Master NILM Algorithms General ...",
+      "url": "https://core.ac.uk/download/360848408.pdf",
+      "domain": "core.ac.uk",
+      "site": "CORE",
+      "snippet": "PDF house test unseen house Sep 22, 2020 — The neural networks are trained on an specific from a dataset, and them on an (that they never observed before) of the ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 11,
+      "title": "Practical Test-Time Domain Adaptation for Industrial Condition ... National Institutes of Health (NIH)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12737140/",
+      "domain": "pmc.ncbi.nlm.nih.gov",
+      "site": "(.gov)",
+      "snippet": "Domain generalization unseen by P Goodarzi 2025 Cited by 7 — refers to the ideal setting where a model is designed to perform reliably across all types of distribution shifts. NILM Missing: ‎| Show results with:",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 12,
+      "title": "Test-Time Adaptation without Source Data for Out-of- ...",
+      "url": "https://openreview.net/forum?id=0R6HLWvWYk",
+      "domain": "openreview.net",
+      "site": "OpenReview",
+      "snippet": "domain generalization by Y Yang — This paper tackles the important problem of out-of- (OOD) in bioactivity prediction under a source data-absent setting. The authors propose ... NILM Missing: ‎| Show results with:",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 13,
+      "title": "Test-Time Domain Adaptation by Learning ... The Association for the Advancement of Artificial Intelligence",
+      "url": "https://ojs.aaai.org/index.php/AAAI/article/view/29527/30876",
+      "domain": "ojs.aaai.org",
+      "site": "",
+      "snippet": "PDF Test time domain adaptation domains unseen by Y Wu 2024 Cited by 76 — - aims to the model trained on source target using a few un- labeled images. NILM house 2025 Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 14,
+      "title": "Continual Test-Time Adaptation: A Comprehensive Survey",
+      "url": "https://www.preprints.org/frontend/manuscript/e4460dc2244544474f8edd7a1ebb3568/download_pub",
+      "domain": "www.preprints.org",
+      "site": "Preprints.org",
+      "snippet": "PDF domain by SK Maharana 2026 — In this comprehensive survey, we formally define the CTTA problem, analyze the diverse continual shift patterns that characterize ... NILM Missing: ‎| Show results with:",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 15,
+      "title": "Publications - Sohyun Lee - GitHub Pages Sohyun Lee",
+      "url": "https://sohyun-l.github.io/publications/",
+      "domain": "sohyun-l.github.io",
+      "site": "",
+      "snippet": "test time adaptation unseen domains Jun 21, 2026 — This paper studies continual - (CTTA), the task of adapting a model to constantly changing in testing while ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 16,
+      "title": "Improved Test-Time Adaptation for Domain Generalization",
+      "url": "https://tldr.takara.ai/p/2304.04494",
+      "domain": "tldr.takara.ai",
+      "site": "takara.ai",
+      "snippet": "Test Time Adaptation adapt unseen domains Continual (CTTA) is required to efficiently to continuous while retaining previously learned knowledge. However ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    }
+  ],
+  "resultCount": 16,
+  "peopleAlsoAsk": [],
+  "peopleAlsoSearchFor": [
+    "Nilm domain generalization unseen house test time adaptation 2025 qui",
+    "Nilm domain generalization unseen house test time adaptation 2025 2022"
+  ],
+  "relatedSearches": [],
+  "pagination": {
+    "pagesFetched": 2,
+    "hasMore": true
+  },
+  "notes": [
+    "Snippets are reconstructed from the accessibility tree; inline bold-query emphasis may reorder text.",
+    "Some inline URLs inside snippets have no accessible text and are omitted."
+  ],
+  "pages": [
+    {
+      "start": 0,
+      "rawChars": 18201,
+      "resultsOnPage": 9,
+      "hrefsUpgraded": 8,
+      "hasMore": true
+    },
+    {
+      "start": 10,
+      "rawChars": 11784,
+      "resultsOnPage": 10,
+      "hrefsUpgraded": 7,
+      "hasMore": true
+    }
+  ],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/google_search/nilm-domain-generalization-unseen-house-test-tim-20260926.json",
+    "bytes": 12279
+  }
+}

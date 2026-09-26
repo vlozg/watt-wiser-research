@@ -1,0 +1,86 @@
+{
+  "query": "ti:\"load monitoring\" AND all:continual",
+  "sortBy": "submittedDate",
+  "sortOrder": "descending",
+  "results": [
+    {
+      "arxivId": "2506.06637",
+      "version": "1",
+      "title": "Non-Intrusive Load Monitoring Based on Image Load Signatures and Continual Learning",
+      "authors": [
+        "Olimjon Toirov",
+        "Wei Yu"
+      ],
+      "summary": "Non-Intrusive Load Monitoring (NILM) identifies the operating status and energy consumption of each electrical device in the circuit by analyzing the electrical signals at the bus, which is of great significance for smart power management. However, the complex and changeable load combinations and application environments lead to the challenges of poor feature robustness and insufficient model generalization of traditional NILM methods. To this end, this paper proposes a new non-intrusive load monitoring method that integrates \"image load signature\" and continual learning. This method converts multi-dimensional power signals such as current, voltage, and power factor into visual image load feature signatures, and combines deep convolutional neural networks to realize the identification and classification of multiple devices; at the same time, self-supervised pre-training is introduced to improve feature generalization, and continual online learning strategies are used to overcome model forgetting to adapt to the emergence of new loads. This paper conducts a large number of experiments on high-sampling rate load datasets, and compares a variety of existing methods and model variants. The results show that the proposed method has achieved significant improvements in recognition accuracy.",
+      "primaryCategory": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.CV",
+        "eess.SP"
+      ],
+      "published": "2025-06-07T03:13:15Z",
+      "updated": "2025-06-07T03:13:15Z",
+      "absUrl": "https://arxiv.org/abs/2506.06637v1",
+      "pdfUrl": "https://arxiv.org/pdf/2506.06637v1",
+      "doi": null,
+      "comment": "10 pages, 3 figures, 2025 2nd International Conference on Digital Society and Artificial Intelligence (DSAI 2025), Conference dates: May 23-25, 2025",
+      "journalRef": null
+    },
+    {
+      "arxivId": "2108.05191",
+      "version": "1",
+      "title": "Microcontroller Based Load Monitoring System",
+      "authors": [
+        "A N Madhavanunni",
+        "S S Arya",
+        "Renjith Kumar D"
+      ],
+      "summary": "The demand for power has increased exponentially over the last century. One avenue through which today's energy problems can be addressed is through the reduction of energy usage in households. This has increased the emphasis on the need for accurate and economic methods of power measurement. The goal of providing such data is to optimize and reduce their power consumption. In view of this, the present manuscript focuses on the design and implementation of precise and reliable load monitoring system using PIC microcontroller chip (PIC16F877A). This involves an accurate sensing of voltage, current and power factor of the load. A clever utilization of in-built ADC and timers of the microcontroller reduces the design complexity of the system. The proposed system monitors the load continuously on a real time basis and displays the parameters such as voltage, current, power factor, active, reactive and apparent powers in an LCD module. The use of microcontroller reduces the cost and makes the device compact. The proposed system has been implemented and tested in the laboratory for single phase loads.",
+      "primaryCategory": "eess.SY",
+      "categories": [
+        "eess.SY",
+        "eess.SP"
+      ],
+      "published": "2021-08-11T12:50:17Z",
+      "updated": "2021-08-11T12:50:17Z",
+      "absUrl": "https://arxiv.org/abs/2108.05191v1",
+      "pdfUrl": "https://arxiv.org/pdf/2108.05191v1",
+      "doi": null,
+      "comment": "Paper presented in International Conference on Control, Calibration and Testing (ICCCT '15), Feb 13-14, 2015, PSG College of Technology, Coimbatore, India",
+      "journalRef": "Proceedings of International Conference on Control, Calibration and Testing (ICCCT '15), Feb 13-14, 2015, Coimbatore, India, 6-10"
+    },
+    {
+      "arxivId": "2104.07809",
+      "version": "1",
+      "title": "A Novel Hybrid Deep Learning Approach for Non-Intrusive Load Monitoring of Residential Appliance Based on Long Short Term Memory and Convolutional Neural Networks",
+      "authors": [
+        "Sobhan Naderian"
+      ],
+      "summary": "Energy disaggregation or nonintrusive load monitoring (NILM), is a single-input blind source discrimination problem, aims to interpret the mains user electricity consumption into appliance level measurement. This article presents a new approach for power disaggregation by using a deep recurrent long short term memory (LSTM) network combined with convolutional neural networks (CNN). Deep neural networks have been shown to be a significant way for these types of problems because of their complexity and huge number of trainable paramters. Hybrid method that proposed in the article could significantly increase the overall accuracy of NILM because it benefits from both network advantages. The proposed method used sequence-to-sequence learning, where the input is a window of the mains and the output is a window of the target appliance. The proposed deep neural network approach has been applied to real-world household energy dataset \"REFIT\". The REFIT electrical load measurements dataset described in this paper includes whole house aggregate loads and nine individual appliance measurements at 8-second intervals per house, collected continuously over a period of two years from 20 houses around the UK. The proposed method achieve significant performance, improving accuracy and F1-score measures by 95.93% and 80.93% ,respectively which demonstrates the effectiveness and superiority of the proposed approach for home energy monitoring. Comparison of proposed method and other recently published method has been presented and discussed based on accuracy, number of considered appliances and size of the deep neural network trainable parameters. The proposed method shows remarkable performance compare to other previous methods.",
+      "primaryCategory": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "eess.SY"
+      ],
+      "published": "2021-04-15T22:34:20Z",
+      "updated": "2021-04-15T22:34:20Z",
+      "absUrl": "https://arxiv.org/abs/2104.07809v1",
+      "pdfUrl": "https://arxiv.org/pdf/2104.07809v1",
+      "doi": null,
+      "comment": null,
+      "journalRef": null
+    }
+  ],
+  "resultCount": 3,
+  "totalResults": 3,
+  "pagination": {
+    "pagesFetched": 1,
+    "hasMore": false
+  },
+  "notes": [],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/arxiv2/arxiv-ti-load-monitoring-and-all-continual-20260926.json",
+    "bytes": 6791
+  }
+}

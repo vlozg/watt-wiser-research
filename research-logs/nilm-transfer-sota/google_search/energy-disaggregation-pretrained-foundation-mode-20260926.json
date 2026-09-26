@@ -1,0 +1,252 @@
+{
+  "query": "energy disaggregation pretrained foundation model checkpoint open source",
+  "fetchedAt": "2026-09-26T15:48:54.810Z",
+  "aiOverview": {
+    "present": true,
+    "text": "Several open-source projects, models, and toolkits provide pretrained weights and foundation architectures for energy disaggregation\n(Non-Intrusive Load Monitoring or NILM):\n\n\nFoundation Models & Repositories\n- FM4NILM / Ask for Any Appliance: A specialized prompt-conditioned foundation model for NILM that frames energy disaggregation as an extraction task. It handles multi-cadence smart meter data (1–60 seconds) without needing per-appliance spec\n[arXiv]\nA specialized prompt-conditioned foundation model for NILM that frames energy disaggregation as an extraction task. It handles multi-cadence smart meter data (1–60 seconds) without needing per-appliance specialized heads\n. The repository details are managed alongside recent updates on\n- PowerFM: An open-source initiative collecting foundation models tailored specifically to the power and energy domain. It includes pretrained architectures optimized for load forecasting, grid simulation, and sub-component profiling. The sou\n[GitHub - Power-Agent/PowerFM]\nAn open-source initiative collecting foundation models tailored specifically to the power and energy domain. It includes pretrained architectures optimized for load forecasting, grid simulation, and sub-component profiling. The source code is hosted on\n- NILMFormer (KDD 2025): A transformer-based sequence-to-sequence foundation architecture designed to handle non-stationary smart meter data through shape and temporal sub-sequence encoding. The code and implementation guidelines are availabl\n[GitHub - adrienpetralia/NILMFormer]\n[Hugging Face Papers]\nA transformer-based sequence-to-sequence foundation architecture designed to handle non-stationary smart meter data through shape and temporal sub-sequence encoding. The code and implementation guidelines are available at\n\n\nPretrained Deep Learning Checkpoints & Pipelines\n- Seq2Point NILM: One of the most widely adapted deep learning implementations for energy disaggregation, providing pre-trained models for standard household appliances like kettles, microwaves, fridges, dishwashers, and washing machines. Che\n[GitHub - MingjunZhong/seq2point-nilm]\nOne of the most widely adapted deep learning implementations for energy disaggregation, providing pre-trained models for standard household appliances like kettles, microwaves, fridges, dishwashers, and washing machines. Checkpoints and training scripts can be accessed via\n- Deep-NILMtk: An ecosystem engineered to extend the classic by wrapping common deep learning backbones with standard training pipelines and pre-trained baselines. It is open-sourced at .\n[NILMTK toolkit]\n[GitHub - BHafsa/deep-nilmtk-v1]\nspecific dataset\nUK-DALE\nREDD\nREFIT\nsampling frequency\nkHz\n1Hz\n[GitHub]\nAre you looking for checkpoints pre-trained on a\n(e.g.,\n), or do you need a model optimized for a particular\n(such as high-frequency\nvs low-frequency\ndata)?\n- arXiv.org Ask for Any Appliance: A Prompt This paper makes three contributions: (1) A request interface for foundation NILM. We recast disaggregation as prompt-conditioned ...\n[Ask for Any Appliance: A Prompt. Opens in new tab.]\n- GitHub PowerFM is an open GitHub - Power-Agent/PowerFM: PowerFM is an open-source repository for foundation models in the power and energy domain. It both m...\n[PowerFM is an open. Opens in new tab.]\n- Medium · Lindo St. Angel Energy Management Using Real-Time Non-Intrusive Load ... The datasets generally include many 10's of millions of active power, reactive power, current, and voltage samples but with differ...\n[Energy Management Using Real-Time Non-Intrusive Load .... Opens in new tab.]",
+    "excerpt": "Several open-source projects, models, and toolkits provide pretrained weights and foundation architectures for energy disaggregation (Non-Intrusive Load Monitoring or NILM): Foundation Models & Repositories FM4NILM / Ask for Any",
+    "sources": [
+      {
+        "name": "arXiv",
+        "domain": "arxiv.org"
+      },
+      {
+        "name": "GitHub - Power-Agent/PowerFM",
+        "domain": "github.com"
+      },
+      {
+        "name": "Hugging Face Papers",
+        "domain": "huggingface.co"
+      },
+      {
+        "name": "NILMTK toolkit",
+        "domain": "www.cl.cam.ac.uk"
+      },
+      {
+        "name": "Energy Management Using Real-Time Non-Intrusive Load .... Opens in new tab.",
+        "domain": "medium.com"
+      }
+    ]
+  },
+  "results": [
+    {
+      "rank": 1,
+      "title": "GitHub - pferido/Energy-Disaggregation",
+      "url": "https://github.com/pferido/Energy-Disaggregation",
+      "domain": "github.com",
+      "site": "GitHub",
+      "snippet": "models energy The objective of this project is to build two machine learning for separating total electric usage of two appliances from the aggregate house ... checkpoint Missing: ‎| Show results with:",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 2,
+      "title": "Ask for Any Appliance: A Prompt-Programmable ...",
+      "url": "https://arxiv.org/html/2609.23146",
+      "domain": "arxiv.org",
+      "site": "arXiv.org",
+      "snippet": "disaggregation 7 days ago — We recast as prompt-conditioned component extraction, composing language cards with signal exemplars so that one frozen, meter- ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 3,
+      "title": "Development of an Open Source Energy Disaggregation ...",
+      "url": "https://www.researchgate.net/publication/369163110_Development_of_an_Open_Source_Energy_Disaggregation_Tool_for_the_Home_Automation_Platform_Home_Assistant",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "Disaggregation models May 23, 2026 — performance has been assessed for both : before and after TensorFlow Lite compression. Comparative analysis has been ... foundation Missing: ‎| Show results with:",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 4,
+      "title": "Industrial Energy Disaggregation with Digital Twin ...",
+      "url": "https://huggingface.co/papers/2506.05880",
+      "domain": "huggingface.co",
+      "site": "Hugging Face",
+      "snippet": "models disaggregation energy Jun 25, 2025 — We show in experiments that NILM trained with AMDA-augmented data significantly improve the of consumption of ... pretrained foundation checkpoint Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 5,
+      "title": "Building-Level Energy Disaggregation Using AI-Based ...",
+      "url": "https://www.mdpi.com/2673-2688/7/4/122",
+      "domain": "www.mdpi.com",
+      "site": "MDPI",
+      "snippet": "energy disaggregation by A Rubio-Bustos 2026 — This study addresses this gap by developing and evaluating multiple artificial intelligence approaches for across residential, commercial, ... checkpoint Missing: ‎| Show results with: models energy disaggregation By using large publicly available datasets to train seq2point learning it is very feasible to perform that is ... pretrained foundation Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 6,
+      "title": "inesylla/energy-disaggregation-DL",
+      "url": "https://github.com/inesylla/energy-disaggregation-DL",
+      "domain": "github.com",
+      "site": "GitHub",
+      "snippet": "model models In this final modification, the output of the attention layer is used to compute the result of the regression subnetwork (in all the ). In this ... checkpoint Missing: ‎| Show results with:",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 7,
+      "title": "Ask for Any Appliance: A Prompt-Programmable ...",
+      "url": "https://arxiv.org/pdf/2609.23146",
+      "domain": "arxiv.org",
+      "site": "arXiv.org",
+      "snippet": "PDF Energy disaggregation models by X Wang 2026 — . NILM has progressed from combinatorial optimization and factorial hidden Markov (FHMMs) [13, 18] to recurrent ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 8,
+      "title": "PowerPM: Foundation Model for Power Systems Yang Yang - Zhejiang University",
+      "url": "https://yangy.org/works/power/NeurIPS24_PowerPM.pdf",
+      "domain": "yangy.org",
+      "site": "",
+      "snippet": "PDF pre-trained by S Tu Cited by 49 — PowerPM contains about 250M parameters and is on large-scale hierarchical ETS data with 987.42GB. Specifically, we employ the “pre- training then ... 28 pages",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 9,
+      "title": "A Study Of Energy Disaggregation Using Deep Learning",
+      "url": "https://scispace.com/pdf/a-study-of-energy-disaggregation-using-deep-learning-3y54cfc2jk.pdf",
+      "domain": "scispace.com",
+      "site": "SciSpace",
+      "snippet": "PDF Energy disaggregation model estimates appliance-by-appliance electricity consumption from ... step increment, I later decided on the trained until 5000 epochs.",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 10,
+      "title": "Introducing Mistral 3",
+      "url": "https://mistral.ai/news/mistral-3/",
+      "domain": "mistral.ai",
+      "site": "Mistral AI mistral.ai",
+      "snippet": "checkpoint Dec 2, 2025 — This optimized lets you run Mistral Large 3 efficiently on Blackwell NVL72 systems and on a single 8×A100 or 8×H100 node using vLLM.",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 11,
+      "title": "Metadata for Energy Disaggregation",
+      "url": "https://www.opentrain.ai/papers/metadata-for-energy-disaggregation--arxiv-1403.5946/",
+      "domain": "www.opentrain.ai",
+      "site": "OpenTrain AI",
+      "snippet": "Energy Disaggregation Mar 1, 2014 — Find implementation resources, reproducibility signals, and linked technical artifacts for Metadata for .",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 12,
+      "title": "A New Transformer Model for Energy Disaggregation",
+      "url": "https://ecofact-project.eu/wp-content/uploads/2023/04/Energformer__A_New_Transformer_Model_for_Energy_Disaggregation.pdf",
+      "domain": "ecofact-project.eu",
+      "site": "ecofact ecofact-project.eu",
+      "snippet": "PDF energy sources by GF Angelis 2023 Cited by 79 — Non-Intrusive Load Moni- toring (NILM) can be an alternative solution as it can provide disaggrated data. NILM can help to identify the of high ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 13,
+      "title": "Accepted Papers - ACM e-Energy 2026 Association for Computing Machinery",
+      "url": "https://energy.acm.org/conferences/eenergy/2026/pages/accepted-papers.php",
+      "domain": "energy.acm.org",
+      "site": "",
+      "snippet": "pre-trained models energy open source ... for analytics. We release the and associated code in at \\\\url{https://anonymous.4open.science/r/energyfm/}.",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 14,
+      "title": "Qian Zhao",
+      "url": "https://www.alphaxiv.org/@qian-zhao-3",
+      "domain": "www.alphaxiv.org",
+      "site": "alphaXiv",
+      "snippet": "STEP3-VL-10B We present , a lightweight open-source foundation model designed to redefine the trade-off between compact efficiency and frontier-level multimodal ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 15,
+      "title": "a deep learning approach to energy disaggregation using ... Hrčak",
+      "url": "https://hrcak.srce.hr/file/485432",
+      "domain": "hrcak.srce.hr",
+      "site": "",
+      "snippet": "PDF models by S Anakal 2025 Cited by 1 — This approach NILM as a nonlinear regression problem, training separate neural networks for each appliance to predict their load profiles.",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 16,
+      "title": "(PDF) Industrial Energy Disaggregation with Digital Twin ...",
+      "url": "https://www.researchgate.net/publication/393022068_Industrial_Energy_Disaggregation_with_Digital_Twin-generated_Dataset_and_Efficient_Data_Augmentation",
+      "domain": "www.researchgate.net",
+      "site": "ResearchGate",
+      "snippet": "Energy Disaggregation open source Jun 25, 2025 — To address data scarcity and privacy issues, we introduce the Synthetic Industrial Dataset for (SIDED), an - ... pretrained foundation checkpoint Missing: ‎",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    },
+    {
+      "rank": 17,
+      "title": "Tutorial 8: Deep Energy-Based Generative Models",
+      "url": "https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial8/Deep_Energy_Models.html",
+      "domain": "uvadlc-notebooks.readthedocs.io",
+      "site": "UvA DL Notebooks",
+      "snippet": "energy models Energy models In this tutorial, we will look at -based deep learning , and focus on their application as generative . have been a popular ...",
+      "sitelinks": [],
+      "kind": "web",
+      "urlSource": "html"
+    }
+  ],
+  "resultCount": 17,
+  "peopleAlsoAsk": [],
+  "peopleAlsoSearchFor": [],
+  "relatedSearches": [],
+  "pagination": {
+    "pagesFetched": 2,
+    "hasMore": true
+  },
+  "notes": [
+    "Snippets are reconstructed from the accessibility tree; inline bold-query emphasis may reorder text.",
+    "Some inline URLs inside snippets have no accessible text and are omitted."
+  ],
+  "pages": [
+    {
+      "start": 0,
+      "rawChars": 19559,
+      "resultsOnPage": 8,
+      "hrefsUpgraded": 6,
+      "hasMore": true
+    },
+    {
+      "start": 10,
+      "rawChars": 10443,
+      "resultsOnPage": 10,
+      "hrefsUpgraded": 9,
+      "hasMore": true
+    }
+  ],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/google_search/energy-disaggregation-pretrained-foundation-mode-20260926.json",
+    "bytes": 14268
+  }
+}

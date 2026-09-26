@@ -1,0 +1,85 @@
+{
+  "query": "all:\"appliance\" AND all:\"disaggregation\" AND all:\"unseen\"",
+  "sortBy": "submittedDate",
+  "sortOrder": "descending",
+  "results": [
+    {
+      "arxivId": "2409.00062",
+      "version": "2",
+      "title": "HiFAKES: Synthetic High-Frequency NILM Data for NILM Models Diagnostics and Generalization Testing",
+      "authors": [
+        "Ilia Kamyshev",
+        "Sahar Moghimian",
+        "Henni Ouerdane"
+      ],
+      "summary": "Monitoring electricity consumption at the appliance level is crucial for increasing energy efficiency in residential and commercial buildings. Using a single meter, the non-intrusive load monitoring (NILM) breaks down household consumption down to appliance-level, providing comprehensive insights into end-user electricity behavior. NILM models are trained on a household's total power consumption paired with submetered appliance labels. When sampled at high frequencies ($\\geq$ 1 kHz), these datasets capture the full waveform characteristics, significantly improving disaggregation accuracy and model generalization. Nevertheless, such datasets are scarce, collected from a limited number of households, and rarely include labels for power estimation, which complicates their use for model training, evaluation, or debugging. We propose HiFAKES, a pre-trained synthetic data generator that can instantly generate unlimited amounts of fully labeled high-frequency NILM data, including aggregated and submetered current signatures. The data is ready-to-use and annotated for load identification (classification) and power estimation (regression). It allows simulating seen and completely unseen scenarios of appliances' behavior with full control over the number of appliance classes, operational modes, class similarity, brand diversity, and the number of concurrently running devices. We propose a structured methodology to test the generalization of NILM models on simulated unseen households. The reliability of the HiFAKES synthetic data is assessed using a domain-agnostic 3-dimensional metric. The generated signatures achieve high realism (93\\% authenticity), closely resemble real-world data (84\\% fidelity), and include a reasonable portion of unseen signatures (5\\%).",
+      "primaryCategory": "eess.SP",
+      "categories": [
+        "eess.SP"
+      ],
+      "published": "2024-08-22T18:31:53Z",
+      "updated": "2025-07-12T06:23:49Z",
+      "absUrl": "https://arxiv.org/abs/2409.00062v2",
+      "pdfUrl": "https://arxiv.org/pdf/2409.00062v2",
+      "doi": null,
+      "comment": null,
+      "journalRef": null
+    },
+    {
+      "arxivId": "2210.04176",
+      "version": "1",
+      "title": "Non-intrusive Load Monitoring based on Self-supervised Learning",
+      "authors": [
+        "Shuyi Chen",
+        "Bochao Zhao",
+        "Mingjun Zhong",
+        "Wenpeng Luan",
+        "Yixin Yu"
+      ],
+      "summary": "Deep learning models for non-intrusive load monitoring (NILM) tend to require a large amount of labeled data for training. However, it is difficult to generalize the trained models to unseen sites due to different load characteristics and operating patterns of appliances between data sets. For addressing such problems, self-supervised learning (SSL) is proposed in this paper, where labeled appliance-level data from the target data set or house is not required. Initially, only the aggregate power readings from target data set are required to pre-train a general network via a self-supervised pretext task to map aggregate power sequences to derived representatives. Then, supervised downstream tasks are carried out for each appliance category to fine-tune the pre-trained network, where the features learned in the pretext task are transferred. Utilizing labeled source data sets enables the downstream tasks to learn how each load is disaggregated, by mapping the aggregate to labels. Finally, the fine-tuned network is applied to load disaggregation for the target sites. For validation, multiple experimental cases are designed based on three publicly accessible REDD, UK-DALE, and REFIT data sets. Besides, state-of-the-art neural networks are employed to perform NILM task in the experiments. Based on the NILM results in various cases, SSL generally outperforms zero-shot learning in improving load disaggregation performance without any sub-metering data from the target data sets.",
+      "primaryCategory": "eess.SP",
+      "categories": [
+        "eess.SP"
+      ],
+      "published": "2022-10-09T06:00:01Z",
+      "updated": "2022-10-09T06:00:01Z",
+      "absUrl": "https://arxiv.org/abs/2210.04176v1",
+      "pdfUrl": "https://arxiv.org/pdf/2210.04176v1",
+      "doi": null,
+      "comment": "12 pages,10 figures",
+      "journalRef": null
+    },
+    {
+      "arxivId": "1507.06594",
+      "version": "3",
+      "title": "Neural NILM: Deep Neural Networks Applied to Energy Disaggregation",
+      "authors": [
+        "Jack Kelly",
+        "William Knottenbelt"
+      ],
+      "summary": "Energy disaggregation estimates appliance-by-appliance electricity consumption from a single meter that measures the whole home's electricity demand. Recently, deep neural networks have driven remarkable improvements in classification performance in neighbouring machine learning fields such as image classification and automatic speech recognition. In this paper, we adapt three deep neural network architectures to energy disaggregation: 1) a form of recurrent neural network called `long short-term memory' (LSTM); 2) denoising autoencoders; and 3) a network which regresses the start time, end time and average power demand of each appliance activation. We use seven metrics to test the performance of these algorithms on real aggregate power data from five appliances. Tests are performed against a house not seen during training and against houses seen during training. We find that all three neural nets achieve better F1 scores (averaged over all five appliances) than either combinatorial optimisation or factorial hidden Markov models and that our neural net algorithms generalise well to an unseen house.",
+      "primaryCategory": "cs.NE",
+      "categories": [
+        "cs.NE"
+      ],
+      "published": "2015-07-23T18:18:49Z",
+      "updated": "2015-09-28T10:15:35Z",
+      "absUrl": "https://arxiv.org/abs/1507.06594v3",
+      "pdfUrl": "https://arxiv.org/pdf/1507.06594v3",
+      "doi": "10.1145/2821650.2821672",
+      "comment": "To appear in ACM BuildSys'15, November 4--5, 2015, Seoul",
+      "journalRef": null
+    }
+  ],
+  "resultCount": 3,
+  "totalResults": 3,
+  "pagination": {
+    "pagesFetched": 1,
+    "hasMore": false
+  },
+  "notes": [],
+  "artifact": {
+    "path": "projects/watt-wiser/research-logs/nilm-transfer-sota/arxiv/arxiv-all-appliance-and-all-disaggregation-and-all-uns-20260926.json",
+    "bytes": 6664
+  }
+}
