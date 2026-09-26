@@ -1,0 +1,48 @@
+loading data (cached under .auto/cache) ...
+   calib kettle: 5 sessions of 2656 available
+   calib microwave: 5 sessions of 2055 available
+   calib fridge: 5 sessions of 191926 available
+   calib washing_machine: 5 sessions of 20322 available
+   calib dishwasher: 5 sessions of 9334 available
+building + training model (src/experiments/04_autoresearch/model.py) ...
+   per-device pos_weight: {'kettle': 34.1, 'microwave': 50.0, 'fridge': 1.3, 'washing_machine': 50.0, 'dishwasher': 1.0}
+   epoch 0: train_mse=0.38867 bce=27.25469 val_mse_scaled=0.01152
+   epoch 1: train_mse=0.22978 bce=20.60641 val_mse_scaled=0.00734
+   epoch 2: train_mse=0.15843 bce=16.45755 val_mse_scaled=0.00598
+   epoch 3: train_mse=0.13392 bce=13.41929 val_mse_scaled=0.00511
+   epoch 4: train_mse=0.16519 bce=12.30161 val_mse_scaled=0.00519
+   epoch 5: train_mse=0.13364 bce=11.33404 val_mse_scaled=0.00459
+   epoch 6: train_mse=0.14327 bce=10.66424 val_mse_scaled=0.00965
+   epoch 7: train_mse=0.17345 bce=9.51876 val_mse_scaled=0.00499
+   epoch 8: train_mse=0.26445 bce=9.12196 val_mse_scaled=0.00610
+   epoch 9: train_mse=0.12786 bce=8.58342 val_mse_scaled=0.00393
+   epoch 10: train_mse=0.14162 bce=8.36560 val_mse_scaled=0.01051
+   epoch 11: train_mse=0.20841 bce=7.95091 val_mse_scaled=0.00623
+   train-end diagnostics: power head mean=0.1239 max=1.3119  on-head mean=0.3247 max=1.0000
+   calib-scale kettle: r=1.08  pred_p95_all=1248W  pred_p95_on=3206W  true_p50_on=2331W  thr=1173W  (x3996 max_w)
+   calib-scale microwave: r=1.00  pred_p95_all=0W  pred_p95_on=0W  true_p50_on=1588W  thr=762W  (x2668 max_w)
+   calib-scale fridge: r=1.00  pred_p95_all=0W  pred_p95_on=0W  true_p50_on=90W  thr=44W  (x2048 max_w)
+   calib-scale washing_machine: r=1.00  pred_p95_all=0W  pred_p95_on=0W  true_p50_on=1778W  thr=90W  (x2974 max_w)
+   calib-scale dishwasher: r=1.00  pred_p95_all=2669W  pred_p95_on=2672W  true_p50_on=122W  thr=60W  (x3964 max_w)
+predicting eval span ...
+   prediction done in 1.5s
+
+device            n_gt   n_pred  match     P      R      F1     MAE_W   nMAE
+kettle              299      38     13   0.342  0.043  0.077      15.7  0.0458
+microwave           262       0      0   0.000  0.000  0.000       7.4  0.0215
+fridge            28034       2      0   0.000  0.000  0.000      40.0  0.1166
+washing_machine    2966       1      0   0.000  0.000  0.000      27.9  0.0814
+dishwasher         1353    1853     10   0.005  0.007  0.006      27.0  0.0788
+pooled: n_gt=32914 n_pred=1894 n_matched=23 F1=0.001
+coverage: pred=0.108 true=0.258 of aggregate
+
+METRIC min_device_f1=0.000000
+METRIC mean_device_f1=0.016678
+METRIC pooled_episode_f1=0.001322
+METRIC mean_mae_w=23.6045
+METRIC worst_mae_w=40.0016
+METRIC mean_nmae=0.068825
+METRIC coverage_pred_share=0.107749
+METRIC coverage_true_share=0.258188
+METRIC min_device_f1=0.000000
+elapsed 68s -> /root/longvdh/agent_space/projects/watt-wiser/.auto/last_bench.json
