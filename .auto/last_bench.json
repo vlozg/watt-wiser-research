@@ -1,0 +1,106 @@
+{
+ "config": {
+  "target_house": "house_1",
+  "devices": [
+   "kettle",
+   "microwave",
+   "fridge",
+   "washing_machine",
+   "dishwasher"
+  ],
+  "thr_on_W": {
+   "kettle": 1173.0,
+   "microwave": 762.0,
+   "fridge": 44.5,
+   "washing_machine": 90.0,
+   "dishwasher": 60.5
+  },
+  "split_us": 1380585600000000,
+  "eval_days": 30,
+  "cadence": "6s",
+  "window": 128,
+  "stride": 32,
+  "k_calib": 5,
+  "tau_onset_us": 12000000,
+  "duration_band": [
+   0.3333333333333333,
+   3.0
+  ],
+  "source_houses": [
+   "house_2",
+   "house_5"
+  ]
+ },
+ "devices": {
+  "kettle": {
+   "n_gt": 299,
+   "n_pred": 0,
+   "n_matched": 0,
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0,
+   "mae_w": 14.586810898761755,
+   "nmae": 0.04253139557444761,
+   "n_common": 362610,
+   "nonnull_frac": 0.839375
+  },
+  "microwave": {
+   "n_gt": 262,
+   "n_pred": 0,
+   "n_matched": 0,
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0,
+   "mae_w": 7.325315362114322,
+   "nmae": 0.021358738900228668,
+   "n_common": 359983,
+   "nonnull_frac": 0.8332939814814815
+  },
+  "fridge": {
+   "n_gt": 28034,
+   "n_pred": 0,
+   "n_matched": 0,
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0,
+   "mae_w": 40.00243118042112,
+   "nmae": 0.11663681912943238,
+   "n_common": 352298,
+   "nonnull_frac": 0.8155046296296297
+  },
+  "washing_machine": {
+   "n_gt": 2966,
+   "n_pred": 0,
+   "n_matched": 0,
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0,
+   "mae_w": 27.89471339965866,
+   "nmae": 0.08133382260665613,
+   "n_common": 360345,
+   "nonnull_frac": 0.8341319444444445
+  },
+  "dishwasher": {
+   "n_gt": 1353,
+   "n_pred": 0,
+   "n_matched": 0,
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0,
+   "mae_w": 16.979807092853044,
+   "nmae": 0.04950875810045965,
+   "n_common": 364113,
+   "nonnull_frac": 0.8428541666666667
+  }
+ },
+ "min_device_f1": 0.0,
+ "min_device": "kettle",
+ "mean_device_f1": 0.0,
+ "pooled_episode_f1": 0.0,
+ "mean_mae_w": 21.35781558676178,
+ "worst_mae_w": 40.00243118042112,
+ "mean_nmae": 0.06227390686224488,
+ "coverage_pred_share": 0.0,
+ "coverage_true_share": 0.2581875673746769,
+ "elapsed_s": 26.252628803253174
+}

@@ -53,6 +53,7 @@ for US homes with Shelly EM Gen3 submeters.
   including the V-I track (`vi/`, PLAID 30 kHz captures).
   Heavy dataset dirs are gitignored; scripts and notes are tracked.
 - `.scratch/` - throwaway scripts only; docs must never reference anything in here.
+- `.auto/` - autoresearch loop scaffold (frozen benchmark + task prompt + ideas backlog + run log), plugin-managed; iteration model code in `src/experiments/04_autoresearch/`
 - `.agents/` - vendored agent skills for marimo notebooks, from github.com/marimo-team/skills
   (provenance + upstream commit in `.agents/PROVENANCE.md`), in the standard skills-CLI
   layout `.agents/skills/<skill>/SKILL.md`: `marimo-notebook` (authoring),

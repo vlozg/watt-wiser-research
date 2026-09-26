@@ -1,0 +1,37 @@
+/root/longvdh/agent_space/projects/watt-wiser/src/experiments/04_autoresearch/model.py:163: RuntimeWarning: invalid value encountered in divide
+  core = (acc / cnt[:, None])[pad:pad + t]
+loading data (cached under .auto/cache) ...
+   calib kettle: 5 sessions of 2656 available
+   calib microwave: 5 sessions of 2055 available
+   calib fridge: 5 sessions of 191926 available
+   calib washing_machine: 5 sessions of 20322 available
+   calib dishwasher: 5 sessions of 9334 available
+building + training model (src/experiments/04_autoresearch/model.py) ...
+   per-device pos_weight: {'kettle': 34.1, 'microwave': 50.0, 'fridge': 1.3, 'washing_machine': 50.0, 'dishwasher': 1.0}
+   epoch 0: train_mse=2724.56594 bce=389.46579 val_mse_scaled=0.05416
+   epoch 1: train_mse=1.12759 bce=110.05098 val_mse_scaled=0.05416
+   epoch 2: train_mse=1.12786 bce=63.73292 val_mse_scaled=0.05416
+   epoch 3: train_mse=1.12867 bce=48.33069 val_mse_scaled=0.05416
+   epoch 4: train_mse=1.12745 bce=84.54672 val_mse_scaled=0.05416
+predicting eval span ...
+   prediction done in 1.6s
+
+device            n_gt   n_pred  match     P      R      F1     MAE_W   nMAE
+kettle              299       0      0   0.000  0.000  0.000      14.6  0.0425
+microwave           262       0      0   0.000  0.000  0.000       7.3  0.0214
+fridge            28034       0      0   0.000  0.000  0.000      40.0  0.1166
+washing_machine    2966       0      0   0.000  0.000  0.000      27.9  0.0813
+dishwasher         1353       0      0   0.000  0.000  0.000      17.0  0.0495
+pooled: n_gt=32914 n_pred=0 n_matched=0 F1=0.000
+coverage: pred=0.000 true=0.258 of aggregate
+
+METRIC min_device_f1=0.000000
+METRIC mean_device_f1=0.000000
+METRIC pooled_episode_f1=0.000000
+METRIC mean_mae_w=21.3578
+METRIC worst_mae_w=40.0024
+METRIC mean_nmae=0.062274
+METRIC coverage_pred_share=0.000000
+METRIC coverage_true_share=0.258188
+METRIC min_device_f1=0.000000
+elapsed 26s -> /root/longvdh/agent_space/projects/watt-wiser/.auto/last_bench.json

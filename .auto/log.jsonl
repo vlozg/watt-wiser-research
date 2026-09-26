@@ -1,0 +1,1 @@
+{"type":"config","name":"NILM seq2seq: worst-device episode F1 on UK-DALE house_1","metricName":"min_device_f1","metricUnit":"","bestDirection":"higher","metricLabel":"worst-device episode F1","objectiveLabel":"Target: every device F1 > 0.7 (episode-level, frozen 6 s protocol)"}

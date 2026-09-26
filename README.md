@@ -27,6 +27,7 @@ client's code + data as received.
 | `pyproject.toml` + `uv.lock` | uv-tracked Python deps (numpy / pandas / matplotlib / scipy / h5py / py7zr / pytables / pyarrow / pypdf; dev: ruff); setup: `uv sync` |
 | `AGENTS.md` | Working rules + layout conventions for agents |
 | `.agents/` | Vendored agent skills for marimo notebooks (authoring, ipynb conversion, headless runs, wasm sharing), layout `.agents/skills/<skill>/SKILL.md` - from github.com/marimo-team/skills |
+| `.auto/` | Autoresearch scaffold: `prompt.md` (frozen task contract), `measure.sh` + `bench.py` (frozen benchmark), `checks.sh`, `ideas.md` - plugin-managed optimization loop; iteration model in `src/experiments/04_autoresearch/` |
 
 ## Reading order (docs)
 
