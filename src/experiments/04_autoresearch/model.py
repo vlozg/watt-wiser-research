@@ -473,7 +473,12 @@ def _wm30_profile(exc: np.ndarray, cal: dict, mark_wm: dict,
     prof = {'heat': heat,
             'merge_n': merge_n,
             'span_band': (0.6 * min(spans), 1.25 * max(spans)),
-            'amp_lo': min(p90s),
+            # REL_AMP lo margin (0.8x) on the heater p90 floor: the mark
+            # windows' p90s are the strongest observed heater draws; the
+            # same lo margin every other amp band uses covers the weaker
+            # cycles (pre-span pump-signature verified: sub-heat
+            # switching rate identical to gated runs, 0/83 zero-rate)
+            'amp_lo': 0.8 * min(p90s),
             'mean_band': (0.8 * min(means), 1.25 * max(means)),
             'hs_band': (0.75 * min(hss), 1.75 * max(hss)),
             'idle_hi': 2.0 * max(idles),
