@@ -772,6 +772,43 @@ def build_and_train(ctx: dict):
             print('   fridge mined cell: none regular enough; '
                   'fallback = passive-window pairs')
 
+    # fridge run-basis gates: compressor draws below the extractor's amp
+    # floor or with broken rise/fall pairing never become events; on the
+    # coarse grid they are isolated flat runs inside the fridge band.
+    # Run amp window 0.8x passive-mark amp (same lo margin as every mean
+    # band) to the population amp top; isolation level 3x the mark amp -
+    # the smallest session-ratio level above the band top (2.1x) - with
+    # the kettle isolation window convention.
+    if fridge_band is not None:
+        fr_amp = mark['fridge']['amp']
+        fridge_band['fr_run'] = {'amp_lo': 0.8 * fr_amp,
+                                 'amp_hi': fridge_band['amp'][1],
+                                 'iso_amp': 3.0 * fr_amp,
+                                 'iso_win': KET_ISO_WIN_S}
+        fr_ok = ((ev_amp >= fridge_band['amp'][0])
+                 & (ev_amp <= fridge_band['amp'][1])
+                 & (ev_dur >= fridge_band['dur'][0])
+                 & (ev_dur <= fridge_band['dur'][1]))
+        fr_on = ev_on[fr_ok] / stride
+        fr_off = ev_off[fr_ok] / stride
+        fr_cands = 0
+        for a, b in _merge_runs(
+                _runs((exc30 >= fridge_band['fr_run']['amp_lo'])
+                      & (exc30 <= fridge_band['fr_run']['amp_hi'])), 1):
+            span_s = (b - a) * DW30_GRID_S
+            if not fridge_band['dur'][0] <= span_s \
+                    <= fridge_band['dur'][1]:
+                continue
+            if not _iso_clear(exc30, a, b, fridge_band['fr_run']['iso_amp'],
+                              fridge_band['fr_run']['iso_win']):
+                continue
+            k = int(np.searchsorted(fr_on, b, side='left')) - 1
+            if k >= 0 and fr_off[k] > a:
+                continue
+            fr_cands += 1
+        print(f'   fridge run-basis: {fr_cands} net-new '
+              f'candidates ({fr_cands / days:.2f}/day)')
+
     def predict(filled) -> dict:
         f = np.asarray(filled, dtype='float32')
         sig = _roll_median(f, SMOOTH_N)
@@ -788,7 +825,7 @@ def build_and_train(ctx: dict):
         # rise (the run starts at the first heater block; the GT cycle
         # starts at the fill valve).
         stride = max(1, int(round(DW30_GRID_S / cad_s)))
-        if dw30 is not None or ket_prof is not None                 or wm30 is not None:
+        if dw30 is not None or ket_prof is not None                 or wm30 is not None or fridge_band is not None:
             exc_e = _dw30_grid(f, cad_s)
         if dw30 is not None or wm30 is not None:
             ev30_e = np.sort(on // stride)
@@ -903,7 +940,8 @@ def build_and_train(ctx: dict):
             ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
                   & (dur >= REL_DUR[0] * p['dur_s'])
                   & (dur <= REL_DUR[1] * p['dur_s']))
-        for k in np.flatnonzero(ok):
+        fr_ok_idx = np.flatnonzero(ok)
+        for k in fr_ok_idx:
             i0 = int(k)
             seg = out['fridge'][on[i0]:off[i0]]
             out['fridge'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
@@ -940,6 +978,31 @@ def build_and_train(ctx: dict):
                     continue
                 seg = out['kettle'][a6:b6]
                 out['kettle'][a6:b6] = np.maximum(seg, mean_w)
+        # 4) fridge run-basis: the event path misses compressor cycles
+        # whose draw sits below the extractor's amp floor or whose
+        # rise/fall pairing broke; on the coarse grid they are isolated
+        # flat runs in the fridge band. Emit runs no admitted fridge
+        # event already owns, with the build-time gates.
+        if fridge_band is not None:
+            fb = fridge_band['fr_run']
+            for a, b in _merge_runs(
+                    _runs((exc_e >= fb['amp_lo']) & (exc_e <= fb['amp_hi'])),
+                    1):
+                span_s = (b - a) * DW30_GRID_S
+                if not fridge_band['dur'][0] <= span_s \
+                        <= fridge_band['dur'][1]:
+                    continue
+                if not _iso_clear(exc_e, a, b, fb['iso_amp'], fb['iso_win']):
+                    continue
+                a6 = a * stride
+                b6 = b * stride
+                k = int(np.searchsorted(on[fr_ok_idx], b6 - 1,
+                                        side='right')) - 1
+                if k >= 0 and off[fr_ok_idx[k]] > a6:
+                    continue
+                w = float(np.median(exc_e[a:b]))
+                seg = out['fridge'][a6:b6]
+                out['fridge'][a6:b6] = np.maximum(seg, w)
         return out
 
     return predict
