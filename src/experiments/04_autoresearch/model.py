@@ -13,10 +13,14 @@ the quiet dw ~0.03 (amplitude-identical heaters, calib-phase structure).
 Burst/duty events classify against mark profiles; microwave-band events
 inside named chains are suppressed (heater partial-duty draws mimic the
 mw band); the fridge uses a mined duty cell only if it is regular
-(cv <= 0.6), else the passive window.
+(cv <= 0.6); else its emission band is calibrated from the mined
+small-sustained population (compressor-class window, amp <= 120 W):
+the population's own p5/p95 amp/dur bands replace the thin passive-
+window mark (3 pairs) whose amp sits below the true compressor mode.
 Known limits: chain naming still amp/mean-gated (phase sequences i28b);
-fridge mining found no regular cell (cv ~2) - i29 periodicity. Pre-span
-rules only; nothing is tuned on eval results."""
+the population band still caps fridge recall at the extractor's
+capture rate (~1/3 of compressor ON time). Pre-span rules only;
+nothing is tuned on eval results."""
 from __future__ import annotations
 
 import numpy as np
@@ -52,6 +56,10 @@ DUTY_AMP_W = (40.0, 300.0)
 DUTY_DUR_S = (600.0, 2400.0)
 DUTY_CELL_MIN = 300    # min events per (amp, dur) cell over the mined span
 DUTY_CV_MAX = 0.6      # require regular (thermostat-like) recycling
+FR_POP_AMP_HI = 120.0  # fallback population amp cap: domestic fridge
+# compressor draw; keeps the mined compressor mode and excludes the
+# sustained 95-300 W tail (laptops, heaters) that corrupts percentiles
+FR_POP_MIN = 300       # min fallback-population events to calibrate a band
 BURST_CLUSTER_MIN = 50  # mined burst cluster needed for a dur reference
 REL_AMP = 0.20
 REL_DUR = (1.0 / 3.0, 3.0)
@@ -344,8 +352,24 @@ def build_and_train(ctx: dict):
                   f'dur_band={fridge_band["dur"][0] / 60:.0f}-'
                   f'{fridge_band["dur"][1] / 60:.0f}min n={n_cell} cv={cv:.3f}')
     if fridge_band is None:
-        print('   fridge mined cell: none regular enough; '
-              'fallback = passive-window pairs')
+        # no regular cell: calibrate the emission band from the mined
+        # small-sustained population itself (compressor-class window,
+        # amp capped at FR_POP_AMP_HI). The passive-window mark rests on
+        # 3 pairs whose amp sits below the population mode.
+        fpop = dm & (ev_amp <= FR_POP_AMP_HI)
+        if int(fpop.sum()) >= FR_POP_MIN:
+            fridge_band = {'amp': _pband(ev_amp[fpop]),
+                           'dur': _pband(ev_dur[fpop]),
+                           'n': int(fpop.sum())}
+            print(f'   fridge fallback: population band '
+                  f'amp={fridge_band["amp"][0]:.0f}-'
+                  f'{fridge_band["amp"][1]:.0f}W '
+                  f'dur={fridge_band["dur"][0] / 60:.0f}-'
+                  f'{fridge_band["dur"][1] / 60:.0f}min '
+                  f'n={fridge_band["n"]}')
+        else:
+            print('   fridge mined cell: none regular enough; '
+                  'fallback = passive-window pairs')
 
     def predict(filled) -> dict:
         f = np.asarray(filled, dtype='float32')
