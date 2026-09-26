@@ -412,35 +412,23 @@ def build_and_train(ctx: dict):
             i0 = int(k)
             seg = out['kettle'][on[i0]:off[i0]]
             out['kettle'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
-        # microwave: the draw is duty-cycled and the level excursion
-        # includes idle time, so emit the powered plateau runs (thr =
-        # base + 0.5x amp, the same ON-mask the mark profiles use; run
-        # merge/dwell from the meta protocol) rather than the excursion.
+        # microwave: the mark window is the GT cycle span plus fixed 60 s
+        # pre/post rolls (calibration protocol), so the rolled-off mark
+        # core IS the cycle and dur_s is its median length. The mark
+        # events are sustained 0.6-0.8 min excursions, so emit the event
+        # span itself gated on the event duration (same REL_DUR band as
+        # every burst device): duty-chunked heater lookalikes live in
+        # 100-400 s events whose 30-60 s plateaus pass a run-level gate
+        # but whose event duration fails this one.
         p = mark['microwave']
         mw_dr = p['dur_s']
-        mw_merge = int(round(meta['merge_s']['microwave'] / cad_s))
-        mw_dwell = int(round(meta['dwell_s']['microwave'] / cad_s))
         ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
-              & ~ev_in_named)
+              & ~ev_in_named
+              & (dur >= REL_DUR[0] * mw_dr) & (dur <= REL_DUR[1] * mw_dr))
         for k in np.flatnonzero(ok):
             i0 = int(k)
-            thr = float(base_roll[max(on[i0] - 6, 0)]) + 0.5 * amp[i0]
-            runs = _runs(sig[on[i0]:off[i0]] > thr)
-            merged = []
-            for a, b in runs:
-                if merged and a - merged[-1][1] <= mw_merge:
-                    merged[-1] = (merged[-1][0], b)
-                else:
-                    merged.append((a, b))
-            for a, b in merged:
-                if b - a < mw_dwell:
-                    continue
-                d_pl = (b - a) * cad_s
-                if not (REL_DUR[0] * mw_dr <= d_pl <= REL_DUR[1] * mw_dr):
-                    continue
-                j0, j1 = int(on[i0] + a), int(on[i0] + b)
-                seg = out['microwave'][j0:j1]
-                out['microwave'][j0:j1] = np.maximum(seg, amp[i0])
+            seg = out['microwave'][on[i0]:off[i0]]
+            out['microwave'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
         if fridge_band is not None:
             ok = ((amp >= fridge_band['amp'][0])
                   & (amp <= fridge_band['amp'][1])
