@@ -74,6 +74,9 @@ PROG_SPAN_HI = 1.25    # span ceiling vs max mark span
 # What IS visible is the raw heater signature, so dw detection merges
 # heater-level plateaus on a coarse grid and gates the merged run.
 DW30_GRID_S = 30.0     # coarse grid for the sustained-run detector
+KET_MARK_MIN = 3       # kettle marks that must hold an isolated run
+KET_ISO_AMP_W = 1000.0  # other-run level that breaks kettle isolation
+KET_ISO_WIN_S = 600.0  # +- window for the kettle isolation test
 DW_BASE_WIN = 240      # 2 h trailing p10 baseline: a single ~100 min dw
                        # cycle is ~8% of the window, so it cannot absorb
                        # the baseline the way shorter windows would
@@ -268,6 +271,25 @@ def _merge_runs(runs, gap_n: int):
         else:
             out.append((a, b))
     return out
+
+
+def _iso_clear(exc: np.ndarray, a: int, b: int, iso_amp: float,
+               iso_win: float) -> bool:
+    """True when no run >= iso_amp falls within +-iso_win s of the run
+    [a, b) on the coarse grid (the run's own excitation extent does not
+    count against it)."""
+    pad = int(iso_win / DW30_GRID_S) + 2
+    k0 = max(0, a - pad)
+    k1 = min(len(exc), b + pad)
+    a_s = a * DW30_GRID_S
+    b_s = b * DW30_GRID_S
+    for c, d in _runs(exc[k0:k1] >= iso_amp):
+        c_s = (k0 + c) * DW30_GRID_S
+        d_s = (k0 + d) * DW30_GRID_S
+        if d_s <= a_s or c_s >= b_s:
+            if d_s > a_s - iso_win and c_s < b_s + iso_win:
+                return False
+    return True
 
 
 def _dw30_runs(exc: np.ndarray, ev30_sorted: np.ndarray, prof: dict) -> list:
@@ -485,6 +507,7 @@ def build_and_train(ctx: dict):
     # program chains in the mined stream (structure check)
     prog_named = {'washing_machine': 0, 'dishwasher': 0}
     prog_total = 0
+    named_spans = []  # spans claimed by a program name (wm/dw territory)
     br_sig = _roll_median(sig, 11)
     for a0, a1 in _chains(ev_on, ev_off, mg):
         s_i, e_i = ev_on[a0], ev_off[a1 - 1]
@@ -505,11 +528,80 @@ def build_and_train(ctx: dict):
             d = None  # the sustained-run detector owns dw
         if d is not None:
             prog_named[d] += 1
+            named_spans.append((s_i, e_i))
     print(f'   mined program chains: {prog_total} pass structure, named '
           f'wm={prog_named["washing_machine"]} dw={prog_named["dishwasher"]}')
     if dw30 is None:
         print('   dw sustained detector disabled (mark windows produced '
               'no heater runs)')
+
+    # kettle sustained-run detector: a real kettle draw is one isolated
+    # flat run on the coarse grid - thr = 0.75x mark amp (the dw run
+    # convention), span inside the burst REL_DUR band of the mark dur,
+    # run-mean excitation inside the mark REL_AMP band. All five mark
+    # windows show no other >=1 kW run within +-10 min, so the
+    # isolation gate is mark-supported; draws stacked on other loads
+    # inflate the run mean past the amp band (3 of 5 mark runs sit at
+    # 3.3-4.2 kW), leaving those to the event path. The run path only
+    # ADDS draws whose rise/fall pairing broke (mid-draw level
+    # changes), i.e. runs no admitted burst event overlaps.
+    ket = mark['kettle']
+    ket_thr = PROG_HEAT_AMP_FRAC * ket['amp']
+    ket_span = (REL_DUR[0] * ket['dur_s'], REL_DUR[1] * ket['dur_s'])
+    ket_amp_band = ((1.0 - REL_AMP) * ket['amp'],
+                    (1.0 + REL_AMP) * ket['amp'])
+    ket_ok = np.flatnonzero(
+        (np.abs(ev_amp - ket['amp']) / ket['amp'] <= REL_AMP)
+        & (ev_dur >= REL_DUR[0] * dur_ref['kettle'])
+        & (ev_dur <= REL_DUR[1] * dur_ref['kettle']))
+    t0 = int(ctx['pre']['ts_us'][0])
+    ket_marks = 0
+    for lo_us, hi_us in ctx['calib']['kettle']['marks_us']:
+        j0 = max(0, int((lo_us - t0) / 1e6 / DW30_GRID_S))
+        j1 = max(j0 + 2, int((hi_us - t0) / 1e6 / DW30_GRID_S))
+        hit = False
+        for a, b in _runs(exc30[j0:j1] >= ket_thr):
+            if not ket_span[0] <= (b - a) * DW30_GRID_S <= ket_span[1]:
+                continue
+            if _iso_clear(exc30, j0 + a, j0 + b, KET_ISO_AMP_W,
+                          KET_ISO_WIN_S):
+                hit = True
+                break
+        ket_marks += int(hit)
+    print(f'   kettle sustained marks: {ket_marks}/'
+          f'{len(ctx["calib"]["kettle"]["marks_us"])} windows hold an '
+          'isolated in-band run')
+    ket_prof = None
+    if ket_marks >= KET_MARK_MIN:
+        cands = []
+        for a, b in _runs(exc30 >= ket_thr):
+            span_s = (b - a) * DW30_GRID_S
+            if not ket_span[0] <= span_s <= ket_span[1]:
+                continue
+            mean_w = float(exc30[a:b].mean())
+            if not ket_amp_band[0] <= mean_w <= ket_amp_band[1]:
+                continue
+            if not _iso_clear(exc30, a, b, KET_ISO_AMP_W, KET_ISO_WIN_S):
+                continue
+            a6 = a * stride
+            b6 = b * stride
+            k = int(np.searchsorted(ev_on[ket_ok], b6 - 1,
+                                    side='right')) - 1
+            if k >= 0 and ev_off[ket_ok[k]] > a6:
+                continue
+            dup = False
+            for c0, c1 in named_spans:
+                if c0 < b6 and a6 < c1:
+                    dup = True
+                    break
+            if dup:
+                continue
+            cands.append((a6, b6, mean_w))
+        print(f'   kettle sustained runs: {len(cands)} net-new '
+              f'candidates ({len(cands) / days:.2f}/day)')
+        ket_prof = {'thr': ket_thr, 'span_band': ket_span,
+                    'amp_band': ket_amp_band, 'iso_amp': KET_ISO_AMP_W,
+                    'iso_win': KET_ISO_WIN_S}
 
     # fridge: most-regular (amp x dur) duty cell among mined events
     dm = ((ev_amp >= DUTY_AMP_W[0]) & (ev_amp <= DUTY_AMP_W[1])
@@ -577,9 +669,11 @@ def build_and_train(ctx: dict):
         # inside the 600 s matching tolerance of the GT cycle's mask
         # rise (the run starts at the first heater block; the GT cycle
         # starts at the fill valve).
-        if dw30 is not None:
+        stride = max(1, int(round(DW30_GRID_S / cad_s)))
+        if dw30 is not None or ket_prof is not None:
             exc_e = _dw30_grid(f, cad_s)
-            ev30_e = np.sort(on // max(1, int(round(DW30_GRID_S / cad_s))))
+        if dw30 is not None:
+            ev30_e = np.sort(on // stride)
             for a30, b30 in _dw30_runs(exc_e, ev30_e, dw30):
                 i0 = max(0, stride * a30 - dw30['ext6'])
                 i1 = min(len(f), stride * b30 + dw30['ext6'])
@@ -589,6 +683,7 @@ def build_and_train(ctx: dict):
 
         # 1) program chains emit spans; their events stay burst-eligible
         ev_in_named = np.zeros(len(on), dtype=bool)
+        named_spans = []
         for a0, a1 in _chains(on, off, mg):
             s_i, e_i = on[a0], off[a1 - 1]
             span = float((e_i - s_i) * cad_s)
@@ -607,9 +702,11 @@ def build_and_train(ctx: dict):
                 # suppression over the chain span (dw heater partial-
                 # duty draws sit in the mw amp band)
                 ev_in_named[a0:a1] = True
+                named_spans.append((on[a0], off[a1 - 1]))
                 continue
             out[d][on[a0]:off[a1 - 1]] = mark[d]['mean_w']
             ev_in_named[a0:a1] = True
+            named_spans.append((on[a0], off[a1 - 1]))
 
         # 2) every event classifies independently (burst / duty bands).
         # Program heaters emit partial-duty draws (amp 1.3-1.9 kW) inside
@@ -620,7 +717,8 @@ def build_and_train(ctx: dict):
         dr = dur_ref.get('kettle', p['dur_s'])
         ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
               & (dur >= REL_DUR[0] * dr) & (dur <= REL_DUR[1] * dr))
-        for k in np.flatnonzero(ok):
+        ket_ok_idx = np.flatnonzero(ok)
+        for k in ket_ok_idx:
             i0 = int(k)
             seg = out['kettle'][on[i0]:off[i0]]
             out['kettle'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
@@ -655,6 +753,39 @@ def build_and_train(ctx: dict):
             i0 = int(k)
             seg = out['fridge'][on[i0]:off[i0]]
             out['fridge'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
+        # 3) kettle sustained runs: draws whose rise/fall pairing broke
+        # (mid-draw level changes) never become events; on the coarse
+        # grid they are one isolated flat run. Emit runs the burst
+        # classifier does not already own (no admitted kettle event or
+        # named chain overlaps), with the build-time gates.
+        if ket_prof is not None:
+            for a, b in _runs(exc_e >= ket_prof['thr']):
+                span_s = (b - a) * DW30_GRID_S
+                if not ket_prof['span_band'][0] <= span_s \
+                        <= ket_prof['span_band'][1]:
+                    continue
+                mean_w = float(exc_e[a:b].mean())
+                if not ket_prof['amp_band'][0] <= mean_w \
+                        <= ket_prof['amp_band'][1]:
+                    continue
+                a6 = a * stride
+                b6 = b * stride
+                if not _iso_clear(exc_e, a, b, ket_prof['iso_amp'],
+                                  ket_prof['iso_win']):
+                    continue
+                dup = False
+                for c0, c1 in named_spans:
+                    if c0 < b6 and a6 < c1:
+                        dup = True
+                        break
+                if dup:
+                    continue
+                k = int(np.searchsorted(on[ket_ok_idx], b6 - 1,
+                                        side='right')) - 1
+                if k >= 0 and off[ket_ok_idx[k]] > a6:
+                    continue
+                seg = out['kettle'][a6:b6]
+                out['kettle'][a6:b6] = np.maximum(seg, mean_w)
         return out
 
     return predict
