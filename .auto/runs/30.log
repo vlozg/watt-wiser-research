@@ -1,0 +1,42 @@
+loading data (cached under .auto/cache) ...
+   calib kettle: 5 marks of 1160 pre-span cycles, jitter +- 30 s
+   calib microwave: 5 marks of 899 pre-span cycles, jitter +- 30 s
+   calib fridge: passive 3 h window
+   calib washing_machine: dropped 1 mark (recording gap)
+   calib washing_machine: 4 marks of 208 pre-span cycles, jitter +- 30 s
+   calib dishwasher: 5 marks of 94 pre-span cycles, jitter +- 30 s
+building model (src/experiments/04_autoresearch/model.py) ...
+   mark profiles: kettle amp=2477W dur=2.2min mean=2478W; microwave amp=1583W dur=0.8min mean=714W; fridge amp=50W dur=12.5min mean=292W; washing_machine amp=2240W dur=101.0min mean=936W dens=0.34-0.68/min; dishwasher amp=2164W dur=97.2min mean=497W dens=0.02-0.05/min
+   mined 19883 level-excursion events from 325 pre-span days
+   mined kettle cluster: n=984 dur_p50=2.0min (mark 2.2min)
+   mined microwave cluster: n=1606 dur_p50=2.7min (mark 0.8min)
+   mined program chains: 591 pass structure, named wm=67 dw=19
+   fridge mined cell: none regular enough; fallback = passive-window pairs
+sanity gate: smoothed-perfect predictor under v2 cycle scoring
+   SANITY kettle: n_gt=366 f1=0.981
+   SANITY microwave: n_gt=286 f1=0.952
+   SANITY fridge: n_gt=2805 f1=0.915
+   SANITY washing_machine: n_gt=80 f1=1.000
+   SANITY dishwasher: n_gt=28 f1=1.000
+   SANITY_GATE=PASS (min 0.915)
+predicting eval span ...
+   prediction done in 0.3s
+
+device            n_cyc  n_pred  match     P      R      F1     MAE_W   nMAE
+kettle              366     204    187   0.917  0.511  0.656      11.2  0.0322
+microwave           286     218     75   0.344  0.262  0.298       7.8  0.0226
+fridge             2805     251     87   0.347  0.031  0.057      38.3  0.1104
+washing_machine      80      24      7   0.292  0.087  0.135      37.2  0.1071
+dishwasher           28       4      2   0.500  0.071  0.125      17.7  0.0511
+pooled cycles: n_gt=3565 n_pred=701 n_matched=358 F1=0.168
+coverage: pred=0.082 true=0.253 of aggregate
+
+METRIC mean_device_f1=0.254062
+METRIC min_device_f1=0.056937
+METRIC pooled_cycle_f1=0.167839
+METRIC mean_mae_w=22.4567
+METRIC worst_mae_w=38.3443
+METRIC mean_nmae=0.064655
+METRIC coverage_pred_share=0.082367
+METRIC coverage_true_share=0.252640
+elapsed 154s -> /root/longvdh/agent_space/projects/watt-wiser/.auto/last_bench.json

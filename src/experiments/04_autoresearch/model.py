@@ -5,15 +5,18 @@ this recovers kettle/microwave boils that first-fall pairing shredded
 and compressor cycles that magnitude-stealing mispaired. Events are
 mined from the PRE-span aggregate (unlabeled, mains only, FAQ-Q1 legal)
 to pre-register bands; hour-scale chains are programs only if seed amp
-is within +-20% of a wm/dw mark amp AND the chain mean level matches
-that mark's mean_w within 50% (rejects flat 2 kW long loads). Burst/
-duty events classify against mark profiles; microwave-band events
-inside named chains are suppressed (heater partial-duty draws mimic
-the mw band); the fridge uses a mined duty cell only if it is regular
+is within +-20% of a wm/dw mark amp, the chain mean level is inside the
+marks' own mean band [0.8x min, 1.25x max] (rejects flat 2 kW loads and
+low-power junk), the chain span is inside the marks' span band, and the
+event density matches the mark: the wm pump chatters ~0.4 events/min vs
+the quiet dw ~0.03 (amplitude-identical heaters, calib-phase structure).
+Burst/duty events classify against mark profiles; microwave-band events
+inside named chains are suppressed (heater partial-duty draws mimic the
+mw band); the fridge uses a mined duty cell only if it is regular
 (cv <= 0.6), else the passive window.
-Known limits: wm vs dw remain amplitude-identical (i28); fridge mining
-found no regular cell (cv ~2) - i29 periodicity. Pre-span rules only;
-nothing is tuned on eval results."""
+Known limits: chain naming still amp/mean-gated (phase sequences i28b);
+fridge mining found no regular cell (cv ~2) - i29 periodicity. Pre-span
+rules only; nothing is tuned on eval results."""
 from __future__ import annotations
 
 import numpy as np
@@ -30,7 +33,15 @@ CHAIN_GAP_S = 600.0    # program chaining gap (= program merge_s)
 PROG_SEED_FRAC = 0.5   # chain seed amp vs min(wm, dw) mark amp
 PROG_MIN_S = 1800.0    # hour-scale chain
 PROG_AMP_TOL = 0.20    # seed amp vs mark amp
-PROG_MEAN_TOL = 0.50   # chain mean level vs mark mean_w (two-sided)
+PROG_DENS_HI = 0.75    # wm-like density floor vs wm marks' min density
+PROG_DENS_LO = 2.0     # dw-like density ceiling vs dw marks' max density
+PROG_HEAT_AMP_FRAC = 0.75  # program heat event amp vs min mark amp
+PROG_HEAT_MIN_S = 300.0    # program heat event min dur (kettle boil = 2 min)
+PROG_SPAN_LO_WM = 0.35 # wm chain-span floor: soak pauses > the 600 s
+# chain gap split the eventful part, and the GT protocol (merge 600 s)
+# splits at the SAME boundary, so wm fragments are GT granularity
+PROG_SPAN_LO_DW = 0.60 # dw floor: dw junk cluster sits at 0.35-0.55x
+PROG_SPAN_HI = 1.25    # span ceiling vs max mark span
 DUTY_AMP_W = (40.0, 300.0)
 DUTY_DUR_S = (600.0, 2400.0)
 DUTY_CELL_MIN = 300    # min events per (amp, dur) cell over the mined span
@@ -117,7 +128,7 @@ def _pband(vals: np.ndarray):
 
 
 def _profile_from_marks(cal: dict, cad_s: float, roll_s: float,
-                        dev_class: str) -> dict:
+                        dev_class: str, dev: str = '') -> dict:
     """Amplitude/duration/mean-power profile from calibration marks only.
     Marks carry a pre/post roll: non-passive stats use the rolled-off
     core. Amplitude per class: burst = ON-plateau median, program = p90
@@ -156,7 +167,7 @@ def _profile_from_marks(cal: dict, cad_s: float, roll_s: float,
         mean_w = float(onlvl.mean() - base) if len(onlvl) else amp
         return {'amp': amp, 'dur_s': dur, 'mean_w': max(mean_w, 30.0)}
     rn = int(round(roll_s / cad_s))
-    amps, durs, means = [], [], []
+    amps, durs, means, dens = [], [], [], []
     for seg in cal['mains_seg']:
         s = seg.astype('float64')
         base = float(np.median(s[:BASE_N]))
@@ -170,28 +181,61 @@ def _profile_from_marks(cal: dict, cad_s: float, roll_s: float,
             amps.append(hi)
         durs.append(len(core) * cad_s)
         means.append(max(float(core.mean()) - base, 30.0))
-    return {'amp': float(np.median(amps)), 'dur_s': float(np.median(durs)),
+    prof = {'amp': float(np.median(amps)), 'dur_s': float(np.median(durs)),
             'mean_w': float(np.median(means))}
+    if dev_class == 'program':
+        # Phase structure from the same marks: event density separates
+        # the pump-chattering wm (~0.4 events/min) from the quiet dw
+        # (~0.03); mean/span bands come from the marks' own spread.
+        for seg in cal['mains_seg']:
+            sig = _roll_median(seg.astype('float32'), SMOOTH_N)
+            on, off, amp = _extract_events(sig, cad_s)
+            dens.append(len(on) / (len(seg) * cad_s / 60.0))
+        prof['dens_band'] = (min(dens), max(dens))
+        prof['mean_band'] = (0.8 * min(means), 1.25 * max(means))
+        # the chain span runs first-event to last-event and can miss the
+        # program's quiet tail (dw marks put the heater at ~0.19 of the
+        # span with sparse late events); the wm floor is lower still
+        # because soak pauses split wm chains at the GT merge boundary
+        lo = PROG_SPAN_LO_WM if dev == 'washing_machine' else PROG_SPAN_LO_DW
+        prof['span_band'] = (lo * min(durs), PROG_SPAN_HI * max(durs))
+    return prof
 
 
 def _name_program(seed_amp: float, span_s: float, mean_lvl: float,
-                  mark: dict):
-    """Name an hour-scale chain: seed amp within +-20% of a wm/dw mark
-    amp, chain mean level within +-50% of that mark's mean_w (rejects
-    flat long loads); score = amp + 0.25x log-span + 0.5x mean distances."""
-    best, bsc = None, None
+                  density: float, has_long_heat: bool, mark: dict):
+    """Name an hour-scale chain. Gates from the calib marks only: seed
+    amp within +-20% of the mark amp, chain mean inside the marks' own
+    mean band [0.8x min, 1.25x max], chain span inside the marks' span
+    band, and the chain must contain a long high-amp event (>= 0.75x
+    mark amp for >= 5 min) - a kettle boil is 2 min and cannot seed a
+    program name. The mean bands overlap (wm floor 440 W < dw ceiling
+    698 W), so when both marks admit a chain the disjoint density
+    bands decide: the wm pump chatters (marks 0.34-0.68 events/min)
+    vs the quiet dw (0.02-0.05) - dw-quiet <= 2x the dw mark max,
+    wm-chattery >= 0.75x the wm mark min, else unnamed."""
+    if not has_long_heat:
+        return None
+    ok = []
     for d in ('washing_machine', 'dishwasher'):
         p = mark[d]
-        da = abs(seed_amp - p['amp']) / p['amp']
-        if da > PROG_AMP_TOL:
+        if abs(seed_amp - p['amp']) / p['amp'] > PROG_AMP_TOL:
             continue
-        dm = abs(mean_lvl - p['mean_w']) / p['mean_w']
-        if dm > PROG_MEAN_TOL:
+        if not p['mean_band'][0] <= mean_lvl <= p['mean_band'][1]:
             continue
-        sc = da + 0.25 * abs(np.log(span_s / p['dur_s'])) + 0.5 * dm
-        if bsc is None or sc < bsc:
-            best, bsc = d, sc
-    return best
+        if not p['span_band'][0] <= span_s <= p['span_band'][1]:
+            continue
+        ok.append(d)
+    if len(ok) == 1:
+        return ok[0]
+    if len(ok) == 2:
+        # both marks admit the chain (the mean bands overlap 440-698 W):
+        # the disjoint density bands decide
+        if density <= PROG_DENS_LO * mark['dishwasher']['dens_band'][1]:
+            return 'dishwasher'
+        if density >= PROG_DENS_HI * mark['washing_machine']['dens_band'][0]:
+            return 'washing_machine'
+    return None
 
 
 def build_and_train(ctx: dict):
@@ -201,13 +245,18 @@ def build_and_train(ctx: dict):
     class_of = meta['device_class']
     mg = int(round(meta['merge_s']['washing_machine'] / cad_s))
     roll_s = float(meta.get('pre_roll_s', 0.0))
-    mark = {d: _profile_from_marks(ctx['calib'][d], cad_s, roll_s, class_of[d])
+    mark = {d: _profile_from_marks(ctx['calib'][d], cad_s, roll_s,
+                                   class_of[d], d)
             for d in devices}
     print('   mark profiles: ' + '; '.join(
         f"{d} amp={mark[d]['amp']:.0f}W dur={mark[d]['dur_s'] / 60:.1f}min "
-        f"mean={mark[d]['mean_w']:.0f}W" for d in devices))
+        f"mean={mark[d]['mean_w']:.0f}W"
+        + (f" dens={mark[d]['dens_band'][0]:.2f}-{mark[d]['dens_band'][1]:.2f}/min"
+           if 'dens_band' in mark[d] else '') for d in devices))
     seed_thr = PROG_SEED_FRAC * min(mark['washing_machine']['amp'],
                                     mark['dishwasher']['amp'])
+    heat_thr = PROG_HEAT_AMP_FRAC * min(mark['washing_machine']['amp'],
+                                        mark['dishwasher']['amp'])
 
     # ---- mine the PRE-span aggregate (unlabeled, mains only) ----
     sig = _roll_median(np.asarray(ctx['pre']['mains'], dtype='float32'),
@@ -242,7 +291,10 @@ def build_and_train(ctx: dict):
         prog_total += 1
         lvl = float(sig[ev_on[a0]:ev_off[a1 - 1]].mean()) \
             - float(_roll_median(sig, 11)[max(ev_on[a0] - 6, 0)])
-        d = _name_program(smax, span, lvl, mark)
+        dens = (a1 - a0) / (span / 60.0)
+        heat = bool(((ev_amp[a0:a1] >= heat_thr)
+                     & (ev_dur[a0:a1] >= PROG_HEAT_MIN_S)).any())
+        d = _name_program(smax, span, lvl, dens, heat, mark)
         if d is not None:
             prog_named[d] += 1
     print(f'   mined program chains: {prog_total} pass structure, named '
@@ -302,7 +354,10 @@ def build_and_train(ctx: dict):
                 continue
             lvl = float(sig[on[a0]:off[a1 - 1]].mean()) \
                 - float(base_roll[max(on[a0] - 6, 0)])
-            d = _name_program(smax, span, lvl, mark)
+            dens = (a1 - a0) / (span / 60.0)
+            heat = bool(((amp[a0:a1] >= heat_thr)
+                         & (dur[a0:a1] >= PROG_HEAT_MIN_S)).any())
+            d = _name_program(smax, span, lvl, dens, heat, mark)
             if d is None:
                 continue
             out[d][on[a0]:off[a1 - 1]] = mark[d]['mean_w']
