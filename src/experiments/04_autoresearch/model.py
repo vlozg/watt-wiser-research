@@ -25,6 +25,30 @@ gate(sigmoid(on_logit) > gate_thr_d), with gate_thr_d and an amplitude scale
 calibrated per device from the K=5 target-house calib sessions (ON/OFF sigmoid
 quantiles; ON-position median watts). All calibration data is house_1
 PRE-SPLIT - no eval leakage.
+
+v15 (visibility-routed hybrid decode; lineage analog-problems.md S2.1/S4
+via backlog i15, with the routing insight from runs 10-14): the net stays
+the v5 amortized posterior estimator (training identical, same seed).
+predict routes each device by AGGREGATE VISIBILITY = calib ON-median
+amplitude / aggregate-residual sigma (sigma from SOURCE houses = 497 W):
+chains with vis >= 1 (kettle 4.7, washing_machine 3.6, microwave 3.2) are
+decoded in an exact additive-factorial joint MAP over their 2^3 = 8 joint
+states - emissions = per-chain logit-shifted posterior log-liks (shift by
+the SAME calib gate, so the v5 decision boundary is preserved) + soft
+sum-to-aggregate Gaussian; chains with vis < 1 (fridge 0.18, dishwasher
+0.25) fall back to the direct v5 per-sample power x gate detector, because
+their ON states are indistinguishable from the residual noise floor - the
+consistency term carries no information for them (run 14: constraining the
+blind dw posterior produced 0/209 aligned episodes) and the direct path is
+measured better there (fridge 0.146 vs 0.094, dw 0.030 vs 0.002). The
+routing gap is wide (>= 3.2 vs <= 0.25, a 13x separation) and derived from
+calib + source data only - no eval-derived parameters anywhere. MAP chains
+keep the v11 amplitudes (calib ON medians, floored at 1.2x threshold).
+Fallback chains reproduce v5 exactly (same seed, same calib, same
+accumulation). Expected: kettle/wm/microwave keep their decode gains,
+fridge/dw return to v5 levels, so the min device lifts from wm 0.007 (v5)
+/ dw 0.002 (decode-only) to microwave ~0.017 - the first primary
+improvement since v5 if it holds.
 """
 from __future__ import annotations
 
@@ -47,6 +71,9 @@ CHANNELS = 64
 PRED_BATCH = 1024
 GATE_MIN, GATE_MAX = 0.05, 0.95  # clamp for calibrated gate thresholds
 AMP_MIN, AMP_MAX = 0.5, 4.0      # clamp for calibrated amplitude scale
+VP_SIGMA_MIN, VP_SIGMA_MAX = 20.0, 1000.0  # aggregate-residual sigma clamp (W)
+VP_AMP_FLOOR = 1.2                         # ON amplitude floor vs threshold
+VP_VIS_SPLIT = 1.0                # amp/sigma routing split (MAP vs direct)
 
 
 def _valid_starts(a: np.ndarray, w: int) -> np.ndarray:
@@ -174,6 +201,7 @@ def build_and_train(ctx: dict):
     # ---- calibrate per-device gate + amplitude from target-house calib ----
     gate_thr = np.zeros(len(devices), dtype='float32')
     amp_scale = np.ones(len(devices), dtype='float32')
+    amp_arr = np.zeros(len(devices), dtype='float64')
     for j, dev in enumerate(devices):
         cw = ctx['calib'][dev]
         xm = torch.from_numpy(
@@ -198,6 +226,7 @@ def build_and_train(ctx: dict):
         med_true = float(np.median(dw[on])) if on.any() else 0.0
         r = float(np.clip(med_true / med_pred, AMP_MIN, AMP_MAX))             if med_pred > 1.0 else 1.0
         amp_scale[j] = r
+        amp_arr[j] = med_true
         sq = lambda a, q: f'{np.percentile(a, q):.2f}' if len(a) else 'nan'
         print(f'   calib-gate {dev}: sigON p05/p50/p95='
               f'{sq(sig[on], 5)}/{sq(sig[on], 50)}/{sq(sig[on], 95)}'
@@ -208,31 +237,110 @@ def build_and_train(ctx: dict):
     print('   gate_thr:', {d: round(float(gate_thr[j]), 2)
                            for j, d in enumerate(devices)})
 
+    # ---- i15 continuation: visibility-routed joint MAP ----
+    # sigma = std of (source-train mains - sum of all 5 device channels):
+    # the noise scale of the sum-to-aggregate constraint (clamped). Each
+    # chain is routed by visibility = calib ON-median amplitude / sigma.
+    # High-visibility chains join the joint MAP; the rest keep the direct
+    # per-sample detector (their ON states are indistinguishable from
+    # noise, so constraining them adds no information - run 14 evidence).
+    thr_arr = np.array([thr[d] for d in devices], dtype='float64')
+    amp_arr = np.maximum(amp_arr, VP_AMP_FLOOR * thr_arr)
+    K = len(devices)
+    sum_sq = 0.0
+    sum_n = 0
+    for h, d in ctx['pretrain'].items():
+        mm = d['train']['mains']
+        dva = np.stack([d['train']['devices'][dev] for dev in devices],
+                       axis=0)
+        obs = np.isfinite(mm) & np.isfinite(dva).all(axis=0)
+        if obs.any():
+            resid = mm[obs] - dva[:, obs].sum(axis=0)
+            sum_sq += float((resid ** 2).sum())
+            sum_n += int(obs.sum())
+    sigma = float(np.clip(np.sqrt(sum_sq / max(sum_n, 1)),
+                          VP_SIGMA_MIN, VP_SIGMA_MAX))
+    vis = amp_arr / sigma
+    use_map = vis >= VP_VIS_SPLIT
+    map_idx = np.flatnonzero(use_map)
+    map_pos = {int(j): i for i, j in enumerate(map_idx)}
+    K_m = len(map_idx)
+    n_states_m = 2 ** K_m
+    bits_m = ((np.arange(n_states_m)[:, None] >> np.arange(K_m)[None, :])
+              & 1).astype('float64')
+    watts_m = amp_arr[map_idx] @ bits_m.T
+    logA = np.full((n_states_m, n_states_m), K_m * np.log(0.5))
+    print('   decode routing: sigma=%.0fW' % sigma,
+          'vis=', {d: round(float(vis[j]), 2)
+                   for j, d in enumerate(devices)},
+          'mode=', {d: ('MAP' if use_map[j] else 'direct')
+                    for j, d in enumerate(devices)},
+          'amp=', {d: round(float(amp_arr[j]))
+                   for j, d in enumerate(devices)})
+
     net.eval()
 
     @torch.no_grad()
     def predict(mains: np.ndarray) -> dict:
         t = len(mains)
         pad = w - 1
-        x = np.pad(np.nan_to_num(mains.astype('float32'), nan=0.0) / INPUT_SCALE,
-                   (pad, pad), mode='edge')
+        mains_f = np.nan_to_num(mains.astype('float64'), nan=0.0)
+        x = np.pad((mains_f / INPUT_SCALE).astype('float32'), (pad, pad),
+                   mode='edge')
         starts = np.arange(0, len(x) - w + 1, meta['stride'])
-        acc = np.zeros((len(x), len(devices)), dtype='float64')
+        acc_sig = np.zeros((len(x), len(devices)), dtype='float64')
+        acc_pg = np.zeros((len(x), len(devices)), dtype='float64')
         cnt = np.zeros(len(x), dtype='float64')
         for i in range(0, len(starts), PRED_BATCH):
             b = starts[i:i + PRED_BATCH]
             xb = torch.from_numpy(_gather(x, b, w)[:, :, None])
             p, o = net(xb)
-            g = (torch.sigmoid(o).numpy() > gate_thr[None, None, :])                 .astype('float32')
+            sg = torch.sigmoid(o).numpy()
+            g = (sg > gate_thr[None, None, :]).astype('float32')
             pg = p.numpy() * g          # gate kills off-segments per device
-            for k in range(pg.shape[0]):
+            for k in range(sg.shape[0]):
                 s0 = int(b[k])
-                acc[s0:s0 + w] += pg[k]
+                acc_sig[s0:s0 + w] += sg[k]
+                acc_pg[s0:s0 + w] += pg[k]
                 cnt[s0:s0 + w] += 1.0
-        safe = np.where(cnt[:, None] > 0, acc / np.maximum(cnt, 1.0)[:, None], 0.0)
-        core = safe[pad:pad + t]
-        return {dev: np.clip(core[:, j] * max_w[dev] * amp_scale[j],
-                             0.0, None).astype('float32')
-                for j, dev in enumerate(devices)}
+        safe_s = np.where(cnt[:, None] > 0,
+                          acc_sig / np.maximum(cnt, 1.0)[:, None], 0.0)
+        safe_p = np.where(cnt[:, None] > 0,
+                          acc_pg / np.maximum(cnt, 1.0)[:, None], 0.0)
+        qbar = safe_s[pad:pad + t]
+        pcore = safe_p[pad:pad + t]
+        # ---- joint MAP over the high-visibility chains ----
+        qcl = np.clip(qbar[:, map_idx], 1e-4, 1.0 - 1e-4)
+        dl = np.log(qcl / (1.0 - qcl)) \
+            - np.log(gate_thr[map_idx]
+                     / (1.0 - gate_thr[map_idx]))[None, :]
+        qp = np.clip(1.0 / (1.0 + np.exp(-np.clip(dl, -30.0, 30.0))),
+                     1e-6, 1.0 - 1e-6)
+        on_ll = np.log(qp)
+        off_ll = np.log(1.0 - qp)
+        don = on_ll - off_ll
+        emis = off_ll.sum(axis=1)[:, None] + don @ bits_m.T \
+            - 0.5 * ((mains_f[:, None] - watts_m[None, :]) / sigma) ** 2
+        bp = np.empty((t, n_states_m), dtype=np.uint8)
+        delta = emis[0].copy()
+        idx = np.arange(n_states_m)
+        for i in range(1, t):
+            cand = delta[:, None] + logA
+            bi = cand.argmax(axis=0)
+            bp[i] = bi
+            delta = cand[bi, idx] + emis[i]
+        st = np.empty(t, dtype=np.int64)
+        st[-1] = int(delta.argmax())
+        for i in range(t - 1, 0, -1):
+            st[i - 1] = bp[i, st[i]]
+        onm = ((st[:, None] >> np.arange(K_m)[None, :]) & 1).astype('float32')
+        out = {}
+        for j, dev in enumerate(devices):
+            if use_map[j]:
+                out[dev] = (onm[:, map_pos[j]] * amp_arr[j]).astype('float32')
+            else:
+                out[dev] = np.clip(pcore[:, j] * max_w[dev] * amp_scale[j],
+                                   0.0, None).astype('float32')
+        return out
 
     return predict
