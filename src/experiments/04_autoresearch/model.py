@@ -49,6 +49,22 @@ accumulation). Expected: kettle/wm/microwave keep their decode gains,
 fridge/dw return to v5 levels, so the min device lifts from wm 0.007 (v5)
 / dw 0.002 (decode-only) to microwave ~0.017 - the first primary
 improvement since v5 if it holds.
+
+v16 (routing-rule completion + full state space): two corrections to v15,
+both calib/source-derived and pre-registered. (1) Rule B - posterior
+LIVENESS: a chain joins the MAP only if its ON head crosses its own calib
+gate on calib ON sessions (on_p95 > gate_thr). A dead head (microwave
+calib sigON p95 = 0.00) has no timing signal: its shifted posterior
+hovers at the decision boundary and its MAP state is pure penalty noise,
+so it routes to the direct path (measured better: v5 mw 0.018 vs
+MAP-only mw 0.010). (2) The joint MAP spans ALL five chains again (as in
+the v11 decode): the aggregate physically contains every load, so the
+sum-to-aggregate emission term is more faithful with all chains present;
+only the OUTPUT routing changes (Rule A visibility AND Rule B liveness).
+Pre-registered prediction: kettle/washing_machine reproduce the v11
+decode exactly (0.302/0.335), microwave/fridge/dishwasher reproduce v5
+exactly (0.018/0.146/0.030), so min_device_f1 = 0.018 (+77% over v15,
++150% over v5) with every secondary at or better than v15.
 """
 from __future__ import annotations
 
@@ -202,6 +218,7 @@ def build_and_train(ctx: dict):
     gate_thr = np.zeros(len(devices), dtype='float32')
     amp_scale = np.ones(len(devices), dtype='float32')
     amp_arr = np.zeros(len(devices), dtype='float64')
+    on_p95 = np.zeros(len(devices), dtype='float64')
     for j, dev in enumerate(devices):
         cw = ctx['calib'][dev]
         xm = torch.from_numpy(
@@ -222,6 +239,7 @@ def build_and_train(ctx: dict):
         else:
             gt = 0.5
         gate_thr[j] = gt
+        on_p95[j] = float(on_q[2]) if on_q is not None else 0.0
         med_pred = float(np.median(pw[on])) if on.any() else 0.0
         med_true = float(np.median(dw[on])) if on.any() else 0.0
         r = float(np.clip(med_true / med_pred, AMP_MIN, AMP_MAX))             if med_pred > 1.0 else 1.0
@@ -261,18 +279,26 @@ def build_and_train(ctx: dict):
     sigma = float(np.clip(np.sqrt(sum_sq / max(sum_n, 1)),
                           VP_SIGMA_MIN, VP_SIGMA_MAX))
     vis = amp_arr / sigma
-    use_map = vis >= VP_VIS_SPLIT
-    map_idx = np.flatnonzero(use_map)
-    map_pos = {int(j): i for i, j in enumerate(map_idx)}
-    K_m = len(map_idx)
+    live = on_p95 > gate_thr
+    use_map = (vis >= VP_VIS_SPLIT) & live
+    # The joint MAP spans ALL five chains (the physical state space: the
+    # aggregate contains every load), but only chains passing BOTH routing
+    # rules route their OUTPUT through the MAP. Rule A (visibility):
+    # amplitude resolvable above the residual noise floor. Rule B
+    # (liveness): the ON head crosses its own calib gate on calib ON
+    # sessions - otherwise the shifted posterior hovers at the boundary
+    # and the chain's MAP state is penalty noise with no timing signal
+    # (microwave calib sigON p95 = 0.00).
+    K_m = K
     n_states_m = 2 ** K_m
     bits_m = ((np.arange(n_states_m)[:, None] >> np.arange(K_m)[None, :])
               & 1).astype('float64')
-    watts_m = amp_arr[map_idx] @ bits_m.T
+    watts_m = amp_arr @ bits_m.T
     logA = np.full((n_states_m, n_states_m), K_m * np.log(0.5))
     print('   decode routing: sigma=%.0fW' % sigma,
           'vis=', {d: round(float(vis[j]), 2)
                    for j, d in enumerate(devices)},
+          'live=', {d: bool(live[j]) for j, d in enumerate(devices)},
           'mode=', {d: ('MAP' if use_map[j] else 'direct')
                     for j, d in enumerate(devices)},
           'amp=', {d: round(float(amp_arr[j]))
@@ -310,10 +336,9 @@ def build_and_train(ctx: dict):
         qbar = safe_s[pad:pad + t]
         pcore = safe_p[pad:pad + t]
         # ---- joint MAP over the high-visibility chains ----
-        qcl = np.clip(qbar[:, map_idx], 1e-4, 1.0 - 1e-4)
+        qcl = np.clip(qbar, 1e-4, 1.0 - 1e-4)
         dl = np.log(qcl / (1.0 - qcl)) \
-            - np.log(gate_thr[map_idx]
-                     / (1.0 - gate_thr[map_idx]))[None, :]
+            - np.log(gate_thr / (1.0 - gate_thr))[None, :]
         qp = np.clip(1.0 / (1.0 + np.exp(-np.clip(dl, -30.0, 30.0))),
                      1e-6, 1.0 - 1e-6)
         on_ll = np.log(qp)
@@ -337,7 +362,7 @@ def build_and_train(ctx: dict):
         out = {}
         for j, dev in enumerate(devices):
             if use_map[j]:
-                out[dev] = (onm[:, map_pos[j]] * amp_arr[j]).astype('float32')
+                out[dev] = (onm[:, j] * amp_arr[j]).astype('float32')
             else:
                 out[dev] = np.clip(pcore[:, j] * max_w[dev] * amp_scale[j],
                                    0.0, None).astype('float32')
