@@ -64,7 +64,13 @@ def _():
     import matplotlib.pyplot as plt
     import numpy as np
     import pandas as pd
-    return bl, json, np, pd, plt
+
+    from wattwiser.experiments.data_loader import gold_parquet_path, load_power_series
+    from wattwiser.experiments.energy import step_energy_cumsum_wh, window_energy_wh
+    from wattwiser.experiments.evaluation import match_onsets, precision_recall_f1
+    from wattwiser.experiments.segmentation import build_episodes, episodes_from_edges, rising_edges
+    from wattwiser.paths import ROOT
+    return ROOT, bl, build_episodes, episodes_from_edges, gold_parquet_path, json, load_power_series, match_onsets, np, pd, plt, precision_recall_f1, rising_edges, step_energy_cumsum_wh, window_energy_wh
 
 
 @app.cell
@@ -108,20 +114,20 @@ def _(bl, cfg, mo):
 
 
 @app.cell
-def _(bl, cfg, json, np):
+def _(ROOT, bl, cfg, gold_parquet_path, json, load_power_series, np, step_energy_cumsum_wh):
     # --- Load everything once (computation) -------------------------------
     # Gold layout: data/gold/<dataset>/<house>/<channel>.parquet, columns
     # [ts_us (int64 us), w (float64 W)]. mains = aggregate; canonicals =
     # submeter channels - the measured ground truth. They are never detector
     # input: the detectors below see the aggregate only.
-    mains_df = bl.load_series(bl.gold_file(cfg["dataset"], cfg["house"], "mains"))
+    mains_df = load_power_series(gold_parquet_path(cfg["dataset"], cfg["house"], "mains"))
     chans = {
-        c: bl.load_series(bl.gold_file(cfg["dataset"], cfg["house"], c))
+        c: load_power_series(gold_parquet_path(cfg["dataset"], cfg["house"], c))
         for c in cfg["canonicals"]
     }
     # thresholds.json is quarantined (statement section 0) - adopted as-is;
     # the reproducibility cell re-derives it from the channels.
-    with open(f"{bl.ROOT}/data/gold/thresholds.json") as fh:
+    with open(f"{ROOT}/data/gold/thresholds.json") as fh:
         _thr_all = json.load(fh)
     thr = {
         c: float(_thr_all[cfg["dataset"]][cfg["house"]][c]["thr_on_W"])
@@ -133,7 +139,7 @@ def _(bl, cfg, json, np):
     # per-episode attribution in the scoring cell.
     mains_ts = mains_df["ts_us"].to_numpy(np.int64)
     mains_w = mains_df["w"].to_numpy(float)
-    mains_cum_wh = bl.step_energy_cumsum_wh(mains_ts, mains_w, cfg["max_hold_s"])
+    mains_cum_wh = step_energy_cumsum_wh(mains_ts, mains_w, cfg["max_hold_s"])
     return bl, chans, cfg, mains_cum_wh, mains_df, mains_ts, mains_w, thr
 
 
@@ -256,14 +262,14 @@ def _(bl, mo, thr_check):
 
 
 @app.cell
-def _(bl, chans, cfg, mains_cum_wh, np, pd, thr):
+def _(build_episodes, cfg, chans, mains_cum_wh, np, pd, step_energy_cumsum_wh, thr):
     # --- Ground-truth episodes (computation) -------------------------------
     # Per canonical: ON := w > thr (rule above); contiguous ON runs are
     # merged across gaps <= merge_gap_s (single dropped samples); runs
     # shorter than min_dwell_s are dropped. Channel energy uses the same
     # step rule as mains (60 s hold), so "share of mains" is like-for-like.
     gt = {
-        c: bl.build_episodes(
+        c: build_episodes(
             chans[c], thr[c], cfg["min_dwell_s"], cfg["merge_gap_s"], cfg["max_hold_s"]
         )
         for c in cfg["canonicals"]
@@ -274,7 +280,7 @@ def _(bl, chans, cfg, mains_cum_wh, np, pd, thr):
         _e = gt[_c]
         _ch_ts = chans[_c]["ts_us"].to_numpy(np.int64)
         _ch_w = chans[_c]["w"].to_numpy(float)
-        _ch_wh = float(bl.step_energy_cumsum_wh(_ch_ts, _ch_w, cfg["max_hold_s"])[-1])
+        _ch_wh = float(step_energy_cumsum_wh(_ch_ts, _ch_w, cfg["max_hold_s"])[-1])
         _recs.append(
             {
                 "canonical": _c,
@@ -428,7 +434,7 @@ def _(mo):
 
 
 @app.cell
-def _(bl, cfg, gt, mains_ts, mains_w, np, split_us):
+def _(cfg, gt, mains_ts, mains_w, np, split_us):
     # --- H02: button-press calibration simulation (computation) ------------
     # For every ground-truth episode in the calibration span, pretend the
     # occupant pressed the button at its onset, and read the profile off
@@ -525,7 +531,7 @@ def _(bl, cfg, mo, profiles):
 
 
 @app.cell
-def _(bl, cfg, mains_ts, mains_w, np, pd, profiles, split_us):
+def _(cfg, episodes_from_edges, mains_ts, mains_w, np, pd, profiles, rising_edges, split_us):
     # --- Detectors (computation; test span only) ---------------------------
     # Shared step signal: at every sample, mean(next k samples) minus
     # mean(previous k samples), k = step_win / cadence. rolling(k).mean()
@@ -551,27 +557,27 @@ def _(bl, cfg, mains_ts, mains_w, np, pd, profiles, split_us):
         if not np.isfinite(_dP) or _dP <= 0:
             anchor_pred[_c] = pd.DataFrame(columns=["t_on_us", "t_off_us", "dur_s"])
             continue
-        _rise = bl.rising_edges(_step, cfg["profile_rise_frac"] * _dP)
-        _fall_idx = bl.rising_edges(-_step, cfg["profile_fall_frac"] * _dP)
-        anchor_pred[_c] = bl.episodes_from_edges(
+        _rise = rising_edges(_step, cfg["profile_rise_frac"] * _dP)
+        _fall_idx = rising_edges(-_step, cfg["profile_fall_frac"] * _dP)
+        anchor_pred[_c] = episodes_from_edges(
             ts_t, _rise, ts_t[_fall_idx], cfg["min_dwell_s"]
         )
     # Floor: one global threshold pair (500 W up, 250 W down), no profile,
     # same episode pairing - the strawman the anchor must beat.
-    _rise_f = bl.rising_edges(_step, cfg["floor_rise_w"])
-    _fall_f = bl.rising_edges(-_step, cfg["floor_rise_w"] * cfg["floor_fall_frac"])
-    floor_pred = bl.episodes_from_edges(ts_t, _rise_f, ts_t[_fall_f], cfg["min_dwell_s"])
+    _rise_f = rising_edges(_step, cfg["floor_rise_w"])
+    _fall_f = rising_edges(-_step, cfg["floor_rise_w"] * cfg["floor_fall_frac"])
+    floor_pred = episodes_from_edges(ts_t, _rise_f, ts_t[_fall_f], cfg["min_dwell_s"])
     return anchor_pred, floor_pred, ts_t
 
 
 @app.cell
-def _(anchor_pred, bl, cfg, floor_pred, gt, mains_cum_wh, mains_ts, mains_w, np, split_us, ts_t):
+def _(anchor_pred, cfg, floor_pred, gt, mains_cum_wh, mains_ts, mains_w, match_onsets, np, precision_recall_f1, split_us, ts_t, window_energy_wh):
     # --- Scoring (computation; test span) -----------------------------------
     # Books first: every Wh of test-span mains is either (a) attributed to a
     # matched GT episode, (b) inside the always-on floor, or (c) residual.
     #
     # Detection quality: greedy one-to-one matching of predicted onsets to
-    # GT onsets within tau (baseline_lib.match_onsets); P/R/F1 from counts.
+    # GT onsets within tau (match_onsets); P/R/F1 from counts.
     #
     # Energy quality (anchor only): for each MATCHED GT episode, mains energy
     # over [on, off), minus the always-on floor's share
@@ -580,7 +586,7 @@ def _(anchor_pred, bl, cfg, floor_pred, gt, mains_cum_wh, mains_ts, mains_w, np,
     # the median relative error over matched episodes.
     _tau_us = cfg["tau_s"] * 1e6
     _i_test0 = int(np.searchsorted(mains_ts, split_us, side="left"))
-    _mains_wh_test = bl.window_energy_wh(
+    _mains_wh_test = window_energy_wh(
         mains_ts, mains_cum_wh, split_us, int(mains_ts[-1]) + 1
     )
     # always-on floor: 10th percentile of calibration-span mains - the load
@@ -597,8 +603,8 @@ def _(anchor_pred, bl, cfg, floor_pred, gt, mains_cum_wh, mains_ts, mains_w, np,
         _f1s = {}
         for _name, _pred in [("anchor", anchor_pred[_c]), ("floor", floor_pred)]:
             _p_on = _pred["t_on_us"].to_numpy(np.int64)
-            _gi, _pi = bl.match_onsets(_g_on, _p_on, _tau_us)
-            _prec, _rec, _f1 = bl.prf(len(_gi), len(_p_on), len(_g_on))
+            _gi, _pi = match_onsets(_g_on, _p_on, _tau_us)
+            _prec, _rec, _f1 = precision_recall_f1(len(_gi), len(_p_on), len(_g_on))
             _f1s[_name] = _f1
             _err = None
             if _name == "anchor" and len(_gi):
@@ -606,7 +612,7 @@ def _(anchor_pred, bl, cfg, floor_pred, gt, mains_cum_wh, mains_ts, mains_w, np,
                 _e_main = np.array(
                     [
                         max(
-                            bl.window_energy_wh(mains_ts, mains_cum_wh, a, b)
+                            window_energy_wh(mains_ts, mains_cum_wh, a, b)
                             - _always_on_w * (b - a) / 1e6 / 3600,
                             0.0,
                         )
@@ -723,7 +729,7 @@ def _(mo):
     - **Microwave in/out of the canonical set**: statement section 10 open item; the scaffold keeps all five.
     - **Per-class episode labeling**: the washing_machine labels are spike-dominated (short activations, not cycles); per-class min dwell / cycle grouping is decided at the full run's freeze, not here.
     - **Multi-house separation** (statement section 7): house 1 only here.
-    - **pytest coverage for baseline_lib** (episode builder, matcher, step-energy rule) in tests/.
+    - **pytest coverage for the wattwiser.experiments primitives** (episode builder, matcher, step-energy rule) in tests/.
     """)
     return
 

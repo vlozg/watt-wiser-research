@@ -83,7 +83,10 @@ def _():
     import matplotlib.pyplot as plt
     import numpy as np
     import pandas as pd
-    return bl, np, pd, plt
+
+    from wattwiser.experiments.data_loader import annot_csv_path, gold_parquet_path, load_power_series
+    from wattwiser.experiments.segmentation import build_episodes
+    return annot_csv_path, bl, build_episodes, gold_parquet_path, load_power_series, np, pd, plt
 
 
 @app.cell
@@ -121,16 +124,16 @@ def _(bl, cfg, mo):
 
 
 @app.cell
-def _(bl, cfg, pd):
+def _(annot_csv_path, cfg, pd):
     # --- Load the all-device profile store (computation) -------------------
     # Written by 02_build_rule_profiles.py (single writer); displayed here.
     _profiles_frames = []
     _splits_frames = []
     for _h in cfg["houses"]:
         _profiles_frames.append(
-            pd.read_csv(bl.gold_annot_file(cfg["dataset"], _h, "device_profile"))
+            pd.read_csv(annot_csv_path(cfg["dataset"], _h, "device_profile"))
         )
-        _splits_frames.append(pd.read_csv(bl.gold_annot_file(cfg["dataset"], _h, "splits")))
+        _splits_frames.append(pd.read_csv(annot_csv_path(cfg["dataset"], _h, "splits")))
     profiles_df = pd.concat(_profiles_frames, ignore_index=True)
     splits_df = pd.concat(_splits_frames, ignore_index=True)
     return profiles_df, splits_df
@@ -262,7 +265,7 @@ def _(cls_color, plt, profiles_df):
 
 
 @app.cell
-def _(cls_color, cfg, plt, profiles_df):
+def _(cfg, cls_color, plt, profiles_df):
     # --- Per-house episodic ranking (fig) ------------------------------------
     # Top non-focus devices by pre-split episodes: who is episodic at all?
     _nf = profiles_df[~profiles_df["in_focus"]]
@@ -344,14 +347,14 @@ def _(bl, cfg, mo, profiles_df):
 
 
 @app.cell
-def _(bl, cfg, np, pd, plt, profiles_df, splits_df):
+def _(build_episodes, cfg, gold_parquet_path, load_power_series, np, pd, plt, profiles_df, splits_df):
     # --- Loaders + figure helpers (computation, 03 vocabulary) ---------------
     _cache = {}
 
     def load_chan(house, name):
         key = (house, name)
         if key not in _cache:
-            _cache[key] = bl.load_series(bl.gold_file(cfg["dataset"], house, name))
+            _cache[key] = load_power_series(gold_parquet_path(cfg["dataset"], house, name))
         return _cache[key]
 
     def split_us_of(house):
@@ -391,7 +394,7 @@ def _(bl, cfg, np, pd, plt, profiles_df, splits_df):
         j0, j1 = np.searchsorted(s_ts, lo), np.searchsorted(s_ts, hi)
         axes[1].plot((s_ts[j0:j1] - lo) / 3.6e9, s_w[j0:j1], color="#d95f02", lw=0.8)
         axes[1].set_ylabel(f"{dev} sub (W)", fontsize=8)
-        ep = bl.build_episodes(s, thr, dwell, merge, 60.0)
+        ep = build_episodes(s, thr, dwell, merge, 60.0)
         sel = ep[(ep["t_on_us"] < hi) & (ep["t_off_us"] > lo)]
         for r in sel.itertuples():
             axes[2].axvspan(
@@ -411,7 +414,7 @@ def _(bl, cfg, np, pd, plt, profiles_df, splits_df):
     def sheet_fig(house, dev, thr, dwell, merge):
         """Review sheet: top calibration-span candidates by energy (03 pattern)."""
         s = load_chan(house, dev)
-        ep = bl.build_episodes(s, thr, dwell, merge, 60.0)
+        ep = build_episodes(s, thr, dwell, merge, 60.0)
         cal = ep[ep["t_on_us"] < split_us_of(house)]
         cal = (
             cal.sort_values("energy_wh", ascending=False)
@@ -561,7 +564,7 @@ def _(mo):
       this device; it was left uncurated.
 
     **Load contract.** Everything downstream reads the union via
-    `baseline_lib.gt_cycles(dataset, house)` - the 360 marks now cover 15
+    `load_gt_cycles(dataset, house)` - the 360 marks now cover 15
     device-house pairs across 3 houses, all pre-split.
     """)
     return

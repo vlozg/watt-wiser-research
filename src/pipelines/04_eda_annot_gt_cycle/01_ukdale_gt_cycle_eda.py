@@ -74,7 +74,12 @@ def _():
     import matplotlib.pyplot as plt
     import numpy as np
     import pandas as pd
-    return bl, np, pd, plt
+
+    from wattwiser.experiments.data_loader import annot_csv_path, gold_parquet_path, load_power_series
+    from wattwiser.experiments.evaluation import precision_recall_f1
+    from wattwiser.experiments.segmentation import build_episodes
+    from wattwiser.paths import ROOT
+    return ROOT, annot_csv_path, bl, build_episodes, gold_parquet_path, load_power_series, np, pd, plt, precision_recall_f1
 
 
 @app.cell
@@ -130,19 +135,19 @@ def _(bl, cfg, mo):
 
 
 @app.cell
-def _(bl, cfg):
+def _(ROOT, cfg, gold_parquet_path, load_power_series):
     # --- Load gold channels once (computation) -----------------------------
     # mains = aggregate (the only detector-side signal in part F); the
     # canonical channels are submeters - measured ground truth, never
     # detector input. thr comes from the quarantined thresholds.json.
     import json
 
-    mains_df = bl.load_series(bl.gold_file(cfg["dataset"], cfg["house"], "mains"))
+    mains_df = load_power_series(gold_parquet_path(cfg["dataset"], cfg["house"], "mains"))
     chans = {
-        c: bl.load_series(bl.gold_file(cfg["dataset"], cfg["house"], c))
+        c: load_power_series(gold_parquet_path(cfg["dataset"], cfg["house"], c))
         for c in cfg["cycle_rules"]
     }
-    with open(f"{bl.ROOT}/data/gold/thresholds.json") as fh:
+    with open(f"{ROOT}/data/gold/thresholds.json") as fh:
         _thr_all = json.load(fh)
     thr = {
         c: float(_thr_all[cfg["dataset"]][cfg["house"]][c]["thr_on_W"])
@@ -281,7 +286,7 @@ def _(mo):
 
 
 @app.cell
-def _(bl, chans, pd):
+def _(build_episodes, chans, pd):
     # --- Rule grid on the washing machine (computation) --------------------
     # For each (thr, dwell, merge): all episodes, and the cycle-like subset
     # (>= 10 min and >= 100 Wh). "ON-energy share" = cycle-like energy over
@@ -290,11 +295,11 @@ def _(bl, chans, pd):
     _wm = chans["washing_machine"]
     grid_rows = []
     for _thr in (50.0, 90.0, 150.0):
-        _ep = bl.build_episodes(_wm, _thr, 30.0, 12.0, 60.0)
+        _ep = build_episodes(_wm, _thr, 30.0, 12.0, 60.0)
         _tot_wh = float(_ep["energy_wh"].sum())
         for _dwell in (30.0, 600.0):
             for _merge in (12.0, 300.0, 1800.0):
-                _e = bl.build_episodes(_wm, _thr, _dwell, _merge, 60.0)
+                _e = build_episodes(_wm, _thr, _dwell, _merge, 60.0)
                 _cl = _e[(_e["dur_s"] >= 600.0) & (_e["energy_wh"] >= 100.0)]
                 grid_rows.append(
                     {
@@ -345,7 +350,7 @@ def _(bl, grid_df, mo):
 
 
 @app.cell
-def _(bl, chans, day_info, mains_df, np, pd, plt):
+def _(build_episodes, chans, day_info, mains_df, np, pd, plt):
     # --- Visual rule verification on the busiest WM day (computation+fig) --
     # Same day, two rules: R0 = gold episode rule (90 W, 30 s, 12 s),
     # R2 = cycle rule (90 W, 600 s, 600 s). Strips top to bottom: mains,
@@ -358,8 +363,8 @@ def _(bl, chans, day_info, mains_df, np, pd, plt):
     _wm = chans["washing_machine"]
     _wm_ts = _wm["ts_us"].to_numpy(np.int64)
     _wm_w = _wm["w"].to_numpy(float)
-    _r0 = bl.build_episodes(_wm, 90.0, 30.0, 12.0, 60.0)
-    _r2 = bl.build_episodes(_wm, 90.0, 600.0, 600.0, 60.0)
+    _r0 = build_episodes(_wm, 90.0, 30.0, 12.0, 60.0)
+    _r2 = build_episodes(_wm, 90.0, 600.0, 600.0, 60.0)
     fig_ov, _axes = plt.subplots(4, 1, figsize=(11, 7.2), sharex=True)
     _i0, _i1 = np.searchsorted(_m_ts, _lo), np.searchsorted(_m_ts, _hi)
     _axes[0].plot((_m_ts[_i0:_i1] - _lo) / 3.6e9, _m_w[_i0:_i1], color="#222222", lw=0.7)
@@ -419,7 +424,7 @@ def _(mo):
 
 
 @app.cell
-def _(bl, chans, cfg, thr):
+def _(build_episodes, cfg, chans, thr):
     # --- Per-device cycle stats under class rules (computation) ------------
     # Program devices: cycle-like = >= 10 min and >= 100 Wh under (600, 600).
     # Burst devices: all episodes under (30, 60). Fridge: (30, 12) shows the
@@ -428,7 +433,7 @@ def _(bl, chans, cfg, thr):
     for _dev, _rule in cfg["cycle_rules"].items():
         _s = chans[_dev]
         _t = thr[_dev]
-        _e = bl.build_episodes(_s, _t, _rule["dwell"], _rule["merge"], 60.0)
+        _e = build_episodes(_s, _t, _rule["dwell"], _rule["merge"], 60.0)
         if _dev in ("washing_machine", "dishwasher"):
             _cl = _e[(_e["dur_s"] >= cfg["cycle_like_s"]) & (_e["energy_wh"] >= 100.0)]
             _cls, _n = "program", int(len(_cl))
@@ -565,7 +570,7 @@ def _(bl, mo, runs_df):
 
 
 @app.cell
-def _(bl, cfg, chans, cycle_features, mains_df, np, runs_df, thr):
+def _(build_episodes, cfg, chans, cycle_features, mains_df, np, runs_df, thr):
     # --- Cycle onset vs strongest activation (computation) -----------------
     # For the two program devices (calibration span): the H02-style onset
     # dP on the aggregate (median [on, on+30 s) minus median [on-60 s, on))
@@ -575,7 +580,7 @@ def _(bl, cfg, chans, cycle_features, mains_df, np, runs_df, thr):
     _m_ts = mains_df["ts_us"].to_numpy(np.int64)
     _m_w = mains_df["w"].to_numpy(float)
     for _dev in ("washing_machine", "dishwasher"):
-        _e = bl.build_episodes(chans[_dev], thr[_dev], 600.0, 600.0, 60.0)
+        _e = build_episodes(chans[_dev], thr[_dev], 600.0, 600.0, 60.0)
         _cal = _e[_e["t_on_us"] < cfg["split_us"]].reset_index(drop=True)
         _feats = cycle_features(_cal, runs_df)
         _dpon = []
@@ -653,14 +658,14 @@ def _(mo):
 
 
 @app.cell
-def _(bl, chans, cfg, mains_df, np, plt, thr):
+def _(build_episodes, cfg, chans, mains_df, np, plt, thr):
     # --- Curation sheet: calibration WM candidates (computation + figure) --
     # Rule cycles (90 W, 600 s, 600 s) starting inside the calibration span,
     # ranked by energy; the top 30 drawn as strips: mains (black), WM
     # submeter (orange), cycle span (green). Sheet row numbers are the
     # stable handles the curated set cites.
     _wm = chans["washing_machine"]
-    _e = bl.build_episodes(_wm, thr["washing_machine"], 600.0, 600.0, 60.0)
+    _e = build_episodes(_wm, thr["washing_machine"], 600.0, 600.0, 60.0)
     _cal = (
         _e[_e["t_on_us"] < cfg["split_us"]]
         .sort_values("energy_wh", ascending=False)
@@ -716,7 +721,7 @@ def _(bl, mo, pd, sheet_info):
 
 
 @app.cell
-def _(bl, cfg, pd):
+def _(annot_csv_path, cfg, pd):
     # --- Curated calibration marks (loaded from the gold_annot store) ------
     # Operative store: data/gold_annot/ukdale/house_1/manual_cycles.csv (schema,
     # provenance, append-only convention: data/gold_annot/README.md). The
@@ -727,7 +732,7 @@ def _(bl, cfg, pd):
     # append rows with a new source tag; this notebook picks them up. All
     # marks lie inside the calibration span (before the part F split), so
     # nothing here leaks into the test span.
-    _path = bl.gold_annot_file(cfg["dataset"], cfg["house"], "manual_cycles")
+    _path = annot_csv_path(cfg["dataset"], cfg["house"], "manual_cycles")
     curated_wm = pd.read_csv(_path)
     _need = {"device", "t_on_us", "t_off_us", "source"}
     if not _need.issubset(set(curated_wm.columns)):
@@ -837,14 +842,14 @@ def _(mo):
 
 
 @app.cell
-def _(bl, chans, cfg, curated_wm, thr):
+def _(build_episodes, cfg, chans, curated_wm, thr):
     # --- Calibration marks per device (computation) ------------------------
     # WM: the 20 hand-curated marks (part E). Others: rule cycles starting
     # in the calibration span (no curation budget spent on them here).
     cal_cycles = {"washing_machine": curated_wm.copy()}
     for _dev in ("dishwasher", "kettle", "microwave"):
         _rule = cfg["cycle_rules"][_dev]
-        _e = bl.build_episodes(chans[_dev], thr[_dev], _rule["dwell"], _rule["merge"], 60.0)
+        _e = build_episodes(chans[_dev], thr[_dev], _rule["dwell"], _rule["merge"], 60.0)
         cal_cycles[_dev] = _e[_e["t_on_us"] < cfg["split_us"]].reset_index(drop=True)
     return (cal_cycles,)
 
@@ -949,7 +954,7 @@ def _(bl, loo_acc, loo_cm, mo):
 
 
 @app.cell
-def _(bl, cal_cycles, cfg, chans, np, pd, profiles, runs_df, thr):
+def _(build_episodes, cal_cycles, cfg, chans, np, pd, precision_recall_f1, profiles, runs_df, thr):
     # --- Predictive power: profile-gated detection (computation) -----------
     # Program devices: chain qualifying runs (dP >= det_thr_frac x profile
     # dP) with gaps <= clamp(gap90, 300 s, 1800 s); keep chains whose
@@ -981,7 +986,7 @@ def _(bl, cal_cycles, cfg, chans, np, pd, profiles, runs_df, thr):
             _cand["dur_s"] = (_cand["c1"] - _cand["c0"]) / 1e6
             _cand = _cand[(_cand["dur_s"] >= cfg["det_dur_lo"] * _p["dur"]) & (_cand["dur_s"] <= cfg["det_dur_hi"] * _p["dur"])]
         _rule = cfg["cycle_rules"][_dev]
-        _gt = bl.build_episodes(chans[_dev], thr[_dev], _rule["dwell"], _rule["merge"], 60.0)
+        _gt = build_episodes(chans[_dev], thr[_dev], _rule["dwell"], _rule["merge"], 60.0)
         _gt = _gt[_gt["t_on_us"] >= cfg["split_us"]]
         if _dev in ("washing_machine", "dishwasher"):
             _gt = _gt[(_gt["dur_s"] >= cfg["cycle_like_s"]) & (_gt["energy_wh"] >= cfg["cycle_like_wh"])]
@@ -991,7 +996,7 @@ def _(bl, cal_cycles, cfg, chans, np, pd, profiles, runs_df, thr):
             _need = min(cfg["ov_min_s"], cfg["ov_frac"] * (int(_r.t_off_us) - int(_r.t_on_us)) / 1e6)
             if len(_ov) and (np.maximum(_ov, 0) / 1e6 >= _need).any():
                 _n_match += 1
-        _P, _R, _F1 = bl.prf(_n_match, len(_cand), len(_gt))
+        _P, _R, _F1 = precision_recall_f1(_n_match, len(_cand), len(_gt))
         det_rows.append(
             [_dev, f"{_thr_dp:.0f}", str(len(_cand)), str(len(_gt)), str(_n_match), f"{_P:.2f}", f"{_R:.2f}", f"{_F1:.2f}"]
         )
@@ -999,7 +1004,7 @@ def _(bl, cal_cycles, cfg, chans, np, pd, profiles, runs_df, thr):
 
 
 @app.cell
-def _(bl, cfg, chans, profiles, runs_df, thr):
+def _(build_episodes, cfg, chans, profiles, runs_df, thr):
     # --- Detection ceiling (computation) -----------------------------------
     # Upper bound for ANY activation-anchored detector: per test-span GT
     # cycle, is there (a) any qualifying activation inside it, and (b) one
@@ -1009,7 +1014,7 @@ def _(bl, cfg, chans, profiles, runs_df, thr):
     ceil_rows = []
     for _dev in ("washing_machine", "kettle"):
         _rule = cfg["cycle_rules"][_dev]
-        _e = bl.build_episodes(chans[_dev], thr[_dev], _rule["dwell"], _rule["merge"], 60.0)
+        _e = build_episodes(chans[_dev], thr[_dev], _rule["dwell"], _rule["merge"], 60.0)
         _gt = _e[_e["t_on_us"] >= cfg["split_us"]]
         _thr_dp = cfg["det_thr_frac"] * profiles[_dev]["dp"]
         _lo_dp, _hi_dp = 0.5 * profiles[_dev]["dp"], 2.0 * profiles[_dev]["dp"]

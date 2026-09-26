@@ -84,11 +84,16 @@ def _():
 
     _sys.path.insert(0, str(_here.parents[2] / "experiments" / "00_baseline"))
     import baseline_lib as bl
-    ROOT = Path(bl.ROOT)
+    from wattwiser.paths import ROOT as _repo_root
+
+    ROOT = Path(_repo_root)
     import matplotlib.pyplot as plt
     import numpy as np
     import pandas as pd
-    return ROOT, bl, json, np, pd, plt
+
+    from wattwiser.experiments.data_loader import gold_parquet_path, load_power_series
+    from wattwiser.experiments.segmentation import build_episodes
+    return ROOT, bl, build_episodes, gold_parquet_path, json, load_power_series, np, pd, plt
 
 
 @app.cell
@@ -242,7 +247,7 @@ def _(inv_df, np, plt):
 
 
 @app.cell
-def _(np, press_hours, plt):
+def _(np, plt, press_hours):
     # --- Figure: diurnal shape of presses ------------------------------------
     fig_diurnal, _axes = plt.subplots(3, 1, figsize=(11, 5.6), sharex=True)
     for _ax, _house in zip(_axes, ("house_1", "house_2", "house_5")):
@@ -260,14 +265,14 @@ def _(np, press_hours, plt):
 
 
 @app.cell
-def _(ROOT, bl, cfg, np, pd, plt):
+def _(ROOT, build_episodes, cfg, gold_parquet_path, load_power_series, np, pd, plt):
     # --- Loaders + alignment helpers (computation) ---------------------------
     _cache = {}
 
     def load_chan(house, name):
         key = (house, name)
         if key not in _cache:
-            _cache[key] = bl.load_series(bl.gold_file(cfg["dataset"], house, name))
+            _cache[key] = load_power_series(gold_parquet_path(cfg["dataset"], house, name))
         return _cache[key]
 
     _prof_cache = {}
@@ -312,7 +317,7 @@ def _(ROOT, bl, cfg, np, pd, plt):
             stats["class"] = "no_channel"
             return stats, None
         thr, dwell, merge = rule_of(house, label)
-        ep = bl.build_episodes(s, thr, dwell, merge, 60.0)
+        ep = build_episodes(s, thr, dwell, merge, 60.0)
         on = ep["t_on_us"].to_numpy(np.int64)
         off = ep["t_off_us"].to_numpy(np.int64)
         sw = s["w"].to_numpy(float)
@@ -365,7 +370,7 @@ def _(ROOT, bl, cfg, np, pd, plt):
         )
         presses = b.loc[b["v0"] == 1, "ts_us"].to_numpy(np.int64)
         thr, dwell, merge = rule_of(house, label)
-        ep = bl.build_episodes(load_chan(house, label), thr, dwell, merge, 60.0)
+        ep = build_episodes(load_chan(house, label), thr, dwell, merge, 60.0)
         on = ep["t_on_us"].to_numpy(np.int64)
         off = ep["t_off_us"].to_numpy(np.int64)
         win_us = cfg["align_win_s"] * 1_000_000
@@ -393,7 +398,7 @@ def _(ROOT, bl, cfg, np, pd, plt):
         s_ts = s["ts_us"].to_numpy(np.int64)
         s_w = s["w"].to_numpy(float)
         thr, dwell, merge = rule_of(house, label)
-        ep = bl.build_episodes(s, thr, dwell, merge, 60.0)
+        ep = build_episodes(s, thr, dwell, merge, 60.0)
         fig, axes = plt.subplots(3, 1, figsize=(11, 5.4), sharex=True)
         i0, i1 = np.searchsorted(m_ts, lo), np.searchsorted(m_ts, hi)
         axes[0].plot((m_ts[i0:i1] - lo) / 3.6e9, m_w[i0:i1], color="#222222", lw=0.7)
@@ -605,7 +610,7 @@ def _(align_df, cfg, press_overlay):
 
 
 @app.cell
-def _(bl, mo, overlay_packs):
+def _(mo, overlay_packs):
     # presentation: exemplar overlays in accordions
     _items = {}
     for _key, _pack in overlay_packs.items():

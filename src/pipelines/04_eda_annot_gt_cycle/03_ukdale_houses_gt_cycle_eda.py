@@ -83,7 +83,10 @@ def _():
     import matplotlib.pyplot as plt
     import numpy as np
     import pandas as pd
-    return bl, np, pd, plt
+
+    from wattwiser.experiments.data_loader import annot_csv_path, gold_parquet_path, load_power_series
+    from wattwiser.experiments.segmentation import build_episodes
+    return annot_csv_path, bl, build_episodes, gold_parquet_path, load_power_series, np, pd, plt
 
 
 @app.cell
@@ -127,26 +130,26 @@ def _(bl, cfg, mo):
 
 
 @app.cell
-def _(bl, cfg, pd):
+def _(annot_csv_path, cfg, pd):
     # --- Load the rule-derived store files (computation) -------------------
     # Written by 02_build_rule_profiles.py; this notebook verifies and
     # displays them - the builder stays the single writer.
     _houses = ("house_1", "house_2", "house_3", "house_4", "house_5")
     splits_frames = []
     for _h in _houses:
-        _s = pd.read_csv(bl.gold_annot_file(cfg["dataset"], _h, "splits"))
+        _s = pd.read_csv(annot_csv_path(cfg["dataset"], _h, "splits"))
         splits_frames.append(_s)
     splits_df = pd.concat(splits_frames, ignore_index=True)
 
     prof_frames = []
     for _h in _houses:
-        _p = pd.read_csv(bl.gold_annot_file(cfg["dataset"], _h, "device_profile"))
+        _p = pd.read_csv(annot_csv_path(cfg["dataset"], _h, "device_profile"))
         prof_frames.append(_p)
     profiles_df = pd.concat(prof_frames, ignore_index=True)
 
     rule_rows = []
     for _h in _houses:
-        _path = bl.gold_annot_file(cfg["dataset"], _h, "rule_cycles")
+        _path = annot_csv_path(cfg["dataset"], _h, "rule_cycles")
         try:
             _rc = pd.read_csv(_path)
         except pd.errors.EmptyDataError:
@@ -221,14 +224,14 @@ def _(bl, mo, pd, profiles_df, rule_counts_df, splits_df):
 
 
 @app.cell
-def _(bl, cfg, np, pd, plt, profiles_df, splits_df):
+def _(annot_csv_path, build_episodes, cfg, gold_parquet_path, load_power_series, np, pd, plt, profiles_df, splits_df):
     # --- Shared loaders and figure helpers (computation) --------------------
     _cache = {}
 
     def load_chan(house, name):
         key = (house, name)
         if key not in _cache:
-            _cache[key] = bl.load_series(bl.gold_file(cfg["dataset"], house, name))
+            _cache[key] = load_power_series(gold_parquet_path(cfg["dataset"], house, name))
         return _cache[key]
 
     def thr_used(house, dev):
@@ -273,7 +276,7 @@ def _(bl, cfg, np, pd, plt, profiles_df, splits_df):
         axes[1].plot((s_ts[j0:j1] - lo) / 3.6e9, s_w[j0:j1], color="#d95f02", lw=0.8)
         axes[1].set_ylabel(f"{dev} sub (W)")
         for ax, (label, thr, dwell, merge) in zip(axes[2:], rules):
-            ep = bl.build_episodes(s, thr, dwell, merge, 60.0)
+            ep = build_episodes(s, thr, dwell, merge, 60.0)
             sel = ep[(ep["t_on_us"] < hi) & (ep["t_off_us"] > lo)]
             for r in sel.itertuples():
                 ax.axvspan((r.t_on_us - lo) / 3.6e9, (r.t_off_us - lo) / 3.6e9, color="#2ca02c", alpha=0.35, lw=0)
@@ -288,7 +291,7 @@ def _(bl, cfg, np, pd, plt, profiles_df, splits_df):
         """Review sheet: top calibration-span cycles by energy as strips."""
         s = load_chan(house, dev)
         thr = thr_used(house, dev)
-        ep = bl.build_episodes(s, thr, cfg["cycle_dwell_s"], cfg["cycle_merge_s"], 60.0)
+        ep = build_episodes(s, thr, cfg["cycle_dwell_s"], cfg["cycle_merge_s"], 60.0)
         cal = ep[ep["t_on_us"] < split_us_of(house)]
         cal = (
             cal.sort_values("energy_wh", ascending=False)
@@ -382,7 +385,7 @@ def _(bl, cfg, np, pd, plt, profiles_df, splits_df):
     def curated(house, dev):
         """Curated marks from the store; None when the file is not there yet."""
         try:
-            df = pd.read_csv(bl.gold_annot_file(cfg["dataset"], house, "manual_cycles"))
+            df = pd.read_csv(annot_csv_path(cfg["dataset"], house, "manual_cycles"))
         except FileNotFoundError:
             return None
         need = {"device", "t_on_us", "t_off_us", "source"}
@@ -424,7 +427,7 @@ def _(mo):
 
 
 @app.cell
-def _(bl, cfg, load_chan, np):
+def _(cfg, load_chan, np):
     # --- House 2 data health (computation: measured, not assumed) ----------
     def _modal_dt_s(ts_us):
         d = np.diff(ts_us) / 1e6
@@ -528,14 +531,14 @@ def _(mo):
 
 
 @app.cell
-def _(bl, cfg, load_chan, pd, split_us_of, thr_used):
+def _(build_episodes, cfg, load_chan, pd, split_us_of, thr_used):
     # --- House 2 program-cycle stats (independent recomputation) -----------
     # Recomputed here from the gold channels - an independent check on the
     # builder's device_profile.csv numbers (n / n_cal must match).
     h2_cyc = {}
     for _dev in ("washing_machine", "dishwasher"):
         _t = thr_used("house_2", _dev)
-        _ep = bl.build_episodes(load_chan("house_2", _dev), _t, cfg["cycle_dwell_s"], cfg["cycle_merge_s"], 60.0)
+        _ep = build_episodes(load_chan("house_2", _dev), _t, cfg["cycle_dwell_s"], cfg["cycle_merge_s"], 60.0)
         _cl = _ep[(_ep["dur_s"] >= cfg["cycle_like_s"]) & (_ep["energy_wh"] >= cfg["cycle_like_wh"])]
         _cal = _cl[_cl["t_on_us"] < split_us_of("house_2")]
         h2_cyc[_dev] = {
@@ -574,7 +577,7 @@ def _(bl, h2_cyc, mo):
 
 
 @app.cell
-def _(sheet_fig, plt):
+def _(plt, sheet_fig):
     # --- House 2 WM review sheet (fig) --------------------------------------
     fig_h2_wm_sheet, h2_wm_sheet_info = sheet_fig("house_2", "washing_machine")
     fig_h2_wm_sheet  # noqa: B018  (render figure as cell output)
@@ -601,7 +604,7 @@ def _(bl, h2_wm_sheet_info, mo, pd):
 
 
 @app.cell
-def _(sheet_fig, plt):
+def _(plt, sheet_fig):
     # --- House 2 DW review sheet (fig) --------------------------------------
     fig_h2_dw_sheet, h2_dw_sheet_info = sheet_fig("house_2", "dishwasher")
     fig_h2_dw_sheet  # noqa: B018  (render figure as cell output)
@@ -691,7 +694,7 @@ def _(mo):
 
 
 @app.cell
-def _(bl, load_chan, np):
+def _(load_chan, np):
     # --- House 5 data health (computation) ----------------------------------
     def _modal_dt_s(ts_us):
         d = np.diff(ts_us) / 1e6
@@ -794,12 +797,12 @@ def _(mo):
 
 
 @app.cell
-def _(bl, cfg, load_chan, pd, split_us_of, thr_used):
+def _(build_episodes, cfg, load_chan, pd, split_us_of, thr_used):
     # --- House 5 program-cycle stats (independent recomputation) ------------
     h5_cyc = {}
     for _dev in ("washing_machine", "dishwasher"):
         _t = thr_used("house_5", _dev)
-        _ep = bl.build_episodes(load_chan("house_5", _dev), _t, cfg["cycle_dwell_s"], cfg["cycle_merge_s"], 60.0)
+        _ep = build_episodes(load_chan("house_5", _dev), _t, cfg["cycle_dwell_s"], cfg["cycle_merge_s"], 60.0)
         _cl = _ep[(_ep["dur_s"] >= cfg["cycle_like_s"]) & (_ep["energy_wh"] >= cfg["cycle_like_wh"])]
         _cal = _cl[_cl["t_on_us"] < split_us_of("house_5")]
         h5_cyc[_dev] = {
@@ -838,7 +841,7 @@ def _(bl, h5_cyc, mo):
 
 
 @app.cell
-def _(sheet_fig, plt):
+def _(plt, sheet_fig):
     # --- House 5 WM review sheet (fig) --------------------------------------
     fig_h5_wm_sheet, h5_wm_sheet_info = sheet_fig("house_5", "washing_machine")
     fig_h5_wm_sheet  # noqa: B018  (render figure as cell output)
@@ -863,7 +866,7 @@ def _(bl, h5_wm_sheet_info, mo, pd):
 
 
 @app.cell
-def _(sheet_fig, plt):
+def _(plt, sheet_fig):
     # --- House 5 DW review sheet (fig) --------------------------------------
     fig_h5_dw_sheet, h5_dw_sheet_info = sheet_fig("house_5", "dishwasher")
     fig_h5_dw_sheet  # noqa: B018  (render figure as cell output)
@@ -947,7 +950,7 @@ def _(mo):
 
 
 @app.cell
-def _(bl, load_chan, np, pd, profiles_df):
+def _(load_chan, np, pd, profiles_df):
     # --- Houses 3-4 health + burst verification (computation) ---------------
     brief_h34 = {}
     for _h in ("house_3", "house_4"):
@@ -1004,24 +1007,24 @@ def _(bl, brief_h34, mo, profiles_df):
 
 
 @app.cell
-def _(bl, cfg, pd):
+def _(annot_csv_path, cfg, pd):
     # --- Store inventory (computation) ---------------------------------------
     inv_rows = []
     for _h in ("house_1", "house_2", "house_3", "house_4", "house_5"):
         _row = {"house": _h}
         try:
-            _c = pd.read_csv(bl.gold_annot_file(cfg["dataset"], _h, "manual_cycles"))
+            _c = pd.read_csv(annot_csv_path(cfg["dataset"], _h, "manual_cycles"))
             _row["cycles_rows"] = int(len(_c))
             _row["cycles_sources"] = ",".join(sorted(_c["source"].astype(str).unique())) if len(_c) else "-"
         except FileNotFoundError:
             _row["cycles_rows"] = 0
             _row["cycles_sources"] = "-"
         try:
-            _r = pd.read_csv(bl.gold_annot_file(cfg["dataset"], _h, "rule_cycles"))
+            _r = pd.read_csv(annot_csv_path(cfg["dataset"], _h, "rule_cycles"))
             _row["rule_cycles_rows"] = int(len(_r))
         except pd.errors.EmptyDataError:
             _row["rule_cycles_rows"] = 0
-        _p = pd.read_csv(bl.gold_annot_file(cfg["dataset"], _h, "device_profile"))
+        _p = pd.read_csv(annot_csv_path(cfg["dataset"], _h, "device_profile"))
         _row["profile_rows"] = int(len(_p))
         inv_rows.append(_row)
     inventory_df = pd.DataFrame(inv_rows)

@@ -80,7 +80,9 @@ def _():
     import numpy as np
     import pandas as pd
 
-    return Path, bl, np, pd, plt
+
+    from wattwiser.paths import ROOT
+    return Path, ROOT, bl, np, pd, plt
 
 
 @app.cell
@@ -126,14 +128,14 @@ def _(bl, cfg, mo):
 
 
 @app.cell
-def _(Path, bl, cfg, np, pd):
+def _(Path, ROOT, cfg, np, pd):
     # --- Load the synthetic dataset once (computation) ---------------------
     # The CSV is the client's synthesized 30-day trace (read-only under
     # repo/). Timestamps are naive; treated as UTC. Device channels are
     # measured ground truth for scoring; every profile feature below is
     # derived from the aggregate alone. The *_on flags are the marks (no
     # manual curation in this EDA, per scope).
-    _path = Path(bl.ROOT) / cfg["source_csv"]
+    _path = Path(ROOT) / cfg["source_csv"]
     _df = pd.read_csv(_path)
     _ts = pd.to_datetime(_df["timestamp"], format="%Y-%m-%d %H:%M:%S")
     tsu = _ts.dt.tz_localize("UTC").astype("datetime64[us, UTC]").astype("int64").to_numpy()
@@ -167,7 +169,7 @@ def _(cfg, pd, w):
 
 
 @app.cell
-def _(ch, cfg, np, pd, sm, tsu, w):
+def _(cfg, ch, np, pd, sm, tsu, w):
     # --- Data health + additivity (computation: measured, not assumed) -----
     _dt = np.diff(tsu) / 1e6
     _cad = cfg["cadence_s"]
@@ -248,7 +250,7 @@ def _(mo):
 
 
 @app.cell
-def _(ch, cfg, marks, np, pd, plt, tsu, w):
+def _(cfg, ch, marks, np, pd, plt, tsu, w):
     # --- One marked day, raw overlay (computation + figure) ----------------
     _cad = cfg["cadence_s"]
     _wm_w = ch["washing_machine"]
@@ -620,7 +622,7 @@ def _(cfg, d, np, split_us, tsu):
 
 
 @app.cell
-def _(ch, cfg, d, marks, np, pd, plt, profiles, runfeat, split_us, tsu, w):
+def _(cfg, ch, d, marks, np, pd, plt, profiles, runfeat, split_us, tsu, w):
     # --- Anatomy of one program cycle (figure) ------------------------------
     # The first test-span washing-machine mark: aggregate + WM channel
     # above, detrended aggregate + qualifying-activation shading below.

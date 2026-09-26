@@ -1,8 +1,11 @@
 import os
 
-import baseline_lib as bl
 import numpy as np
 import pandas as pd
+
+from wattwiser.experiments.data_loader import load_power_series
+from wattwiser.experiments.segmentation import build_episodes
+from wattwiser.paths import ROOT
 
 DATASET = "ukdale"
 HOUSES = ("house_1", "house_2", "house_3", "house_4", "house_5")
@@ -200,7 +203,7 @@ def profile_row(house, dev, split_us):
     )
     if spec["source"] == "excluded" or spec["thr"] != spec["thr"]:
         return row, None
-    df = bl.load_series(bl.gold_file(DATASET, house, dev))
+    df = load_power_series(gold_parquet_path(DATASET, house, dev))
     ts = df["ts_us"].to_numpy(np.int64)
     w = df["w"].to_numpy(float)
     on = w > spec["thr"]
@@ -208,15 +211,15 @@ def profile_row(house, dev, split_us):
         row["on_power_p50_w"] = float(np.percentile(w[on], 50))
         row["on_power_p99_w"] = float(np.percentile(w[on], 99))
     if dev in PROGRAM:
-        ep = bl.build_episodes(df, spec["thr"], CYCLE_RULE["dwell"], CYCLE_RULE["merge"], 60.0)
+        ep = build_episodes(df, spec["thr"], CYCLE_RULE["dwell"], CYCLE_RULE["merge"], 60.0)
         sel = cycle_like(ep)
         rule_cycles = None  # program cycles live in cycles.csv (manual marks)
     elif dev in BURST:
-        ep = bl.build_episodes(df, spec["thr"], BURST_RULE["dwell"], BURST_RULE["merge"], 60.0)
+        ep = build_episodes(df, spec["thr"], BURST_RULE["dwell"], BURST_RULE["merge"], 60.0)
         sel = ep
         rule_cycles = ep
     else:  # duty: compressor runs, reported for reference only
-        ep = bl.build_episodes(df, spec["thr"], DUTY_RULE["dwell"], DUTY_RULE["merge"], 60.0)
+        ep = build_episodes(df, spec["thr"], DUTY_RULE["dwell"], DUTY_RULE["merge"], 60.0)
         sel = ep
         rule_cycles = None  # duty is never written to rule_cycles
     row["n_cycles"] = int(len(sel))
@@ -246,7 +249,7 @@ def meta_row(house, dev, split_us):
     04_ukdale_all_device_eda notebook verifies the suggested class before
     anything downstream relies on these rows.
     '''
-    df = bl.load_series(bl.gold_file(DATASET, house, dev))
+    df = load_power_series(gold_parquet_path(DATASET, house, dev))
     w = df["w"].to_numpy(float)
     on = w > GENERIC_THR_W
     row = dict(
@@ -272,7 +275,7 @@ def meta_row(house, dev, split_us):
     if on.any():
         row["on_power_p50_w"] = float(np.percentile(w[on], 50))
         row["on_power_p99_w"] = float(np.percentile(w[on], 99))
-    ep = bl.build_episodes(df, GENERIC_THR_W, GENERIC_RULE["dwell"], GENERIC_RULE["merge"], 60.0)
+    ep = build_episodes(df, GENERIC_THR_W, GENERIC_RULE["dwell"], GENERIC_RULE["merge"], 60.0)
     row["n_cycles"] = int(len(ep))
     row["n_cycles_cal"] = int((ep["t_on_us"] < split_us).sum()) if len(ep) else 0
     if len(ep):
@@ -285,9 +288,9 @@ def meta_row(house, dev, split_us):
 
 def main():
     for house in HOUSES:
-        out_dir = os.path.join(bl.ROOT, "data", "gold_annot", DATASET, house)
+        out_dir = os.path.join(ROOT, "data", "gold_annot", DATASET, house)
         os.makedirs(out_dir, exist_ok=True)
-        mains_df = bl.load_series(bl.gold_file(DATASET, house, "mains"))
+        mains_df = load_power_series(gold_parquet_path(DATASET, house, "mains"))
         m_ts = mains_df["ts_us"].to_numpy(np.int64)
         split_us = split_for_house(m_ts, house)
         pd.DataFrame([dict(
@@ -299,7 +302,7 @@ def main():
                    "floor to UTC midnight of t0 + 75% of mains span"),
         )]).to_csv(os.path.join(out_dir, "splits.csv"), index=False)
         rows, burst_frames = [], []
-        gold_dir = os.path.join(bl.ROOT, "data", "gold", DATASET, house)
+        gold_dir = os.path.join(ROOT, "data", "gold", DATASET, house)
         all_devs = sorted(
             f[: -len(".parquet")]
             for f in os.listdir(gold_dir)
