@@ -30,7 +30,9 @@ FALL_REL = (0.3, 3.0)  # pairing magnitude sanity gate
 LEVEL_TOL = (0.15, 15.0)  # post-fall level-return tolerance (rel, abs W)
 SPAN_ZERO_MAX = 0.5    # drop events whose span is mostly a recording gap
 CHAIN_GAP_S = 600.0    # program chaining gap (= program merge_s)
-PROG_SEED_FRAC = 0.5   # chain seed amp vs min(wm, dw) mark amp
+PROG_SEED_FRAC = 0.5   # chain amp threshold (raw rolled p90) vs
+# min(wm, dw) mark amp - raw, not event-based: the extractor misses
+# heater blocks (4 of 9 marks) so an event-max seed would exclude them
 PROG_MIN_S = 1800.0    # hour-scale chain
 PROG_AMP_TOL = 0.20    # seed amp vs mark amp
 PROG_DENS_HI = 0.75    # wm-like density floor vs wm marks' min density
@@ -208,9 +210,11 @@ def _profile_from_marks(cal: dict, cad_s: float, roll_s: float,
 
 def _name_program(seed_amp: float, span_s: float, mean_lvl: float,
                   density: float, heat_share: float, mark: dict):
-    """Name an hour-scale chain. Gates from the calib marks only: seed
-    amp within +-20% of the mark amp, chain mean inside the marks' own
-    mean band [0.8x min, 1.25x max], chain span inside the marks' span
+    """Name an hour-scale chain. Gates from the calib marks only: chain
+    amp (raw rolled p90 over the chain span - the same statistic the
+    marks' amp uses) within +-20% of the mark amp, chain mean inside
+    the marks' own mean band [0.8x min, 1.25x max], chain span inside
+    the marks' span
     band, and raw heat-time (level >= 0.75x mark amp) over >= 9% of the
     chain span - a kettle boil is 2 min in a >= 31 min chain (<= 6.6%)
     and cannot seed a program name. The mean bands overlap (wm floor 440 W < dw ceiling
@@ -287,17 +291,22 @@ def build_and_train(ctx: dict):
     # program chains in the mined stream (structure check)
     prog_named = {'washing_machine': 0, 'dishwasher': 0}
     prog_total = 0
+    br_sig = _roll_median(sig, 11)
     for a0, a1 in _chains(ev_on, ev_off, mg):
-        span = float((ev_off[a1 - 1] - ev_on[a0]) * cad_s)
-        smax = float(ev_amp[a0:a1].max())
-        if smax < seed_thr or span < PROG_MIN_S:
+        s_i, e_i = ev_on[a0], ev_off[a1 - 1]
+        span = float((e_i - s_i) * cad_s)
+        br = float(br_sig[max(s_i - 6, 0)])
+        # amp reference = raw rolled p90 over the chain span, the same
+        # statistic the marks' amp is computed from; the extractor's
+        # event max misses heater blocks (4 of 9 marks)
+        p90 = float(np.percentile(sig[s_i:e_i], 90)) - br
+        if p90 < seed_thr or span < PROG_MIN_S:
             continue
         prog_total += 1
-        lvl = float(sig[ev_on[a0]:ev_off[a1 - 1]].mean()) \
-            - float(_roll_median(sig, 11)[max(ev_on[a0] - 6, 0)])
+        lvl = float(sig[s_i:e_i].mean()) - br
         dens = (a1 - a0) / (span / 60.0)
-        hshare = float((sig[ev_on[a0]:ev_off[a1 - 1]] >= heat_thr).mean())
-        d = _name_program(smax, span, lvl, dens, hshare, mark)
+        hshare = float((sig[s_i:e_i] >= heat_thr).mean())
+        d = _name_program(p90, span, lvl, dens, hshare, mark)
         if d is not None:
             prog_named[d] += 1
     print(f'   mined program chains: {prog_total} pass structure, named '
@@ -351,15 +360,16 @@ def build_and_train(ctx: dict):
         # 1) program chains emit spans; their events stay burst-eligible
         ev_in_named = np.zeros(len(on), dtype=bool)
         for a0, a1 in _chains(on, off, mg):
-            span = float((off[a1 - 1] - on[a0]) * cad_s)
-            smax = float(amp[a0:a1].max())
-            if smax < seed_thr or span < PROG_MIN_S:
+            s_i, e_i = on[a0], off[a1 - 1]
+            span = float((e_i - s_i) * cad_s)
+            br = float(base_roll[max(s_i - 6, 0)])
+            p90 = float(np.percentile(sig[s_i:e_i], 90)) - br
+            if p90 < seed_thr or span < PROG_MIN_S:
                 continue
-            lvl = float(sig[on[a0]:off[a1 - 1]].mean()) \
-                - float(base_roll[max(on[a0] - 6, 0)])
+            lvl = float(sig[s_i:e_i].mean()) - br
             dens = (a1 - a0) / (span / 60.0)
-            hshare = float((sig[on[a0]:off[a1 - 1]] >= heat_thr).mean())
-            d = _name_program(smax, span, lvl, dens, hshare, mark)
+            hshare = float((sig[s_i:e_i] >= heat_thr).mean())
+            d = _name_program(p90, span, lvl, dens, hshare, mark)
             if d is None:
                 continue
             out[d][on[a0]:off[a1 - 1]] = mark[d]['mean_w']
