@@ -35,8 +35,12 @@ PROG_MIN_S = 1800.0    # hour-scale chain
 PROG_AMP_TOL = 0.20    # seed amp vs mark amp
 PROG_DENS_HI = 0.75    # wm-like density floor vs wm marks' min density
 PROG_DENS_LO = 2.0     # dw-like density ceiling vs dw marks' max density
-PROG_HEAT_AMP_FRAC = 0.75  # program heat event amp vs min mark amp
-PROG_HEAT_MIN_S = 300.0    # program heat event min dur (kettle boil = 2 min)
+PROG_HEAT_AMP_FRAC = 0.75  # program heat level vs min mark amp
+PROG_HEAT_SHARE = 0.09     # min raw heat-time share of the chain span;
+# extractor-independent: the level-return extractor misses heater blocks
+# (4 of 9 marks show no heater-scale extracted event despite a ~2.2 kW
+# core p90) while every mark's raw share is 0.120-0.405; a 2-min kettle
+# boil in the shortest gated chain (31 min) is share 0.066 -> killed
 PROG_SPAN_LO_WM = 0.35 # wm chain-span floor: soak pauses > the 600 s
 # chain gap split the eventful part, and the GT protocol (merge 600 s)
 # splits at the SAME boundary, so wm fragments are GT granularity
@@ -203,18 +207,18 @@ def _profile_from_marks(cal: dict, cad_s: float, roll_s: float,
 
 
 def _name_program(seed_amp: float, span_s: float, mean_lvl: float,
-                  density: float, has_long_heat: bool, mark: dict):
+                  density: float, heat_share: float, mark: dict):
     """Name an hour-scale chain. Gates from the calib marks only: seed
     amp within +-20% of the mark amp, chain mean inside the marks' own
     mean band [0.8x min, 1.25x max], chain span inside the marks' span
-    band, and the chain must contain a long high-amp event (>= 0.75x
-    mark amp for >= 5 min) - a kettle boil is 2 min and cannot seed a
-    program name. The mean bands overlap (wm floor 440 W < dw ceiling
+    band, and raw heat-time (level >= 0.75x mark amp) over >= 9% of the
+    chain span - a kettle boil is 2 min in a >= 31 min chain (<= 6.6%)
+    and cannot seed a program name. The mean bands overlap (wm floor 440 W < dw ceiling
     698 W), so when both marks admit a chain the disjoint density
     bands decide: the wm pump chatters (marks 0.34-0.68 events/min)
     vs the quiet dw (0.02-0.05) - dw-quiet <= 2x the dw mark max,
     wm-chattery >= 0.75x the wm mark min, else unnamed."""
-    if not has_long_heat:
+    if heat_share < PROG_HEAT_SHARE:
         return None
     ok = []
     for d in ('washing_machine', 'dishwasher'):
@@ -292,9 +296,8 @@ def build_and_train(ctx: dict):
         lvl = float(sig[ev_on[a0]:ev_off[a1 - 1]].mean()) \
             - float(_roll_median(sig, 11)[max(ev_on[a0] - 6, 0)])
         dens = (a1 - a0) / (span / 60.0)
-        heat = bool(((ev_amp[a0:a1] >= heat_thr)
-                     & (ev_dur[a0:a1] >= PROG_HEAT_MIN_S)).any())
-        d = _name_program(smax, span, lvl, dens, heat, mark)
+        hshare = float((sig[ev_on[a0]:ev_off[a1 - 1]] >= heat_thr).mean())
+        d = _name_program(smax, span, lvl, dens, hshare, mark)
         if d is not None:
             prog_named[d] += 1
     print(f'   mined program chains: {prog_total} pass structure, named '
@@ -355,9 +358,8 @@ def build_and_train(ctx: dict):
             lvl = float(sig[on[a0]:off[a1 - 1]].mean()) \
                 - float(base_roll[max(on[a0] - 6, 0)])
             dens = (a1 - a0) / (span / 60.0)
-            heat = bool(((amp[a0:a1] >= heat_thr)
-                         & (dur[a0:a1] >= PROG_HEAT_MIN_S)).any())
-            d = _name_program(smax, span, lvl, dens, heat, mark)
+            hshare = float((sig[on[a0]:off[a1 - 1]] >= heat_thr).mean())
+            d = _name_program(smax, span, lvl, dens, hshare, mark)
             if d is None:
                 continue
             out[d][on[a0]:off[a1 - 1]] = mark[d]['mean_w']
