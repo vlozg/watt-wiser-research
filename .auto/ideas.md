@@ -87,3 +87,27 @@ is where F1 lives):
   the last-N epoch checkpoints or per-head capacity control - captures
   kettle's genuine +50% F1 from longer fit (0.214 -> 0.320) without the
   pos_weight-driven saturation of rare heads (wm sigOFF p50 0.98).
+
+Protocol v2 backlog (2026-09-30, owner-approved external review; v1
+episode metric retired - see H15_benchmark_validity + log run 28; family
+cap ~3 runs per idea; ceiling check before declaring a device stuck;
+primary mean_device_f1 with min_device_f1 guardrail):
+- i25 (review 1, DONE - run 28, the v2 reference): rules v0 step-pair
+  detector, profiles from aggregate-only calibration marks. mean 0.184,
+  min 0.047. Known limits = the next ideas' targets.
+- i26 (review 2): mine a year of unlabeled PRE-split events (~1 M
+  samples), cluster switch-on signatures, name clusters from the 5 calib
+  sessions -> unsupervised device dictionary; attacks kettle recall
+  (P 0.952 / R 0.219: extraction misses most boils) and the fridge
+  ~50 W impostor.
+- i27 (review 3): train on target by pasting calib signatures into mined
+  aggregate backgrounds - labeled-ish target data without eval contact.
+- i28 (review 4): phase-sequence/HSMM for wm/dw - profiles 2240 vs
+  2164 W are amplitude-identical; only phase structure (dw heater blocks
+  + ~120 W pump; wm wash pulses) separates them.
+- i29 (review 5, supersedes i21's v1 framing): fridge periodicity scan
+  (BLS/autocorr on the step signal, not the raw aggregate - the raw-signal
+  fold over-corrected to 1673 W in run-28 preflight).
+- i30 (review 6): REFIT 20-house contrastive event encoder
+  (data/gold/refit staged) - cross-dataset event representation.
+- i31 (review 7, optional): 1 Hz track at native client cadence.

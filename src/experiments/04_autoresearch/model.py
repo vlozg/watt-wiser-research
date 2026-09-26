@@ -1,22 +1,43 @@
-"""Rules-first NILM v0 on the v2 cycle protocol: pair aggregate power
-steps into events, match amplitude/duration against profiles built from
-aggregate-only calibration marks (FAQ Q1; fridge = passive window),
-merge program-device events into cycles. Pauses the v23 NN line (runs
-10-27 optimized the v1 episode metric, verified unlearnable).
-Known v0 limits: same-wattage devices confuse on amplitude (kettle vs
-wm/dw heater steps); no interference handling (H06); no phase models."""
+"""Rules + mining NILM (i26) on the v2 cycle protocol. Events are
+level-excursion cycles: a step rise ends at the first fall whose post-
+fall level returns to the pre-rise baseline (tol max(0.15x, 15 W)) -
+this recovers kettle/microwave boils that first-fall pairing shredded
+and compressor cycles that magnitude-stealing mispaired. Events are
+mined from the PRE-span aggregate (unlabeled, mains only, FAQ-Q1 legal)
+to pre-register bands; hour-scale chains are programs only if seed amp
+is within +-20% of a wm/dw mark amp AND the chain mean level matches
+that mark's mean_w within 50% (rejects flat 2 kW long loads). Burst/
+duty events classify against mark profiles; microwave-band events
+inside named chains are suppressed (heater partial-duty draws mimic
+the mw band); the fridge uses a mined duty cell only if it is regular
+(cv <= 0.6), else the passive window.
+Known limits: wm vs dw remain amplitude-identical (i28); fridge mining
+found no regular cell (cv ~2) - i29 periodicity. Pre-span rules only;
+nothing is tuned on eval results."""
 from __future__ import annotations
 
 import numpy as np
 
-BASE_N = 10            # pre-onset baseline samples (60 s)
+BASE_N = 10            # mark-segment baseline samples (60 s)
 SMOOTH_N = 5           # rolling-median smoothing (30 s at 6 s cadence)
 STEP_H = 3             # +-18 s step-probe half window
-AMP_MIN_W = 50.0       # minimum credible switch-on step (below fridge amp)
-REL_AMP = 0.20         # profile amplitude tolerance (+-20%)
+AMP_MIN_W = 50.0
+MAXSPAN_S = 7200.0
+FALL_REL = (0.3, 3.0)  # pairing magnitude sanity gate
+LEVEL_TOL = (0.15, 15.0)  # post-fall level-return tolerance (rel, abs W)
+SPAN_ZERO_MAX = 0.5    # drop events whose span is mostly a recording gap
+CHAIN_GAP_S = 600.0    # program chaining gap (= program merge_s)
+PROG_SEED_FRAC = 0.5   # chain seed amp vs min(wm, dw) mark amp
+PROG_MIN_S = 1800.0    # hour-scale chain
+PROG_AMP_TOL = 0.20    # seed amp vs mark amp
+PROG_MEAN_TOL = 0.50   # chain mean level vs mark mean_w (two-sided)
+DUTY_AMP_W = (40.0, 300.0)
+DUTY_DUR_S = (600.0, 2400.0)
+DUTY_CELL_MIN = 300    # min events per (amp, dur) cell over the mined span
+DUTY_CV_MAX = 0.6      # require regular (thermostat-like) recycling
+BURST_CLUSTER_MIN = 50  # mined burst cluster needed for a dur reference
+REL_AMP = 0.20
 REL_DUR = (1.0 / 3.0, 3.0)
-MAXSPAN_S = 7200.0     # max rise->fall pairing distance
-FALL_REL = (0.4, 2.5)  # paired fall amplitude vs rise
 
 
 def _roll_median(x: np.ndarray, n: int) -> np.ndarray:
@@ -32,23 +53,83 @@ def _runs(on: np.ndarray):
                     np.flatnonzero(d == -1).tolist()))
 
 
+def _extract_events(sig: np.ndarray, cad_s: float):
+    """Level-excursion events: a rise (> AMP_MIN_W over +-18 s) ends at
+    the FIRST fall within MAXSPAN_S whose magnitude is within FALL_REL of
+    the rise AND whose post-fall level returns to the pre-rise baseline
+    within max(rel x amp, abs) - the physical end of the excursion.
+    Intervening small steps (fridge off during a boil) no longer shred
+    events, and far-future same-magnitude falls cannot steal them.
+    Events whose span is mostly a recording gap are dropped."""
+    n = len(sig)
+    fut = np.concatenate([sig[STEP_H:], np.full(STEP_H, sig[-1])])
+    past = np.concatenate([np.full(STEP_H, sig[0]), sig[:-STEP_H]])
+    stp = fut - past
+    is_rise = stp > AMP_MIN_W
+    is_fall = stp < -AMP_MIN_W
+    r_idx = np.flatnonzero(is_rise & ~np.concatenate([[False], is_rise[:-1]]))
+    f_idx = np.flatnonzero(is_fall & ~np.concatenate([[False], is_fall[:-1]]))
+    base_roll = _roll_median(sig, 11)
+    zc = np.cumsum(sig <= 0.5, dtype=np.int32)
+    on_l, off_l, amp_l = [], [], []
+    for i in r_idx.tolist():
+        a = float(stp[i])
+        b = float(base_roll[max(i - 6, 0)])
+        tol = max(LEVEL_TOL[0] * a, LEVEL_TOL[1])
+        j0 = int(np.searchsorted(f_idx, i + STEP_H))
+        j1 = int(np.searchsorted(f_idx, i + MAXSPAN_S / cad_s, side='right'))
+        if j0 >= j1:
+            continue
+        idx = f_idx[j0:j1]
+        mags = -stp[idx]
+        ok = ((mags >= FALL_REL[0] * a) & (mags <= FALL_REL[1] * a)
+              & (np.abs(sig[np.minimum(idx + STEP_H, n - 1)] - b) <= tol))
+        if not ok.any():
+            continue
+        jb = int(idx[int(np.flatnonzero(ok)[0])])
+        if jb - i > 0 and (int(zc[jb]) - int(zc[i])) / (jb - i) > SPAN_ZERO_MAX:
+            continue
+        on_l.append(i)
+        off_l.append(jb)
+        amp_l.append(a)
+    return (np.asarray(on_l, dtype=np.int64),
+            np.asarray(off_l, dtype=np.int64),
+            np.asarray(amp_l, dtype=np.float64))
+
+
+def _chains(ev_on: np.ndarray, ev_off: np.ndarray, mg: int):
+    """[a0, a1) slices of maximal event chains: consecutive events with
+    gap (next on - prev off) <= mg samples join one chain. O(N) pass."""
+    out = []
+    a0 = 0
+    n = len(ev_on)
+    for i in range(1, n + 1):
+        if i == n or ev_on[i] - ev_off[i - 1] > mg:
+            out.append((a0, i))
+            a0 = i
+    return out
+
+
+def _pband(vals: np.ndarray):
+    if len(vals) == 0:
+        return (0.0, 0.0)
+    return (float(np.percentile(vals, 5)), float(np.percentile(vals, 95)))
+
+
 def _profile_from_marks(cal: dict, cad_s: float, roll_s: float,
                         dev_class: str) -> dict:
     """Amplitude/duration/mean-power profile from calibration marks only.
-    Marks carry a pre/post roll (the session records before switch-on):
-    non-passive stats use the rolled-off core. Amplitude estimator is
-    per class: burst = ON-plateau median (flat boil / mw burst),
-    program = p90 (heater level), duty/passive = recurring rise/fall
-    pairs 10-40 min apart with matched amplitude (the compressor).
-    Known limit: a small cycling load near 50 W can outnumber
-    compressor pairs in a 3 h window; periodicity scan is backlog idea 5."""
+    Marks carry a pre/post roll: non-passive stats use the rolled-off
+    core. Amplitude per class: burst = ON-plateau median, program = p90
+    (heater level), duty/passive = recurring rise/fall pairs 10-40 min
+    apart with matched amplitude (the compressor)."""
     if cal['passive'] or dev_class == 'duty':
         w = cal['mains_seg'][0].astype('float64')
         base = float(np.percentile(w, 20))
         fut = np.concatenate([w[STEP_H:], np.full(STEP_H, w[-1])])
         past = np.concatenate([np.full(STEP_H, w[0]), w[:-STEP_H]])
         stp = fut - past
-        # Recurring rise/fall pairs = the compressor's duty cycle.
+
         def pair_fallback():
             up = stp > 40.0
             dn = stp < -40.0
@@ -93,83 +174,196 @@ def _profile_from_marks(cal: dict, cad_s: float, roll_s: float,
             'mean_w': float(np.median(means))}
 
 
+def _name_program(seed_amp: float, span_s: float, mean_lvl: float,
+                  mark: dict):
+    """Name an hour-scale chain: seed amp within +-20% of a wm/dw mark
+    amp, chain mean level within +-50% of that mark's mean_w (rejects
+    flat long loads); score = amp + 0.25x log-span + 0.5x mean distances."""
+    best, bsc = None, None
+    for d in ('washing_machine', 'dishwasher'):
+        p = mark[d]
+        da = abs(seed_amp - p['amp']) / p['amp']
+        if da > PROG_AMP_TOL:
+            continue
+        dm = abs(mean_lvl - p['mean_w']) / p['mean_w']
+        if dm > PROG_MEAN_TOL:
+            continue
+        sc = da + 0.25 * abs(np.log(span_s / p['dur_s'])) + 0.5 * dm
+        if bsc is None or sc < bsc:
+            best, bsc = d, sc
+    return best
+
+
 def build_and_train(ctx: dict):
     meta = ctx['meta']
     devices = meta['devices']
-    cad_s = meta['cadence_us'] / 1e6
+    cad_s = float(meta['cadence_us']) / 1e6
     class_of = meta['device_class']
-    merge_n = {d: int(round(meta['merge_s'][d] / cad_s)) for d in devices}
-    prof = {d: _profile_from_marks(ctx['calib'][d], cad_s,
-                                   float(meta.get('pre_roll_s', 0.0)),
-                                   class_of[d])
+    mg = int(round(meta['merge_s']['washing_machine'] / cad_s))
+    roll_s = float(meta.get('pre_roll_s', 0.0))
+    mark = {d: _profile_from_marks(ctx['calib'][d], cad_s, roll_s, class_of[d])
             for d in devices}
+    print('   mark profiles: ' + '; '.join(
+        f"{d} amp={mark[d]['amp']:.0f}W dur={mark[d]['dur_s'] / 60:.1f}min "
+        f"mean={mark[d]['mean_w']:.0f}W" for d in devices))
+    seed_thr = PROG_SEED_FRAC * min(mark['washing_machine']['amp'],
+                                    mark['dishwasher']['amp'])
+
+    # ---- mine the PRE-span aggregate (unlabeled, mains only) ----
+    sig = _roll_median(np.asarray(ctx['pre']['mains'], dtype='float32'),
+                       SMOOTH_N)
+    ev_on, ev_off, ev_amp = _extract_events(sig, cad_s)
+    ev_dur = (ev_off - ev_on) * cad_s
+    days = len(sig) * cad_s / 86400
+    print(f'   mined {len(ev_on)} level-excursion events from {days:.0f} '
+          'pre-span days')
+
+    # mined burst dur references: p50 dur of events in each mark amp band
+    dur_ref = {}
+    for d in ('kettle', 'microwave'):
+        p = mark[d]
+        m = np.abs(ev_amp - p['amp']) / p['amp'] <= REL_AMP
+        if int(m.sum()) >= BURST_CLUSTER_MIN:
+            dur_ref[d] = float(np.percentile(ev_dur[m], 50))
+            print(f'   mined {d} cluster: n={int(m.sum())} '
+                  f'dur_p50={dur_ref[d] / 60:.1f}min (mark '
+                  f'{p["dur_s"] / 60:.1f}min)')
+        else:
+            dur_ref[d] = p['dur_s']
+
+    # program chains in the mined stream (structure check)
+    prog_named = {'washing_machine': 0, 'dishwasher': 0}
+    prog_total = 0
+    for a0, a1 in _chains(ev_on, ev_off, mg):
+        span = float((ev_off[a1 - 1] - ev_on[a0]) * cad_s)
+        smax = float(ev_amp[a0:a1].max())
+        if smax < seed_thr or span < PROG_MIN_S:
+            continue
+        prog_total += 1
+        lvl = float(sig[ev_on[a0]:ev_off[a1 - 1]].mean()) \
+            - float(_roll_median(sig, 11)[max(ev_on[a0] - 6, 0)])
+        d = _name_program(smax, span, lvl, mark)
+        if d is not None:
+            prog_named[d] += 1
+    print(f'   mined program chains: {prog_total} pass structure, named '
+          f'wm={prog_named["washing_machine"]} dw={prog_named["dishwasher"]}')
+
+    # fridge: most-regular (amp x dur) duty cell among mined events
+    dm = ((ev_amp >= DUTY_AMP_W[0]) & (ev_amp <= DUTY_AMP_W[1])
+          & (ev_dur >= DUTY_DUR_S[0]) & (ev_dur <= DUTY_DUR_S[1]))
+    fridge_band = None
+    if int(dm.sum()) >= DUTY_CELL_MIN:
+        cells: dict = {}
+        for k in np.flatnonzero(dm):
+            key = (int(ev_amp[k] // 10.0), int(ev_dur[k] // 300.0))
+            cells.setdefault(key, []).append(int(k))
+        cand = []
+        for ks in cells.values():
+            if len(ks) < DUTY_CELL_MIN:
+                continue
+            ks = np.asarray(ks, dtype=np.int64)
+            a50 = float(np.percentile(ev_amp[ks], 50))
+            d50 = float(np.percentile(ev_dur[ks], 50))
+            iv = np.diff(np.sort(ev_on[ks])) * cad_s
+            cv = (float(iv.std() / iv.mean())
+                  if len(iv) >= 3 and iv.mean() > 0 else 9.9)
+            cand.append((cv, a50, d50, ks))
+        cand.sort(key=lambda t: t[0])
+        if cand and cand[0][0] <= DUTY_CV_MAX:
+            cv, a50, _, ks = cand[0]
+            n_cell = len(ks)
+            fridge_band = {'amp': _pband(ev_amp[ks]),
+                           'dur': _pband(ev_dur[ks]), 'n': n_cell, 'cv': cv}
+            print(f'   fridge mined cell: a50={a50:.0f}W '
+                  f'amp_band={fridge_band["amp"][0]:.0f}-'
+                  f'{fridge_band["amp"][1]:.0f}W '
+                  f'dur_band={fridge_band["dur"][0] / 60:.0f}-'
+                  f'{fridge_band["dur"][1] / 60:.0f}min n={n_cell} cv={cv:.3f}')
+    if fridge_band is None:
+        print('   fridge mined cell: none regular enough; '
+              'fallback = passive-window pairs')
 
     def predict(filled) -> dict:
-        sig = _roll_median(np.asarray(filled, dtype='float32'), SMOOTH_N)
-        n = len(sig)
-        fut = np.concatenate([sig[STEP_H:], np.full(STEP_H, sig[-1])])
-        past = np.concatenate([np.full(STEP_H, sig[0]), sig[:-STEP_H]])
-        stp = fut - past
-        is_rise = stp > AMP_MIN_W
-        is_fall = stp < -AMP_MIN_W
-        rise_e = is_rise & ~np.concatenate([[False], is_rise[:-1]])
-        fall_e = is_fall & ~np.concatenate([[False], is_fall[:-1]])
-        r_idx = np.flatnonzero(rise_e)
-        f_idx = np.flatnonzero(fall_e)
-        events = []  # (on, off, amp) sorted by on
-        for k, i in enumerate(r_idx):
-            j = int(np.searchsorted(f_idx, i + STEP_H))
-            if j >= len(f_idx) or (f_idx[j] - i) * cad_s > MAXSPAN_S:
-                continue
-            amp = float(stp[i])
-            if not FALL_REL[0] * amp <= -stp[f_idx[j]] <= FALL_REL[1] * amp:
-                continue
-            events.append((int(i), int(f_idx[j]), amp))
-        if not events:
-            return {d: np.zeros(n, dtype='float32') for d in devices}
-        ev_on = np.array([e[0] for e in events])
-        ev_off = np.array([e[1] for e in events])
+        f = np.asarray(filled, dtype='float32')
+        sig = _roll_median(f, SMOOTH_N)
+        base_roll = _roll_median(sig, 11)
+        on, off, amp = _extract_events(sig, cad_s)
+        out = {d: np.zeros(len(f), dtype='float32') for d in devices}
+        if len(on) == 0:
+            return out
+        dur = (off - on) * cad_s
 
-        def extend_cycle(on0: int, off0: int, mg: int):
-            # Absorb surrounding events into the program cluster in both
-            # directions: pump/fill steps precede the heater, so the
-            # cycle onset is the cluster start, not the seed event.
-            start, end = on0, off0
-            while True:
-                k = int(np.searchsorted(ev_on, end, side='right'))
-                if k < len(ev_on) and ev_on[k] <= end + mg:
-                    end = max(end, int(ev_off[k]))
-                    continue
-                kb = int(np.searchsorted(ev_on, start, side='left')) - 1
-                if kb >= 0 and ev_on[kb] < start and ev_off[kb] >= start - mg:
-                    start = int(ev_on[kb])
-                    continue
-                return start, end
+        # 1) program chains emit spans; their events stay burst-eligible
+        ev_in_named = np.zeros(len(on), dtype=bool)
+        for a0, a1 in _chains(on, off, mg):
+            span = float((off[a1 - 1] - on[a0]) * cad_s)
+            smax = float(amp[a0:a1].max())
+            if smax < seed_thr or span < PROG_MIN_S:
+                continue
+            lvl = float(sig[on[a0]:off[a1 - 1]].mean()) \
+                - float(base_roll[max(on[a0] - 6, 0)])
+            d = _name_program(smax, span, lvl, mark)
+            if d is None:
+                continue
+            out[d][on[a0]:off[a1 - 1]] = mark[d]['mean_w']
+            ev_in_named[a0:a1] = True
 
-        out = {d: np.zeros(n, dtype='float32') for d in devices}
-        for (i, off, amp) in events:
-            best = None
-            for d in devices:
-                p = prof[d]
-                da = abs(amp - p['amp']) / p['amp']
-                if da <= REL_AMP and (best is None or da < best[0]):
-                    best = (da, d)
-            if best is None:
-                continue
-            d = best[1]
-            if class_of[d] == 'program':
-                start, end = extend_cycle(i, off, merge_n[d])
-            else:
-                start, end = i, off
-            dur = (end - start) * cad_s
-            if not REL_DUR[0] * prof[d]['dur_s'] <= dur <= REL_DUR[1] * prof[d]['dur_s']:
-                continue
-            val = prof[d]['mean_w'] if class_of[d] == 'program' else amp
-            seg = out[d][start:end]
-            out[d][start:end] = np.maximum(seg, val)
+        # 2) every event classifies independently (burst / duty bands).
+        # Program heaters emit partial-duty draws (amp 1.3-1.9 kW) inside
+        # named chains that mimic the microwave band - suppress mw there.
+        # Kettle is separated by duration, fridge by amplitude, so their
+        # classification stays chain-blind.
+        p = mark['kettle']
+        dr = dur_ref.get('kettle', p['dur_s'])
+        ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
+              & (dur >= REL_DUR[0] * dr) & (dur <= REL_DUR[1] * dr))
+        for k in np.flatnonzero(ok):
+            i0 = int(k)
+            seg = out['kettle'][on[i0]:off[i0]]
+            out['kettle'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
+        # microwave: the draw is duty-cycled and the level excursion
+        # includes idle time, so emit the powered plateau runs (thr =
+        # base + 0.5x amp, the same ON-mask the mark profiles use; run
+        # merge/dwell from the meta protocol) rather than the excursion.
+        p = mark['microwave']
+        mw_dr = p['dur_s']
+        mw_merge = int(round(meta['merge_s']['microwave'] / cad_s))
+        mw_dwell = int(round(meta['dwell_s']['microwave'] / cad_s))
+        ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
+              & ~ev_in_named)
+        for k in np.flatnonzero(ok):
+            i0 = int(k)
+            thr = float(base_roll[max(on[i0] - 6, 0)]) + 0.5 * amp[i0]
+            runs = _runs(sig[on[i0]:off[i0]] > thr)
+            merged = []
+            for a, b in runs:
+                if merged and a - merged[-1][1] <= mw_merge:
+                    merged[-1] = (merged[-1][0], b)
+                else:
+                    merged.append((a, b))
+            for a, b in merged:
+                if b - a < mw_dwell:
+                    continue
+                d_pl = (b - a) * cad_s
+                if not (REL_DUR[0] * mw_dr <= d_pl <= REL_DUR[1] * mw_dr):
+                    continue
+                j0, j1 = int(on[i0] + a), int(on[i0] + b)
+                seg = out['microwave'][j0:j1]
+                out['microwave'][j0:j1] = np.maximum(seg, amp[i0])
+        if fridge_band is not None:
+            ok = ((amp >= fridge_band['amp'][0])
+                  & (amp <= fridge_band['amp'][1])
+                  & (dur >= fridge_band['dur'][0])
+                  & (dur <= fridge_band['dur'][1]))
+        else:
+            p = mark['fridge']
+            ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
+                  & (dur >= REL_DUR[0] * p['dur_s'])
+                  & (dur <= REL_DUR[1] * p['dur_s']))
+        for k in np.flatnonzero(ok):
+            i0 = int(k)
+            seg = out['fridge'][on[i0]:off[i0]]
+            out['fridge'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
         return out
 
-    print('   rules v0 profiles: ' + '; '.join(
-        f"{d} amp={prof[d]['amp']:.0f}W dur={prof[d]['dur_s'] / 60:.1f}min"
-        for d in devices))
     return predict

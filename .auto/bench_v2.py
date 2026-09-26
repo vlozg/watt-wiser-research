@@ -24,6 +24,11 @@ Protocol v2 (all constants frozen here; do not tune):
   with CALIB_SEED); the model receives ONLY aggregate slices over the
   marks - never a submeter trace. Fridge gets a passive 3 h aggregate
   window (it cannot be button-calibrated).
+- ctx.pre (owner-approved review backlog, "mine a year of unlabeled
+  events"): the model additionally receives the PRE-span AGGREGATE
+  mains (ts_us + mains, same fill treatment as eval). Device channels
+  are never passed for any span; the PRE-span aggregate is the product's
+  own unlabeled signal, so mining it is FAQ-Q1-legal.
 Changing this file or measure_v2.sh must be stopped and documented, as
 with v1. Iterations change src/experiments/04_autoresearch/model.py.
 """
@@ -274,11 +279,13 @@ def main() -> None:
         print(f'elapsed {time.time() - t_start:.0f}s (selftest)')
         return
 
+    def _fill(a):
+        return (pd.Series(a).ffill(limit=FFILL_LIMIT).fillna(0.0)
+                .to_numpy(dtype='float32'))
     ctx = {'meta': meta, 'calib': calib,
+           'pre': {'ts_us': pre['ts_us'], 'mains': _fill(pre['mains'])},
            'eval': {'ts_us': evh['ts_us'],
-                    'mains': (pd.Series(evh['mains'])
-                              .ffill(limit=FFILL_LIMIT).fillna(0.0)
-                              .to_numpy(dtype='float32'))}}
+                    'mains': _fill(evh['mains'])}}
     print('building model (src/experiments/04_autoresearch/model.py) ...')
     spec = importlib.util.spec_from_file_location('ar_model', MODEL_PATH)
     mod = importlib.util.module_from_spec(spec)
@@ -292,6 +299,7 @@ def main() -> None:
               'tau_onset_s': TAU_ONSET_S, 'dwell_s': DWELL_S,
               'merge_s': MERGE_S, 'duration_band': DURATION_BAND,
               'calibration': 'aggregate-only marks (FAQ Q1)',
+              'ctx_pre_aggregate': True,
               'press_jitter_s': PRESS_JITTER_S,
               'passive_fridge_h': PASSIVE_FRIDGE_H}
     if not sanity_check(evh):
