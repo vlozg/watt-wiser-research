@@ -74,7 +74,11 @@ PROG_SPAN_HI = 1.25    # span ceiling vs max mark span
 # What IS visible is the raw heater signature, so dw detection merges
 # heater-level plateaus on a coarse grid and gates the merged run.
 DW30_GRID_S = 30.0     # coarse grid for the sustained-run detector
-KET_MARK_MIN = 3       # kettle marks that must hold an isolated run
+KET_MARK_MIN = 1       # kettle marks that must hold an IN-BAND run. Isolation is
+                       # enforced per emitted candidate below, never as a vote on
+                       # the mark windows: a busy home has a >=1kW neighbour within
+                       # +-600s of most marks, and counting isolation here disabled
+                       # the whole sustained-run path on 9/12 pool kettle pairs.
 KET_ISO_AMP_W = 1000.0  # other-run level that breaks kettle isolation
 KET_ISO_WIN_S = 600.0  # +- window for the kettle isolation test
 DW_BASE_WIN = 240      # 2 h trailing p10 baseline: a single ~100 min dw
@@ -467,7 +471,7 @@ def _dw30_profile(exc: np.ndarray, cal: dict, mark_dw: dict,
         p90s.append(float(np.percentile(seg, 90)))
         means.append(float(seg.mean()))
         hss.append(float((seg >= heat).mean()))
-        idles.append(float(np.median(below)) if len(below) else 0.0)
+        idles.append(float(np.median(below)) if len(below) else None)
         denss.append(ne / (span_s / 60.0))
         # the mark window is the GT cycle plus roll pads, so the first
         # heater block's offset from the window start IS the pre-heat
@@ -497,13 +501,13 @@ def _dw30_profile(exc: np.ndarray, cal: dict, mark_dw: dict,
             'amp_lo': 0.8 * min(p90s),
             'mean_band': (0.8 * min(means), 1.25 * max(means)),
             'hs_band': (0.75 * min(hss), 1.75 * max(hss)),
-            'idle_hi': 2.0 * max(idles),
+            'idle_hi': 2.0 * max([v for v in idles if v is not None]) if any(v is not None for v in idles) else float('inf'),
             'dens_hi': 2.0 * max(denss),
             'ext_back6': int(round(ext_back_s / cad_s)),
             'ext_fwd6': int(round(ext_fwd_s / cad_s)),
             'mark_pre_offs': pres,
             'mark_post_offs': posts,
-            'emit_w': mark_dw['mean_w']}
+            'emit_w': max(mark_dw['mean_w'], AMP_MIN_W)}
     print('   dw sustained profile: span=%.0f-%.0fmin amp>=%.0fW '
           'mean=%.0f-%.0fW hs=%.2f-%.2f idle<=%.0fW dens<=%.3f/min '
           'heater_gap_merge=%dmin ext_back=%.1fmin ext_fwd=%.1fmin '
@@ -674,7 +678,7 @@ def _wm30_profile(exc: np.ndarray, cal: dict, mark_wm: dict,
         p90s.append(float(np.percentile(seg, 90)))
         means.append(float(seg.mean()))
         hss.append(float((seg >= heat).mean()))
-        idles.append(float(np.median(below)) if len(below) else 0.0)
+        idles.append(float(np.median(below)) if len(below) else None)
         denss.append(ne / (span_s / 60.0))
         # run offsets inside the GT cycle core (window minus the roll
         # pads): run start vs core start, core end vs run end - the
@@ -694,12 +698,12 @@ def _wm30_profile(exc: np.ndarray, cal: dict, mark_wm: dict,
             'amp_lo': 0.8 * min(p90s),
             'mean_band': (0.8 * min(means), 1.25 * max(means)),
             'hs_band': (0.75 * min(hss), 1.75 * max(hss)),
-            'idle_hi': 2.0 * max(idles),
+            'idle_hi': 2.0 * max([v for v in idles if v is not None]) if any(v is not None for v in idles) else float('inf'),
             'dens_hi': 2.0 * max(denss),
             'dens_lo': 0.75 * min(denss),
             'ext_back6': int(round(ext_back_s / cad_s)),
             'ext_fwd6': int(round(ext_fwd_s / cad_s)),
-            'emit_w': mark_wm['mean_w']}
+            'emit_w': max(mark_wm['mean_w'], AMP_MIN_W)}
     print('   wm sustained profile: span=%.0f-%.0fmin amp>=%.0fW '
           'mean=%.0f-%.0fW hs=%.2f-%.2f idle<=%.0fW dens=%.3f-%.3f/min '
           'heater_gap_merge=%dmin ext_back=%.1fmin ext_fwd=%.1fmin'
@@ -788,6 +792,21 @@ def build_and_train(ctx: dict):
     # core 108 s) is already the fragmented regime the switch exists
     # for, and a strict comparison left that calibration on the core
     # gate, whose amp band rejected the paste's low chunks outright.
+    # A mark whose amplitude sits BELOW the reader's own floor cannot be a
+    # device draw: the pool's threshold convention is half the median on-draw
+    # (ukdale/house_1 kettle thr 1173 W), so the device's median draw is
+    # 2 x thr. On refit/house_6 the kettle mark read 1259 W against thr
+    # 1307 W, so the [0.8, 1.2]x amp band it defined was [1009, 1508] W and
+    # kept 83 of the house's 964 >= 1200 W excursions (F1 0.018 on 649 GT
+    # cycles). Re-anchor only in that case; a representative mark is a no-op.
+    for _d in list(mark):
+        _t = float(ctx.get('meta', {}).get('thresholds', {}).get(_d, 0.0) or 0.0)
+        if _t > 0.0 and mark[_d]['amp'] < _t:
+            print('   mark re-anchor %s: amp %.0fW is below the reader floor '
+                  '%.0fW -> median draw %.0fW'
+                  % (_d, mark[_d]['amp'], _t, 2.0 * _t))
+            mark[_d]['amp'] = 2.0 * _t
+
     ev_band = {}
     for d in devices:
         if class_of[d] != 'burst':
@@ -953,7 +972,8 @@ def build_and_train(ctx: dict):
             & (ev_dur >= REL_DUR[0] * dur_ref['kettle'])
             & (ev_dur <= REL_DUR[1] * dur_ref['kettle']))
         t0 = int(ctx['pre']['ts_us'][0])
-        ket_marks = 0
+        ket_marks = 0      # marks holding an ISOLATED in-band run (diagnostic)
+        ket_inband = 0     # marks holding an in-band run at all: the gate
         for lo_us, hi_us in ctx['calib']['kettle']['marks_us']:
             j0 = max(0, int((lo_us - t0) / 1e6 / DW30_GRID_S))
             j1 = max(j0 + 2, int((hi_us - t0) / 1e6 / DW30_GRID_S))
@@ -961,16 +981,17 @@ def build_and_train(ctx: dict):
             for a, b in _runs(exc30[j0:j1] >= ket_thr):
                 if not ket_span[0] <= (b - a) * DW30_GRID_S <= ket_span[1]:
                     continue
+                hit = True
                 if _iso_clear(exc30, j0 + a, j0 + b, KET_ISO_AMP_W,
                               KET_ISO_WIN_S):
-                    hit = True
+                    ket_marks += 1
                     break
-            ket_marks += int(hit)
+            ket_inband += int(hit)
         print(f'   kettle sustained marks: {ket_marks}/'
               f'{len(ctx["calib"]["kettle"]["marks_us"])} windows hold an '
-              'isolated in-band run')
+              f'isolated; {ket_inband} hold an in-band run')
         ket_prof = None
-        if ket_marks >= KET_MARK_MIN:
+        if ket_inband >= KET_MARK_MIN:
             cands = []
             for a, b in _runs(exc30 >= ket_thr):
                 span_s = (b - a) * DW30_GRID_S
@@ -1068,11 +1089,24 @@ def build_and_train(ctx: dict):
         fridge_band = None
     if fridge_band is not None:
         fr_amp = mark['fridge']['amp']
-        fridge_band['fr_run'] = {'amp_lo': 0.8 * fr_amp,
+        fr_lo = 0.8 * fr_amp
+        fr_dur_lo = mark['fridge']['dur_s'] / 3.0
+        fr_iso = 3.0 * fr_amp
+        if fr_lo > fridge_band['amp'][1]:
+            # the passive mark is contaminated by a neighbour load inside its
+            # own window (932W/0.3min on refit/house_17): 0.8x its amp sits
+            # ABOVE the mined band top, so the run window [lo, hi] is inverted
+            # and admits nothing. The mined population band is then the only
+            # trustworthy reference, with the same 1/3 lo margin and 3x
+            # isolation convention applied against it.
+            fr_lo = 0.8 * fridge_band['amp'][0]
+            fr_dur_lo = fridge_band['dur'][0] / REL_DUR[1]
+            fr_iso = 3.0 * fridge_band['amp'][1]
+        fridge_band['fr_run'] = {'amp_lo': fr_lo,
                                  'amp_hi': fridge_band['amp'][1],
-                                 'dur_lo': mark['fridge']['dur_s'] / 3.0,
+                                 'dur_lo': fr_dur_lo,
                                  'dur_hi': fridge_band['dur'][1],
-                                 'iso_amp': 3.0 * fr_amp,
+                                 'iso_amp': fr_iso,
                                  'iso_win': KET_ISO_WIN_S}
         fr_ok = ((ev_amp >= fridge_band['amp'][0])
                  & (ev_amp <= fridge_band['amp'][1])
@@ -1210,6 +1244,7 @@ def build_and_train(ctx: dict):
         # mask: an event that fits the kettle band blocks a sustained
         # kettle run even if the burst dispute assigns it elsewhere
         ket_ok_idx = np.flatnonzero(ket_ok)
+
         # The kettle keeps every event its gate admits: disputed events
         # sit inside kettle paste spans (its draws are the higher-amp
         # population), so taking them away costs recall on real draws,
