@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-# Benchmark entry point - prints METRIC lines. v3 (owner-directed segment-2
-# protocol): PRIMARY = median of mean_device_f1 over the frozen 10-seed
-# calibration list, guardrails p10 + per-device medians, plus the frozen
-# transfer track (ukdale house_2/house_5 + 5 REFIT houses) with per-pair
-# smoothed-perfect and random-floor gates. house_1 protocol otherwise
-# identical to v2 (cycle scoring, aggregate-only marks). bench_v2.py is
-# frozen reference; v1 retired earlier.
+# Benchmark entry point - prints METRIC lines. v4 (owner-directed segment-2
+# protocol): PRIMARY = median over the frozen 5 seeds of the mean F1 over the
+# frozen pool's (house, device) pairs, every house RE-CALIBRATED with its own
+# K=5 marks, its own pre-split history and a fresh build_and_train - the
+# deployment path. v3's transfer track applied house_1's predictor to other
+# homes, which the product never does; it is retained only as a frozen
+# guardrail readout and is reported separately at milestones.
+# Pool eligibility is frozen GT-only in .auto/pool_v4.json by .auto/pool_v4.py.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export UV_CACHE_DIR=/tmp/uvcache
 export OMP_NUM_THREADS=8
-exec uv run python3 .auto/bench_v3.py
+exec uv run python3 .auto/bench_v4.py

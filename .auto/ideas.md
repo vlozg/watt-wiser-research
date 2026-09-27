@@ -579,3 +579,26 @@ kept only other-device events): corrected cross-house retrieval is at
 CHANCE (enc 0.210 vs raw 0.225, 5 devices), while enroll is 0.840 enc vs
 0.650 raw - the encoder's value is same-house K=5 enrollment, not
 cross-house invariance.
+
+## v4 prerequisite landed: model.py device-subset robust (run 72, keep 5ad5980)
+Guards at every device-keyed site: _name_program filters to devices present in
+mark (an absent device must not own a chain); seed_thr/heat_thr = FRAC *
+min(present program amps) else +inf; dw30 and wm30 are built only when their
+device is marked, partner amp falls back to the device's own mark amp; dur_ref
+filtered to present devices; fridge_band = None without a fridge channel; out
+allocated over ALL_DEVICES and narrowed to the house's devices on both return
+paths; predict gate branches for kettle/microwave/fridge are presence elif +
+zero-mask else. Verified: bench v3 re-run is BIT-IDENTICAL (median 0.505987,
+p10 0.485922, all ten per-seed values to 6 dp, transfer 0.151921); subset smoke
+test builds eco/house_03 and eco/house_01 (fridge only -> exactly [fridge]),
+refit/house_17 (no dw channel -> 4 keys, partner fallback exercised),
+ukdale/house_1 (all 5). Logged as keep as a DECLARED protocol exception: no
+metric change, kept only because the discard path auto-reverts src/.
+TRAP: log_experiment's narrative banner is computed against a fixed generic
+baseline and printed '+20.1%' for this run; only title/description/asi are
+trustworthy as claims. NEXT: .auto/bench_v4.py - per-home calibration
+(build_calibration parameterized by the house's own thr_map + device list) + a
+fresh build_and_train per (house, seed); primary = median over seeds of the mean
+F1 over the 66 pool pairs; report pool pair-mean, device-balanced mean, the
+house_1 subset and the v3 readout side by side; --holdout for the 7 holdout
+houses, milestone-only.
