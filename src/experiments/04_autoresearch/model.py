@@ -725,7 +725,9 @@ def _name_program(seed_amp: float, span_s: float, mean_lvl: float,
     if heat_share < PROG_HEAT_SHARE:
         return None
     ok = []
-    for d in ('washing_machine', 'dishwasher'):
+    # bench v4 runs houses with device subsets: an absent device is not in
+    # `mark` and cannot own a chain
+    for d in [x for x in ('washing_machine', 'dishwasher') if x in mark]:
         p = mark[d]
         if abs(seed_amp - p['amp']) / p['amp'] > PROG_AMP_TOL:
             continue
@@ -750,6 +752,13 @@ def _name_program(seed_amp: float, span_s: float, mean_lvl: float,
         if density >= PROG_DENS_HI * mark['washing_machine']['dens_band'][0]:
             return 'washing_machine'
     return None
+
+
+# every device class the model can emit; bench v4 scores houses that have
+# only a subset, so `out` is allocated over all of these and narrowed to the
+# house's own devices on return
+ALL_DEVICES = ('kettle', 'microwave', 'fridge', 'washing_machine',
+               'dishwasher')
 
 
 def build_and_train(ctx: dict):
@@ -790,10 +799,15 @@ def build_and_train(ctx: dict):
                   f'(event p50 {eb["amp_p50"]:.0f}W/'
                   f'{eb["dur_p50"]:.0f}s vs core {mark[d]["amp"]:.0f}W/'
                   f'{mark[d]["dur_s"]:.0f}s) - event-based gate bands')
-    seed_thr = PROG_SEED_FRAC * min(mark['washing_machine']['amp'],
-                                    mark['dishwasher']['amp'])
-    heat_thr = PROG_HEAT_AMP_FRAC * min(mark['washing_machine']['amp'],
-                                        mark['dishwasher']['amp'])
+    # program-seed gates: min over the program appliances this house HAS.
+    # With none present no chain can be named, so the thresholds go to +inf
+    # and the seed test rejects every chain.
+    prog_amps = [mark[d]['amp'] for d in ('washing_machine', 'dishwasher')
+                 if d in mark]
+    seed_thr = (PROG_SEED_FRAC * min(prog_amps) if prog_amps
+                else float('inf'))
+    heat_thr = (PROG_HEAT_AMP_FRAC * min(prog_amps) if prog_amps
+                else float('inf'))
 
     # ---- mine the PRE-span aggregate (unlabeled, mains only) ----
     sig = _roll_median(np.asarray(ctx['pre']['mains'], dtype='float32'),
@@ -810,9 +824,16 @@ def build_and_train(ctx: dict):
     ev30 = np.sort(ev_on // stride)
     exc30 = _dw30_grid(np.asarray(ctx['pre']['mains'], dtype='float32'),
                        cad_s)
-    dw30 = _dw30_profile(exc30, ctx['calib']['dishwasher'],
-                         mark['dishwasher'], mark['washing_machine']['amp'],
-                         roll_s, ev30, int(ctx['pre']['ts_us'][0]), cad_s)
+    if 'dishwasher' in mark:
+        # the partner amp only sets heat = FRAC * min(partner, own). With no
+        # wm channel the device's own mark amp is the only mark-derived
+        # reference available (constants must not be hand-set per house).
+        dw30 = _dw30_profile(
+            exc30, ctx['calib']['dishwasher'], mark['dishwasher'],
+            mark.get('washing_machine', mark['dishwasher'])['amp'],
+            roll_s, ev30, int(ctx['pre']['ts_us'][0]), cad_s)
+    else:
+        dw30 = None
     if dw30 is not None:
         _dw_synth_onset_check(ctx['pre']['mains'],
                               ctx['calib']['dishwasher'], dw30,
@@ -823,7 +844,7 @@ def build_and_train(ctx: dict):
 
     # mined burst dur references: p50 dur of events in each mark amp band
     dur_ref = {}
-    for d in ('kettle', 'microwave'):
+    for d in [x for x in ('kettle', 'microwave') if x in mark]:
         p = mark[d]
         m = np.abs(ev_amp - p['amp']) / p['amp'] <= REL_AMP
         if int(m.sum()) >= BURST_CLUSTER_MIN:
@@ -871,10 +892,15 @@ def build_and_train(ctx: dict):
     # emission extension (the wm heats at the cycle start, then pumps
     # below the heater threshold ~45 min). Candidates inside dw30 runs
     # or a named program chain are already owned.
-    wm30 = _wm30_profile(exc30, ctx['calib']['washing_machine'],
-                         mark['washing_machine'],
-                         mark['dishwasher']['amp'], roll_s, ev30,
-                         int(ctx['pre']['ts_us'][0]), cad_s)
+    if 'washing_machine' in mark:
+        # partner amp: same fallback rule as the dw detector (the partner
+        # only ever lowers heat = FRAC * min(partner, own))
+        wm30 = _wm30_profile(
+            exc30, ctx['calib']['washing_machine'], mark['washing_machine'],
+            mark.get('dishwasher', mark['washing_machine'])['amp'],
+            roll_s, ev30, int(ctx['pre']['ts_us'][0]), cad_s)
+    else:
+        wm30 = None
     if wm30 is not None:
         dw_spans6 = ([(a * stride, b * stride) for a, b in dw_runs]
                      if dw30 is not None else [])
@@ -904,63 +930,66 @@ def build_and_train(ctx: dict):
     # 3.3-4.2 kW), leaving those to the event path. The run path only
     # ADDS draws whose rise/fall pairing broke (mid-draw level
     # changes), i.e. runs no admitted burst event overlaps.
-    ket = mark['kettle']
-    ket_thr = PROG_HEAT_AMP_FRAC * ket['amp']
-    ket_span = (REL_DUR[0] * ket['dur_s'], REL_DUR[1] * ket['dur_s'])
-    ket_amp_band = ((1.0 - REL_AMP) * ket['amp'],
-                    (1.0 + REL_AMP) * ket['amp'])
-    ket_ok = np.flatnonzero(
-        (np.abs(ev_amp - ket['amp']) / ket['amp'] <= REL_AMP)
-        & (ev_dur >= REL_DUR[0] * dur_ref['kettle'])
-        & (ev_dur <= REL_DUR[1] * dur_ref['kettle']))
-    t0 = int(ctx['pre']['ts_us'][0])
-    ket_marks = 0
-    for lo_us, hi_us in ctx['calib']['kettle']['marks_us']:
-        j0 = max(0, int((lo_us - t0) / 1e6 / DW30_GRID_S))
-        j1 = max(j0 + 2, int((hi_us - t0) / 1e6 / DW30_GRID_S))
-        hit = False
-        for a, b in _runs(exc30[j0:j1] >= ket_thr):
-            if not ket_span[0] <= (b - a) * DW30_GRID_S <= ket_span[1]:
-                continue
-            if _iso_clear(exc30, j0 + a, j0 + b, KET_ISO_AMP_W,
-                          KET_ISO_WIN_S):
-                hit = True
-                break
-        ket_marks += int(hit)
-    print(f'   kettle sustained marks: {ket_marks}/'
-          f'{len(ctx["calib"]["kettle"]["marks_us"])} windows hold an '
-          'isolated in-band run')
     ket_prof = None
-    if ket_marks >= KET_MARK_MIN:
-        cands = []
-        for a, b in _runs(exc30 >= ket_thr):
-            span_s = (b - a) * DW30_GRID_S
-            if not ket_span[0] <= span_s <= ket_span[1]:
-                continue
-            mean_w = float(exc30[a:b].mean())
-            if not ket_amp_band[0] <= mean_w <= ket_amp_band[1]:
-                continue
-            if not _iso_clear(exc30, a, b, KET_ISO_AMP_W, KET_ISO_WIN_S):
-                continue
-            a6 = a * stride
-            b6 = b * stride
-            k = int(np.searchsorted(ev_on[ket_ok], b6 - 1,
-                                    side='right')) - 1
-            if k >= 0 and ev_off[ket_ok[k]] > a6:
-                continue
-            dup = False
-            for c0, c1 in named_spans:
-                if c0 < b6 and a6 < c1:
-                    dup = True
+    if 'kettle' in mark:
+        # absent kettle channel: no marks to mine, nothing emitted
+        ket = mark['kettle']
+        ket_thr = PROG_HEAT_AMP_FRAC * ket['amp']
+        ket_span = (REL_DUR[0] * ket['dur_s'], REL_DUR[1] * ket['dur_s'])
+        ket_amp_band = ((1.0 - REL_AMP) * ket['amp'],
+                        (1.0 + REL_AMP) * ket['amp'])
+        ket_ok = np.flatnonzero(
+            (np.abs(ev_amp - ket['amp']) / ket['amp'] <= REL_AMP)
+            & (ev_dur >= REL_DUR[0] * dur_ref['kettle'])
+            & (ev_dur <= REL_DUR[1] * dur_ref['kettle']))
+        t0 = int(ctx['pre']['ts_us'][0])
+        ket_marks = 0
+        for lo_us, hi_us in ctx['calib']['kettle']['marks_us']:
+            j0 = max(0, int((lo_us - t0) / 1e6 / DW30_GRID_S))
+            j1 = max(j0 + 2, int((hi_us - t0) / 1e6 / DW30_GRID_S))
+            hit = False
+            for a, b in _runs(exc30[j0:j1] >= ket_thr):
+                if not ket_span[0] <= (b - a) * DW30_GRID_S <= ket_span[1]:
+                    continue
+                if _iso_clear(exc30, j0 + a, j0 + b, KET_ISO_AMP_W,
+                              KET_ISO_WIN_S):
+                    hit = True
                     break
-            if dup:
-                continue
-            cands.append((a6, b6, mean_w))
-        print(f'   kettle sustained runs: {len(cands)} net-new '
-              f'candidates ({len(cands) / days:.2f}/day)')
-        ket_prof = {'thr': ket_thr, 'span_band': ket_span,
-                    'amp_band': ket_amp_band, 'iso_amp': KET_ISO_AMP_W,
-                    'iso_win': KET_ISO_WIN_S}
+            ket_marks += int(hit)
+        print(f'   kettle sustained marks: {ket_marks}/'
+              f'{len(ctx["calib"]["kettle"]["marks_us"])} windows hold an '
+              'isolated in-band run')
+        ket_prof = None
+        if ket_marks >= KET_MARK_MIN:
+            cands = []
+            for a, b in _runs(exc30 >= ket_thr):
+                span_s = (b - a) * DW30_GRID_S
+                if not ket_span[0] <= span_s <= ket_span[1]:
+                    continue
+                mean_w = float(exc30[a:b].mean())
+                if not ket_amp_band[0] <= mean_w <= ket_amp_band[1]:
+                    continue
+                if not _iso_clear(exc30, a, b, KET_ISO_AMP_W, KET_ISO_WIN_S):
+                    continue
+                a6 = a * stride
+                b6 = b * stride
+                k = int(np.searchsorted(ev_on[ket_ok], b6 - 1,
+                                        side='right')) - 1
+                if k >= 0 and ev_off[ket_ok[k]] > a6:
+                    continue
+                dup = False
+                for c0, c1 in named_spans:
+                    if c0 < b6 and a6 < c1:
+                        dup = True
+                        break
+                if dup:
+                    continue
+                cands.append((a6, b6, mean_w))
+            print(f'   kettle sustained runs: {len(cands)} net-new '
+                  f'candidates ({len(cands) / days:.2f}/day)')
+            ket_prof = {'thr': ket_thr, 'span_band': ket_span,
+                        'amp_band': ket_amp_band, 'iso_amp': KET_ISO_AMP_W,
+                        'iso_win': KET_ISO_WIN_S}
 
     # fridge: most-regular (amp x dur) duty cell among mined events
     dm = ((ev_amp >= DUTY_AMP_W[0]) & (ev_amp <= DUTY_AMP_W[1])
@@ -1023,6 +1052,10 @@ def build_and_train(ctx: dict):
     # mark dur over REL_DUR lo (same 1/3 margin the event path uses
     # against the mark), hi = the population band top (the extractor
     # sees nothing above it to mine).
+    if 'fridge' not in mark:
+        # no fridge channel in this house: the mined band has no mark to gate
+        # on, so drop it and let both fridge paths skip
+        fridge_band = None
     if fridge_band is not None:
         fr_amp = mark['fridge']['amp']
         fridge_band['fr_run'] = {'amp_lo': 0.8 * fr_amp,
@@ -1060,9 +1093,9 @@ def build_and_train(ctx: dict):
         sig = _roll_median(f, SMOOTH_N)
         base_roll = _roll_median(sig, 11)
         on, off, amp = _extract_events(sig, cad_s)
-        out = {d: np.zeros(len(f), dtype='float32') for d in devices}
+        out = {d: np.zeros(len(f), dtype='float32') for d in ALL_DEVICES}
         if len(on) == 0:
-            return out
+            return {d: out[d] for d in devices}
         dur = (off - on) * cad_s
 
         # 0) dw sustained runs (see _dw30_runs): emit the run span
@@ -1153,11 +1186,13 @@ def build_and_train(ctx: dict):
         if eb is not None:
             ket_ok = ((amp >= eb['amp_lo']) & (amp <= eb['amp_hi'])
                       & (dur >= eb['dur_lo']) & (dur <= eb['dur_hi']))
-        else:
+        elif 'kettle' in mark:
             p = mark['kettle']
             dr = dur_ref.get('kettle', p['dur_s'])
             ket_ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
                       & (dur >= REL_DUR[0] * dr) & (dur <= REL_DUR[1] * dr))
+        else:
+            ket_ok = np.zeros(len(on), dtype=bool)
         # ownership for the sustained-run path uses the pre-resolution
         # mask: an event that fits the kettle band blocks a sustained
         # kettle run even if the burst dispute assigns it elsewhere
@@ -1185,13 +1220,15 @@ def build_and_train(ctx: dict):
             mw_ok = ((amp >= eb['amp_lo']) & (amp <= eb['amp_hi'])
                      & ~ev_in_named
                      & (dur >= eb['dur_lo']) & (dur <= eb['dur_hi']))
-        else:
+        elif 'microwave' in mark:
             p = mark['microwave']
             mw_dr = p['dur_s']
             mw_ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
                      & ~ev_in_named
                      & (dur >= REL_DUR[0] * mw_dr)
                      & (dur <= REL_DUR[1] * mw_dr))
+        else:
+            mw_ok = np.zeros(len(on), dtype=bool)
         # 2b) burst conflict resolution, mw side only: kettle and mw
         # admission bands overlap in (amp, dur) space, so one event can
         # fit both gates (b2 synthetic probe: seed 1's mw event band
@@ -1227,11 +1264,13 @@ def build_and_train(ctx: dict):
                   & (amp <= fridge_band['amp'][1])
                   & (dur >= fridge_band['dur'][0])
                   & (dur <= fridge_band['dur'][1]))
-        else:
+        elif 'fridge' in mark:
             p = mark['fridge']
             ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
                   & (dur >= REL_DUR[0] * p['dur_s'])
                   & (dur <= REL_DUR[1] * p['dur_s']))
+        else:
+            ok = np.zeros(len(on), dtype=bool)
         fr_ok_idx = np.flatnonzero(ok)
         for k in fr_ok_idx:
             i0 = int(k)
@@ -1294,6 +1333,6 @@ def build_and_train(ctx: dict):
                 w = float(np.median(exc_e[a:b]))
                 seg = out['fridge'][a6:b6]
                 out['fridge'][a6:b6] = np.maximum(seg, w)
-        return out
+        return {d: out[d] for d in devices}
 
     return predict

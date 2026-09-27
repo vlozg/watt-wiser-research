@@ -168,7 +168,16 @@ def retrieval(ev: dict, X: np.ndarray, mode: str,
         tried = 0
         for i in qidx:
             if mode == 'cross':
-                gal = np.where(val & (ev['dev'] != d)
+                # Gallery = every event of the other held-out houses. A
+                # hit means the NEAREST neighbour carries the right
+                # device, so the gallery must contain the positives (same
+                # device, other houses) alongside other devices as
+                # distractors. The old ev['dev'] != d filter kept only
+                # distractors, so no hit was possible and the reported
+                # 'cross-house invariance 0.000' was that artifact, not a
+                # measurement (owner-directed fix). Enroll mode already
+                # galleries same-device + other-device events.
+                gal = np.where(val
                                & (ev['house'] != ev['house'][i]))[0]
             else:
                 hs = ev['house'][i]

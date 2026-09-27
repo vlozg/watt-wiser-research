@@ -495,3 +495,87 @@ robust-mean variant for stacked-load episodes (5-7/seed, mean
 1057-2205 vs <=943, hs passes 0.17-0.19) - needs own diag; (c) wm
 residuals seeds 4/1/8 (0.135-0.17) - wm30 geometry diag; (d) parked:
 transfer dw overshoot (no per-cycle electrical signal in pre-heat).
+
+## m6 verdict (run 70, KEEP, b6c3fd3): wm30 window-skip + ownership removal
+
+Both m5-parked wm residuals were fixed; all three pre-registered keep
+conditions passed (median 0.505987 >= 0.504189, p10 0.485922 >=
+0.466497, no device median drop; wm median 0.3547->0.3892). Six seeds
+up, four bit-identical, none down.
+
+1. Window-skip: an empty mark window no longer disables the wm
+   sustained detector; it is skipped, and <2 usable windows disables
+   (bands off one sample are noise). Fixes seed 8 (0.173->0.39 diag).
+2. wm-side dw run-basis ownership REMOVED. DURABLE LESSON: the dw/wm
+   mark bands can cross on wide-band calibrations (seed 4: dw dens
+   ceiling 1.053/min > wm marks' max 0.44) - once crossed, NO
+   mark-derived rule (any-overlap, double-pass gate admission, z-sum
+   arbitration) can arbitrate a double claim; arbitration by emission
+   order is a prior, not a measurement, and cost 8-19 real wm
+   cycles/seed vs ~1 FP. Emit both and let each device's own gates
+   bear the precision burden (kettle precedent at event level).
+   Measured variant ladder (wm F1, seeds 8/4/1/2026): baseline
+   0.227/0.208/0.220/0.629; double-pass 0.351/0.224/0.264/0.629;
+   ownership-off 0.390/0.330/0.276/0.629. Named-chain dup check kept
+   (chains are mark-verified; the wide dw bands are not).
+
+New floor: median 0.505987, p10 0.485922, device medians kettle
+0.766469 / mw 0.381962 / fridge 0.512856 / wm 0.389216 / dw 0.522727;
+transfer 0.151921.
+
+m7 candidates (in priority order):
+(a) wm30 mark-stat robustification - the seeds 4/1 residual is
+    band-floor rejects: eval wm runs mean 473-866 vs mean_lo 702-775,
+    dens 0.04-0.20 vs dens_lo 0.14-0.20, hs ~0.15 vs 0.18. Derive the
+    lo floors from per-window medians (or drop them when the mark
+    spread is huge) instead of 0.75x-min of 4 windows. Validate on the
+    seeds 4/1/8 diag before benching.
+(b) wm FP trim - the dw cross-fire FPs (2026: 8/27 with gt_dw_overlap=1)
+    and the ext_fwd 26-53 min overshoot into dw territory; needs its
+    own diag after (a) moves the R/P balance.
+(c) dw P-side (~14-17 FP/seed pre-existing, P-limited) - idle/mean band
+    tightening, parked since m5.
+(d) transfer campaign (owner bar 0.50, current 0.152): house-1 levers
+    do not transfer; the biggest zeros are dw (ukdale h2 0.036, refit
+    dw 0.000-0.017) - the per-house pre-heat backtrack (walk back from
+    the first heater block while exc stays above the idle floor) is
+    the parked adaptive lever.
+(e) mw burst F1 median 0.382 (iso probe 0.347) - burst-path precision,
+    parked.
+
+## m7 verdict: extractor bounce rule REFUTED (run 71, discarded, no bench)
+Hypothesis: _extract_events samples the post-fall level at f_end+STEP_H,
+and a duty-cycled draw's 10-30 s magnetron off-gaps read as "level back
+on", so every intra-draw fall fails; pairing then walks to the draw-end
+fall and fuses the whole draw into one monster event the burst dur
+ceiling rejects. Fix: accept a fall as end if the level bounces back
+within hi = lo + STEP_H + 2.
+A/B on the b2 probe (pre-fix vs post-fix, same seeds):
+  seed 2026 iso_microwave 0.33 -> 0.33 (P/R bit-identical)
+  seed 1    iso_microwave 0.35 -> 0.35
+  seed 2026 iso_wm        0.67 -> 0.91 (R 0.54 -> 0.94)
+  seed 1    mix_prog wm   0.75 -> 0.38 (R 0.63 -> 0.23)
+  wm mark dens 0.30-0.56 -> 0.57-0.90/min (real wm runs fragment too)
+The target metric (mw) does not move at all while seed-1 wm recall
+collapses. Reverted before benching (a change the probe already shows is
+net-negative is not worth a bench run).
+RULES OUT: the mw iso R loss is not intra-draw event fusion at the
+extractor. Fragmentation demonstrably increases (the mw fragment switch
+fires more often) yet mw F1 is unchanged, so the mw ceiling is downstream
+of extraction - emitted span/amp geometry and the burst gate bands, not
+the pairing walk. Also rules out the bounce rule as a free change: it
+fragments sustained wm runs and needs a wm-side guard before any reuse.
+
+## Segment-2 pivot: bench v4 (per-home re-calibration) - owner direction
+Eligibility freeze lives in .auto/pool_v4.py (GT-only, reads no model
+score); scoring in .auto/bench_v4.py. PREREQUISITE FOUND: build_and_train
+hard-indexes all five devices (model.py 793-796 min(wm,dw); 813/818
+calib['dishwasher']; 874 calib['washing_machine']; 918 calib['kettle']),
+but pool houses have arbitrary device subsets - the model must tolerate
+absent devices before v4 can score anything. Must preserve house_1
+bit-identity. Open concerns: the pair-mean is dominated by fridge
+coverage; fit cost vs CMA-ES. B1 bug fixed (b1_encoder.py:171 gallery
+kept only other-device events): corrected cross-house retrieval is at
+CHANCE (enc 0.210 vs raw 0.225, 5 devices), while enroll is 0.840 enc vs
+0.650 raw - the encoder's value is same-house K=5 enrollment, not
+cross-house invariance.
