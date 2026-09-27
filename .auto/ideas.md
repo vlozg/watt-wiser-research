@@ -337,6 +337,48 @@ under the same ctx interface -> m4 full v3 eval + transfer.
 Kill criterion: after 5+ runs, no run beats the re-baseline v3 median
 by >= 0.01 AND transfer_mean_f1 never moves >= 0.05 above HEAD's floor.
 One bad first run is not a refutation.
+B1 log:
+- m1 DONE (run 63): miner .auto/b1_events.py; 5260 events / 29 pool
+  houses (fridge 1800, wm 1165, dw 821, mw 800, kettle 674). Pool
+  corrections declared first: greend b0-b7 dropped (no mains.parquet),
+  eco/house_04 dropped (0-row mains) - 29 usable houses.
+- m2 DONE (run 63): encoder .auto/b1_encoder.py (72-d features -> 64-d
+  InfoNCE projection). Enroll geometry (gallery = K=5 same-house marks,
+  the m3 shape): raw .650 -> encoder .840 (kettle .94, fridge .88, dw
+  .78, wm .76) - PASS. Cross-house invariance: 0.000 - FAILS; recorded
+  as B1's open sub-goal (levers: per-window z-norm, amplitude-invariant
+  distance, duration-normalized shapes). m3 proceeds on the enroll
+  geometry for burst devices; cross-house matching is a later lever.
+- m3 NEXT: enroll-mode nearest-example matching wired into model.py
+  for kettle/microwave; bench measures it (5+ runs before judged).
+- m3 run 1 (run 64, DISCARD): gate wired at 3 sites (kettle events,
+  mw events, kettle runs), constants a priori (min_cos .15, margin
+  .05). RESULT: median .3651 (-0.056), p10 -0.048, transfer -0.019;
+  kettle median -0.054, mw median -0.073; fridge/wm/dw + all 15
+  non-gated transfer pairs bitwise = floor (integrity OK). Gate kills
+  15-88% of kettle / 40-90% of mw admissions. Diagnosis: window-
+  convention shift (extractor event edges vs miner cycle edges) not
+  tested by the m2 gate; thresholds miscalibrated for it. Wiring
+  saved at .auto/runs/b1_m3_model.diff (discard reverts src/).
+- m3b (run 65, DISCARD): per-build calibration on CALIB-ONLY data -
+  pseudo-positives = pre-span events inside the device's own amp/dur
+  bands (extractor-shaped, carries the window-convention shift);
+  t_min = max(.05, p25(own)-.05); duty/passive windows excluded from
+  galleries. KEY CALIBRATION FINDING: pseudo-positive own-minus-cross
+  margins ~0 or negative at p10 (kettle-vs-mw confusion - flat high
+  draws indistinguishable in-house), so the margin test was run 1's
+  killer; dropped it, kept min-cos bar only. RESULT: median .4160
+  (-.005), p10 -.012, kettle median -.030 (guardrail fail); mw
+  ~floor despite killing 6-40% of admissions (kills ~half false);
+  fridge/wm/dw bitwise floor; transfer .1484 (+.002 flat): real
+  kettle gains (refit h9 +.068, h3 +.056) offset by h5/h2 losses.
+  VERDICT: enroll-gate refuted at 2 implementations - the amp/dur
+  bands already capture what the in-house embedding offers; residual
+  fine-shape signal does not separate true from false within-band.
+  m3 gate sub-track CLOSED (budget 2 of 5-15). Wiring saved at
+  .auto/runs/b1_m3b_model.diff (233 lines). B1 remains open ONLY via
+  the cross-house retrieval sub-goal (m2 top-1 0.000 -> needs
+  invariance levers; keep as parallel sub-goal, not the gate).
 
 ### B2 - synthetic supervision in the target house
 Hypothesis: pasting baseline-subtracted mark signatures into real

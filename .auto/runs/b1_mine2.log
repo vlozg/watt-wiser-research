@@ -1,0 +1,73 @@
+   b1_events: ukdale/house_3: 
+   b1_events: ukdale/house_4: 
+   b1_events: refit/house_1: 
+   b1_events: refit/house_4: 
+   b1_events: refit/house_6: 
+   b1_events: refit/house_7: dishwasher=662c, fridge=26876c, kettle=1352c, washing_machine=868c
+   b1_events: refit/house_8: fridge=18054c, kettle=2767c, microwave=1625c, washing_machine=441c
+   b1_events: refit/house_10: dishwasher=879c, fridge=14636c, microwave=801c, washing_machine=649c
+   b1_events: refit/house_11: 
+   b1_events: refit/house_12: 
+   b1_events: refit/house_13: 
+   b1_events: refit/house_15: dishwasher=21c, fridge=9969c, microwave=284c, washing_machine=266c
+   b1_events: refit/house_16: 
+   b1_events: refit/house_17: 
+   b1_events: refit/house_18: dishwasher=304c, fridge=21127c, microwave=274c, washing_machine=165c
+   b1_events: refit/house_19: 
+   b1_events: refit/house_21: 
+   b1_events: eco/house_01: fridge=6105c
+   b1_events: eco/house_02: fridge=11266c, kettle=267c
+   b1_events: eco/house_03: fridge=2324c
+   built cache eco_house_05_full.npz: 3,153,600 samples (11:23:45)
+   b1_events: eco/house_05: 
+   built cache eco_house_06_full.npz: 3,153,600 samples (11:23:46)
+   b1_events: eco/house_06: fridge=11804c, kettle=74c
+   built cache redd_building_1_full.npz: 522,349 samples (11:23:47)
+   b1_events: redd/building_1: 
+   built cache redd_building_2_full.npz: 504,409 samples (11:23:47)
+   b1_events: redd/building_2: 
+   built cache redd_building_3_full.npz: 645,085 samples (11:23:47)
+   b1_events: redd/building_3: 
+   built cache redd_building_4_full.npz: 690,895 samples (11:23:48)
+   b1_events: redd/building_4: 
+   built cache redd_building_5_full.npz: 631,163 samples (11:23:48)
+   b1_events: redd/building_5: 
+   built cache redd_building_6_full.npz: 337,125 samples (11:23:48)
+   b1_events: redd/building_6: 
+   built cache ampds2_building_1_full.npz: 10,511,990 samples (11:23:55)
+   b1_events: ampds2/building_1: dishwasher=838c, washing_machine=412c
+   b1_events: mined 5260 events from 29 houses -> b1_events_v1.npz
+      ampds2/building_1/dishwasher: 838 cycles, kept 200
+      ampds2/building_1/washing_machine: 412 cycles, kept 200
+      eco/house_01/fridge: 6105 cycles, kept 200
+      eco/house_02/fridge: 11266 cycles, kept 200
+      eco/house_02/kettle: 267 cycles, kept 200
+      eco/house_03/fridge: 2324 cycles, kept 200
+      eco/house_06/fridge: 11804 cycles, kept 200
+      eco/house_06/kettle: 74 cycles, kept 74
+      refit/house_10/dishwasher: 879 cycles, kept 200
+      refit/house_10/fridge: 14636 cycles, kept 200
+      refit/house_10/microwave: 801 cycles, kept 200
+      refit/house_10/washing_machine: 649 cycles, kept 200
+      refit/house_15/dishwasher: 21 cycles, kept 21
+      refit/house_15/fridge: 9969 cycles, kept 200
+      refit/house_15/microwave: 284 cycles, kept 200
+      refit/house_15/washing_machine: 266 cycles, kept 200
+      refit/house_18/dishwasher: 304 cycles, kept 200
+      refit/house_18/fridge: 21127 cycles, kept 200
+      refit/house_18/microwave: 274 cycles, kept 200
+      refit/house_18/washing_machine: 165 cycles, kept 165
+      refit/house_7/dishwasher: 662 cycles, kept 200
+      refit/house_7/fridge: 26876 cycles, kept 200
+      refit/house_7/kettle: 1352 cycles, kept 200
+      refit/house_7/washing_machine: 868 cycles, kept 200
+      refit/house_8/fridge: 18054 cycles, kept 200
+      refit/house_8/kettle: 2767 cycles, kept 200
+      refit/house_8/microwave: 1625 cycles, kept 200
+      refit/house_8/washing_machine: 441 cycles, kept 200
+total events: 5260
+   kettle           n=   674 peak p10/p50/p90 =  1865.4/ 2453.8/ 4070.4 W dur p50 =     138 s
+   microwave        n=   800 peak p10/p50/p90 =   985.5/ 1567.5/ 4138.1 W dur p50 =     180 s
+   fridge           n=  1800 peak p10/p50/p90 =     1.4/  146.6/ 1718.2 W dur p50 =     924 s
+   washing_machine  n=  1165 peak p10/p50/p90 =   291.8/ 2490.7/ 4871.9 W dur p50 =    3912 s
+   dishwasher       n=   821 peak p10/p50/p90 =   642.8/ 2325.4/ 4212.6 W dur p50 =    1164 s

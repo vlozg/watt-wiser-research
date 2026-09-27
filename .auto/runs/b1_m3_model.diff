@@ -1,0 +1,173 @@
+diff --git a/src/experiments/04_autoresearch/model.py b/src/experiments/04_autoresearch/model.py
+index ed9c968..fcc1835 100644
+--- a/src/experiments/04_autoresearch/model.py
++++ b/src/experiments/04_autoresearch/model.py
+@@ -36,6 +36,19 @@ from __future__ import annotations
+ import numpy as np
+ import pandas as pd
+ 
++import b1_events as b1ev  # noqa: E402  (.auto is on sys.path via bench_v3)
++import b1_encoder as b1enc  # noqa: E402
++
++# B1 m3: enroll-mode nearest-example gate for burst events. The frozen
++# deterministic encoder (trained once on the ctx.pretrain pool, cached
++# in .auto/cache - a pure function of that pool) embeds the raw calib
++# mark segments (gallery) and each candidate event window; a burst
++# candidate is admitted only when its window matches its own device's
++# gallery better than every other device's. Constants fixed a priori
++# from the m2 gate behavior (top-1 retrieval), not tuned on eval.
++ENROLL_MIN_COS = 0.15
++ENROLL_MARGIN = 0.05
++
+ BASE_N = 10            # mark-segment baseline samples (60 s)
+ SMOOTH_N = 5           # rolling-median smoothing (30 s at 6 s cadence)
+ STEP_H = 3             # +-18 s step-probe half window
+@@ -557,6 +570,33 @@ def build_and_train(ctx: dict):
+         f"mean={mark[d]['mean_w']:.0f}W"
+         + (f" dens={mark[d]['dens_band'][0]:.2f}-{mark[d]['dens_band'][1]:.2f}/min"
+            if 'dens_band' in mark[d] else '') for d in devices))
++
++    # ---- B1 m3: burst-device enrollment (embedding galleries) ----
++    # Gallery = embedded raw calib mark segments per device, same
++    # window convention as the pool miner (baseline = first samples,
++    # resample to 128). The encoder is the frozen deterministic
++    # artifact of the ctx.pretrain pool (cache or recompute).
++    enc = b1enc.load_or_train_encoder(ctx['pretrain'])
++    dev_i = {d: i for i, d in enumerate(devices)}
++    gal_Z, gal_lab = [], []
++    for d in devices:
++        segs = ctx['calib'][d].get('mains_seg', [])
++        if not segs:
++            continue
++        Z = b1enc.embed_segments(segs, cad_s, enc)
++        gal_Z.append(Z)
++        gal_lab.append(np.full(len(Z), dev_i[d], dtype='int64'))
++    if gal_Z:
++        G = np.concatenate(gal_Z).astype('float32')
++        G_lab = np.concatenate(gal_lab)
++    else:
++        G = np.zeros((0, enc[0].shape[1]), dtype='float32')
++        G_lab = np.zeros(0, dtype='int64')
++    print('   B1 enrollment: gallery {} marks ({}) dim {}'.format(
++        G.shape[0],
++        ', '.join(f'{d}={len(ctx["calib"][d].get("mains_seg", []))}'
++                  for d in devices), G.shape[1]))
++    gate_printed = [False]
+     seed_thr = PROG_SEED_FRAC * min(mark['washing_machine']['amp'],
+                                     mark['dishwasher']['amp'])
+     heat_thr = PROG_HEAT_AMP_FRAC * min(mark['washing_machine']['amp'],
+@@ -829,6 +869,49 @@ def build_and_train(ctx: dict):
+             return out
+         dur = (off - on) * cad_s
+ 
++        def enroll_scores(lo_idx, hi_idx, assigned):
++            """Embed candidate windows -> (own_cos, best_other_cos).
++
++            Window = [on-60 s, off+60 s] on the raw filled aggregate,
++            baseline = median of the first ~8 samples (the miner's
++            convention), resampled to 128 like the miner/enrollment.
++            """
++            sigs, peaks, durs = [], [], []
++            for i0, i1 in zip(lo_idx, hi_idx):
++                lo = max(int(i0) - 10, 0)
++                hi = min(int(i1) + 10, len(f))
++                w = f[lo:hi]
++                nb = min(8, int(i0) - lo)
++                bs = np.asarray(w[:nb], dtype='float32')
++                bs = bs[np.isfinite(bs)]
++                b = float(np.median(bs)) if len(bs) else 0.0
++                sg = np.nan_to_num(w - b, nan=0.0).astype('float32')
++                x = np.linspace(0.0, 1.0, len(sg))
++                sg = np.interp(np.linspace(0.0, 1.0, b1ev.N_WIN), x,
++                               sg).astype('float32')
++                sigs.append(sg)
++                peaks.append(float(sg.max()))
++                durs.append((int(i1) - int(i0)) * cad_s)
++            X = b1enc.feat_rows_batch(sigs, peaks, durs)
++            W, mu, sd = enc
++            Z = b1enc._l2(((X - mu) / sd) @ W)
++            S = Z @ G.T
++            own = np.empty(len(lo_idx), dtype='float64')
++            oth = np.empty(len(lo_idx), dtype='float64')
++            for r, dv in enumerate(assigned):
++                m = G_lab == dev_i[dv]
++                own[r] = S[r][m].max() if m.any() else -1.0
++                mo = G_lab != dev_i[dv]
++                oth[r] = S[r][mo].max() if mo.any() else -1.0
++            return own, oth
++
++        def gate_keep(lo_idx, hi_idx, assigned):
++            own, oth = enroll_scores(lo_idx, hi_idx, assigned)
++            keep = (own >= ENROLL_MIN_COS) & (own - oth >= ENROLL_MARGIN)
++            return keep, own, oth
++
++        kc = kk = mc = mk = rc = rk = 0
++
+         # 0) dw sustained runs (see _dw30_runs): emit the run span
+         # extended by the mark-derived ext on each side so onsets stay
+         # inside the 600 s matching tolerance of the GT cycle's mask
+@@ -919,6 +1002,12 @@ def build_and_train(ctx: dict):
+         ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
+               & (dur >= REL_DUR[0] * dr) & (dur <= REL_DUR[1] * dr))
+         ket_ok_idx = np.flatnonzero(ok)
++        if len(ket_ok_idx) and G.shape[0]:
++            keep, _, _ = gate_keep(on[ket_ok_idx], off[ket_ok_idx],
++                                   ['kettle'] * len(ket_ok_idx))
++            kc += len(ket_ok_idx)
++            kk += int(keep.sum())
++            ket_ok_idx = ket_ok_idx[keep]
+         for k in ket_ok_idx:
+             i0 = int(k)
+             seg = out['kettle'][on[i0]:off[i0]]
+@@ -936,7 +1025,14 @@ def build_and_train(ctx: dict):
+         ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
+               & ~ev_in_named
+               & (dur >= REL_DUR[0] * mw_dr) & (dur <= REL_DUR[1] * mw_dr))
+-        for k in np.flatnonzero(ok):
++        mw_idx = np.flatnonzero(ok)
++        if len(mw_idx) and G.shape[0]:
++            keep, _, _ = gate_keep(on[mw_idx], off[mw_idx],
++                                   ['microwave'] * len(mw_idx))
++            mc += len(mw_idx)
++            mk += int(keep.sum())
++            mw_idx = mw_idx[keep]
++        for k in mw_idx:
+             i0 = int(k)
+             seg = out['microwave'][on[i0]:off[i0]]
+             out['microwave'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
+@@ -961,6 +1057,7 @@ def build_and_train(ctx: dict):
+         # classifier does not already own (no admitted kettle event or
+         # named chain overlaps), with the build-time gates.
+         if ket_prof is not None:
++            run_cands = []
+             for a, b in _runs(exc_e >= ket_prof['thr']):
+                 span_s = (b - a) * DW30_GRID_S
+                 if not ket_prof['span_band'][0] <= span_s \
+@@ -986,6 +1083,15 @@ def build_and_train(ctx: dict):
+                                         side='right')) - 1
+                 if k >= 0 and off[ket_ok_idx[k]] > a6:
+                     continue
++                run_cands.append((a6, b6, mean_w))
++            if run_cands and G.shape[0]:
++                ri = np.array([c[0] for c in run_cands], dtype='int64')
++                rj = np.array([c[1] for c in run_cands], dtype='int64')
++                keep, _, _ = gate_keep(ri, rj, ['kettle'] * len(run_cands))
++                rc += len(run_cands)
++                rk += int(keep.sum())
++                run_cands = [c for c, kp in zip(run_cands, keep) if kp]
++            for a6, b6, mean_w in run_cands:
+                 seg = out['kettle'][a6:b6]
+                 out['kettle'][a6:b6] = np.maximum(seg, mean_w)
+         # 4) fridge run-basis: the event path misses compressor cycles
+@@ -1012,6 +1118,11 @@ def build_and_train(ctx: dict):
+                 w = float(np.median(exc_e[a:b]))
+                 seg = out['fridge'][a6:b6]
+                 out['fridge'][a6:b6] = np.maximum(seg, w)
++        if not gate_printed[0]:
++            gate_printed[0] = True
++            print(f'   B1 gate (first span): kettle events {kk}/{kc} '
++                  f'kept, microwave events {mk}/{mc} kept, kettle runs '
++                  f'{rk}/{rc} kept')
+         return out
+ 
+     return predict

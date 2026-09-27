@@ -1,0 +1,6 @@
+--- B1 m2 retrieval gate (held-out houses: ukdale/house_3, refit/house_6, refit/house_7, eco/house_01, redd/building_3)
+   cross  raw: mean=0.000 kettle=0.000 microwave=nan fridge=0.000 washing_machine=0.000 dishwasher=0.000
+   cross  enc: mean=0.000 kettle=0.000 microwave=nan fridge=0.000 washing_machine=0.000 dishwasher=0.000
+   enroll raw: mean=0.650 kettle=0.740 microwave=nan fridge=0.780 washing_machine=0.360 dishwasher=0.720
+   enroll enc: mean=0.840 kettle=0.940 microwave=nan fridge=0.880 washing_machine=0.760 dishwasher=0.780
+   saved -> b1_encoder_v1.npz

@@ -125,9 +125,26 @@ def _extract_events(sig: np.ndarray, cad_s: float):
     is_rise = stp > AMP_MIN_W
     is_fall = stp < -AMP_MIN_W
     r_idx = np.flatnonzero(is_rise & ~np.concatenate([[False], is_rise[:-1]]))
-    f_idx = np.flatnonzero(is_fall & ~np.concatenate([[False], is_fall[:-1]]))
     base_roll = _roll_median(sig, 11)
     zc = np.cumsum(sig <= 0.5, dtype=np.int32)
+    # Fall runs: starts + true contiguous ends. A fall run can span
+    # several samples - a plateau that drifts down by more than
+    # AMP_MIN_W across the step window turns stp negative before the
+    # cliff, so the run starts early and its first step is small while
+    # the level at start+STEP_H is still on the plateau - measuring
+    # there dropped the whole event (b2 synthetic probe: seed-2026
+    # microwave marks with a drifting plateau extract nothing). The
+    # fall magnitude and the post-fall level belong to the whole
+    # descent: sample both at the fall run's end. Clean single-sample
+    # runs keep the previous values exactly.
+    f_pos = np.flatnonzero(is_fall)
+    if len(f_pos):
+        br = np.flatnonzero(np.diff(f_pos) > 1)
+        f_idx = np.concatenate([[f_pos[0]], f_pos[br + 1]])
+        f_end = np.concatenate([f_pos[br], [f_pos[-1]]])
+    else:
+        f_idx = f_pos
+        f_end = f_pos
     on_l, off_l, amp_l = [], [], []
     for i in r_idx.tolist():
         a = float(stp[i])
@@ -138,9 +155,10 @@ def _extract_events(sig: np.ndarray, cad_s: float):
         if j0 >= j1:
             continue
         idx = f_idx[j0:j1]
-        mags = -stp[idx]
+        lvl = sig[np.minimum(f_end[j0:j1] + STEP_H, n - 1)]
+        mags = sig[idx] - lvl
         ok = ((mags >= FALL_REL[0] * a) & (mags <= FALL_REL[1] * a)
-              & (np.abs(sig[np.minimum(idx + STEP_H, n - 1)] - b) <= tol))
+              & (np.abs(lvl - b) <= tol))
         if not ok.any():
             continue
         jb = int(idx[int(np.flatnonzero(ok)[0])])
@@ -246,6 +264,43 @@ def _profile_from_marks(cal: dict, cad_s: float, roll_s: float,
         lo = PROG_SPAN_LO_WM if dev == 'washing_machine' else PROG_SPAN_LO_DW
         prof['span_band'] = (lo * min(durs), PROG_SPAN_HI * max(durs))
     return prof
+
+
+def _burst_event_bands(cal: dict, cad_s: float):
+    """Burst gate bands measured on what the extractor sees in the mark
+    segments themselves. The GT-core stats describe the draw, not the
+    event: duty-chunked draws (microwave magnetron) fragment into
+    30-60 s chunks whose amps span the duty range, so a gate centered on
+    the core stats rejects every chunk (b2 synthetic-probe evidence:
+    seed-1 microwave marks extract 36 s events at 706-1776 W against a
+    core band of 1189-1783 W / 38-342 s - nothing admits). Run the
+    predict-time extractor on each raw mark segment, keep events with
+    amp >= 0.3 x segment p90 (drops background compressor/base events
+    sitting in the roll pads), and band admission on the mark's own
+    event distribution: amp [0.8 x min, 1.25 x max], dur [1/3 x min,
+    3 x max]. Returns None when fewer than two such events exist -
+    the caller then keeps the core-stats gate."""
+    amps, durs = [], []
+    for seg in cal['mains_seg']:
+        s = np.asarray(seg, dtype='float32')
+        hi = float(np.percentile(s, 90))
+        if hi <= 30.0:
+            continue
+        ev = _extract_events(_roll_median(s, SMOOTH_N), cad_s)
+        for on, off, amp in zip(ev[0], ev[1], ev[2]):
+            if amp < 0.3 * hi:
+                continue
+            dur_s = float(off - on) * cad_s
+            if dur_s >= 12.0:
+                amps.append(float(amp))
+                durs.append(dur_s)
+    if len(amps) < 2:
+        return None
+    return {'amp_lo': 0.8 * min(amps), 'amp_hi': 1.25 * max(amps),
+            'dur_lo': REL_DUR[0] * min(durs),
+            'dur_hi': REL_DUR[1] * max(durs),
+            'amp_p50': float(np.percentile(amps, 50)),
+            'dur_p50': float(np.percentile(durs, 50))}
 
 
 def _dw30_grid(mains: np.ndarray, cad_s: float) -> np.ndarray:
@@ -391,7 +446,10 @@ def _dw30_profile(exc: np.ndarray, cal: dict, mark_dw: dict,
     prof = {'heat': heat,
             'merge_n': merge_n,
             'span_band': (0.6 * min(spans), 1.25 * max(spans)),
-            'amp_lo': min(p90s),
+            # the wm30 profile carries the same 0.8 lower margin; the
+            # heater level varies +-15-20% across cycles and the dw/wm
+            # class separation lives in the dens/idle gates, not here
+            'amp_lo': 0.8 * min(p90s),
             'mean_band': (0.8 * min(means), 1.25 * max(means)),
             'hs_band': (0.75 * min(hss), 1.75 * max(hss)),
             'idle_hi': 2.0 * max(idles),
@@ -557,6 +615,24 @@ def build_and_train(ctx: dict):
         f"mean={mark[d]['mean_w']:.0f}W"
         + (f" dens={mark[d]['dens_band'][0]:.2f}-{mark[d]['dens_band'][1]:.2f}/min"
            if 'dens_band' in mark[d] else '') for d in devices))
+    # burst gates from the marks' own event structure: when the mark
+    # draw fragments in the extractor (duty-chunked magnetron), the
+    # core-stats gate rejects every fragment - switch that device to
+    # the mark's event distribution instead (see _burst_event_bands).
+    ev_band = {}
+    for d in devices:
+        if class_of[d] != 'burst':
+            continue
+        eb = _burst_event_bands(ctx['calib'][d], cad_s)
+        if eb is None:
+            continue
+        if (eb['dur_p50'] < 0.5 * mark[d]['dur_s']
+                or eb['amp_p50'] < 0.7 * mark[d]['amp']):
+            ev_band[d] = eb
+            print(f'   {d} mark draw fragments in the extractor '
+                  f'(event p50 {eb["amp_p50"]:.0f}W/'
+                  f'{eb["dur_p50"]:.0f}s vs core {mark[d]["amp"]:.0f}W/'
+                  f'{mark[d]["dur_s"]:.0f}s) - event-based gate bands')
     seed_thr = PROG_SEED_FRAC * min(mark['washing_machine']['amp'],
                                     mark['dishwasher']['amp'])
     heat_thr = PROG_HEAT_AMP_FRAC * min(mark['washing_machine']['amp'],
@@ -914,10 +990,15 @@ def build_and_train(ctx: dict):
         # named chains that mimic the microwave band - suppress mw there.
         # Kettle is separated by duration, fridge by amplitude, so their
         # classification stays chain-blind.
-        p = mark['kettle']
-        dr = dur_ref.get('kettle', p['dur_s'])
-        ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
-              & (dur >= REL_DUR[0] * dr) & (dur <= REL_DUR[1] * dr))
+        eb = ev_band.get('kettle')
+        if eb is not None:
+            ok = ((amp >= eb['amp_lo']) & (amp <= eb['amp_hi'])
+                  & (dur >= eb['dur_lo']) & (dur <= eb['dur_hi']))
+        else:
+            p = mark['kettle']
+            dr = dur_ref.get('kettle', p['dur_s'])
+            ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
+                  & (dur >= REL_DUR[0] * dr) & (dur <= REL_DUR[1] * dr))
         ket_ok_idx = np.flatnonzero(ok)
         for k in ket_ok_idx:
             i0 = int(k)
@@ -931,11 +1012,18 @@ def build_and_train(ctx: dict):
         # every burst device): duty-chunked heater lookalikes live in
         # 100-400 s events whose 30-60 s plateaus pass a run-level gate
         # but whose event duration fails this one.
-        p = mark['microwave']
-        mw_dr = p['dur_s']
-        ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
-              & ~ev_in_named
-              & (dur >= REL_DUR[0] * mw_dr) & (dur <= REL_DUR[1] * mw_dr))
+        eb = ev_band.get('microwave')
+        if eb is not None:
+            ok = ((amp >= eb['amp_lo']) & (amp <= eb['amp_hi'])
+                  & ~ev_in_named
+                  & (dur >= eb['dur_lo']) & (dur <= eb['dur_hi']))
+        else:
+            p = mark['microwave']
+            mw_dr = p['dur_s']
+            ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
+                  & ~ev_in_named
+                  & (dur >= REL_DUR[0] * mw_dr)
+                  & (dur <= REL_DUR[1] * mw_dr))
         for k in np.flatnonzero(ok):
             i0 = int(k)
             seg = out['microwave'][on[i0]:off[i0]]

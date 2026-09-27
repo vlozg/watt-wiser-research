@@ -1,0 +1,56 @@
+   built cache ukdale_house_3_full.npz: 566,797 samples (11:20:41)
+   b1_events: ukdale/house_3: kettle=566797c
+   built cache ukdale_house_4_full.npz: 2,960,750 samples (11:20:43)
+   b1_events: ukdale/house_4: fridge=2960750c, kettle=2960750c, microwave=2960750c
+   built cache refit_house_1_full.npz: 9,200,903 samples (11:20:53)
+   b1_events: refit/house_1: dishwasher=9200903c, fridge=9200903c, washing_machine=9200903c
+   built cache refit_house_4_full.npz: 9,129,384 samples (11:21:06)
+   b1_events: refit/house_4: fridge=9129384c, kettle=9129384c, microwave=9129384c, washing_machine=9129384c
+   built cache refit_house_6_full.npz: 8,314,792 samples (11:21:15)
+   b1_events: refit/house_6: dishwasher=8314792c, fridge=8314792c, kettle=8314792c, microwave=8314792c, washing_machine=8314792c
+   built cache refit_house_7_full.npz: 8,829,696 samples (11:21:28)
+   b1_events: refit/house_7: dishwasher=8829696c, fridge=8829696c, kettle=8829696c, washing_machine=8829696c
+   built cache refit_house_8_full.npz: 7,992,829 samples (11:21:32)
+   b1_events: refit/house_8: fridge=7992829c, kettle=7992829c, microwave=7992829c, washing_machine=7992829c
+   built cache refit_house_10_full.npz: 8,452,559 samples (11:21:35)
+   b1_events: refit/house_10: dishwasher=8452559c, fridge=8452559c, microwave=8452559c, washing_machine=8452559c
+   built cache refit_house_11_full.npz: 5,646,958 samples (11:21:41)
+   b1_events: refit/house_11: dishwasher=5646958c, fridge=5646958c, kettle=5646958c, microwave=5646958c, washing_machine=5646958c
+   built cache refit_house_12_full.npz: 7,021,987 samples (11:21:46)
+   b1_events: refit/house_12: fridge=7021987c, kettle=7021987c, microwave=7021987c
+   built cache refit_house_13_full.npz: 7,178,798 samples (11:21:55)
+   b1_events: refit/house_13: dishwasher=7178798c, fridge=7178798c, kettle=7178798c, microwave=7178798c, washing_machine=7178798c
+   built cache refit_house_15_full.npz: 8,170,066 samples (11:22:04)
+   b1_events: refit/house_15: dishwasher=8170066c, fridge=8170066c, microwave=8170066c, washing_machine=8170066c
+   built cache refit_house_16_full.npz: 7,828,326 samples (11:22:11)
+   b1_events: refit/house_16: dishwasher=7828326c, fridge=7828326c, washing_machine=7828326c
+   built cache refit_house_17_full.npz: 6,767,090 samples (11:22:19)
+   b1_events: refit/house_17: fridge=6767090c, kettle=6767090c, microwave=6767090c, washing_machine=6767090c
+   built cache refit_house_18_full.npz: 6,379,808 samples (11:22:21)
+   b1_events: refit/house_18: dishwasher=6379808c, fridge=6379808c, microwave=6379808c, washing_machine=6379808c
+   built cache refit_house_19_full.npz: 6,774,696 samples (11:22:28)
+   b1_events: refit/house_19: fridge=6774696c, kettle=6774696c, microwave=6774696c, washing_machine=6774696c
+   built cache refit_house_21_full.npz: 7,053,363 samples (11:22:34)
+   b1_events: refit/house_21: dishwasher=7053363c, fridge=7053363c, kettle=7053363c, washing_machine=7053363c
+   built cache eco_house_01_full.npz: 3,528,000 samples (11:22:39)
+   b1_events: eco/house_01: fridge=3528000c
+   built cache eco_house_02_full.npz: 3,528,000 samples (11:22:42)
+   b1_events: eco/house_02: fridge=3528000c, kettle=3528000c
+   built cache eco_house_03_full.npz: 2,736,000 samples (11:22:43)
+   b1_events: eco/house_03: fridge=2736000c
+Traceback (most recent call last):
+  File "/root/longvdh/agent_space/projects/watt-wiser/.auto/b1_events.py", line 167, in <module>
+    ev = mine_pool(v3.make_pretrain_ctx())
+  File "/root/longvdh/agent_space/projects/watt-wiser/.auto/b1_events.py", line 99, in mine_pool
+    h = pretrain_ctx['load'](tag)
+  File "/root/longvdh/agent_space/projects/watt-wiser/.auto/bench_v3.py", line 367, in load
+    span = load_span(ds, house, None, None, 'full', chans)
+  File "/root/longvdh/agent_space/projects/watt-wiser/.auto/bench_v3.py", line 196, in load_span
+    t0, t1 = _mains_bounds(ds, house)
+             ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/root/longvdh/agent_space/projects/watt-wiser/.auto/bench_v3.py", line 178, in _mains_bounds
+    return int(ts.min()), int(ts.max())
+               ~~~~~~^^
+  File "/root/longvdh/agent_space/projects/watt-wiser/.venv/lib/python3.13/site-packages/numpy/_core/_methods.py", line 45, in _amin
+    return umr_minimum(a, axis, None, out, keepdims, initial, where)
+ValueError: zero-size array to reduction operation minimum which has no identity

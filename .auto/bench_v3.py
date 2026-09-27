@@ -50,8 +50,9 @@ v2 number was a lucky draw. v3 makes the metric honest:
 3. --confirm re-runs the house_1 sweep on days 90-365. Once per claimed
    breakthrough, never per iteration.
 4. ctx['pretrain'] exposes the frozen pretraining pool (every data/gold
-   house except house_1 and the transfer-test houses) through a lazy
-   loader. The model must take pretraining data ONLY through ctx.
+   house except house_1 and the transfer-test houses; greend buildings
+   dropped - see note at PRETRAIN_HOUSES) through a lazy loader. The
+   model must take pretraining data ONLY through ctx.
 
 Labelled-dev-set disclosure (owner-directed): house_1's PRE-split
 submeter channels are the labelled dev set - diagnostics only, never a
@@ -134,11 +135,19 @@ PRETRAIN_HOUSES = (
     + ['refit/house_' + h for h in
        ('1', '4', '6', '7', '8', '10', '11', '12', '13', '15', '16', '17',
         '18', '19', '21')]
-    + ['eco/house_0' + str(i) for i in range(1, 7)]
+    + ['eco/house_0' + i for i in ('1', '2', '3', '5', '6')]
     + ['redd/building_' + str(i) for i in range(1, 7)]
     + ['ampds2/building_1']
-    + ['greend/building_' + str(i) for i in range(8)]
 )
+# Pool correction (declared before any bet touched ctx['pretrain']): the
+# 8 greend buildings were dropped from the pool - they have submeter
+# channels but NO mains.parquet, so no aggregate exists to mine and the
+# lazy loader would crash on them. Pool-side GT-integrity fix, same
+# principle as the house_2 washing_machine exclusion; HEAD never reads
+# ctx['pretrain'], so the re-baseline floor is unaffected. Second
+# correction: eco/house_04 dropped - its mains.parquet has 0 rows.
+# Usable pool: 29 houses (kettle 17 / fridge 27 / microwave 18 /
+# dishwasher 18 / washing_machine 22 coverage).
 
 
 def index_us(idx: pd.DatetimeIndex) -> np.ndarray:

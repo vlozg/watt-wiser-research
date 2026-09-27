@@ -1,0 +1,233 @@
+diff --git a/src/experiments/04_autoresearch/model.py b/src/experiments/04_autoresearch/model.py
+index ed9c968..632f558 100644
+--- a/src/experiments/04_autoresearch/model.py
++++ b/src/experiments/04_autoresearch/model.py
+@@ -36,6 +36,22 @@ from __future__ import annotations
+ import numpy as np
+ import pandas as pd
+ 
++import b1_events as b1ev  # noqa: E402  (.auto is on sys.path via bench_v3)
++import b1_encoder as b1enc  # noqa: E402
++
++# B1 m3b: enroll-mode nearest-example gate for burst events. The
++# frozen deterministic encoder (trained once on the ctx.pretrain pool,
++# cached in .auto/cache - a pure function of that pool) embeds the raw
++# calib mark segments (gallery) and each candidate event window; a
++# burst candidate is admitted when its window embeds close enough to
++# its own device's gallery (own-cosine bar). Admission thresholds are
++# calibrated PER BUILD on calib-only data: pseudo-positives are pre-
++# span events inside the device's own admission bands (extractor-
++# shaped, so their score distribution carries the same window-
++# convention shift eval candidates have); no eval data touches the
++# calibration. Run 1's fixed constants (min .15 + margin .05) killed
++# 15-88% of true draws - see .auto/ideas.md B1 log.
++
+ BASE_N = 10            # mark-segment baseline samples (60 s)
+ SMOOTH_N = 5           # rolling-median smoothing (30 s at 6 s cadence)
+ STEP_H = 3             # +-18 s step-probe half window
+@@ -557,6 +573,72 @@ def build_and_train(ctx: dict):
+         f"mean={mark[d]['mean_w']:.0f}W"
+         + (f" dens={mark[d]['dens_band'][0]:.2f}-{mark[d]['dens_band'][1]:.2f}/min"
+            if 'dens_band' in mark[d] else '') for d in devices))
++
++    # ---- B1 m3: burst-device enrollment (embedding galleries) ----
++    # Gallery = embedded raw calib mark segments per device, same
++    # window convention as the pool miner (baseline = first samples,
++    # resample to 128). The encoder is the frozen deterministic
++    # artifact of the ctx.pretrain pool (cache or recompute).
++    enc = b1enc.load_or_train_encoder(ctx['pretrain'])
++    dev_i = {d: i for i, d in enumerate(devices)}
++    gal_Z, gal_lab, gal_names = [], [], []
++    for d in devices:
++        if class_of[d] == 'duty' or ctx['calib'][d].get('passive'):
++            continue  # duty/passive windows are not event-shaped; in
++            # the cross-device comparison they only add score noise
++        segs = ctx['calib'][d].get('mains_seg', [])
++        if not segs:
++            continue
++        Z = b1enc.embed_segments(segs, cad_s, enc)
++        gal_Z.append(Z)
++        gal_lab.append(np.full(len(Z), dev_i[d], dtype='int64'))
++        gal_names.append(f'{d}={len(Z)}')
++    if gal_Z:
++        G = np.concatenate(gal_Z).astype('float32')
++        G_lab = np.concatenate(gal_lab)
++    else:
++        G = np.zeros((0, enc[0].shape[1]), dtype='float32')
++        G_lab = np.zeros(0, dtype='int64')
++    print('   B1 enrollment: gallery {} marks ({}) dim {}'.format(
++        G.shape[0], ', '.join(gal_names), G.shape[1]))
++
++    def embed_windows(mains, lo_idx, hi_idx, assigned):
++        """Embed candidate windows -> (own_cos, best_other_cos).
++
++        Window = [on-60 s, off+60 s] on the given raw aggregate,
++        baseline = median of the first ~8 samples (the miner's
++        convention), resampled to 128 like the miner/enrollment.
++        """
++        sigs, peaks, durs = [], [], []
++        for i0, i1 in zip(lo_idx, hi_idx):
++            lo = max(int(i0) - 10, 0)
++            hi = min(int(i1) + 10, len(mains))
++            w = np.asarray(mains[lo:hi], dtype='float32')
++            nb = min(8, int(i0) - lo)
++            bs = w[:nb]
++            bs = bs[np.isfinite(bs)]
++            b = float(np.median(bs)) if len(bs) else 0.0
++            sg = np.nan_to_num(w - b, nan=0.0).astype('float32')
++            x = np.linspace(0.0, 1.0, len(sg))
++            sg = np.interp(np.linspace(0.0, 1.0, b1ev.N_WIN), x,
++                           sg).astype('float32')
++            sigs.append(sg)
++            peaks.append(float(sg.max()))
++            durs.append((int(i1) - int(i0)) * cad_s)
++        X = b1enc.feat_rows_batch(sigs, peaks, durs)
++        W, mu, sd = enc
++        Z = b1enc._l2(((X - mu) / sd) @ W)
++        S = Z @ G.T
++        own = np.empty(len(lo_idx), dtype='float64')
++        oth = np.empty(len(lo_idx), dtype='float64')
++        for r, dv in enumerate(assigned):
++            m = G_lab == dev_i[dv]
++            own[r] = S[r][m].max() if m.any() else -1.0
++            mo = G_lab != dev_i[dv]
++            oth[r] = S[r][mo].max() if mo.any() else -1.0
++        return own, oth
++
++    gate_printed = [False]
+     seed_thr = PROG_SEED_FRAC * min(mark['washing_machine']['amp'],
+                                     mark['dishwasher']['amp'])
+     heat_thr = PROG_HEAT_AMP_FRAC * min(mark['washing_machine']['amp'],
+@@ -625,6 +707,53 @@ def build_and_train(ctx: dict):
+             named_spans.append((s_i, e_i))
+     print(f'   mined program chains: {prog_total} pass structure, named '
+           f'wm={prog_named["washing_machine"]} dw={prog_named["dishwasher"]}')
++
++    # ---- B1 m3b: per-build gate calibration on calib-only data ----
++    # Pseudo-positives: pre-span events inside the device's own
++    # amp/dur admission bands (extractor-shaped - the same window
++    # convention the predict candidates have, so the threshold lands
++    # on the shifted distribution, not the miner's). mw candidates
++    # inside pre-span named chains are excluded, mirroring predict's
++    # chain suppression. No eval data involved.
++    gate_thr = {}
++    rng_cal = np.random.default_rng(0)
++    for d in ('kettle', 'microwave'):
++        p = mark[d]
++        dr = dur_ref.get(d, p['dur_s'])
++        band = ((np.abs(ev_amp - p['amp']) / p['amp'] <= REL_AMP)
++                & (ev_dur >= REL_DUR[0] * dr)
++                & (ev_dur <= REL_DUR[1] * dr))
++        idx = np.flatnonzero(band)
++        if d == 'microwave' and named_spans:
++            keep = np.ones(len(idx), dtype=bool)
++            for j, kx in enumerate(idx):
++                for c0, c1 in named_spans:
++                    if c0 < ev_off[kx] and ev_on[kx] < c1:
++                        keep[j] = False
++                        break
++            idx = idx[keep]
++        if len(idx) > 400:
++            idx = rng_cal.choice(idx, 400, replace=False)
++        if len(idx) < 10:
++            print(f'   B1 m3b: {d} gate disabled ({len(idx)} pre-span '
++                  'band candidates)')
++            continue
++        own, oth = embed_windows(ctx['pre']['mains'], ev_on[idx],
++                                 ev_off[idx], [d] * len(idx))
++        # min-cos bar only: pseudo-positive margins vs the other
++        # flat-draw gallery (kettle vs microwave) sit at ~0 or below
++        # at p10 - the encoder separates devices across houses but
++        # not flat draws within one house, so a margin test kills
++        # true draws (run 1's disease). The bar is own-shape
++        # confirmation, not cross-device discrimination.
++        t_min = max(0.05, float(np.percentile(own, 25)) - 0.05)
++        gate_thr[d] = t_min
++        print(f'   B1 m3b: {d} gate from {len(idx)} pre-span cands: '
++              f'own p10/p25/p50={float(np.percentile(own, 10)):.3f}/'
++              f'{float(np.percentile(own, 25)):.3f}/'
++              f'{float(np.percentile(own, 50)):.3f} margin p10='
++              f'{float(np.percentile(own - oth, 10)):.3f} -> '
++              f'min {t_min:.3f} (no margin test)')
+     if dw30 is None:
+         print('   dw sustained detector disabled (mark windows produced '
+               'no heater runs)')
+@@ -829,6 +958,15 @@ def build_and_train(ctx: dict):
+             return out
+         dur = (off - on) * cad_s
+ 
++        def gate_keep(lo_idx, hi_idx, dv):
++            if dv not in gate_thr:
++                return np.ones(len(lo_idx), dtype=bool)
++            own, _ = embed_windows(f, lo_idx, hi_idx,
++                                   [dv] * len(lo_idx))
++            return own >= gate_thr[dv]
++
++        kc = kk = mc = mk = rc = rk = 0
++
+         # 0) dw sustained runs (see _dw30_runs): emit the run span
+         # extended by the mark-derived ext on each side so onsets stay
+         # inside the 600 s matching tolerance of the GT cycle's mask
+@@ -919,6 +1057,11 @@ def build_and_train(ctx: dict):
+         ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
+               & (dur >= REL_DUR[0] * dr) & (dur <= REL_DUR[1] * dr))
+         ket_ok_idx = np.flatnonzero(ok)
++        if len(ket_ok_idx):
++            keep = gate_keep(on[ket_ok_idx], off[ket_ok_idx], 'kettle')
++            kc += len(ket_ok_idx)
++            kk += int(keep.sum())
++            ket_ok_idx = ket_ok_idx[keep]
+         for k in ket_ok_idx:
+             i0 = int(k)
+             seg = out['kettle'][on[i0]:off[i0]]
+@@ -936,7 +1079,13 @@ def build_and_train(ctx: dict):
+         ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
+               & ~ev_in_named
+               & (dur >= REL_DUR[0] * mw_dr) & (dur <= REL_DUR[1] * mw_dr))
+-        for k in np.flatnonzero(ok):
++        mw_idx = np.flatnonzero(ok)
++        if len(mw_idx):
++            keep = gate_keep(on[mw_idx], off[mw_idx], 'microwave')
++            mc += len(mw_idx)
++            mk += int(keep.sum())
++            mw_idx = mw_idx[keep]
++        for k in mw_idx:
+             i0 = int(k)
+             seg = out['microwave'][on[i0]:off[i0]]
+             out['microwave'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
+@@ -961,6 +1110,7 @@ def build_and_train(ctx: dict):
+         # classifier does not already own (no admitted kettle event or
+         # named chain overlaps), with the build-time gates.
+         if ket_prof is not None:
++            run_cands = []
+             for a, b in _runs(exc_e >= ket_prof['thr']):
+                 span_s = (b - a) * DW30_GRID_S
+                 if not ket_prof['span_band'][0] <= span_s \
+@@ -986,6 +1136,15 @@ def build_and_train(ctx: dict):
+                                         side='right')) - 1
+                 if k >= 0 and off[ket_ok_idx[k]] > a6:
+                     continue
++                run_cands.append((a6, b6, mean_w))
++            if run_cands:
++                ri = np.array([c[0] for c in run_cands], dtype='int64')
++                rj = np.array([c[1] for c in run_cands], dtype='int64')
++                keep = gate_keep(ri, rj, 'kettle')
++                rc += len(run_cands)
++                rk += int(keep.sum())
++                run_cands = [c for c, kp in zip(run_cands, keep) if kp]
++            for a6, b6, mean_w in run_cands:
+                 seg = out['kettle'][a6:b6]
+                 out['kettle'][a6:b6] = np.maximum(seg, mean_w)
+         # 4) fridge run-basis: the event path misses compressor cycles
+@@ -1012,6 +1171,11 @@ def build_and_train(ctx: dict):
+                 w = float(np.median(exc_e[a:b]))
+                 seg = out['fridge'][a6:b6]
+                 out['fridge'][a6:b6] = np.maximum(seg, w)
++        if not gate_printed[0]:
++            gate_printed[0] = True
++            print(f'   B1 gate (first span): kettle events {kk}/{kc} '
++                  f'kept, microwave events {mk}/{mc} kept, kettle runs '
++                  f'{rk}/{rc} kept')
+         return out
+ 
+     return predict
