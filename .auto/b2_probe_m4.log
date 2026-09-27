@@ -1,0 +1,48 @@
+   mark profiles: kettle amp=2477W dur=2.2min mean=2478W; microwave amp=1583W dur=0.8min mean=714W; fridge amp=50W dur=12.5min mean=292W; washing_machine amp=2240W dur=101.0min mean=936W dens=0.30-0.56/min; dishwasher amp=2164W dur=97.2min mean=497W dens=0.02-0.06/min
+   mined 17906 level-excursion events from 325 pre-span days
+   dw sustained profile: span=46-102min amp>=1685W mean=495-943W hs=0.20-0.61 idle<=144W dens<=0.184/min heater_gap_merge=70min ext_back=18.5min ext_fwd=0.5min pre_offs=['18.0', '19.0', '18.0', '18.5', '19.0']
+   dw synth onset check: emitted-vs-pasted onset deltas ['-30', '-30', 'none'] (median -30s)
+   dw sustained runs: 56 pass run-basis gates (0.172/day)
+   mined kettle cluster: n=1023 dur_p50=1.9min (mark 2.2min)
+   mined microwave cluster: n=1672 dur_p50=2.4min (mark 0.8min)
+   mined program chains: 330 pass structure, named wm=139 dw=0
+   wm sustained profile: span=16-84min amp>=1914W mean=936-2568W hs=0.27-1.39 idle<=1936W dens=0.202-0.955/min heater_gap_merge=17min ext_back=3.0min ext_fwd=53.2min
+   wm sustained runs: 82 net-new candidates (0.252/day)
+   kettle sustained marks: 4/5 windows hold an isolated in-band run
+   kettle sustained runs: 198 net-new candidates (0.61/day)
+   fridge fallback: population band amp=54-103W dur=10-36min n=3763
+   fridge run-basis: 2451 net-new candidates (7.54/day)
+B2 probe seed 2026: signatures kettle=3 microwave=3 washing_machine=4 dishwasher=5
+  quiet 6h windows found: 60
+  iso_kettle: kettle P0.85/R0.65/F1 0.74  
+  iso_microwave: kettle P0.00/R0.00/F1 0.00  microwave P0.34/R0.32/F1 0.33  
+  iso_wm: kettle P0.00/R0.00/F1 0.00  microwave P0.00/R0.00/F1 0.00  washing_machine P0.87/R0.54/F1 0.67  
+  iso_dw: kettle P0.00/R0.00/F1 0.00  microwave P0.00/R0.00/F1 0.00  dishwasher P0.91/R0.77/F1 0.83  
+  mix_burst: kettle P0.79/R0.88/F1 0.84  microwave P0.25/R0.32/F1 0.28  
+  mix_prog: kettle P0.00/R0.00/F1 0.00  washing_machine P0.92/R0.63/F1 0.75  dishwasher P0.00/R0.00/F1 0.00  
+    cross-fire on washing_machine spans: ['kettle->0.04']
+  probe elapsed 4s
+   mark profiles: kettle amp=2261W dur=2.3min mean=1947W; microwave amp=1486W dur=1.9min mean=450W; fridge amp=49W dur=23.5min mean=268W; washing_machine amp=2085W dur=93.6min mean=613W dens=0.26-0.46/min; dishwasher amp=2332W dur=98.3min mean=664W dens=0.04-0.51/min
+   microwave mark draw fragments in the extractor (event p50 1420W/36s vs core 1486W/114s) - event-based gate bands
+   mined 17906 level-excursion events from 325 pre-span days
+   dw sustained profile: span=46-116min amp>=1816W mean=511-1772W hs=0.20-0.76 idle<=571W dens<=1.054/min heater_gap_merge=69min ext_back=18.5min ext_fwd=0.5min pre_offs=['19.0', '18.0', '5.0', '18.5', '18.5']
+   dw synth onset check: emitted-vs-pasted onset deltas ['-30', '-30', '-60'] (median -30s)
+   dw sustained runs: 112 pass run-basis gates (0.345/day)
+   mined kettle cluster: n=1118 dur_p50=1.9min (mark 2.3min)
+   mined microwave cluster: n=1722 dur_p50=2.4min (mark 1.9min)
+   mined program chains: 330 pass structure, named wm=126 dw=0
+   wm sustained profile: span=11-115min amp>=1734W mean=775-1786W hs=0.18-0.98 idle<=2051W dens=0.204-1.000/min heater_gap_merge=49min ext_back=2.6min ext_fwd=26.5min
+   wm sustained runs: 68 net-new candidates (0.209/day)
+   kettle sustained marks: 2/5 windows hold an isolated in-band run
+   fridge fallback: population band amp=54-103W dur=10-36min n=3763
+   fridge run-basis: 1989 net-new candidates (6.12/day)
+B2 probe seed 1: signatures kettle=5 microwave=4 washing_machine=4 dishwasher=5
+  quiet 6h windows found: 60
+  iso_kettle: kettle P0.71/R0.52/F1 0.60  microwave P0.00/R0.00/F1 0.00  
+  iso_microwave: kettle P0.00/R0.00/F1 0.00  microwave P0.48/R0.27/F1 0.35  
+  iso_wm: kettle P0.00/R0.00/F1 0.00  microwave P0.00/R0.00/F1 0.00  washing_machine P0.66/R0.43/F1 0.52  dishwasher P0.00/R0.00/F1 0.00  
+  iso_dw: kettle P0.00/R0.00/F1 0.00  microwave P0.00/R0.00/F1 0.00  washing_machine P0.00/R0.00/F1 0.00  dishwasher P0.93/R0.77/F1 0.84  
+  mix_burst: kettle P0.77/R0.77/F1 0.77  microwave P0.50/R0.22/F1 0.31  
+  mix_prog: washing_machine P0.66/R0.87/F1 0.75  dishwasher P1.00/R0.55/F1 0.71  
+    cross-fire on dishwasher spans: ['washing_machine->0.60']
+  probe elapsed 4s

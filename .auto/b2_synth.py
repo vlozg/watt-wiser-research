@@ -30,6 +30,7 @@ Usage: uv run python3 .auto/b2_synth.py [--seeds 2026,1,2]
 from __future__ import annotations
 
 import importlib.util
+import os
 import sys
 import time
 from pathlib import Path
@@ -254,6 +255,9 @@ def run(seed: int) -> None:
         'mix_prog': [(s, [('washing_machine', 1, True),
                           ('dishwasher', 1, True)]) for s in starts[24:27]],
     }
+    dbg = os.environ.get('B2_DEBUG')
+    if dbg:
+        print('  DBG starts: %s' % (starts,))
     for name, wins in scen.items():
         agg = {d: {'tp': 0, 'p': 0, 't': 0} for d in PROBE_DEVICES}
         for s0, plan in wins:
@@ -291,6 +295,9 @@ def run(seed: int) -> None:
                         pe = np.asarray(pred[e])
                         fr = float(np.mean([(pe[a:b] > B.THR[e]).mean()
                                             for a, b in spans]))
+                        if dbg:
+                            print('  DBG xf %s win[%s] dev=%s spans=%s %s->%.2f'
+                                  % (name, s0, d, spans, e, fr))
                         if fr > 0.02:
                             cross[d].append('%s->%.2f' % (e, fr))
             for d, v in cross.items():

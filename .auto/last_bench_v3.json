@@ -27,14 +27,14 @@
    },
    "1": {
     "kettle": 0.7534039334341905,
-    "microwave": 0.4136690647482014,
+    "microwave": 0.41530054644808745,
     "fridge": 0.5245826663617654,
     "washing_machine": 0.15384615384615385,
-    "dishwasher": 0.39999999999999997
+    "dishwasher": 0.5
    },
    "2": {
-    "kettle": 0.7363896848137537,
-    "microwave": 0.33482810164424515,
+    "kettle": 0.7325227963525835,
+    "microwave": 0.3064516129032258,
     "fridge": 0.5128564749883123,
     "washing_machine": 0.3305785123966942,
     "dishwasher": 0.5454545454545454
@@ -48,88 +48,88 @@
    },
    "4": {
     "kettle": 0.7522658610271903,
-    "microwave": 0.27442371020856204,
+    "microwave": 0.4090121317157712,
     "fridge": 0.5057621222004783,
     "washing_machine": 0.1346153846153846,
-    "dishwasher": 0.5161290322580646
+    "dishwasher": 0.4838709677419355
    },
    "5": {
     "kettle": 0.7522658610271903,
-    "microwave": 0.35514018691588795,
+    "microwave": 0.40522875816993464,
     "fridge": 0.42023346303501946,
     "washing_machine": 0.47297297297297297,
     "dishwasher": 0.6
    },
    "6": {
     "kettle": 0.7591463414634146,
-    "microwave": 0.3529411764705882,
+    "microwave": 0.35409836065573763,
     "fridge": 0.5128564749883123,
     "washing_machine": 0.2982456140350877,
-    "dishwasher": 0.03076923076923077
+    "dishwasher": 0.46153846153846156
    },
    "7": {
     "kettle": 0.803921568627451,
     "microwave": 0.340625,
     "fridge": 0.49889331562638345,
     "washing_machine": 0.37878787878787873,
-    "dishwasher": 0.03278688524590164
+    "dishwasher": 0.49180327868852464
    },
    "8": {
     "kettle": 0.8011204481792717,
-    "microwave": 0.35611510791366907,
+    "microwave": 0.358695652173913,
     "fridge": 0.5128564749883123,
     "washing_machine": 0.17322834645669294,
-    "dishwasher": 0.03278688524590164
+    "dishwasher": 0.49180327868852464
    },
    "9": {
     "kettle": 0.7737909516380657,
-    "microwave": 0.34868421052631576,
+    "microwave": 0.3545150501672241,
     "fridge": 0.5128564749883123,
     "washing_machine": 0.44594594594594594,
-    "dishwasher": 0.26666666666666666
+    "dishwasher": 0.6666666666666667
    }
   },
-  "median_mean_device_f1": 0.4593446068155618,
-  "p10": 0.38923473604647096,
+  "median_mean_device_f1": 0.49418949838255993,
+  "p10": 0.4664972854336239,
   "median_device_f1": {
    "kettle": 0.7664686465507402,
-   "microwave": 0.3540406816932381,
+   "microwave": 0.3819622051719238,
    "fridge": 0.5128564749883123,
    "washing_machine": 0.35468319559228645,
-   "dishwasher": 0.4580645161290323
+   "dishwasher": 0.5227272727272727
   }
  },
  "transfer": {
   "ukdale/house_2/kettle": 0.2084794637986127,
-  "ukdale/house_2/microwave": 0.49073212624346957,
-  "ukdale/house_2/dishwasher": 0.21428571428571425,
+  "ukdale/house_2/microwave": 0.46635913591359135,
+  "ukdale/house_2/dishwasher": 0.03603896103896104,
   "ukdale/house_5/fridge": 0.12777777777777777,
   "ukdale/house_5/washing_machine": 0.1481707317073171,
-  "ukdale/house_5/dishwasher": 0.2105263157894737,
-  "refit/house_5/dishwasher": 0.023778959594107217,
+  "ukdale/house_5/dishwasher": 0.0,
+  "refit/house_5/dishwasher": 0.0,
   "refit/house_5/fridge": 0.220131702728128,
   "refit/house_5/kettle": 0.599302053510442,
-  "refit/house_5/microwave": 0.042359752120026094,
+  "refit/house_5/microwave": 0.0411036036036036,
   "refit/house_5/washing_machine": 0.08686141212896278,
   "refit/house_3/dishwasher": 0.0,
   "refit/house_3/fridge": 0.06083136194660359,
   "refit/house_3/kettle": 0.37863592174827876,
-  "refit/house_3/microwave": 0.026038210084864233,
+  "refit/house_3/microwave": 0.02685047528945353,
   "refit/house_3/washing_machine": 0.07678754955219498,
-  "refit/house_2/dishwasher": 0.10480549199084668,
+  "refit/house_2/dishwasher": 0.1433461703038083,
   "refit/house_2/fridge": 0.381899552461462,
   "refit/house_2/kettle": 0.1484365053716054,
-  "refit/house_2/microwave": 0.26274713425193086,
+  "refit/house_2/microwave": 0.2994413407821229,
   "refit/house_2/washing_machine": 0.046536796536796536,
   "refit/house_9/dishwasher": 0.0,
   "refit/house_9/fridge": 0.19431891542930924,
-  "refit/house_9/kettle": 0.3044151711363486,
-  "refit/house_9/microwave": 0.014191843439754305,
+  "refit/house_9/kettle": 0.2879827174838021,
+  "refit/house_9/microwave": 0.01372852499613063,
   "refit/house_9/washing_machine": 0.0,
-  "refit/house_20/dishwasher": 0.15192307692307694,
+  "refit/house_20/dishwasher": 0.0,
   "refit/house_20/fridge": 0.3063070458220847,
   "refit/house_20/kettle": 0.030840419258498356,
-  "refit/house_20/microwave": 0.2931551245187387,
+  "refit/house_20/microwave": 0.28600925667318355,
   "refit/house_20/washing_machine": 0.05982142857142857
  },
  "floors": {

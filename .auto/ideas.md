@@ -391,6 +391,69 @@ Milestones: m1 signature library from calib marks -> m2 paste engine
 with variation -> m3 train-on-synthetic pipeline -> m4 v3 eval.
 Kill criterion: same as B1 after 5+ runs.
 
+**m1+m2 verdict (run 66, keep, 5318070): the probe paid for itself
+without ever training on synthetic data.** Pasting seed-2026 mw mark
+sig-0 into quiet backgrounds recovered nothing: the floor's extractor
+measured fall magnitude + post-fall level at the fall-RUN START, and
+plateaus drifting down > AMP_MIN_W (50 W) across the 6-sample step
+window turn stp negative before the cliff (premature fall run: step
+-81 W vs required >= 590 W, level still on plateau) -> event dropped
+ENTIRELY. Real duty-cycled mw draws hit the same pathology, so the
+defect was live on the bench. Fix: true contiguous fall-run ends via
+np.diff on is_fall positions; magnitude = level drop across the run;
+post-fall level after the run end; single-sample runs bitwise
+identical. (Intermediate f_end = next-run-start - 1 was itself buggy
+for gapped runs - overshoot to future falls, mag=-54 rejections -
+caught on the probe.) Plus mw/kettle event-band gates from
+mark-extracted events (fragmentation switch) and dw30 amp_lo 0.8x.
+Bench: median 0.4215 -> 0.4593 (+0.0379, largest single-run gain of
+the campaign), p10 +0.0233, transfer 0.1462 -> 0.1682; kettle +0.114,
+dw +0.116, mw +0.039, wm +0.011, fridge -0.001. Probe iso F1 after:
+kettle 0.60-0.74, mw 0.22-0.35, wm 0.52-0.88, dw 0.61-0.79 (residual
+mw gap = smoothing-lag edge effects on 6-9-sample truth spans, a
+paste artifact). Cross-fires parked: kettle event band admits mw
+chunks (0.31 on mw spans, seed 2); wm sustained path claims dw pastes
+(0.60, seed 1). Next: m3/m4 train-on-synthetic.
+
+**Gate-fix bundle verdict (run 67, discard, tree back at 5318070):
+attribution confirmed, deltas real but under the +0.01 keep bar - the
+whole bundle is preserved as a patch.** Cross-fire attribution
+(per-event, b2 probe): (a) seed-2 kettle cross-fire = the merged mw
+paste event (2 kW, 294 s) admitted by the kettle EVENT band
+[1753,2980] x [12,396] while the mw core rejects it (2032 > 1910) ->
+kettle claims 0.865 of the mw span; the event is flat (p10/p90 0.89)
+but the seed-2 kettle mark events are dip-y too (flats 0.11-0.24), so
+a flatness discriminator is dead - the event is genuinely ambiguous on
+(amp, dur), fixed only by a dur ceiling; (b) seed-1 mw cross-fire =
+the mw event band admitted kettle chunks, fixed by a z-sum dispute
+(ket_z <= mw_z suppresses the MW side only; the kettle keeps every
+event its gate admits - its emission stays pre-dispute and
+bit-identical, so stealing disputed events costs kettle recall);
+anchors/half-widths from _gate_anchor_hw (event-band p50s when
+switched, core stats x REL_AMP/REL_DUR otherwise); (c) seed-2 mw iso
+R 0.13 = the fragmentation switch MISSED the boundary (dur_p50 54 ==
+0.5 x core 108, strict < failed) -> the core gate rejected the paste's
+low chunks. Dur ceiling: 3 x max(dur_p50, max(durs)/2) - merged
+multi-chunk events are foreign structure, not longer draws; 3 x max
+alone admitted them (294 s into a 60 s-chunk kettle), 3 x p50 alone
+risks the 2026-mw extraction variance (p50 36, max 108). Switch test
+now inclusive (<=). Probe: seed-1 cross-fire gone, seed-2 iso_kettle
+0.72 restored, seed-2 mw iso 0.21->0.36 and mix_burst 0.43->0.67, no
+regressions (probe iso_all_mean 0.598->0.610). Bench: median
+0.4593->0.4672 (+0.0078, deterministic Pareto - mw median 0.354->0.382,
+other devices bit-identical, p10 +0.0003, transfer -0.0004), under the
++0.01 keep bar -> discard per the pre-registered rule. Bundle patch:
+.auto/runs/b2_m3_dispute_durceil_switch.diff (157 lines; apply with
+git apply). Label note: session tags this 'm3' and the train-on-
+synthetic bet 'm4'; this file's milestone list (above) calls the
+train-on-synthetic pipeline 'm3' - same bet, one step earlier. Next:
+apply the patch + train-on-synthetic pipeline as ONE bundle against
+floor 0.4593 / bar 0.4693. Parked: seed-2 mix_burst wm->0.91 on mw
+spans (no scored-device gain - the wm is unscored there), seed-1
+mix_prog wm->0.60 on dw spans, dw collapse on seeds 6/7/8 (0.03) and
+wm volatility (0.135-0.17 on seeds 4/1/8) - the bottom of the seed
+distribution, m4-scale levers.
+
 ### Bench v3 + re-baseline (this segment, done first)
 bench_v3.py built: 10-seed median primary, p10 + device-median
 guardrails, transfer track frozen on GT usability (ukdale house_2 +

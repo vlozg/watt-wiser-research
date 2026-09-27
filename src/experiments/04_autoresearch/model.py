@@ -278,8 +278,16 @@ def _burst_event_bands(cal: dict, cad_s: float):
     amp >= 0.3 x segment p90 (drops background compressor/base events
     sitting in the roll pads), and band admission on the mark's own
     event distribution: amp [0.8 x min, 1.25 x max], dur [1/3 x min,
-    3 x max]. Returns None when fewer than two such events exist -
-    the caller then keeps the core-stats gate."""
+    3 x max(p50, max/2)]. The dur ceiling anchors on the population's
+    own chunk scale rather than its extreme: a merged multi-chunk event
+    (b2 probe: seed-2 kettle pastes extract one 294 s event at 2 kW
+    from a 60 s-chunk population) is a foreign structure, not a longer
+    draw, and 3 x max(durs) admitted it. max(p50, max/2) keeps the
+    ceiling at 3 x p50 for tight chunk populations (admitting every
+    observed chunk with headroom for extractor variance) while a
+    long-tailed population keeps at least 1.5 x its own max. Returns
+    None when fewer than two such events exist - the caller then keeps
+    the core-stats gate."""
     amps, durs = [], []
     for seg in cal['mains_seg']:
         s = np.asarray(seg, dtype='float32')
@@ -296,11 +304,29 @@ def _burst_event_bands(cal: dict, cad_s: float):
                 durs.append(dur_s)
     if len(amps) < 2:
         return None
+    dur_p50 = float(np.percentile(durs, 50))
+    dur_max = max(durs)
     return {'amp_lo': 0.8 * min(amps), 'amp_hi': 1.25 * max(amps),
             'dur_lo': REL_DUR[0] * min(durs),
-            'dur_hi': REL_DUR[1] * max(durs),
+            'dur_hi': REL_DUR[1] * max(dur_p50, 0.5 * dur_max),
             'amp_p50': float(np.percentile(amps, 50)),
-            'dur_p50': float(np.percentile(durs, 50))}
+            'dur_p50': dur_p50}
+
+
+def _gate_anchor_hw(dev: str, ev_band: dict, mark: dict):
+    """(amp anchor, amp half-width, dur anchor, dur half-width) of a
+    burst gate's admission band: the event population's p50 and band
+    when the fragmentation switch fired, else the mark core stats with
+    their REL_AMP / REL_DUR margins. The burst dispute compares events
+    against these so a disputed event lands in the population whose own
+    band it fits best."""
+    eb = ev_band.get(dev)
+    if eb is not None:
+        return (eb['amp_p50'], max(1.0, (eb['amp_hi'] - eb['amp_lo']) / 2.0),
+                eb['dur_p50'], max(1.0, (eb['dur_hi'] - eb['dur_lo']) / 2.0))
+    p = mark[dev]
+    return (p['amp'], REL_AMP * p['amp'],
+            p['dur_s'], (REL_DUR[1] - REL_DUR[0]) / 2.0 * p['dur_s'])
 
 
 def _dw30_grid(mains: np.ndarray, cad_s: float) -> np.ndarray:
@@ -425,6 +451,7 @@ def _dw30_profile(exc: np.ndarray, cal: dict, mark_dw: dict,
     else:
         merge_n = int(round(4200.0 / DW30_GRID_S))
     spans, p90s, means, hss, idles, denss = [], [], [], [], [], []
+    pres, posts = [], []
     for (lo_us, hi_us), (j0, j1) in zip(cal['marks_us'], per):
         merged = _merge_runs(_runs(exc[j0:j1] >= heat), merge_n)
         a, b = max(merged, key=lambda r: r[1] - r[0])
@@ -439,10 +466,25 @@ def _dw30_profile(exc: np.ndarray, cal: dict, mark_dw: dict,
         hss.append(float((seg >= heat).mean()))
         idles.append(float(np.median(below)) if len(below) else 0.0)
         denss.append(ne / (span_s / 60.0))
-    cycle_s = [(hi_us - lo_us) / 1e6 - 2.0 * roll_s
-               for lo_us, hi_us in cal['marks_us']]
-    ext_s = max(0.0, 0.5 * (float(np.mean(cycle_s))
-                            - float(np.mean(spans))))
+        # the mark window is the GT cycle plus roll pads, so the first
+        # heater block's offset from the window start IS the pre-heat
+        # phase (cycle start -> first heater block) and the tail after
+        # the run end is the post phase - both measured directly per
+        # mark (the mark jitter is +-30 s, the pad 60 s)
+        pres.append(a * DW30_GRID_S - roll_s)
+        posts.append(((j1 - j0) - b) * DW30_GRID_S - roll_s)
+    # onset geometry: the emitted dw onset must land on the GT cycle's
+    # mask rise (the fill valve), but the run starts at the first
+    # heater block with the pre-heat phase between. Backtrack by the
+    # MEDIAN per-mark pre-heat offset, robust to a contaminated mark
+    # whose stacked loads inflate the run span and deflate the old
+    # half-mean-gap estimate (run-67 diagnosis: seed 6 ext 7.7min vs
+    # seed 2026 9.3min pushed emitted onsets 606-642s late, outside
+    # the 600s matching tolerance, collapsing dw F1 to 0.03 on seeds
+    # 6/7/8 while the same raw runs passed every gate). Forward
+    # extension uses the median post phase symmetrically.
+    ext_back_s = max(0.0, float(np.median(pres)))
+    ext_fwd_s = max(0.0, float(np.median(posts)))
     prof = {'heat': heat,
             'merge_n': merge_n,
             'span_band': (0.6 * min(spans), 1.25 * max(spans)),
@@ -454,16 +496,118 @@ def _dw30_profile(exc: np.ndarray, cal: dict, mark_dw: dict,
             'hs_band': (0.75 * min(hss), 1.75 * max(hss)),
             'idle_hi': 2.0 * max(idles),
             'dens_hi': 2.0 * max(denss),
-            'ext6': int(round(ext_s / cad_s)),
+            'ext_back6': int(round(ext_back_s / cad_s)),
+            'ext_fwd6': int(round(ext_fwd_s / cad_s)),
+            'mark_pre_offs': pres,
+            'mark_post_offs': posts,
             'emit_w': mark_dw['mean_w']}
     print('   dw sustained profile: span=%.0f-%.0fmin amp>=%.0fW '
           'mean=%.0f-%.0fW hs=%.2f-%.2f idle<=%.0fW dens<=%.3f/min '
-          'heater_gap_merge=%dmin ext=%.1fmin'
+          'heater_gap_merge=%dmin ext_back=%.1fmin ext_fwd=%.1fmin '
+          'pre_offs=%s'
           % (prof['span_band'][0] / 60, prof['span_band'][1] / 60,
              prof['amp_lo'], prof['mean_band'][0], prof['mean_band'][1],
              prof['hs_band'][0], prof['hs_band'][1], prof['idle_hi'],
-             prof['dens_hi'], merge_n * DW30_GRID_S / 60, ext_s / 60))
+             prof['dens_hi'], merge_n * DW30_GRID_S / 60, ext_back_s / 60,
+             ext_fwd_s / 60,
+             ['%.1f' % (p / 60) for p in pres]))
     return prof
+
+
+def _dw_synth_onset_check(pre_mains: np.ndarray, cal: dict, prof: dict,
+                          cad_s: float, roll_s: float) -> None:
+    """m4 train-on-synthetic guard for the dw sustained emission. Paste
+    calibration dw mark slices into quiet pre-span background windows,
+    run the full dw30 pipeline (grid, event mining, run gates) on the
+    assembled synthetic mains, and compare each emitted onset with the
+    pasted cycle start (known: paste offset + roll pad; the +-30 s mark
+    jitter is the residual noise floor). Eval-free by construction:
+    pre-span aggregate + calib marks only. This check would have caught
+    the run-67 ext under-extension (seed 6 emitted onsets 606-642 s
+    late). A systematic median delta (|median| > 60 s) is corrected
+    once by shifting ext_back toward delta=0 (onsets centered on true
+    cycle starts), bounded to [0, 1800] s; pastes the gates reject are
+    reported, not corrected for (ext only shifts emissions of accepted
+    runs)."""
+    heat = prof['heat']
+    SYN_HEAD_S = 600.0
+    stride = max(1, int(round(DW30_GRID_S / cad_s)))
+    feed = (pd.Series(np.asarray(pre_mains, dtype='float32'))
+            .ffill(limit=FFILL_LIMIT).fillna(0.0).to_numpy(dtype='float32'))
+    pres = prof['mark_pre_offs']
+    med_pre = float(np.median(pres))
+    order = np.argsort(np.abs(np.asarray(pres) - med_pre))
+    pick = [int(i) for i in order[:3]]
+    segs = [np.asarray(cal['mains_seg'][i], dtype='float32') for i in pick]
+    # window must hold head + paste + a quiet tail >= the merge gap so
+    # consecutive pastes' heater runs cannot merge across pieces (a
+    # merged run would blow the span band and reject both pastes)
+    win_s = max(max(len(s) for s in segs) * cad_s + SYN_HEAD_S
+                + prof['merge_n'] * DW30_GRID_S + 900.0, 7500.0)
+    W = int(np.ceil(win_s / DW30_GRID_S))
+    exc = _dw30_grid(feed, cad_s)
+    cands = [r for r in _runs(exc < heat) if r[1] - r[0] >= W]
+    if not cands:
+        print('   dw synth onset check: no quiet window (%.0fmin) in the '
+              'pre span - skipped' % (win_s / 60))
+        return
+    idxs = sorted(set([0, len(cands) // 2, len(cands) - 1]))[:3]
+    pieces, expected = [], []
+    for k, ci in enumerate(idxs):
+        a_g = cands[ci][0]
+        piece = feed[a_g * stride:(a_g + W) * stride].copy()
+        seg = segs[k]
+        base = float(np.percentile(seg, 10))
+        h = int(SYN_HEAD_S / cad_s)
+        if h + len(seg) > len(piece):
+            continue
+        piece[h:h + len(seg)] += seg - base
+        pieces.append(piece)
+        # assembly-frame position: piece k starts at k*W grid steps
+        expected.append(k * W * DW30_GRID_S + SYN_HEAD_S + roll_s)
+    if len(pieces) < 2:
+        print('   dw synth onset check: only %d pastes fit - skipped'
+              % len(pieces))
+        return
+    syn = np.concatenate(pieces)
+    exc_s = _dw30_grid(syn, cad_s)
+    ev_on_s, _, _ = _extract_events(_roll_median(syn, SMOOTH_N), cad_s)
+    ev30_s = np.sort(ev_on_s // stride)
+    runs = _dw30_runs(exc_s, ev30_s, prof)
+
+    def _deltas(ext_back_s):
+        out = []
+        for on_s in expected:
+            best = None
+            for a30, b30 in runs:
+                d = abs(a30 * DW30_GRID_S - (on_s + ext_back_s))
+                if best is None or d < best[0]:
+                    best = (d, a30)
+            if best is None or best[0] > 2700.0:
+                out.append(None)
+            else:
+                out.append(best[1] * DW30_GRID_S - ext_back_s - on_s)
+        return out
+
+    got = _deltas(prof['ext_back6'] * cad_s)
+    labels = ['none' if d is None else '%+.0f' % d for d in got]
+    n_ok = sum(1 for d in got if d is not None)
+    if n_ok < 2:
+        print('   dw synth onset check: %d/%d pastes recovered by gates '
+              '(deltas %s) - no correction' % (n_ok, len(expected), labels))
+        return
+    med = float(np.median([d for d in got if d is not None]))
+    print('   dw synth onset check: emitted-vs-pasted onset deltas %s '
+          '(median %+.0fs)' % (labels, med))
+    if abs(med) <= 60.0:
+        return
+    old_b = prof['ext_back6'] * cad_s
+    new_b = float(np.clip(old_b + med, 0.0, 1800.0))
+    prof['ext_back6'] = int(round(new_b / cad_s))
+    labels2 = ['none' if d is None else '%+.0f' % d
+               for d in _deltas(prof['ext_back6'] * cad_s)]
+    print('   dw synth onset check: ext_back %.1f -> %.1f min; deltas '
+          'after %s' % (old_b / 60, new_b / 60, labels2))
 
 
 def _wm30_profile(exc: np.ndarray, cal: dict, mark_wm: dict,
@@ -619,6 +763,11 @@ def build_and_train(ctx: dict):
     # draw fragments in the extractor (duty-chunked magnetron), the
     # core-stats gate rejects every fragment - switch that device to
     # the mark's event distribution instead (see _burst_event_bands).
+    # The duration test is inclusive: an event population at exactly
+    # half the core duration (b2 probe seed 2: mw chunks p50 54 s vs
+    # core 108 s) is already the fragmented regime the switch exists
+    # for, and a strict comparison left that calibration on the core
+    # gate, whose amp band rejected the paste's low chunks outright.
     ev_band = {}
     for d in devices:
         if class_of[d] != 'burst':
@@ -626,7 +775,7 @@ def build_and_train(ctx: dict):
         eb = _burst_event_bands(ctx['calib'][d], cad_s)
         if eb is None:
             continue
-        if (eb['dur_p50'] < 0.5 * mark[d]['dur_s']
+        if (eb['dur_p50'] <= 0.5 * mark[d]['dur_s']
                 or eb['amp_p50'] < 0.7 * mark[d]['amp']):
             ev_band[d] = eb
             print(f'   {d} mark draw fragments in the extractor '
@@ -657,6 +806,9 @@ def build_and_train(ctx: dict):
                          mark['dishwasher'], mark['washing_machine']['amp'],
                          roll_s, ev30, int(ctx['pre']['ts_us'][0]), cad_s)
     if dw30 is not None:
+        _dw_synth_onset_check(ctx['pre']['mains'],
+                              ctx['calib']['dishwasher'], dw30,
+                              cad_s, roll_s)
         dw_runs = _dw30_runs(exc30, ev30, dw30)
         print(f'   dw sustained runs: {len(dw_runs)} pass run-basis '
               f'gates ({len(dw_runs) / days:.3f}/day)')
@@ -906,10 +1058,10 @@ def build_and_train(ctx: dict):
         dur = (off - on) * cad_s
 
         # 0) dw sustained runs (see _dw30_runs): emit the run span
-        # extended by the mark-derived ext on each side so onsets stay
-        # inside the 600 s matching tolerance of the GT cycle's mask
-        # rise (the run starts at the first heater block; the GT cycle
-        # starts at the fill valve).
+        # backtracked by the median pre-heat offset and forward-
+        # extended by the median post phase so the emitted onset lands
+        # on the GT cycle's mask rise (the run starts at the first
+        # heater block; the GT cycle starts at the fill valve).
         stride = max(1, int(round(DW30_GRID_S / cad_s)))
         if dw30 is not None or ket_prof is not None                 or wm30 is not None or fridge_band is not None:
             exc_e = _dw30_grid(f, cad_s)
@@ -919,8 +1071,8 @@ def build_and_train(ctx: dict):
         if dw30 is not None:
             for a30, b30 in _dw30_runs(exc_e, ev30_e, dw30):
                 dw_owned6.append((stride * a30, stride * b30))
-                i0 = max(0, stride * a30 - dw30['ext6'])
-                i1 = min(len(f), stride * b30 + dw30['ext6'])
+                i0 = max(0, stride * a30 - dw30['ext_back6'])
+                i1 = min(len(f), stride * b30 + dw30['ext_fwd6'])
                 seg = out['dishwasher'][i0:i1]
                 out['dishwasher'][i0:i1] = np.maximum(
                     seg, dw30['emit_w'])
@@ -992,14 +1144,23 @@ def build_and_train(ctx: dict):
         # classification stays chain-blind.
         eb = ev_band.get('kettle')
         if eb is not None:
-            ok = ((amp >= eb['amp_lo']) & (amp <= eb['amp_hi'])
-                  & (dur >= eb['dur_lo']) & (dur <= eb['dur_hi']))
+            ket_ok = ((amp >= eb['amp_lo']) & (amp <= eb['amp_hi'])
+                      & (dur >= eb['dur_lo']) & (dur <= eb['dur_hi']))
         else:
             p = mark['kettle']
             dr = dur_ref.get('kettle', p['dur_s'])
-            ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
-                  & (dur >= REL_DUR[0] * dr) & (dur <= REL_DUR[1] * dr))
-        ket_ok_idx = np.flatnonzero(ok)
+            ket_ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
+                      & (dur >= REL_DUR[0] * dr) & (dur <= REL_DUR[1] * dr))
+        # ownership for the sustained-run path uses the pre-resolution
+        # mask: an event that fits the kettle band blocks a sustained
+        # kettle run even if the burst dispute assigns it elsewhere
+        ket_ok_idx = np.flatnonzero(ket_ok)
+        # The kettle keeps every event its gate admits: disputed events
+        # sit inside kettle paste spans (its draws are the higher-amp
+        # population), so taking them away costs recall on real draws,
+        # while leaving them costs the mw only a short false-positive
+        # span. The dispute below therefore only decides whether the mw
+        # also emits.
         for k in ket_ok_idx:
             i0 = int(k)
             seg = out['kettle'][on[i0]:off[i0]]
@@ -1014,17 +1175,43 @@ def build_and_train(ctx: dict):
         # but whose event duration fails this one.
         eb = ev_band.get('microwave')
         if eb is not None:
-            ok = ((amp >= eb['amp_lo']) & (amp <= eb['amp_hi'])
-                  & ~ev_in_named
-                  & (dur >= eb['dur_lo']) & (dur <= eb['dur_hi']))
+            mw_ok = ((amp >= eb['amp_lo']) & (amp <= eb['amp_hi'])
+                     & ~ev_in_named
+                     & (dur >= eb['dur_lo']) & (dur <= eb['dur_hi']))
         else:
             p = mark['microwave']
             mw_dr = p['dur_s']
-            ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
-                  & ~ev_in_named
-                  & (dur >= REL_DUR[0] * mw_dr)
-                  & (dur <= REL_DUR[1] * mw_dr))
-        for k in np.flatnonzero(ok):
+            mw_ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
+                     & ~ev_in_named
+                     & (dur >= REL_DUR[0] * mw_dr)
+                     & (dur <= REL_DUR[1] * mw_dr))
+        # 2b) burst conflict resolution, mw side only: kettle and mw
+        # admission bands overlap in (amp, dur) space, so one event can
+        # fit both gates (b2 synthetic probe: seed 1's mw event band
+        # admitted a 2.1 kW kettle chunk). Suppress the mw on a disputed
+        # event when the kettle population fits it better, judged by the
+        # event's (amp, dur) distance from each gate's anchor (mark core
+        # stats, or the event population's p50 when the fragmentation
+        # switch fired), each normalized by that gate's admission-band
+        # half-width and summed. Band-relative z matters because the
+        # populations differ in spread: a raw amp distance hands a
+        # low-scale kettle chunk to mw (its anchor sits numerically
+        # closer), while a band-relative fit keeps the mw off it, and
+        # the same rule keeps a high-scale mw chunk in mw where a raw
+        # distance would hand it to kettle.
+        if (ket_ok & mw_ok).any():
+            ka, kh, kd, kdh = _gate_anchor_hw('kettle', ev_band, mark)
+            ma, mh, md, mdh = _gate_anchor_hw('microwave', ev_band, mark)
+            ket_z = (np.abs(amp - ka) / kh
+                     + np.abs(dur - kd) / kdh)
+            mw_z = (np.abs(amp - ma) / mh
+                    + np.abs(dur - md) / mdh)
+            dispute = ket_ok & mw_ok
+            mw_ok = mw_ok & ~(dispute & (ket_z <= mw_z))
+        for k in np.flatnonzero(mw_ok):
+            i0 = int(k)
+            seg = out['microwave'][on[i0]:off[i0]]
+            out['microwave'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
             i0 = int(k)
             seg = out['microwave'][on[i0]:off[i0]]
             out['microwave'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])

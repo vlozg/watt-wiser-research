@@ -1,0 +1,157 @@
+diff --git a/src/experiments/04_autoresearch/model.py b/src/experiments/04_autoresearch/model.py
+index 1b45df4..c2493c7 100644
+--- a/src/experiments/04_autoresearch/model.py
++++ b/src/experiments/04_autoresearch/model.py
+@@ -278,8 +278,16 @@ def _burst_event_bands(cal: dict, cad_s: float):
+     amp >= 0.3 x segment p90 (drops background compressor/base events
+     sitting in the roll pads), and band admission on the mark's own
+     event distribution: amp [0.8 x min, 1.25 x max], dur [1/3 x min,
+-    3 x max]. Returns None when fewer than two such events exist -
+-    the caller then keeps the core-stats gate."""
++    3 x max(p50, max/2)]. The dur ceiling anchors on the population's
++    own chunk scale rather than its extreme: a merged multi-chunk event
++    (b2 probe: seed-2 kettle pastes extract one 294 s event at 2 kW
++    from a 60 s-chunk population) is a foreign structure, not a longer
++    draw, and 3 x max(durs) admitted it. max(p50, max/2) keeps the
++    ceiling at 3 x p50 for tight chunk populations (admitting every
++    observed chunk with headroom for extractor variance) while a
++    long-tailed population keeps at least 1.5 x its own max. Returns
++    None when fewer than two such events exist - the caller then keeps
++    the core-stats gate."""
+     amps, durs = [], []
+     for seg in cal['mains_seg']:
+         s = np.asarray(seg, dtype='float32')
+@@ -296,11 +304,29 @@ def _burst_event_bands(cal: dict, cad_s: float):
+                 durs.append(dur_s)
+     if len(amps) < 2:
+         return None
++    dur_p50 = float(np.percentile(durs, 50))
++    dur_max = max(durs)
+     return {'amp_lo': 0.8 * min(amps), 'amp_hi': 1.25 * max(amps),
+             'dur_lo': REL_DUR[0] * min(durs),
+-            'dur_hi': REL_DUR[1] * max(durs),
++            'dur_hi': REL_DUR[1] * max(dur_p50, 0.5 * dur_max),
+             'amp_p50': float(np.percentile(amps, 50)),
+-            'dur_p50': float(np.percentile(durs, 50))}
++            'dur_p50': dur_p50}
++
++
++def _gate_anchor_hw(dev: str, ev_band: dict, mark: dict):
++    """(amp anchor, amp half-width, dur anchor, dur half-width) of a
++    burst gate's admission band: the event population's p50 and band
++    when the fragmentation switch fired, else the mark core stats with
++    their REL_AMP / REL_DUR margins. The burst dispute compares events
++    against these so a disputed event lands in the population whose own
++    band it fits best."""
++    eb = ev_band.get(dev)
++    if eb is not None:
++        return (eb['amp_p50'], max(1.0, (eb['amp_hi'] - eb['amp_lo']) / 2.0),
++                eb['dur_p50'], max(1.0, (eb['dur_hi'] - eb['dur_lo']) / 2.0))
++    p = mark[dev]
++    return (p['amp'], REL_AMP * p['amp'],
++            p['dur_s'], (REL_DUR[1] - REL_DUR[0]) / 2.0 * p['dur_s'])
+ 
+ 
+ def _dw30_grid(mains: np.ndarray, cad_s: float) -> np.ndarray:
+@@ -619,6 +645,11 @@ def build_and_train(ctx: dict):
+     # draw fragments in the extractor (duty-chunked magnetron), the
+     # core-stats gate rejects every fragment - switch that device to
+     # the mark's event distribution instead (see _burst_event_bands).
++    # The duration test is inclusive: an event population at exactly
++    # half the core duration (b2 probe seed 2: mw chunks p50 54 s vs
++    # core 108 s) is already the fragmented regime the switch exists
++    # for, and a strict comparison left that calibration on the core
++    # gate, whose amp band rejected the paste's low chunks outright.
+     ev_band = {}
+     for d in devices:
+         if class_of[d] != 'burst':
+@@ -626,7 +657,7 @@ def build_and_train(ctx: dict):
+         eb = _burst_event_bands(ctx['calib'][d], cad_s)
+         if eb is None:
+             continue
+-        if (eb['dur_p50'] < 0.5 * mark[d]['dur_s']
++        if (eb['dur_p50'] <= 0.5 * mark[d]['dur_s']
+                 or eb['amp_p50'] < 0.7 * mark[d]['amp']):
+             ev_band[d] = eb
+             print(f'   {d} mark draw fragments in the extractor '
+@@ -992,14 +1023,23 @@ def build_and_train(ctx: dict):
+         # classification stays chain-blind.
+         eb = ev_band.get('kettle')
+         if eb is not None:
+-            ok = ((amp >= eb['amp_lo']) & (amp <= eb['amp_hi'])
+-                  & (dur >= eb['dur_lo']) & (dur <= eb['dur_hi']))
++            ket_ok = ((amp >= eb['amp_lo']) & (amp <= eb['amp_hi'])
++                      & (dur >= eb['dur_lo']) & (dur <= eb['dur_hi']))
+         else:
+             p = mark['kettle']
+             dr = dur_ref.get('kettle', p['dur_s'])
+-            ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
+-                  & (dur >= REL_DUR[0] * dr) & (dur <= REL_DUR[1] * dr))
+-        ket_ok_idx = np.flatnonzero(ok)
++            ket_ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
++                      & (dur >= REL_DUR[0] * dr) & (dur <= REL_DUR[1] * dr))
++        # ownership for the sustained-run path uses the pre-resolution
++        # mask: an event that fits the kettle band blocks a sustained
++        # kettle run even if the burst dispute assigns it elsewhere
++        ket_ok_idx = np.flatnonzero(ket_ok)
++        # The kettle keeps every event its gate admits: disputed events
++        # sit inside kettle paste spans (its draws are the higher-amp
++        # population), so taking them away costs recall on real draws,
++        # while leaving them costs the mw only a short false-positive
++        # span. The dispute below therefore only decides whether the mw
++        # also emits.
+         for k in ket_ok_idx:
+             i0 = int(k)
+             seg = out['kettle'][on[i0]:off[i0]]
+@@ -1014,17 +1054,43 @@ def build_and_train(ctx: dict):
+         # but whose event duration fails this one.
+         eb = ev_band.get('microwave')
+         if eb is not None:
+-            ok = ((amp >= eb['amp_lo']) & (amp <= eb['amp_hi'])
+-                  & ~ev_in_named
+-                  & (dur >= eb['dur_lo']) & (dur <= eb['dur_hi']))
++            mw_ok = ((amp >= eb['amp_lo']) & (amp <= eb['amp_hi'])
++                     & ~ev_in_named
++                     & (dur >= eb['dur_lo']) & (dur <= eb['dur_hi']))
+         else:
+             p = mark['microwave']
+             mw_dr = p['dur_s']
+-            ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
+-                  & ~ev_in_named
+-                  & (dur >= REL_DUR[0] * mw_dr)
+-                  & (dur <= REL_DUR[1] * mw_dr))
+-        for k in np.flatnonzero(ok):
++            mw_ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
++                     & ~ev_in_named
++                     & (dur >= REL_DUR[0] * mw_dr)
++                     & (dur <= REL_DUR[1] * mw_dr))
++        # 2b) burst conflict resolution, mw side only: kettle and mw
++        # admission bands overlap in (amp, dur) space, so one event can
++        # fit both gates (b2 synthetic probe: seed 1's mw event band
++        # admitted a 2.1 kW kettle chunk). Suppress the mw on a disputed
++        # event when the kettle population fits it better, judged by the
++        # event's (amp, dur) distance from each gate's anchor (mark core
++        # stats, or the event population's p50 when the fragmentation
++        # switch fired), each normalized by that gate's admission-band
++        # half-width and summed. Band-relative z matters because the
++        # populations differ in spread: a raw amp distance hands a
++        # low-scale kettle chunk to mw (its anchor sits numerically
++        # closer), while a band-relative fit keeps the mw off it, and
++        # the same rule keeps a high-scale mw chunk in mw where a raw
++        # distance would hand it to kettle.
++        if (ket_ok & mw_ok).any():
++            ka, kh, kd, kdh = _gate_anchor_hw('kettle', ev_band, mark)
++            ma, mh, md, mdh = _gate_anchor_hw('microwave', ev_band, mark)
++            ket_z = (np.abs(amp - ka) / kh
++                     + np.abs(dur - kd) / kdh)
++            mw_z = (np.abs(amp - ma) / mh
++                    + np.abs(dur - md) / mdh)
++            dispute = ket_ok & mw_ok
++            mw_ok = mw_ok & ~(dispute & (ket_z <= mw_z))
++        for k in np.flatnonzero(mw_ok):
++            i0 = int(k)
++            seg = out['microwave'][on[i0]:off[i0]]
++            out['microwave'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
+             i0 = int(k)
+             seg = out['microwave'][on[i0]:off[i0]]
+             out['microwave'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
