@@ -628,23 +628,31 @@ def _wm30_profile(exc: np.ndarray, cal: dict, mark_wm: dict,
     the run needs a small back-extension to the mask rise and a large
     forward one to the cycle end - the dw30 symmetric half-gap
     extension would place the onset half a cycle early. The merge gap
-    is 1.25x the marks' max intra-window heater gap."""
+    is 1.25x the marks' max intra-window heater gap. A mark window whose
+    excitation never crosses the heater threshold says nothing about the
+    detector bands - it is skipped rather than disabling the detector
+    outright; with fewer than 2 usable windows the bands would hang off
+    a single sample and the detector stays disabled."""
     heat = PROG_HEAT_AMP_FRAC * min(mark_wm['amp'], dw_amp)
     pad_n = int(round(roll_s / DW30_GRID_S))
     per = []
     max_gap = 0.0
-    for lo_us, hi_us in cal['marks_us']:
+    for w_i, (lo_us, hi_us) in enumerate(cal['marks_us']):
         j0 = max(0, int((lo_us - t0_us) / 1e6 / DW30_GRID_S))
         j1 = max(j0 + 2, int((hi_us - t0_us) / 1e6 / DW30_GRID_S))
         blocks = _runs(exc[j0:j1] >= heat)
         if not blocks:
-            print('   wm sustained profile: a mark window has no heater '
-                  'blocks; sustained detector disabled')
-            return None
+            print('   wm sustained profile: mark window %d has no heater '
+                  'blocks; skipped' % w_i)
+            continue
         for k in range(len(blocks) - 1):
             max_gap = max(max_gap, (blocks[k + 1][0] - blocks[k][1])
                           * DW30_GRID_S)
         per.append((j0, j1))
+    if len(per) < 2:
+        print('   wm sustained profile: fewer than 2 usable mark windows; '
+              'sustained detector disabled')
+        return None
     if max_gap > 0:
         merge_n = max(1, int(round(1.25 * max_gap / DW30_GRID_S)))
     else:
@@ -1067,10 +1075,8 @@ def build_and_train(ctx: dict):
             exc_e = _dw30_grid(f, cad_s)
         if dw30 is not None or wm30 is not None:
             ev30_e = np.sort(on // stride)
-        dw_owned6 = []
         if dw30 is not None:
             for a30, b30 in _dw30_runs(exc_e, ev30_e, dw30):
-                dw_owned6.append((stride * a30, stride * b30))
                 i0 = max(0, stride * a30 - dw30['ext_back6'])
                 i1 = min(len(f), stride * b30 + dw30['ext_fwd6'])
                 seg = out['dishwasher'][i0:i1]
@@ -1111,19 +1117,20 @@ def build_and_train(ctx: dict):
         # by construction). Emission extends the run asymmetrically: a
         # small back-extension to the GT mask rise (the wm heats at the
         # cycle start) and a large forward one over the pump/spin tail
-        # that draws below the heater threshold. Runs inside dw30
-        # territory or a named program chain are already owned.
+        # that draws below the heater threshold. Named program chains
+        # still own their spans; the dw run-basis does not: the dw/wm
+        # mark bands can cross on wide-band calibrations (the dw marks'
+        # event density can exceed the wm marks' max, e.g. seed 4's dw
+        # dens ceiling 1.053/min vs the wm marks' 0.44), so no
+        # mark-derived rule can arbitrate a double claim - arbitration
+        # by emission order cost 8-19 real wm cycles per seed against
+        # ~1 extra wm false positive (m6 diag). Each device's own gates
+        # bear the precision burden, as the kettle already does at
+        # event level.
         if wm30 is not None:
             for a30, b30 in _dw30_runs(exc_e, ev30_e, wm30):
                 a6 = stride * a30
                 b6 = stride * b30
-                owned = False
-                for c0, c1 in dw_owned6:
-                    if c0 < b6 and a6 < c1:
-                        owned = True
-                        break
-                if owned:
-                    continue
                 dup = False
                 for c0, c1 in named_spans:
                     if c0 < b6 and a6 < c1:

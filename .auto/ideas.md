@@ -460,3 +460,38 @@ guardrails, transfer track frozen on GT usability (ukdale house_2 +
 house_5, REFIT house_5/3/2/9/20), smoothed-perfect + random-floor
 gates per pair, ctx.pretrain lazy pool, --confirm days 90-365.
 measure.sh switched. Re-baseline = the floor every bet must beat.
+
+### m5 verdict (run 69, discard; auto-reverted to run-68 state)
+**dw streak segmentation: synthetic pass, eval FP collapse.** Chain:
+scan-back refuted first (mark trace: dw pre-heat is electrically quiet,
+exc p50 -82..+54W vs bg 27W, below-thr frac 0.89-1.00 at 120-300W -
+per-cycle onset scanning has no signal; all 50 marks' pre-offsets mass
+at 17.5-19min with contaminated outliers -> median stands). Recall
+attribution: 12/28 GT episodes fail the SPAN gate on every seed inside
+raw merged runs of 8220-20880s. m5 segmented overlong runs at internal
+below-heat gaps (greedy pack to span-band max). Validator streak pass
+recovered 4-6/6 pasted-pair onsets; b2 probe mix_prog dw RECOVERED
+0.00->0.99 (2026) and 0.71->0.90 (seed 1); iso paths unchanged.
+Bench: median 0.494189->0.481489 (-0.0127), p10 -0.0160, dw device
+median 0.522727->0.448413 (-0.0743) despite gated-episode coverage
+RISING 14->19 (2026) / 16->24 (seed 7). Emission attribution (seed 7):
+63 emitted episodes, 19 matched (deltas ~0), 44 FP - the segmentation
+slabs fire at non-cycle onsets. ROOT CAUSE: eval monoliths are NOT
+clean consecutive dw cycles - they are dw cycles bridged with FOREIGN
+appliance activity (wm cross-fire) through the 70min merge gap. No
+mark-derived rule separates dw cycles from bridged foreign clusters:
+inter-cycle heater gaps 19-46min overlap intra-cycle wash gaps 20-56
+min; gap exc signatures seed-dependent (seed 1 pre-heat p50=99W is
+motor-like); cycle pitch drifts with unknown inter-cycle idle (0-27
+min). Synthetic validator is structurally blind (its streak = two
+CLEAN pasted dw marks). Side effect: wm30 profile consumes the dw run
+set for net-new candidates -> seed-1 wm ext_fwd 26.5->53.2min, wm
+median +0.0097 (luck). LESSON: any emission-shape change must be
+validated against REAL monolith structure, not clean synthetic paste
+pairs; wm30's dependence on the dw run set couples the devices.
+m6 candidates: (a) dw PRECISION lever - wm cross-fire runs pass dw
+gates (pre-existing ~14-17 FP/seed even at m4; dw is P-limited); (b)
+robust-mean variant for stacked-load episodes (5-7/seed, mean
+1057-2205 vs <=943, hs passes 0.17-0.19) - needs own diag; (c) wm
+residuals seeds 4/1/8 (0.135-0.17) - wm30 geometry diag; (d) parked:
+transfer dw overshoot (no per-cycle electrical signal in pre-heat).
