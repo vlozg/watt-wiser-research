@@ -31,6 +31,7 @@ Raised in owner review, 2026-09-20.
 ## Evidence so far
 
 - [none] — both forms are new with this review pass.
+- [reviewed] Natural-drift magnitude measured directly on the autoresearch substrate (2026 segment-1 terminal model, frozen seed-2026 calibration, UK-DALE house 1, 6 s cadence, cycle protocol v2): whole-cycle F1 collapses with time-since-calibration — out-of-time days 90–365 score 0.596/0.594, but the dishwasher falls to 0.017 in year 3. A calibrated profile degrades on its own house within 2–3 years; profiles need recalibration over time, and the drift form (b) is not optional polish but the mechanism that would trigger that recalibration. Owner-directed finding, recorded 2026 (autoresearch log runs 41–61, `.auto/`).
 - [quarantined] the old campaign ran an anomaly rung (`deprecated/baseline_runs/R6_anomaly/`) on the R1 residual (aggregate − always-on − attributed); unreviewed, recorded here as prior-art claim only [registry rule 1; recorded 2026-09-20 during the contradiction trace].
 - Related reviewed facts: per-class level/dwell/duty priors exist to build the drift statistics on [`00_overview.md` §6]; the 4-year UK-DALE house makes the natural-drift pre-study feasible.
 

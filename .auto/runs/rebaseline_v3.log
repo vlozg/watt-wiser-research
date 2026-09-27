@@ -1,0 +1,302 @@
+loading house_1 (cached) ...
+building model module ...
+   mark profiles: kettle amp=2477W dur=2.2min mean=2478W; microwave amp=1583W dur=0.8min mean=714W; fridge amp=50W dur=12.5min mean=292W; washing_machine amp=2240W dur=101.0min mean=936W dens=0.34-0.68/min; dishwasher amp=2164W dur=97.2min mean=497W dens=0.02-0.05/min
+   mined 19883 level-excursion events from 325 pre-span days
+   dw sustained profile: span=46-102min amp>=2107W mean=495-943W hs=0.20-0.61 idle<=144W dens<=0.184/min heater_gap_merge=70min ext=9.3min
+   dw sustained runs: 49 pass run-basis gates (0.151/day)
+   mined kettle cluster: n=984 dur_p50=2.0min (mark 2.2min)
+   mined microwave cluster: n=1606 dur_p50=2.7min (mark 0.8min)
+   mined program chains: 357 pass structure, named wm=139 dw=0
+   wm sustained profile: span=16-84min amp>=1914W mean=936-2568W hs=0.27-1.39 idle<=1936W dens=0.202-1.164/min heater_gap_merge=17min ext_back=3.0min ext_fwd=53.2min
+   wm sustained runs: 82 net-new candidates (0.252/day)
+   kettle sustained marks: 4/5 windows hold an isolated in-band run
+   kettle sustained runs: 236 net-new candidates (0.73/day)
+   fridge fallback: population band amp=54-105W dur=10-36min n=3977
+   fridge run-basis: 2386 net-new candidates (7.34/day)
+--- seed 2026: trained in 1.9s
+   mark profiles: kettle amp=2261W dur=2.3min mean=1947W; microwave amp=1486W dur=1.9min mean=450W; fridge amp=49W dur=23.5min mean=268W; washing_machine amp=2085W dur=93.6min mean=613W dens=0.31-0.52/min; dishwasher amp=2332W dur=98.3min mean=664W dens=0.05-0.53/min
+   mined 19883 level-excursion events from 325 pre-span days
+   dw sustained profile: span=46-116min amp>=2270W mean=511-1772W hs=0.20-0.76 idle<=571W dens<=1.161/min heater_gap_merge=69min ext=8.1min
+   dw sustained runs: 69 pass run-basis gates (0.212/day)
+   mined kettle cluster: n=1078 dur_p50=2.1min (mark 2.3min)
+   mined microwave cluster: n=1656 dur_p50=2.7min (mark 1.9min)
+   mined program chains: 357 pass structure, named wm=121 dw=0
+   wm sustained profile: span=11-115min amp>=1734W mean=775-1786W hs=0.18-0.98 idle<=2051W dens=0.235-1.022/min heater_gap_merge=49min ext_back=2.6min ext_fwd=26.5min
+   wm sustained runs: 77 net-new candidates (0.237/day)
+   kettle sustained marks: 2/5 windows hold an isolated in-band run
+   fridge fallback: population band amp=54-105W dur=10-36min n=3977
+   fridge run-basis: 1935 net-new candidates (5.95/day)
+--- seed 1: trained in 1.9s
+   mark profiles: kettle amp=2376W dur=2.4min mean=1018W; microwave amp=1592W dur=1.8min mean=1291W; fridge amp=30W dur=20.0min mean=30W; washing_machine amp=1813W dur=85.9min mean=668W dens=0.36-0.49/min; dishwasher amp=2164W dur=100.3min mean=604W dens=0.05-0.19/min
+   mined 19883 level-excursion events from 325 pre-span days
+   dw sustained profile: span=46-105min amp>=2166W mean=554-2014W hs=0.22-1.08 idle<=489W dens<=0.452/min heater_gap_merge=68min ext=9.2min
+   dw sustained runs: 75 pass run-basis gates (0.231/day)
+   mined kettle cluster: n=1028 dur_p50=2.1min (mark 2.4min)
+   mined microwave cluster: n=1602 dur_p50=2.7min (mark 1.8min)
+   mined program chains: 364 pass structure, named wm=93 dw=0
+   wm sustained profile: span=14-120min amp>=1764W mean=846-1750W hs=0.20-0.77 idle<=1548W dens=0.150-1.008/min heater_gap_merge=54min ext_back=3.0min ext_fwd=39.2min
+   wm sustained runs: 72 net-new candidates (0.221/day)
+   kettle sustained marks: 2/5 windows hold an isolated in-band run
+   fridge fallback: population band amp=54-105W dur=10-36min n=3977
+   fridge run-basis: 1800 net-new candidates (5.54/day)
+--- seed 2: trained in 1.9s
+   mark profiles: kettle amp=2386W dur=1.7min mean=2043W; microwave amp=1588W dur=0.8min mean=954W; fridge amp=30W dur=20.0min mean=30W; washing_machine amp=1933W dur=87.8min mean=606W dens=0.41-0.58/min; dishwasher amp=2125W dur=99.6min mean=537W dens=0.01-0.08/min
+   mined 19883 level-excursion events from 325 pre-span days
+   dw sustained profile: span=10-125min amp>=2282W mean=542-3123W hs=0.22-1.70 idle<=1038W dens<=0.160/min heater_gap_merge=68min ext=15.2min
+   dw sustained runs: 52 pass run-basis gates (0.160/day)
+   mined kettle cluster: n=1022 dur_p50=2.1min (mark 1.7min)
+   mined microwave cluster: n=1608 dur_p50=2.7min (mark 0.8min)
+   mined program chains: 359 pass structure, named wm=105 dw=0
+   wm sustained profile: span=18-97min amp>=1456W mean=510-2022W hs=0.09-1.09 idle<=1382W dens=0.324-1.265/min heater_gap_merge=52min ext_back=2.5min ext_fwd=30.5min
+   wm sustained runs: 53 net-new candidates (0.163/day)
+   kettle sustained marks: 3/5 windows hold an isolated in-band run
+   kettle sustained runs: 249 net-new candidates (0.77/day)
+   fridge fallback: population band amp=54-105W dur=10-36min n=3977
+   fridge run-basis: 1800 net-new candidates (5.54/day)
+--- seed 3: trained in 1.9s
+   mark profiles: kettle amp=2238W dur=1.6min mean=2033W; microwave amp=1533W dur=1.4min mean=238W; fridge amp=52W dur=10.3min mean=55W; washing_machine amp=1939W dur=88.4min mean=680W dens=0.39-0.56/min; dishwasher amp=2306W dur=96.2min mean=666W dens=0.04-0.36/min
+   mined 19883 level-excursion events from 325 pre-span days
+   dw sustained profile: span=46-106min amp>=2140W mean=600-2299W hs=0.22-1.25 idle<=1366W dens<=1.053/min heater_gap_merge=67min ext=9.2min
+   dw sustained runs: 98 pass run-basis gates (0.301/day)
+   mined kettle cluster: n=1084 dur_p50=2.1min (mark 1.6min)
+   mined microwave cluster: n=1636 dur_p50=2.7min (mark 1.4min)
+   mined program chains: 359 pass structure, named wm=50 dw=0
+   wm sustained profile: span=22-104min amp>=1704W mean=702-2022W hs=0.13-1.09 idle<=1382W dens=0.191-1.102/min heater_gap_merge=52min ext_back=2.3min ext_fwd=27.1min
+   wm sustained runs: 73 net-new candidates (0.225/day)
+   kettle sustained marks: 1/4 windows hold an isolated in-band run
+   fridge fallback: population band amp=54-105W dur=10-36min n=3977
+   fridge run-basis: 2594 net-new candidates (7.98/day)
+--- seed 4: trained in 1.9s
+   mark profiles: kettle amp=2220W dur=2.1min mean=2063W; microwave amp=1564W dur=2.0min mean=791W; fridge amp=324W dur=98.8min mean=379W; washing_machine amp=2221W dur=92.8min mean=677W dens=0.36-0.68/min; dishwasher amp=2220W dur=99.6min mean=563W dens=0.02-0.06/min
+   mined 19883 level-excursion events from 325 pre-span days
+   dw sustained profile: span=46-105min amp>=2250W mean=543-1026W hs=0.21-0.65 idle<=92W dens<=0.130/min heater_gap_merge=69min ext=9.2min
+   dw sustained runs: 31 pass run-basis gates (0.095/day)
+   mined kettle cluster: n=1097 dur_p50=2.1min (mark 2.1min)
+   mined microwave cluster: n=1626 dur_p50=2.7min (mark 2.0min)
+   mined program chains: 356 pass structure, named wm=130 dw=0
+   wm sustained profile: span=16-120min amp>=1657W mean=892-2152W hs=0.27-1.03 idle<=2316W dens=0.267-1.180/min heater_gap_merge=60min ext_back=2.8min ext_fwd=45.3min
+   wm sustained runs: 50 net-new candidates (0.154/day)
+   kettle sustained marks: 2/5 windows hold an isolated in-band run
+   fridge fallback: population band amp=54-105W dur=10-36min n=3977
+   fridge run-basis: 0 net-new candidates (0.00/day)
+--- seed 5: trained in 1.9s
+   mark profiles: kettle amp=2344W dur=2.3min mean=2143W; microwave amp=1658W dur=1.2min mean=1248W; fridge amp=30W dur=20.0min mean=30W; washing_machine amp=2248W dur=96.2min mean=830W dens=0.29-0.63/min; dishwasher amp=2238W dur=99.8min mean=566W dens=0.04-0.26/min
+   mined 19883 level-excursion events from 325 pre-span days
+   dw sustained profile: span=48-122min amp>=2166W mean=599-1826W hs=0.25-0.83 idle<=1167W dens<=0.615/min heater_gap_merge=67min ext=7.7min
+   dw sustained runs: 93 pass run-basis gates (0.286/day)
+   mined kettle cluster: n=1039 dur_p50=2.1min (mark 2.3min)
+   mined microwave cluster: n=1565 dur_p50=2.8min (mark 1.2min)
+   mined program chains: 356 pass structure, named wm=109 dw=0
+   wm sustained profile: span=17-183min amp>=1802W mean=687-2199W hs=0.19-0.91 idle<=1806W dens=0.188-1.297/min heater_gap_merge=81min ext_back=3.2min ext_fwd=36.4min
+   wm sustained runs: 42 net-new candidates (0.129/day)
+   kettle sustained marks: 1/5 windows hold an isolated in-band run
+   fridge fallback: population band amp=54-105W dur=10-36min n=3977
+   fridge run-basis: 1800 net-new candidates (5.54/day)
+--- seed 6: trained in 2.0s
+   mark profiles: kettle amp=2458W dur=1.5min mean=2161W; microwave amp=1569W dur=1.8min mean=560W; fridge amp=58W dur=17.5min mean=57W; washing_machine amp=2133W dur=103.6min mean=559W dens=0.39-0.67/min; dishwasher amp=2268W dur=96.5min mean=595W dens=0.04-0.32/min
+   mined 19883 level-excursion events from 325 pre-span days
+   dw sustained profile: span=46-106min amp>=2253W mean=554-2470W hs=0.22-1.08 idle<=1360W dens<=0.729/min heater_gap_merge=68min ext=7.1min
+   dw sustained runs: 71 pass run-basis gates (0.218/day)
+   mined kettle cluster: n=999 dur_p50=2.0min (mark 1.5min)
+   mined microwave cluster: n=1623 dur_p50=2.7min (mark 1.8min)
+   mined program chains: 357 pass structure, named wm=123 dw=0
+   wm sustained profile: span=15-183min amp>=1904W mean=687-2190W hs=0.20-1.18 idle<=1604W dens=0.235-1.297/min heater_gap_merge=81min ext_back=2.9min ext_fwd=50.1min
+   wm sustained runs: 36 net-new candidates (0.111/day)
+   kettle sustained marks: 3/5 windows hold an isolated in-band run
+   kettle sustained runs: 298 net-new candidates (0.92/day)
+   fridge fallback: population band amp=54-105W dur=10-36min n=3977
+   fridge run-basis: 2246 net-new candidates (6.91/day)
+--- seed 7: trained in 2.0s
+   mark profiles: kettle amp=2375W dur=2.0min mean=2355W; microwave amp=1711W dur=1.1min mean=859W; fridge amp=30W dur=20.0min mean=30W; washing_machine amp=1818W dur=86.4min mean=553W dens=0.08-0.57/min; dishwasher amp=2086W dur=96.2min mean=504W dens=0.02-0.33/min
+   mined 19883 level-excursion events from 325 pre-span days
+   dw sustained profile: span=46-106min amp>=2166W mean=543-2470W hs=0.21-1.09 idle<=1357W dens<=0.729/min heater_gap_merge=69min ext=7.5min
+   dw sustained runs: 93 pass run-basis gates (0.286/day)
+   mined kettle cluster: n=1029 dur_p50=2.1min (mark 2.0min)
+   mined microwave cluster: n=1540 dur_p50=2.8min (mark 1.1min)
+   mined program chains: 364 pass structure, named wm=156 dw=0
+   wm sustained profile: a mark window has no heater blocks; sustained detector disabled
+   kettle sustained marks: 4/5 windows hold an isolated in-band run
+   kettle sustained runs: 238 net-new candidates (0.73/day)
+   fridge fallback: population band amp=54-105W dur=10-36min n=3977
+   fridge run-basis: 1800 net-new candidates (5.54/day)
+--- seed 8: trained in 2.1s
+   mark profiles: kettle amp=2512W dur=1.6min mean=1847W; microwave amp=1786W dur=1.2min mean=1356W; fridge amp=30W dur=20.0min mean=30W; washing_machine amp=1933W dur=91.1min mean=660W dens=0.28-0.65/min; dishwasher amp=2215W dur=99.4min mean=624W dens=0.01-0.29/min
+   mined 19883 level-excursion events from 325 pre-span days
+   dw sustained profile: span=46-117min amp>=2232W mean=534-1196W hs=0.22-0.63 idle<=540W dens<=0.410/min heater_gap_merge=68min ext=7.9min
+   dw sustained runs: 62 pass run-basis gates (0.191/day)
+   mined kettle cluster: n=971 dur_p50=2.0min (mark 1.6min)
+   mined microwave cluster: n=1469 dur_p50=2.9min (mark 1.2min)
+   mined program chains: 359 pass structure, named wm=114 dw=0
+   wm sustained profile: span=11-118min amp>=1601W mean=659-1716W hs=0.15-0.89 idle<=1368W dens=0.270-1.433/min heater_gap_merge=31min ext_back=2.7min ext_fwd=37.0min
+   wm sustained runs: 94 net-new candidates (0.289/day)
+   kettle sustained marks: 2/5 windows hold an isolated in-band run
+   fridge fallback: population band amp=54-105W dur=10-36min n=3977
+   fridge run-basis: 1800 net-new candidates (5.54/day)
+--- seed 9: trained in 1.9s
+    seed 2026: mean_f1=0.5897 kettle=0.779 microwave=0.362 fridge=0.519 washing_machine=0.622 dishwasher=0.667
+    seed 1: mean_f1=0.3750 kettle=0.639 microwave=0.265 fridge=0.527 washing_machine=0.169 dishwasher=0.275
+    seed 2: mean_f1=0.4948 kettle=0.647 microwave=0.306 fridge=0.514 washing_machine=0.430 dishwasher=0.577
+    seed 3: mean_f1=0.4968 kettle=0.757 microwave=0.358 fridge=0.514 washing_machine=0.446 dishwasher=0.409
+    seed 4: mean_f1=0.4261 kettle=0.638 microwave=0.310 fridge=0.511 washing_machine=0.155 dishwasher=0.516
+    seed 5: mean_f1=0.4649 kettle=0.638 microwave=0.268 fridge=0.428 washing_machine=0.503 dishwasher=0.486
+    seed 6: mean_f1=0.3676 kettle=0.644 microwave=0.319 fridge=0.514 washing_machine=0.328 dishwasher=0.032
+    seed 7: mean_f1=0.3765 kettle=0.766 microwave=0.309 fridge=0.503 washing_machine=0.269 dishwasher=0.036
+    seed 8: mean_f1=0.3510 kettle=0.753 microwave=0.335 fridge=0.514 washing_machine=0.119 dishwasher=0.033
+    seed 9: mean_f1=0.4169 kettle=0.658 microwave=0.325 fridge=0.514 washing_machine=0.360 dishwasher=0.227
+
+house_1 v3 primary (median over 10 seeds): 0.421473
+  seed means: [0.5897, 0.375, 0.4948, 0.4968, 0.4261, 0.4649, 0.3676, 0.3765, 0.351, 0.4169]
+  p10=0.365932
+  median kettle: 0.6528
+  median microwave: 0.3146
+  median fridge: 0.5143
+  median washing_machine: 0.3439
+  median dishwasher: 0.3418
+
+METRIC mean_device_f1=0.421473
+METRIC mean_device_f1_p10=0.365932
+METRIC median_kettle_f1=0.652755
+METRIC median_microwave_f1=0.314592
+METRIC median_fridge_f1=0.514299
+METRIC median_washing_machine_f1=0.343919
+METRIC median_dishwasher_f1=0.341800
+METRIC calib_seed2026_mean_device_f1=0.589654
+METRIC calib_seed1_mean_device_f1=0.375008
+METRIC calib_seed2_mean_device_f1=0.494813
+METRIC calib_seed3_mean_device_f1=0.496826
+METRIC calib_seed4_mean_device_f1=0.426054
+METRIC calib_seed5_mean_device_f1=0.464869
+METRIC calib_seed6_mean_device_f1=0.367587
+METRIC calib_seed7_mean_device_f1=0.376510
+METRIC calib_seed8_mean_device_f1=0.351036
+METRIC calib_seed9_mean_device_f1=0.416892
+
+=== transfer track ===
+--- transfer ukdale/house_2: devices=['dishwasher', 'kettle', 'microwave']
+   GATE ukdale/house_2/kettle: smoothed_perfect=0.998 floor=0.000 n_gt=237 -> ok
+    kettle           transfer_f1(median seeds)=0.1474
+   GATE ukdale/house_2/microwave: smoothed_perfect=1.000 floor=0.000 n_gt=113 -> ok
+    microwave        transfer_f1(median seeds)=0.3757
+   GATE ukdale/house_2/dishwasher: smoothed_perfect=1.000 floor=0.000 n_gt=40 -> ok
+    dishwasher       transfer_f1(median seeds)=0.0000
+--- transfer ukdale/house_5: devices=['dishwasher', 'fridge', 'washing_machine']
+   GATE ukdale/house_5/fridge: smoothed_perfect=0.906 floor=0.001 n_gt=942 -> ok
+    fridge           transfer_f1(median seeds)=0.1436
+   GATE ukdale/house_5/washing_machine: smoothed_perfect=1.000 floor=0.000 n_gt=26 -> ok
+    washing_machine  transfer_f1(median seeds)=0.1193
+   GATE ukdale/house_5/dishwasher: smoothed_perfect=1.000 floor=0.000 n_gt=9 -> ok
+    dishwasher       transfer_f1(median seeds)=0.1333
+   refit/house_5 dishwasher: 107 eval cycles (dishwasher)
+   refit/house_5 fridge: 4407 eval cycles (fridge)
+   refit/house_5 kettle: 493 eval cycles (kettle)
+   refit/house_5 microwave: 307 eval cycles (microwave)
+   refit/house_5 washing_machine: 117 eval cycles (washing_machine)
+--- transfer refit/house_5: devices=['dishwasher', 'fridge', 'kettle', 'microwave', 'washing_machine']
+   GATE refit/house_5/dishwasher: smoothed_perfect=1.000 floor=0.000 n_gt=107 -> ok
+    dishwasher       transfer_f1(median seeds)=0.0166
+   GATE refit/house_5/fridge: smoothed_perfect=0.919 floor=0.000 n_gt=4407 -> ok
+    fridge           transfer_f1(median seeds)=0.2335
+   GATE refit/house_5/kettle: smoothed_perfect=0.987 floor=0.000 n_gt=493 -> ok
+    kettle           transfer_f1(median seeds)=0.5243
+   GATE refit/house_5/microwave: smoothed_perfect=0.944 floor=0.000 n_gt=307 -> ok
+    microwave        transfer_f1(median seeds)=0.0234
+   GATE refit/house_5/washing_machine: smoothed_perfect=0.945 floor=0.000 n_gt=117 -> ok
+    washing_machine  transfer_f1(median seeds)=0.0658
+   refit/house_3 dishwasher: 144 eval cycles (dishwasher)
+   refit/house_3 fridge: 2189 eval cycles (fridge+fridge_2)
+   refit/house_3 kettle: 588 eval cycles (kettle)
+   refit/house_3 microwave: 148 eval cycles (microwave)
+   refit/house_3 washing_machine: 102 eval cycles (washing_machine)
+--- transfer refit/house_3: devices=['dishwasher', 'fridge', 'kettle', 'microwave', 'washing_machine']
+   GATE refit/house_3/dishwasher: smoothed_perfect=1.000 floor=0.000 n_gt=144 -> ok
+    dishwasher       transfer_f1(median seeds)=0.0000
+   GATE refit/house_3/fridge: smoothed_perfect=0.998 floor=0.000 n_gt=2189 -> ok
+    fridge           transfer_f1(median seeds)=0.0701
+   GATE refit/house_3/kettle: smoothed_perfect=0.984 floor=0.000 n_gt=588 -> ok
+    kettle           transfer_f1(median seeds)=0.3511
+   GATE refit/house_3/microwave: smoothed_perfect=1.000 floor=0.000 n_gt=148 -> ok
+    microwave        transfer_f1(median seeds)=0.0347
+   GATE refit/house_3/washing_machine: smoothed_perfect=0.995 floor=0.000 n_gt=102 -> ok
+    washing_machine  transfer_f1(median seeds)=0.0816
+   refit/house_2 dishwasher: 97 eval cycles (dishwasher)
+   refit/house_2 fridge: 1309 eval cycles (fridge)
+   refit/house_2 kettle: 568 eval cycles (kettle)
+   refit/house_2 microwave: 330 eval cycles (microwave)
+   refit/house_2 washing_machine: 71 eval cycles (washing_machine)
+--- transfer refit/house_2: devices=['dishwasher', 'fridge', 'kettle', 'microwave', 'washing_machine']
+   GATE refit/house_2/dishwasher: smoothed_perfect=0.969 floor=0.000 n_gt=97 -> ok
+    dishwasher       transfer_f1(median seeds)=0.0973
+   GATE refit/house_2/fridge: smoothed_perfect=0.998 floor=0.000 n_gt=1309 -> ok
+    fridge           transfer_f1(median seeds)=0.3754
+   GATE refit/house_2/kettle: smoothed_perfect=0.996 floor=0.000 n_gt=568 -> ok
+    kettle           transfer_f1(median seeds)=0.1105
+   GATE refit/house_2/microwave: smoothed_perfect=0.991 floor=0.000 n_gt=330 -> ok
+    microwave        transfer_f1(median seeds)=0.2545
+   GATE refit/house_2/washing_machine: smoothed_perfect=0.979 floor=0.000 n_gt=71 -> ok
+    washing_machine  transfer_f1(median seeds)=0.0539
+   refit/house_9 dishwasher: 58 eval cycles (dishwasher)
+   refit/house_9 fridge: 2501 eval cycles (fridge)
+   refit/house_9 kettle: 446 eval cycles (kettle)
+   refit/house_9 microwave: 34 eval cycles (microwave)
+   refit/house_9 washing_machine: 58 eval cycles (washing_machine+washing_machine_2)
+--- transfer refit/house_9: devices=['dishwasher', 'fridge', 'kettle', 'microwave', 'washing_machine']
+   GATE refit/house_9/dishwasher: smoothed_perfect=1.000 floor=0.000 n_gt=58 -> ok
+    dishwasher       transfer_f1(median seeds)=0.0000
+   GATE refit/house_9/fridge: smoothed_perfect=0.991 floor=0.000 n_gt=2501 -> ok
+    fridge           transfer_f1(median seeds)=0.1936
+   GATE refit/house_9/kettle: smoothed_perfect=0.992 floor=0.000 n_gt=446 -> ok
+    kettle           transfer_f1(median seeds)=0.2710
+   GATE refit/house_9/microwave: smoothed_perfect=0.985 floor=0.000 n_gt=34 -> ok
+    microwave        transfer_f1(median seeds)=0.0206
+   GATE refit/house_9/washing_machine: smoothed_perfect=0.991 floor=0.000 n_gt=58 -> ok
+    washing_machine  transfer_f1(median seeds)=0.0000
+   refit/house_20 dishwasher: 19 eval cycles (dishwasher)
+   refit/house_20 fridge: 1704 eval cycles (fridge+fridge_2)
+   refit/house_20 kettle: 261 eval cycles (kettle)
+   refit/house_20 microwave: 143 eval cycles (microwave)
+   refit/house_20 washing_machine: 28 eval cycles (washing_machine)
+--- transfer refit/house_20: devices=['dishwasher', 'fridge', 'kettle', 'microwave', 'washing_machine']
+   GATE refit/house_20/dishwasher: smoothed_perfect=1.000 floor=0.000 n_gt=19 -> ok
+    dishwasher       transfer_f1(median seeds)=0.1482
+   GATE refit/house_20/fridge: smoothed_perfect=0.984 floor=0.001 n_gt=1704 -> ok
+    fridge           transfer_f1(median seeds)=0.3315
+   GATE refit/house_20/kettle: smoothed_perfect=0.998 floor=0.000 n_gt=261 -> ok
+    kettle           transfer_f1(median seeds)=0.0286
+   GATE refit/house_20/microwave: smoothed_perfect=0.993 floor=0.000 n_gt=143 -> ok
+    microwave        transfer_f1(median seeds)=0.2376
+   GATE refit/house_20/washing_machine: smoothed_perfect=0.982 floor=0.000 n_gt=28 -> ok
+    washing_machine  transfer_f1(median seeds)=0.0887
+transfer mean over 31 device-house pairs: 0.1462
+METRIC transfer_mean_f1=0.146190
+METRIC transfer_ukdale_house_2_kettle_f1=0.147431
+METRIC transfer_ukdale_house_2_microwave_f1=0.375726
+METRIC transfer_ukdale_house_2_dishwasher_f1=0.000000
+METRIC transfer_ukdale_house_5_fridge_f1=0.143636
+METRIC transfer_ukdale_house_5_washing_machine_f1=0.119298
+METRIC transfer_ukdale_house_5_dishwasher_f1=0.133333
+METRIC transfer_refit_house_5_dishwasher_f1=0.016621
+METRIC transfer_refit_house_5_fridge_f1=0.233544
+METRIC transfer_refit_house_5_kettle_f1=0.524265
+METRIC transfer_refit_house_5_microwave_f1=0.023396
+METRIC transfer_refit_house_5_washing_machine_f1=0.065835
+METRIC transfer_refit_house_3_dishwasher_f1=0.000000
+METRIC transfer_refit_house_3_fridge_f1=0.070083
+METRIC transfer_refit_house_3_kettle_f1=0.351129
+METRIC transfer_refit_house_3_microwave_f1=0.034725
+METRIC transfer_refit_house_3_washing_machine_f1=0.081624
+METRIC transfer_refit_house_2_dishwasher_f1=0.097274
+METRIC transfer_refit_house_2_fridge_f1=0.375397
+METRIC transfer_refit_house_2_kettle_f1=0.110455
+METRIC transfer_refit_house_2_microwave_f1=0.254459
+METRIC transfer_refit_house_2_washing_machine_f1=0.053896
+METRIC transfer_refit_house_9_dishwasher_f1=0.000000
+METRIC transfer_refit_house_9_fridge_f1=0.193631
+METRIC transfer_refit_house_9_kettle_f1=0.271020
+METRIC transfer_refit_house_9_microwave_f1=0.020587
+METRIC transfer_refit_house_9_washing_machine_f1=0.000000
+METRIC transfer_refit_house_20_dishwasher_f1=0.148171
+METRIC transfer_refit_house_20_fridge_f1=0.331450
+METRIC transfer_refit_house_20_kettle_f1=0.028567
+METRIC transfer_refit_house_20_microwave_f1=0.237626
+METRIC transfer_refit_house_20_washing_machine_f1=0.088715
+elapsed 68s -> /root/longvdh/agent_space/projects/watt-wiser/.auto/last_bench_v3.json
