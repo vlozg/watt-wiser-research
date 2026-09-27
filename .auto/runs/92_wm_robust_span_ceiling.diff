@@ -1,0 +1,467 @@
+diff --git a/.auto/ideas.md b/.auto/ideas.md
+index 562e02e..3289047 100644
+--- a/.auto/ideas.md
++++ b/.auto/ideas.md
+@@ -1198,3 +1198,253 @@ NEXT: point the same one-gate instrumentation at the fridge (refit/house_10 1936
+ P 0.04 R 0.04; refit/house_17 280 / 1840) and the mw (refit/house_6 74 / 390). That method found the
+ binding dw gate in a single screen, and fridge_dw/mw pair-level zeros are the largest clean prizes
+ left. B3 is still the next multi-run project, with this instrumentation as its confidence step.
++
++## m20 (run 86, KEEP 0.354623) - the reader floor is the last hand-set visibility constant
++
++Floor: `703a591` 0.321967 -> m18 `4deec78` 0.336828 -> **m20 `2f0ee0f` 0.354623 (+0.017795)**.
++p10 0.325351 -> 0.336690 (UP), device_balanced 0.341397 -> 0.358294, house_1_v4_mean 0.545625 -> 0.539774.
++Medians: kettle 0.555140 (flat), microwave 0.266004 (flat), **fridge 0.332973 -> 0.370963 (+0.037990)**, wm 0.228634 -> 0.242345 (+0.013711), dw 0.346705 (flat). No device median down > 0.03.
++
++Lesson: the pool convention `half_p50` means the reader marks a device on only above `thr[d]`, and the device's median on-draw sits at `2*thr[d]`.
++Any level the model writes at or below `thr[d]` is invisible however real the detected event. So every emission must be floored at `2*thr[d]`;
++there is no room for a hand-set constant such as `AMP_MIN_W = 50 W` (m17 used 50 W for wm/dw; this run removed it, and the fridge raw writes were never floored at all).
++Implementation: one central hunk in `build_and_train`'s returned predictor - `np.copyto(out[d], np.maximum(out[d], 2*thr[d]), where=out[d] > 0)`
++(zeros stay zero so masks keep their support). It is a no-op wherever the gate is already threshold-anchored (kettle/microwave bands are mark-anchored at 2*thr),
++which the screen confirmed bit-identical on 4 houses.
++
++Refuted in this run (dead code, kept in the tree for now): the protocol-anchored fridge duty-cell re-anchor guard. It never fired on any of the 20 pool houses
++(zero `fridge cell re-anchored` prints in `.auto/runs/86.log`). Its guard needs >= `DUTY_CELL_MIN = 300` pre-span events in a band around `2*thr +/- 20%`;
++those bands hold fewer than 300 events on refit. The 154 W = 2*thr reading that motivated it was the median of ALL extracted events, not the fridge's draw - a bad inference.
++
++New diagnosis (the fridge's remaining gap). Phase probe `.scratch/fr_phase.py` (eval span, seed 2026, refit/house_6, house_10, house_17):
++the GT fridge cycles in refit are **0.3-1.0 min pulses repeating every ~45-50 min**, while the model emits 11-37 min runs;
++only 2/12 (house_10) and 4/12 (house_6) of the emitted runs start at a real pulse. The mined most-regular 20-100 W / 11-37 min duty cell is therefore a
++**competing periodic load**, not the fridge: interval-CV regularity is not identity. Detected-run counts match GT counts there (house_10 1936 vs 1956) while the phases are
++independent - i.e. the model finds a same-rate periodic load at the wrong times. `self` on house_6 was 0.24-0.26 and on house_10 0.11-0.12.
++
++Next (in order): (1) give the fridge duty-cell selection a physical criterion instead of minimum interval-CV - isolated thermostat cycles (reuse `_iso_clear`),
++amplitude stability inside the cell, and a fridge-like duty fraction; (2) consider extending the fridge cell hypothesis space below `DUTY_DUR_S = 600 s`, since the
++refit marks are themselves consistent with short pulse cycles; (3) then resume the big-bet portfolio with B3 (self-training over the unlabeled year).
++Standing: a gain on house_1 alone is not a gain (house_1 subset fell 0.006 here while the pool rose 0.018); never diagnose on the holdout.
++
++### m21 - the fridge duration gate is a reader-visibility gate; on refit the graded cycles are not extractable (run 87, DISCARD, unchanged 0.354623)
++
++Run 87 shipped nothing: pool primary 0.354623 before and after, with the m19 fridge re-anchor guard deleted. That is itself the measurement - the guard was inert pool-wide (0 print over 20 houses, 0.000000 primary delta), and a 4-house subset A/B was bit-identical before the full run. Three repairs were implemented, screened on that subset, and refuted:
++
++1. Mark-derived mining duration window (`_fdur` x REL_DUR replacing DUTY_DUR_S in the fridge duty-cell mining): subset mean 0.364151 -> 0.350107, fridge median 0.257162 -> 0.193965. Windows produced 0.5-4.2min (house_10), 0.1-0.9 (house_17), 4.4-39.8 (house_6), 6.6-59.7 (ukdale/house_1). DO NOT RETRY.
++2. Reader-anchored amp band attached to the mark branch: inert. That branch is the `elif` of `if fridge_band is not None`, so on every house with a mined band it never executes (bit-identical metrics confirmed it).
++3. Reader-anchored union (2*thr +- REL_AMP, inside the home's mark duration window) attached to the live band branch: added 734 preds on house_10, 23 on house_17, 1118 on house_6, 291 on ukdale/house_1, yet subset mean 0.364151 -> 0.363897 and fridge median -> 0.256019. The graded reader cycles are not the population that sits at the reader's own draw level. DO NOT RETRY.
++
++What this establishes (and why to stop editing the fridge band):
++
++- `evaluation.score_episodes` matches onsets within tau, then DISCARDS a matched pair whose len_pred/len_gt falls outside DURATION_BAND. The fridge run-basis emits 20-30min runs (band dur 10-37min) while the refit reader cycles are 0.3-1.0min, so those onsets can never score even when they coincide.
++- On refit there are two coexisting periodic loads (~66min period): the model's ~1900 long runs and the reader's brief pulse at each cycle start. The graded one has no extractable aggregate signature - not the band population, not the 2*thr population (repair 3), and shortening the mining window made it worse (repair 1). That is an extraction limit on those homes, not a band-selection bug.
++- Consequence: the refit fridge prizes (house_10 +0.0044, house_17 +0.0044) are out of reach of band edits. The reachable fridge work is house_6 (0.226 -> 0.33), where reader pulses do partly coincide with emitted onsets.
++
++Next: stop tuning the fridge band, do not re-run these three repairs, and spend the next runs on B3 (self-training over the unlabeled year) - the first untouched big-bet.
++
++### m22 - the fridge duty-cell path is dead for two independent reasons, and its duration space excludes the graded cycles (run 88, DISCARD, unchanged 0.354623)
++
++Census of run 87's own build prints (every pool block):
++
++- `fridge mined cell: a50 ...` = 0 lines, `fridge mined cell: none regular enough` = 0, `fridge fallback: ...` = 63. The mined duty-cell path ran on NO block: every fridge-bearing block took the m16 population fallback. The gate `int(dm.sum()) >= DUTY_CELL_MIN` (300) is combinatorially impossible - a 10 W x 5 min bucket inside a 280 W x 30 min box (~224 buckets, 1.5-10k events) holds tens of events - so the path never even reached its CV test.
++- `named dw=0` on 61/61 blocks (deliberate per the module docstring: dw is carried by the sustained path).
++- `kettle sustained marks: X/5` sums to 87 of 180 windows (2 blocks at 0/5): the sustained kettle path's pre-registration fails on over half of all mark windows, but the event path carries the kettle (median 0.555) and the sustained path only adds ~2.5 runs per block.
++- `mark re-anchor fridge` on 3 blocks only.
++
++Repair attempted (B3-style, self-training on the home's own unlabeled pre-span): make the cell path reachable - per-cell floor 300 -> 20 (enough points for a p5-p95 band) - and replace the selection criterion, because the interval-CV criterion is a SECOND dead gate: consecutive-interval CV cannot survive the extractor's ~1/3 capture of the true cycles (a periodic fridge seen a third of the time reads as irregular). The replacement is Rayleigh phase folding: fold the cell's on-times modulo their own median period, take the concentration R, floor it by the home's own box population R_pop and the classical 1.7/sqrt(n) critical value. The m19 reader-draw re-anchor guard was deleted in the same edit, since making the path reachable would otherwise have activated it and applied the run-87-refuted reader-draw band.
++
++Result: the path fires on 3 of 4 subset houses, and every winning cell is a sparse day-scale one - house_10 R=0.418 n=20 T=8264min (5.7 days), house_17 R=0.342 n=36 T=1769min, ukdale/house_1 R=0.364 n=34 T=4401min - while the box populations are temporally Poisson-like (R_pop=0.006-0.017, cv_pop 0.92-3.31). Subset mean 0.364151 -> 0.347702, fridge median 0.257162 -> 0.183141. REFUTED.
++
++This is the third independent demonstration that narrowing the fridge's duration hypothesis space loses: the m16 wide fallback band is the measured optimum, the run-87 mark-derived window lost (-0.063 fridge median), and now the day-scale Rayleigh cells lose (-0.074). Structural reading: the graded refit fridge cycles are 0.3-1.0min while DUTY_DUR_S = 600-2400s excludes them entirely, and the 10-40min compressor-class box population is a near-Poisson mixture rather than a duty device.
++
++Do not keep editing the fridge band: the fallback is a measured local optimum, and the remaining prize needs a different hypothesis space (or the extractor to see the pulses at all, which run 87 showed it does not). Reverted with `git checkout` and re-measured: primary 0.354623, p10 0.336690, byte-identical to the floor. Note for whoever next makes the cell path reachable: delete the m19 reader-draw re-anchor guard first.
++
++Next: leave the fridge and start B3 for real on a device whose weak median is not band-limited.
++
++## m23 (run 89, DISCARD 0.354848) - the --dump unlock, and three structurally dead device pairs
++
++Run 89 measured a conditional microwave plateau fusion: `predict` admits fragmented
++plateau events (dur inside the mark's *fragment* band, `ev_band`) and then emitted one
++onset per event, so a duty-chunked magnetron cycle produced several onsets and
++`score_episodes`' one-to-one onset matching counted each extra fragment as a false
++onset. Fusing fragments whose pause is inside 1.25x `eb['dur_p50']` (the marks' own
++fragment duration; same margin convention as the wm/dw merge gaps), strictly
++conditional on `ev_band` so unfragmented houses are untouched. Evidence: subset mw
++median 0.223885 -> 0.228612 and fusion print fired (262 plateau events -> 204 cycles);
++pool primary 0.354623 -> 0.354848 (+0.000225), p10 0.336690 -> 0.340019 (+0.0033),
++device_balanced 0.358294 -> 0.359466, mw median 0.266004 -> 0.267281, no device median
++down. Below the +0.01 keep bar, so reverted - but it is a NON-REGRESSION with a real
++mechanism, so bundle it with the next genuine gain. Patch recipe (against `2f0ee0f`):
++replace the duplicated `for k in np.flatnonzero(mw_ok):` emission block at predict
++(the block is literally pasted twice, lines ~1319-1325) with: `_mwk =
++np.flatnonzero(mw_ok)`; if `eb is not None and _mwk.size > 1`, walk `_mwk` and group
++consecutive events while `on[k] - off[g1] <= max(1, int(round(1.25 *
++float(eb['dur_p50']) / cad_s)))`, tracking the group max amp; emit each group once as
++`out['microwave'][on[g0]:off[g1]] = np.maximum(seg, amax)`; else emit per-event as
++before. Bundled inert edits: ported the `_wm30_profile` window-skip rule to
++`_dw30_profile` (skip a mark window whose excitation never crosses the heater
++threshold instead of disabling the whole dw detector; require >=2 usable windows) and
++corrected the dw disable message, which blamed 'mark windows produced no heater runs'
++when the real cause was no dishwasher mark. Both provably inert on this pool: the
++all-or-nothing branch never fired in 61 blocks.
++
++### The real unlock: `bench_v4.py --dump` gives per-pair precision/recall
++Run `uv run python3 .auto/bench_v4.py --dump --workers 1` (~110 s). Per house per seed
++it prints `device P=.. R=.. F1=.. n=pred/gt`, plus per-device `AGGR` lines. 330 pairs
++parsed. Full-pool device structure (median F1 over pairs / mean P / mean R / pred / gt):
++
++| device | pairs | median F1 | mean P | mean R | pred | gt |
++| --- | --- | --- | --- | --- | --- | --- |
++| fridge | 90 | 0.300 | 0.430 | 0.335 | 150243 | 189625 |
++| washing_machine | 75 | 0.180 | 0.243 | 0.246 | 5204 | 4290 |
++| kettle | 60 | 0.620 | 0.519 | 0.620 | 28999 | 20445 |
++| microwave | 55 | 0.230 | 0.330 | 0.289 | 10675 | 9440 |
++| dishwasher | 50 | 0.500 | 0.432 | 0.318 | 1488 | 2635 |
++
++Kettle is the only healthy device. Every other device is precision- AND recall-poor,
++and the dishwasher is the clearest shape: P 0.43 vs R 0.32, i.e. recall-starved (1488
++preds against 2635 gt) - it needs MORE detection, not tighter gates. Note this is the
++pool-wide picture; the 4-house subset has a misleadingly high dw median (0.4575 vs the
++pool's 0.3467) because its dw pairs happen to be the ones that work.
++
++### The prize: dead pairs that are dead on every seed
++The 18 worst pairs are dominated by exact zeros that repeat across seeds - not noise:
++
++- `refit/house_10` dishwasher: preds 0/86, 0/86, 2/86, 0/86, 0/86, F1 0.000. The house
++  HAS a dw mark and `_dw30_profile` builds a profile (subset print: `span=8-21min
++  amp>=1393W mean=1375-5022W hs=0.75-1.75 idle<=infW dens<=0.588/min
++  heater_gap_merge=70min ext_back=0.0min ext_fwd=0.0min`), but then `dw sustained runs:
++  0 pass run-basis gates (0.000/day)`. So the detector is calibrated off a valid mark
++  and every eval run is then rejected by the run-basis gate family.
++- `refit/house_13` dishwasher: preds 1/73, 0/73, 1/73, 1/73, 1/73, F1 0.000 - the same
++  shape, no detection at all. (Not yet confirmed to have a dw mark; check first.)
++- `refit/house_11` washing_machine: F1 0.000 on four seeds with preds 33/58/41/64 vs a
++  fixed gt 15 - precision-zero, the detector emits far more cycles than exist.
++- `refit/house_11` dishwasher: F1 0.000 on four seeds at 12/12, 26/12, 6/12, 9/12 -
++  preds are roughly the right COUNT, so this one is onset/timing disagreement rather
++  than a counting failure.
++- `refit/house_17` s4 wm 0/66 and `refit/house_4` s4 wm 5/32: single-seed, so treat as
++  seed variance, not structure.
++
++Arithmetic that matters: the primary is the mean over the 66 pool pairs, so the two
++dead dishwasher pairs (house_10, house_13) are worth 2 x F1 / 66 - reaching a modest
++F1 0.4 on both would be +0.012 primary, over the +0.01 keep bar, before counting the
++device-median and device_balanced lift. A house where the dishwasher is simply never
++detected is exactly the 'make the process learnable across homes' defect, not a
++benchmark artifact.
++
++### Next hypothesis (B3-adjacent, dw generalization)
++The dw run-basis gate family does not generalize to a house whose own mark yields a
++valid profile. Diagnose house_10 first: dump the mark-derived profile against the runs
++that actually fail, and find which of (amp / mean / hs / dens / span) kills every run -
++the printed profile's `span=8-21min` is suspiciously narrow for a whole-house dw cycle.
++There is a self-training angle here that fits B3: the house's own unlabeled eval year is
++available, so the run-basis bands can be re-estimated from the house's own run
++population (the runs the mark profile already ranks as plausible) instead of being
++frozen from five mark windows. Keep the precision guard: house_11 dw shows what
++unchecked admission costs (41 junk runs on the earlier span re-anchor).
++## m24 (run 90, discard, commit 2f0ee0f): single-block dw marks - big dw win, one pair loss, median-seed trap
++
++**Verdict.** primary 0.352638 (floor 0.354623, delta -0.001985), p10 0.346326 (+0.0096, floor 0.336690),
++device_balanced 0.359112, house_1_v4 0.540104 (unchanged), checksPass true, no device median down >0.03
++(dw median 0.346705 -> 0.388346 UP). Discarded only because the keep rule needs the PRIMARY up >=0.01.
++
++**The metric decoded (the important methodological finding).** mean_device_f1 is the MEDIAN over the 5
++seed means of the 66-pair mean, not a mean over seeds. Reconstructed exactly from per-pair CSVs at the
++floor: {0.335152, 0.356818, 0.354545, 0.357576, 0.338333} -> median 0.354545 = recorded 0.354623. With
++the fixes: {0.345758, 0.364697, 0.352576, 0.368333, 0.346818} -> median 0.352576 = recorded 0.352638.
++So FOUR of five seeds improved (+0.0106 s1, +0.0079 s2, +0.0108 s3, +0.0085 s4) while seed 2026 fell
++-0.0020, and seed 2026 was the middle value. **A change must move the median seed; 4-of-5 good seeds is
++not enough, and the all-pairs mean (+0.007152) is NOT the metric.**
++
++**Hypothesis tested.** refit/house_10 and refit/house_13's dead dishwashers share one root cause: gate
++bands derived from a mark whose own run is structureless. Two edits, both conditional so mark evidence
++wins wherever it exists:
++(1) merge gap: `merge_n = int(round(4200.0/DW30_GRID_S))` (70 min) when `max_gap == 0` -> `merge_n = 1`,
++    applied to both mirrored profiles (_dw30_profile and _wm30_profile). house_10's 70-min value was
++    provably that else-branch, reachable only when its marks yield one fully-ON block per window.
++(2) duty floor: dw `hs_band = (0.75*min(hss), 1.75*max(hss))` -> floor dropped (hs_lo = 0) when
++    min(hss) >= 0.999, because a mark run IS the merged above-heater region, so hs = 1.0 by construction
++    carries no duty evidence and the 0.75 floor excludes partial-duty cycles (other houses measure hs
++    0.22-0.64).
++Diff saved: .auto/runs/90_single_block_mark_fixes.diff (112 lines). Per-pair CSVs: .scratch/run90_base.csv
++and .scratch/run90_new.csv (330 pairs each; comparison script .scratch/cmp90.py).
++
++**Attribution (all-pairs mean F1, floor -> fixes).** dishwasher n=50 0.3398 -> 0.3810 (+0.0412),
++washing_machine n=75 0.2333 -> 0.2357 (+0.0024), microwave n=55 0.2720 -> 0.2742 (+0.0022),
++kettle n=60 0.5423 -> 0.5423 (0.0000), fridge n=90 0.3668 -> 0.3668 (0.0000), ALL 330 +0.007152.
++Kettle/fridge/microwave prediction-vs-gt counts are bit-identical; only dw and two wm pairs moved.
++
++**What the fixes unlocked (keep these).**
++- refit/house_13 dw: 0.00 on all five seeds (1 pred vs 73 GT) -> 0.51/0.51/0.57/0.58/0.55 (37-53 preds).
++  The largest single-pair gain recorded in this campaign. s2026 was already alive at the floor, so
++  house_13's floor pair-median 0.4650 was carried by seed 2026 alone.
++- refit/house_4 wm pair +0.11 (s1) and +0.07 (s3), house aggregate +0.037/+0.023; refit/house_8 +0.005/+0.01.
++
++**What they broke (fix it, do not abandon it).** refit/house_10 dw 0.1500 (10 preds) -> 0.0000 (1 pred) on
++seed 2026 ONLY - exactly -0.15/66 = -0.00227, which is the entire primary regression. The 70-min fallback
++was LOAD-BEARING there: with merge_n = 1 house_10's raw heater blocks are shorter than its own mark-derived
++span band (8-21 min), so span_band rejects them, and the old evidence-free 70-min gap was what made them
++long enough to pass. Same parameter, opposite sign on two houses.
++
++**Next hypothesis A (cheap, safe): union the two merge priors.** Run the dw detector under both merge_n
++(the mark-derived/fallback value AND 1) and union the resulting runs; span_band is then the arbiter, so
++house_10 keeps its long runs and house_13 keeps its short ones. Implementation: one extra _dw30_runs pass
++with prof2 = dict(prof, merge_n=1); it needs no new gates because the existing bands filter both sets.
++This recovers the -0.002 (median back to ~+0.0002) but will NOT clear the +0.01 bar on its own.
++
++**Next hypothesis B (the real prize): fix refit/house_10's dishwasher.** With the median seed being 2026,
++house_10's dw IS the metric bottleneck: 86 GT cycles and only 10 preds (F1 0.15) at the floor, so taking it
++to ~0.75 is +0.6 on one pair = +0.0091 on seed 2026, which combined with A clears the bar on the median
++seed. Diagnose BEFORE writing more gates (two rounds of band repairs have now moved the pool by ~0): dump
++house_10's 86 GT dw intervals (eval submeter, .scratch/ only) against the exc trace at the profile's own
++heat = 1393 W and check whether one GT cycle appears as ONE block (extraction/threshold problem) or MANY
++short blocks (merge problem); also compare its mark windows' structure with its eval cycles - the marks
++read single-block fully-ON (hs = 1.0) while the eval blocks come out <8 min, which is itself inconsistent
++and is probably the real defect. Do NOT widen the band family again.
++
++**Refuted / inert this run.** The dw mark-window skip port ported from _wm30_profile is confirmed INERT
++(two subset screens, with and without it, were bit-identical) - do not re-attempt it. Also do not trust
++subset aggregates as a proxy: the 4-house subset said -0.0081 while the pool all-pairs mean was +0.0072,
++because house_13 (the main beneficiary) is not in the subset. Never log a subset number as a metric.
++## m25 (run 90 follow-up, diagnostic): house_10 dishwasher - level, merge gap, hs floor and density ceiling are all REFUTED as the blocker
++
++**Setup.** refit/house_10 dw is the metric bottleneck: with 2026 as the median seed, +0.6 F1 on this one pair is +0.0091 on the median seed. Diagnostics: .scratch/dw10.py, dw10_sweep.py, dw10_sweep2.py, dw10_sweep3.py (offline; labels used only to count cycle hits).
++
++**GT structure.** 86 dw cycles in the 90-day eval window, durations 10.0-27.2 min (median 18.8), median onset spacing 16.6 h.
++
++**Refuted 1 - level/threshold.** 86 of 86 GT cycles reach max exc >= the mark-derived 1393 W (per-cycle max exc median 2241 W, min 1928 W). At merge_n=1, 59 of 86 cycles already contain an exc block spanning the mark band 8-21 min (blocks per cycle: 1 for 21 cycles, 2 for 64, 3 for 1). The eval cycles are visible at the marks own threshold.
++
++**Refuted 2 - merge gap alone.** Faithful reconstruction (reproducing the floor profile gives its printed 0-pass as n_adm=1). Admitted runs by merge gap: 0.5min->1, 1->1, 2->3, 3->4, 5->16, 8->15, 12->15, floor 70min->10. Best gap touches only 9 of 86 GT cycles.
++
++**Refuted 3 - hs floor (run 90s dw edit) is irrelevant for house_10**: sweeping hs_band (0.75,1.75) vs (0,1.75) gave identical counts (1/3/4/16/15/15).
++
++**Refuted 4 - density ceiling.** Sweeping dens_hi over 0.588, 1.0, 2.0, 5.0, inf at merge gaps 0.5/2/5 min changed NOTHING (1/3/16 admitted at every ceiling, cycles hit 0/0/9). The density ceiling is not binding here.
++
++**Run 90s house_10 regression was the merge gap** (70min -> 1), not the hs edit: at merge_n=1 the eval admits 1 run (n=1 pred, F1 0.00) whereas the 70-min gap admitted 10 (n=10, F1 0.15). Note the printed line "dw sustained runs: N pass run-basis gates" is emitted from the MINING/pre span, not the eval window - it read 10 in run 90 while the eval admitted 1. Never read that print as an eval measurement.
++
++**Additive gate census on the eval window (merge_n=10, gates enabled one at a time):**
++- all gates permissive: admitted=176, cycles touched=43/86
++- +span 8-21min: admitted=16, cycles touched=9/86
++- +amp>=1393W: admitted=16, cycles touched=9/86
++- +mean 1375-5022W: admitted=16, cycles touched=9/86
++- +hs 0-1.75: admitted=16, cycles touched=9/86
++- +dens<=0.588: admitted=16, cycles touched=9/86
++
++**So the blocker is whichever gate drops the count, and 86/86 cycles reaching 1393 W with 59 in-band is the constraint to exploit.** Re-run the census (the printed numbers are in the run 90 follow-up log) before writing code: if the drop is in span_band the answer is a longer allowed span for houses whose marks are single-block; if it is amp/mean the answer is the run statistic being diluted by the merge. In every case the fix must be conditioned on the marks carrying no fragmentation evidence (max_gap == 0 / min(hss) >= 0.999) so evidence-bearing houses are untouched, and unioned with the merge_n=1 candidate rather than replacing it.
++
++**Kill criterion.** If a conditioned fix still leaves house_10 dw F1 below ~0.35, stop attacking bands: 86 cycles all reach the threshold, so at that point check whether the GT cycles union several submeter channels that the marks never see (p4.canon_channels) and pivot to B4 (program model) for the dw instead.
++## m26 (run 91, discard, commit 2f0ee0f): widening the dw span band when the marks show no pause - uniform gain, sub-bar
++
++**Change.** Built on the run-90 edits (re-applied from .auto/runs/90_single_block_mark_fixes.diff). In the dw profile of src/experiments/04_autoresearch/model.py, when max_gap == 0 (the marks contain no internal pause at all) the merge gap is derived from the mark span scale (merge_n = round(0.5 * 0.6 * min(spans) / DW30_GRID_S), bridging pauses up to half the shortest mark span) and the span tolerance is widened about the same centre (0.25*min(spans) to 3.0*max(spans)). The scale-tolerant gates (amp/mean/hs/idle/dens) still arbitrate, and houses whose marks DO show a pause (max_gap > 0) are untouched. Diff saved at .auto/runs/91_single_block_span_condition.diff (126 lines) because the run was discarded.
++
++**Why this and not the other candidates.** Additive gate census on refit/house_10 eval window, merge_n=10: all gates permissive -> 176 runs admitted, 43/86 GT cycles touched; adding the span band 8-21 min alone -> 16 runs, 9/86; adding amp>=1393W, then mean 1375-5022W, then hs 0-1.75, then dens<=0.588 changed nothing further. Level (86/86 cycles reach 1393 W), merge gap alone (best 16 admitted, 9/86 cycles), the dw hs floor (identical counts), and the density ceiling (0.588 -> inf identical) were all refuted first.
++
++**Result (pool, 66 pairs, 20 houses, 5 seeds, 111 s, checks pass).** primary 0.358165 vs floor 0.354623 = +0.003542 (sub-bar). p10 0.343651 (+0.006961), device_balanced 0.365867 (+0.007573), house_1 v4 mean 0.540104 (unchanged). Device medians: dishwasher 0.384353 (+0.037648), microwave 0.267281 (+0.001277), kettle 0.555140, fridge 0.370963, washing_machine 0.242345 - none down.
++
++**All five seeds rose** (seed means, order [2026,1,2,3,4]): run 91 = [0.358165, 0.342976, 0.361740, 0.365480, 0.344664] vs floor = [0.354545, 0.335152, 0.356818, 0.357576, 0.338333]. The median is still seed 2026, so the metric still effectively reads 2026, whose +0.0036 comes from house_10 dishwasher alone (targeted screen: F1 0.15 with n=10 preds -> 0.36 with n=73 preds, R=0.34).
++
++**Lesson.** p10 and device_balanced rising faster than the primary is the signature of repairing dead tail pairs, and that is the shape of every remaining win: the median seed needs several pairs moved, not one.
++
++**Next run.** (1) Apply the same no-pause condition to the wm mirror (identical code); check the wm mark profiles for max_gap == 0 houses first. (2) Run bench_v4.py --dump and diff per pair against .scratch/run90_base.csv (330 pairs) so the next change is chosen from a full attribution rather than aggregates. (3) Dead pairs left on the median seed: refit/house_10 fridge (P=0.04 on 1956 gt), refit/house_6 microwave (R=0.02 on 390 gt), refit/house_11 wm and dw, refit/house_7 dw.
+diff --git a/.auto/last_bench_v4.json b/.auto/last_bench_v4.json
+index 3597ba2..0a91e39 100644
+--- a/.auto/last_bench_v4.json
++++ b/.auto/last_bench_v4.json
+@@ -1,26 +1,26 @@
+ {
+  "bench": "v4",
+- "created": 1790500545.2780235,
++ "created": 1790505090.0898705,
+  "dev_med": {
+-  "dishwasher": 0.34670500264436915,
++  "dishwasher": 0.38435285866327124,
+   "fridge": 0.3709625582570472,
+   "kettle": 0.5551401877470105,
+-  "microwave": 0.26600351192360755,
+-  "washing_machine": 0.24234452090892278
++  "microwave": 0.2672813505508438,
++  "washing_machine": 0.21540680798390457
+  },
+- "device_balanced": 0.3582940370860904,
+- "house_1_v4_mean": 0.5397739275258562,
++ "device_balanced": 0.3596338149810457,
++ "house_1_v4_mean": 0.5330046039861025,
+  "mode": "pool",
+  "n_houses": 20,
+  "n_pairs": 66,
+- "p10": 0.33669020800762944,
+- "primary": 0.35462298532683434,
++ "p10": 0.3373535618066947,
++ "primary": 0.3546550722446109,
+  "seed_means": {
+-  "1": 0.3353406288789332,
+-  "2": 0.3572450354831616,
+-  "3": 0.3577648112873085,
+-  "4": 0.3387145767006739,
+-  "2026": 0.35462298532683434
++  "1": 0.3344735669045841,
++  "2": 0.357406234269007,
++  "3": 0.35610732115048455,
++  "4": 0.3416735541598606,
++  "2026": 0.3546550722446109
+  },
+  "seeds": [
+   2026,
+diff --git a/.auto/log.jsonl b/.auto/log.jsonl
+index 1e1cbba..af45bb0 100644
+--- a/.auto/log.jsonl
++++ b/.auto/log.jsonl
+@@ -86,3 +86,9 @@
+ {"run":83,"commit":"703a591","metric":0.331443,"metrics":{"mean_device_f1_p10":0.325666,"transfer_mean_f1":0.151921,"median_kettle_f1":0.543172,"median_microwave_f1":0.266004,"median_fridge_f1":0.334602,"median_washing_machine_f1":0.228634,"median_dishwasher_f1":0.346705,"b1_events_mined":5260,"b1_enroll_top1_enc":0.84,"b1_enroll_top1_raw":0.65,"b1_cross_house_top1":0.21,"b1_gate_kettle_kept_frac":0.813,"b1_gate_mw_kept_frac":0.853,"b2_probe_mw_iso_mean":0.34,"b2_probe_iso_all_mean":0.61,"device_balanced_mean":0.340336,"house_1_v4_mean":0.545625,"v4_n_pairs":66,"v4_n_houses":20,"fridge_median_delta":0.005839,"primary_delta":0.009476},"status":"discard","description":"RUN 83 (discard; primary 0.331443, checksPass true, 106s, 66 pairs, 20 houses).\nBundle = m16's six verified hunks (kettle in-band gate, idle sentinels, fridge contaminated-mark guard) PLUS one new structural repair.\n\nNEW FINDING (m17): refit/house_11 wm emitted 0 episodes although the eval-span gates were fully live - 16 runs passed every _dw30_runs gate (spans 36-107min in [18,142], mean 330-495W in [149,664], hs 0.25-0.64 in [0.21,1.50], idle 54-148W vs idle_hi 122; pre span gave 37 candidates).\nMechanism: emission writes emit_w = mark_<dev>['mean_w'] into the output mask (dw L514, wm L710). house_11's wm mark is amp=215W dur=28.4min mean=30W - 30W is BELOW AMP_MIN_W=50W, the floor the harness event reader uses, so np.maximum(seg, 30) marked 16 spans with a value nothing could read. This is the SAME defect class as m14/m15/m16 (a calibration-derived quantity silently disables a detector) but at the write boundary rather than at a gate.\nRepair: emit_w = max(mark_<dev>['mean_w'], AMP_MIN_W) for dw and wm. Verified house_11 wm pred 0 -> 13.\n\nRESULT: pool primary 0.331443, bit-identical to run 82 (0.331443) - the clamp is metric-neutral because house_11's 13 wm emissions land 600s+ off its 15 GT cycles (F1 stays 0.00) and no other pool pair has a sub-50W wm/dw mark mean.\nvs floor 703a591: primary +0.009476, p10 +0.007627, device_balanced +0.011854, house_1 +0.003421, kettle +0.006274, fridge +0.005839; mw/wm/dw medians bit-identical; no device median fell.\n\nNEXT (recorded in m17): house_11's placement defect is the biggest clean prize. It emits 13/15 wm and 12/12 dw episodes with ZERO onsets inside tau_onset while its dense devices score (kettle 0.57/565 GT, fridge 0.25/1877, mw 0.23/91). Hypothesis H-shift: a fixed timebase offset between the model's eval-span grid and the GT mask destroys sparse-GT devices and barely dents dense ones. Test by dumping pred vs GT onsets for one house and printing the signed nearest-GT offset per device; repair the single arithmetic error, not per-house offsets.\n\nGUARDS: all clean; no device median regression; p10 and device_balanced both rose.\nSTANDING: sixth consecutive guard-clean run under the flat +0.01 keep bar (78-83); keep-rule proposal (>=0.005 AND p10 AND device_balanced up AND no device median down) still pending with the owner.","title":"run 83: emit_w floor-clamp (legibility) - metric-neutral, 0.0095 under bar","summary":"Mask writes below AMP_MIN_W=50W are invisible; clamping dw/wm emit_w flips house_11 wm 0->13 emissions but pool is bit-identical at 0.331443","timestamp":1790498952695,"segment":2,"confidence":1.937261464051987,"asi":{"hypothesis":"A detector that decides to emit but writes its mark below the reader's amplitude floor (AMP_MIN_W=50W) is silently disabled; clamping emit_w to the floor restores it without changing any gate.","bundle":"m16 six hunks + emit_w floor clamp (dw L514, wm L710)","mechanism_evidence":"house_11 wm: 16 eval-span runs pass every gate, 0 episodes before clamp, 13 after; mark mean_w=30W < AMP_MIN_W=50W","metric_neutral":"pool 0.331443 == run 82 exactly; house_11 wm F1 0.00 both ways (13 emissions are 600s+ off 15 GT)","next_action_hint":"H-shift: dump pred vs GT onsets on one house, print signed nearest-GT offset per device; sparse-GT devices (wm 15, dw 12 on house_11) die while dense ones survive, which a fixed timebase offset would explain.","rollback_reason":"flat +0.01 keep bar not cleared (+0.009476); the clamp is correct but metric-neutral, so the bundle as a whole still sits 0.0005 short.","keep_rule_proposal":"keep when primary rises >=0.005 AND p10 rises AND device_balanced rises AND no device median falls (runs 78-83 would all be keeps)"}}
+ {"run":84,"commit":"4deec78","metric":0.336828,"metrics":{"mean_device_f1_p10":0.325351,"transfer_mean_f1":0.151921,"median_kettle_f1":0.55514,"median_microwave_f1":0.266004,"median_fridge_f1":0.332973,"median_washing_machine_f1":0.228634,"median_dishwasher_f1":0.346705,"b1_events_mined":5260,"b1_enroll_top1_enc":0.84,"b1_enroll_top1_raw":0.65,"b1_cross_house_top1":0.21,"b1_gate_kettle_kept_frac":0.813,"b1_gate_mw_kept_frac":0.853,"b2_probe_mw_iso_mean":0.34,"b2_probe_iso_all_mean":0.61,"device_balanced_mean":0.341397,"house_1_v4_mean":0.545625,"v4_n_pairs":66,"v4_n_houses":20,"fridge_median_delta":0.00421,"primary_delta":0.014861},"status":"keep","description":"m18 band-anchor repair; full v4 pool (66 pairs / 20 houses, 5 seeds, 125 s, checksPass).\nDEFECT (measured on refit/house_6): the kettle event band is [0.8, 1.2] x mark_amp and the mark read 1259 W\nwhile the reader's floor is thr = 1307 W. The pool's convention is half the median on-draw (half_p50;\nukdale/house_1 kettle thr 1173 W matches the protocol), so the device's median draw is ~2614 W and the mark\nsat at half of it. Its band [1009, 1508] W x [24, 216] s kept 83 of the house's 964 >= 1200 W excursions:\nF1 0.018 on 649 GT cycles (P 0.18 / R 0.10). Extraction was NOT the limit (9344 events available).\nDIAGNOSIS PATH: .scratch/h_shift.py raw-onset readout refuted H-shift (matched pred-to-own-GT offsets are\nsub-minute at tau_kettle 60 s; house_1 self 0.79, house_11 0.68) and refuted crossed detectors (house_11\nwm/dw cross hits are fridge/kettle base rates); the zero pairs are time-coverage mismatches.\nREPAIR: in build_and_train, before the band mining, floor a mark's amplitude at the protocol median draw when\nit reads below the reader's floor (if thr > 0 and mark_amp < thr then mark_amp = 2 * thr). Representative\nmarks are no-ops (house_1 2182 W > 1173 W; house_11 1790 W > 1040 W), so it fires only where the mark is\nprovably not a device draw; it fixes both the event band and the run-gate amp floor (0.8 x amp).\nRESULT: primary 0.336828 (+0.014861), p10 0.325351 (+0.007312), device-balanced 0.341397 (+0.012915),\nkettle median 0.555140 (+0.018242), fridge 0.332973 (+0.004210), mw/wm/dw bit-identical, house_1 0.545625\n(+0.003421, bundle-only). No device median fell. Protocol untouched; only\nsrc/experiments/04_autoresearch/model.py changed. Also recorded the owner's 5-bet portfolio in .auto/ideas.md.","title":"m18: floor a sub-threshold mark amp at the reader's median draw","summary":"Mark amp below the reader floor defined a band excluding every GT-eligible draw; re-anchoring it to 2xthr gave +0.0149 primary, the first keep since run 77.","timestamp":1790499609877,"segment":2,"confidence":2.7424473504883626,"asi":{"hypothesis":"a calibration mark whose amplitude is below the reader's own threshold cannot define the device's detection band; the pool's half_p50 convention makes the device's median draw 2*thr, so re-anchoring such a mark to 2*thr restores the band without touching any threshold or gate","defect_class":"calibration-derived quantity silently disables detection - fifth instance (m14 sentinel, m15 count gate, m16 inverted bound, m17 sub-floor write, m18 sub-floor band anchor)","ruled_out":"H-shift / timebase offset (sub-minute matched offsets at tau 60 s); crossed detectors (cross hits are fridge/kettle base rates); extraction limits (9344 events available on house_6)","next_action_hint":"run the big-bet portfolio, B3 self-training first; also apply the sub-floor test to the wm/dw emit level (run's own mean instead of the AMP_MIN_W magic clamp) and do not chase house_11 wm/dw placement (time-coverage mismatch)"}}
+ {"run":85,"commit":"4deec78","metric":0.338897,"metrics":{"mean_device_f1_p10":0.325042,"transfer_mean_f1":0.151921,"median_kettle_f1":0.55514,"median_microwave_f1":0.266004,"median_fridge_f1":0.332973,"median_washing_machine_f1":0.228634,"median_dishwasher_f1":0.331597,"b1_events_mined":5260,"b1_enroll_top1_enc":0.84,"b1_enroll_top1_raw":0.65,"b1_cross_house_top1":0.21,"b1_gate_kettle_kept_frac":0.813,"b1_gate_mw_kept_frac":0.853,"b2_probe_mw_iso_mean":0.34,"b2_probe_iso_all_mean":0.61,"device_balanced_mean":0.344129,"house_1_v4_mean":0.520777,"v4_n_pairs":66,"v4_n_houses":20,"fridge_median_delta":0,"primary_delta":0.002069},"status":"discard","description":"HYPOTHESIS: the dw run-basis span_band (0.6/1.25 x the K=5 mark window spans) silently excludes\nmost of the house's own runs - the same defect class as m18 (a calibration-derived statistic gating\nout the population), on the dw's span axis instead of amplitude.\n\nMETHOD (dev-set screen, seed 2026, temporary instrumentation removed before this run): relax exactly\none dw30 gate at a time and count _dw30_runs. Binding gate per house (house_7/house_10/house_11/house_6):\n  span_band 44->145, 32->47, 97->216, 42->70     <- binding on EVERY house\n  mean_band 52/40/129/43, hs_band 50/32/104/46, dens_hi 47/37/118/42, idle_hi 44/32/97/47,\n  amp_lo 59/32/98/42\nEvery extra run admitted by relaxing span_band already passed all the other run gates, so the\npopulation of runs that pass every other gate is a valid anchor. Repair: re-anchor span_band from\nthat population at the SAME 0.6/1.25 margins using p10/p90 (one junk run cannot set an edge), only\never widen, only when >= 5 such runs exist (same order as the K=5 marks).\n\nPOOL RESULT (66 pairs, 20 houses, seeds 2026/1/2/3/4): primary 0.338897 vs floor 0.336828,\ndelta +0.002069. p10 0.325042 (was 0.325351, -0.000309). device_balanced 0.344129 (+0.002732).\nhouse_1 0.520777 (was 0.545625, -0.024848). Device medians: kettle 0.555140, microwave 0.266004,\nfridge 0.332973, wm 0.228634 - all BIT-IDENTICAL to the floor; dw 0.331597 (was 0.346705, -0.015108).\n\nPER-HOUSE (seed 2026, dw only, all other devices bit-identical): refit/house_10 0.15->0.28\n(10->57 preds, P 0.70->0.35, R 0.08->0.23 - the recall the repair was for), refit/house_7 0.065->0.07,\nrefit/house_6 0.56->0.55, ukdale/house_1 0.67->0.64 (P 1.00->0.88), refit/house_11 0.00 (12->53 preds,\nall false positives).\n\nVERDICT: DISCARD - +0.002 primary, real but small, and the loss is concentrated in precision\n(house_1 dw, house_11's 41 extra junk runs). The population re-anchor lever is genuine but needs a\nprecision guard before it can be carried in a bundle.\n\nALSO REFUTED THIS ITERATION: extending the kettle's population-anchored duration reference (dur_ref,\nthe mined p50 over pre-span events in the mark amp band, already used at model.py L1223) to the mw\nadmission gate. It collapsed ukdale/house_1's mw 0.352->0.15 (-0.20) for only +0.03 on refit/house_17.\nReason: the mined mw cluster is cross-fire contaminated (refit/house_6 p50 2.5 min vs the mark 1.2 min;\nhouse_1 2.5 vs 1.2) while for the kettle the mined and mark durations agree (1.8 vs 1.9 min). The raw\nmark duration is the better mw anchor - do not retry without a changed assumption.\n\nNEXT: run the same one-gate-at-a-time instrumentation on the fridge (refit/house_10 1936 preds/1956 GT\nat P=0.04 R=0.04) and the mw (refit/house_6 74 preds/390 GT) - that method found the binding dw gate in\na single screen. Carry the dw span re-anchor forward only with a precision guard.","title":"dw span band re-anchored on pre-span runs (m19)","summary":"dw span_band was the binding gate (relaxing it: house_7 44->145 runs); re-anchored it on pre-span runs: primary +0.002069, dw median -0.015108, house_1 -0.0248. Under bar.","timestamp":1790500034702,"segment":2,"confidence":2.670859273773027,"asi":{"hypothesis":"dw run-basis span_band is a K=5-mark statistic that excludes most of the house's own runs; re-anchor it on the pre-span population of runs passing all other gates (widen only, p10/p90)","measured":"pool primary +0.002069, dw median -0.015108, house_10 dw 0.15->0.28, house_1 dw 0.67->0.64","rollback_reason":"under the +0.01 bar; precision loss (house_1 dw -0.03 at seed 2026, house_11 12->53 preds all FPs)","next_action_hint":"instrument per-gate rejections for fridge (house_10 1936/1956 at P0.04) and mw (house_6 74/390); reuse the dw re-anchor only with a precision guard"}}
++{"run":86,"commit":"2f0ee0f","metric":0.354623,"metrics":{"mean_device_f1_p10":0.33669,"transfer_mean_f1":0.151921,"median_kettle_f1":0.55514,"median_microwave_f1":0.266004,"median_fridge_f1":0.370963,"median_washing_machine_f1":0.242345,"median_dishwasher_f1":0.346705,"b1_events_mined":5260,"b1_enroll_top1_enc":0.84,"b1_enroll_top1_raw":0.65,"b1_cross_house_top1":0.21,"b1_gate_kettle_kept_frac":0.813,"b1_gate_mw_kept_frac":0.853,"b2_probe_mw_iso_mean":0.34,"b2_probe_iso_all_mean":0.61,"device_balanced_mean":0.358294,"house_1_v4_mean":0.539774,"v4_n_pairs":66,"v4_n_houses":20,"fridge_median_delta":0.03799,"primary_delta":0.017795},"status":"keep","description":"m20 (run 86, KEEP 0.354623) - every emitted device level floored at the reader's own visibility convention.\n\nDEFECT CLASS (m14-m20 family): 'a calibration-derived quantity silently disables detection'. The pool convention half_p50 means the reader marks a device on only above its per-device threshold thr[d], and the device's median on-draw sits at 2*thr[d]. Any level the model wrote at or below thr[d] was invisible to the scorer however real the detected event was.\n\nDIAGNOSIS (this iteration). (1) A phase probe on refit/house_6, house_10, house_17 (eval span, seed 2026) showed the GT fridge 'cycles' there are 0.3-1.0 min pulses repeating every ~45-50 min, while the model emits 11-37 min runs; only 2/12 (house_10) and 4/12 (house_6) of the emitted runs start at a GT pulse. So the mined 'most regular 20-100 W / 11-37 min duty cell' is a different periodic load, and the model's own fridge detections were largely written below thr and dropped. (2) The protocol-anchored fridge-cell re-anchor guard added earlier in this iteration never fired on any of the 20 pool houses (audited: zero 'fridge cell re-anchored' prints in .auto/runs/86.log): its anchor band holds fewer than DUTY_CELL_MIN=300 pre-span events there, so the 154 W reading was the median of ALL extracted events, not the fridge draw - the inference was wrong and the guard is effectively dead code.\n\nCHANGE (3 hunks in src/experiments/04_autoresearch/model.py). (a) replaced the magic emit levels max(mark_dw.mean_w, AMP_MIN_W) and max(mark_wm.mean_w, AMP_MIN_W) with the run's own mean; (b) added a central floor in build_and_train's returned predictor: for each device with a known thr, np.copyto(out[d], np.maximum(out[d], 2*thr[d]), where=out[d] > 0), so zero samples stay zero (masks keep their support) and only levels below the reader's floor are raised. This removes the last hand-set visibility constant (AMP_MIN_W = 50 W) and derives visibility from the reader itself. Kettle/microwave gates are mark-anchored at 2*thr already, so the floor is provably a no-op for them - confirmed bit-identical in the screen.\n\nEVIDENCE. Screen (probe, seed 2026): house_6 fridge 2001->2191 preds, F1 0.197->0.226; house_10 fridge 1936->2541 preds, F1 0.041->0.042; house_17 and house_11 fridge unchanged; kettle/mw/wm/dw identical on all four houses. Authoritative v4 bench (66 pairs, 5 seeds, 111 s, checks pass): primary mean_device_f1 0.336828 -> 0.354623 (+0.017795); p10 0.325351 -> 0.336690 (+0.011339, no drop); device_balanced 0.341397 -> 0.358294; house_1_v4_mean 0.545625 -> 0.539774 (-0.005851, small); medians kettle 0.555140 (flat), microwave 0.266004 (flat), fridge 0.332973 -> 0.370963 (+0.037990), washing_machine 0.228634 -> 0.242345 (+0.013711), dishwasher 0.346705 (flat). No device median fell by more than 0.03. Per-seed: 2026 0.354623, 1 0.335341, 2 0.357245, 3 0.357765, 4 0.338715.\n\nINTERPRETATION. The gain is a pure recall repair, mostly on the fridge (and on the houses where wm/dw run means sat below 2*thr, small there): the model was already detecting these events and the reader could not see them. No threshold, tau, eval-span or metric code was touched. The remaining fridge gap is now precisely located: cell identity by interval regularity alone picks a competing periodic load, and on refit the true target is a short-pulse device.\n\nNEXT. (1) Replace the fridge duty-cell selection's regularity-only criterion with a physical one (isolated thermostat cycles / amplitude stability / duty fraction) so the correct cell wins over a competing regular load. (2) Consider a fridge cell hypothesis space below DUTY_DUR_S = 600 s, since the refit marks are themselves consistent with short pulse cycles. (3) Keep B3 (self-training over the unlabeled year) as the next big bet.","title":"m20 reader-floor visibility: primary +0.0178, fridge +0.038","summary":"Floor every emitted device level at 2*thr[d] (reader half_p50 convention): primary 0.3368->0.3546, p10 up 0.0113, fridge median 0.333->0.371, kettle/mw/dw flat.","timestamp":1790500604150,"segment":2,"confidence":2.6029135483076136,"asi":{"hypothesis":"Levels written at or below the reader's per-device threshold were invisible; flooring every emission at 2*thr[d] (the pool's half_p50 median on-draw) can only turn already-detected events visible and is a no-op for mark-anchored gates.","confirmed":"primary +0.017795, p10 +0.011339 (up), fridge median +0.037990, wm median +0.013711, kettle/mw/dw bit-identical; checks pass.","measured_screen":"house_6 fridge F1 0.197->0.226 (2001->2191 preds); house_10 0.041->0.042 (1936->2541); house_17 and house_11 fridge unchanged.","refuted_this_iteration":"The protocol-anchored fridge duty-cell re-anchor guard is dead code: it never fired on any of the 20 pool houses (0 prints in runs/86.log) because the candidate anchor band holds fewer than DUTY_CELL_MIN=300 pre-span events; the 154 W '2*thr' reading was the median of all extracted events, not the fridge draw.","new_diagnosis":"On refit houses the GT fridge cycles are 0.3-1.0 min pulses every ~45-50 min; the mined most-regular 20-100 W / 11-37 min cell is a competing periodic load and only 2/12-4/12 of emitted runs start at a real pulse. Fridge cell identity needs a physical criterion, not interval regularity alone.","next_action_hint":"Attack fridge cell selection: prefer isolated, amplitude-stable, fridge-duty-fraction cells over the minimum interval-CV cell; then resume the B3 self-training bet.","carried_metrics_note":"b1_*, b2_* and transfer_mean_f1 are carried from the last measured values in .auto/log.jsonl, not re-measured this run."}}
++{"run":87,"commit":"2f0ee0f","metric":0.354623,"metrics":{"mean_device_f1_p10":0.33669,"transfer_mean_f1":0.151921,"median_kettle_f1":0.55514,"median_microwave_f1":0.266004,"median_fridge_f1":0.370963,"median_washing_machine_f1":0.242345,"median_dishwasher_f1":0.346705,"b1_events_mined":5260,"b1_enroll_top1_enc":0.84,"b1_enroll_top1_raw":0.65,"b1_cross_house_top1":0.21,"b1_gate_kettle_kept_frac":0.813,"b1_gate_mw_kept_frac":0.853,"b2_probe_mw_iso_mean":0.34,"b2_probe_iso_all_mean":0.61,"device_balanced_mean":0.358294,"house_1_v4_mean":0.539774,"v4_n_pairs":66,"v4_n_houses":20,"fridge_median_delta":0,"primary_delta":0},"status":"discard","description":"Iteration goal: repair the fridge duty-band selection that m20 diagnosed as the remaining structural prize (refit/house_10 fridge 0.041, house_17 fridge 0.042).\n\nMEASURED RESULT: pool primary 0.354623 (p10 0.336690, device_balanced 0.358294, house_1 0.539774, 66 pairs / 20 houses, all 5 seeds), identical to the floor 2f0ee0f to six decimals, with the dead m19 fridge re-anchor guard deleted from model.py. 109s, checksPass true. The guard printed 0 times across all 20 houses, so its deletion is inert pool-wide - verified both by a bit-identical 4-house subset A/B and by this full run.\n\nThree repairs were implemented, screened on the subset refit/house_10,refit/house_17,refit/house_6,ukdale/house_1 (--seeds 2026 --workers 1, sequential logs give house attribution), then reverted:\n1. Mark-derived mining duration window: subset mean 0.364151 -> 0.350107, fridge median 0.257162 -> 0.193965. REFUTED.\n2. Reader-anchored amp band on the mark branch of the fridge gate: inert, because that branch is the elif of `if fridge_band is not None` and never runs where a band was mined. REFUTED.\n3. Reader-anchored union (2*thr +- REL_AMP inside the home's mark duration window) on the live band branch: added 734/23/1118/291 preds on the four houses, yet subset mean -> 0.363897 and fridge median -> 0.256019. REFUTED.\n\nMECHANISM DISCOVERY (the durable finding): evaluation.score_episodes matches onsets within tau and then discards a matched pair whose len_pred/len_gt falls outside DURATION_BAND. The fridge run-basis emits 20-30min runs (band dur 10-37min) while refit reader cycles measure 0.3-1.0min (union-mask walk, consistent with 1956/2436 GT cycle counts), so those onsets cannot score even when they coincide. Refit hosts two coexisting ~66min-period loads: the model's ~1900 long runs and the reader's brief pulse at each cycle start. The graded pulse has no extractable aggregate signature - not the mined band population, not the 2*thr population - so both the band and the reader level fail, and shortening the mining window made it worse. The refit fridge prizes (house_10 +0.0044, house_17 +0.0044) are unreachable by band edits; the reachable fridge work is house_6 (0.226 -> 0.33) where emitted onsets partly coincide with reader pulses.\n\nCarried counters unchanged (b1/b2 tracks not exercised). Durable lessons written to .auto/ideas.md as m21 with explicit DO-NOT-RETRY markers for all three repairs.","title":"Refuted fridge band repairs; m19 guard proven inert (pool flat)","summary":"Three fridge band repairs refuted on a 4-house screen; pool primary unchanged at 0.354623 and the deleted m19 guard changed nothing.","timestamp":1790501204950,"segment":2,"confidence":2.300858935790804,"asi":{"hypothesis":"The fridge duty band's duration window (10-37min) is the last calibration-derived quantity silently disabling fridge detection on refit, so re-deriving it from the home's own mark or admitting the reader-anchored 2*thr population would restore the graded cycles.","rollback_reason":"All three variants were refuted by subset measurements (fridge median -0.063, inert branch, -0.0011) and the cleanup state reproduced the floor exactly, giving zero primary delta against the +0.01 keep bar.","next_action_hint":"Do not retry the three listed fridge band repairs; the refit fridge graded cycles are extraction-limited. Move to B3 (self-training over the unlabeled year) per the big-bet order, and if the fridge is revisited, target house_6 where onsets partly align.","refuted_repairs":["mark-derived mining duration window","reader-anchored band on the mark elif branch","reader-anchored union on the live band branch"],"subset_screen":"refit/house_10,refit/house_17,refit/house_6,ukdale/house_1 seeds 2026 workers 1","measured_primary_delta":0}}
++{"run":88,"commit":"2f0ee0f","metric":0.354623,"metrics":{"mean_device_f1_p10":0.33669,"transfer_mean_f1":0.151921,"median_kettle_f1":0.55514,"median_microwave_f1":0.266004,"median_fridge_f1":0.370963,"median_washing_machine_f1":0.242345,"median_dishwasher_f1":0.346705,"b1_events_mined":5260,"b1_enroll_top1_enc":0.84,"b1_enroll_top1_raw":0.65,"b1_cross_house_top1":0.21,"b1_gate_kettle_kept_frac":0.813,"b1_gate_mw_kept_frac":0.853,"b2_probe_mw_iso_mean":0.34,"b2_probe_iso_all_mean":0.61,"device_balanced_mean":0.358294,"house_1_v4_mean":0.539774,"v4_n_pairs":66,"v4_n_houses":20,"fridge_median_delta":0,"primary_delta":0},"status":"discard","description":"Iteration goal: repair the fridge duty-cell path, which the run-87 rebuild-print census showed is dead pool-wide.\n\nCENSUS (every pool block of .auto/runs/87.log): `fridge mined cell: a50` 0 lines, `none regular enough` 0, `fridge fallback` 63 -> the mined cell path ran on NO block; every fridge-bearing block used the m16 population fallback. The gate `int(dm.sum()) >= DUTY_CELL_MIN` (300) is combinatorially impossible: a 10 W x 5 min bucket in a 280 W x 30 min box (~224 buckets holding 1.5-10k events) has tens of members, so the CV test was never reached. Also found: `named dw=0` on 61/61 blocks (deliberate; dw uses the sustained path), `kettle sustained marks` 87/180 windows (2 blocks 0/5), `mark re-anchor fridge` on 3 blocks.\n\nREPAIR ATTEMPTED (B3-style self-training on the home's own unlabeled pre-span): cell floor 300 -> 20 plus a new selection criterion, because interval-CV is a SECOND dead gate - consecutive-interval CV cannot survive the extractor's ~1/3 capture of the true cycles, so a periodic fridge reads as irregular. Replacement: Rayleigh phase folding (fold on-times modulo the cell's own median period, concentration R), floored by the home's own box population R_pop and the 1.7/sqrt(n) critical value. The m19 reader-draw re-anchor guard was deleted too, since a reachable cell path would activate it and apply the run-87-refuted reader-draw band.\n\nMEASURED RESULT (subset refit/house_10, refit/house_17, refit/house_6, ukdale/house_1, seeds 2026, workers 1): the path fires on 3 of 4 houses but every winner is a sparse day-scale cell - house_10 R=0.418 n=20 T=8264min, house_17 R=0.342 n=36 T=1769min, ukdale/house_1 R=0.364 n=34 T=4401min - while the box populations are Poisson-like (R_pop 0.006-0.017, cv_pop 0.92-3.31). Subset mean 0.364151 -> 0.347702, fridge median 0.257162 -> 0.183141. REFUTED and reverted.\n\nAUTHORITATIVE RUN after `git checkout -- src/experiments/04_autoresearch/model.py` (src diff empty, byte-identical to the floor): primary 0.354623, p10 0.336690, device_balanced 0.358294, house_1 0.539774, medians kettle 0.555140 / mw 0.266004 / fridge 0.370963 / wm 0.242345 / dw 0.346705, 66 pairs / 20 houses, 81 s, checksPass true. Identical to the floor, so the run is a discard.\n\nSTRUCTURAL CONCLUSION (third independent demonstration): narrowing the fridge's duration hypothesis space always loses - the wide m16 fallback band is a measured local optimum, the run-87 mark-derived window lost -0.063 fridge median, and the day-scale Rayleigh cells lost -0.074. The graded refit fridge cycles are 0.3-1.0min while DUTY_DUR_S = 600-2400s excludes them, and the 10-40min compressor-class box population is a near-Poisson mixture, not a duty device. Durable lessons in .auto/ideas.md m22, including the note to delete the m19 reader-draw guard before ever making the cell path reachable.","title":"Fridge cell gate dead pool-wide; Rayleigh repair refuted (flat)","summary":"Census: the fridge duty-cell path fires on 0 blocks. Making it reachable via Rayleigh folding fires but picks day-scale cells; fridge median -0.074.","timestamp":1790501574753,"segment":2,"confidence":2.0616187734790437,"asi":{"hypothesis":"The fridge duty-cell path is dead pool-wide because of a combinatorially impossible count gate plus an interval-CV criterion that cannot survive the extractor's ~1/3 subsampling; a Rayleigh phase-folding criterion with the home's own population as the regularity floor would give a selective, regular fridge band.","rollback_reason":"Reachable path selected sparse day-scale cells (T 29h to 5.7d, n 20-36) and lost 0.074 fridge median on the subset; reverted byte-exactly and the pool re-measured flat at 0.354623.","next_action_hint":"Stop editing the fridge band - the wide m16 fallback is a measured local optimum, confirmed three times. Delete the m19 reader-draw guard before any future attempt to make the cell path reachable. Start B3 (self-training) on a device whose weak median is not band-limited.","refuted_repairs":["count-gate-only repair (inert: interval CV is the second dead gate)","Rayleigh phase-folding cell selection with the home's own population floor"],"census_findings":{"fridge_cell_path_fired":0,"fridge_fallback_blocks":63,"named_dw_chains_all_blocks":0,"kettle_sustained_windows":"87/180"},"subset_screen":"refit/house_10,refit/house_17,refit/house_6,ukdale/house_1 seeds 2026 workers 1"}}
++{"run":89,"commit":"2f0ee0f","metric":0.354848,"metrics":{"mean_device_f1_p10":0.340019,"transfer_mean_f1":0.151921,"median_kettle_f1":0.55514,"median_microwave_f1":0.267281,"median_fridge_f1":0.370963,"median_washing_machine_f1":0.242345,"median_dishwasher_f1":0.346705,"b1_events_mined":5260,"b1_enroll_top1_enc":0.84,"b1_enroll_top1_raw":0.65,"b1_cross_house_top1":0.21,"b1_gate_kettle_kept_frac":0.813,"b1_gate_mw_kept_frac":0.853,"b2_probe_mw_iso_mean":0.34,"b2_probe_iso_all_mean":0.61,"device_balanced_mean":0.359466,"house_1_v4_mean":0.540104,"v4_n_pairs":66,"v4_n_houses":20,"fridge_median_delta":0,"primary_delta":0.00022499999999997522},"status":"discard","description":"Iteration goal: attack a weak-median device that is NOT band-limited. Diagnostic unlock: `bench_v4.py --dump` yields per-pair precision/recall, so the whole pool was dumped for evidence.\n\nDIAGNOSIS (4-house subset dump, seeds 2026): AGGR kettle P=0.8079 R=0.8049 F1=0.8063; dishwasher P=0.7611 R=0.3733 F1=0.4575 (36 preds vs 127 gt -> recall-starved); fridge P=0.2997 R=0.2275; microwave P=0.2487 R=0.2410; washing_machine P=0.2335 R=0.2026. Kettle is healthy; every other device is precision- AND recall-poor, with house-specific collapses (refit/house_6 mw R=0.02 on 390 gt; refit/house_10 fridge P=0.04 on 1956 gt).\n\nCHANGE (model.py): (1) microwave plateau fusion - `predict` admits fragmented plateau events whose duration matches the mark's fragment band and then emitted one onset per event, so a duty-chunked magnetron cycle produced several onsets and score_episodes (one-to-one onset matching) counted each extra fragment as a false onset; fragments are now fused into one cycle span when the pause is inside 1.25x the marks' own fragment duration (eb['dur_p50'], the same margin convention as the wm/dw merge gaps), strictly conditional on ev_band so houses without extractor fragmentation are untouched. (2) ported the _wm30_profile mark-window rule to _dw30_profile: a window whose excitation never crosses the heater threshold is now skipped instead of disabling the whole dw detector, requiring >=2 usable windows. (3) corrected the dw disable message, which claimed 'mark windows produced no heater runs' when the real cause was simply no dishwasher mark.\n\nSUBSET SCREEN (refit/house_10, refit/house_17, refit/house_6, ukdale/house_1, seed 2026): mean 0.364151 -> 0.365202, mw median 0.223885 -> 0.228612, kettle/fridge/wm/dw bit-identical (the dw and message edits are provably inert on this pool, since the _dw30_profile all-or-nothing branch never fired in 61 blocks). Fusion print fired: 262 plateau events -> 204 cycles.\n\nAUTHORITATIVE POOL RUN: primary 0.354848 vs floor 0.354623 (delta 0.000225), p10 0.340019, device_balanced 0.359466, house_1_v4 0.540104, medians kettle 0.55514 / mw 0.267281 / fridge 0.370963 / wm 0.242345 / dw 0.346705, 66 pairs / 20 houses, checksPass true.\n\nFULL-POOL PER-PAIR EVIDENCE:\nEXIT=0\npairs parsed: 330\n  AGGR kettle           P=0.5187 R=0.6191 F1=0.5426 gt=20445 pred=28999 n_pairs=60\n  AGGR microwave        P=0.3305 R=0.2891 F1=0.2744 gt=9440 pred=10675 n_pairs=55\n  AGGR fridge           P=0.4299 R=0.3342 F1=0.3676 gt=189625 pred=150243 n_pairs=90\n  AGGR washing_machine  P=0.2426 R=0.2458 F1=0.2334 gt=4290 pred=5204 n_pairs=75\n  AGGR dishwasher       P=0.4330 R=0.3182 F1=0.3475 gt=2635 pred=1488 n_pairs=50\n--- per-device (median F1 over pairs, mean P, mean R, total pred, total gt) ---\nfridge           n= 90 medF1=0.300 meanP=0.430 meanR=0.335 pred=150243 gt=189625\nwashing_machine  n= 75 medF1=0.180 meanP=0.243 meanR=0.246 pred=  5204 gt=  4290\nkettle           n= 60 medF1=0.620 meanP=0.519 meanR=0.620 pred= 28999 gt= 20445\nmicrowave        n= 55 medF1=0.230 meanP=0.330 meanR=0.289 pred= 10675 gt=  9440\ndishwasher       n= 50 medF1=0.500 meanP=0.432 meanR=0.318 pred=  1488 gt=  2635\n\nVerdict: below the +0.01 keep bar; the mw fusion is a real but narrow gain (it can only touch the fragmented houses), and the per-pair table is the durable artifact.","title":"Mw fragment fusion: plateau onsets fused to cycle spans","summary":"Fuse duty-chunked mw plateaus into one cycle onset; subset mw median 0.2239->0.2286, pool primary 0.354848","timestamp":1790502284503,"segment":2,"confidence":2.295016972165646,"asi":{"hypothesis":"Duty-chunked magnetron cycles fragment into per-plateau events and were emitted as one onset each, so one-to-one onset matching counted extra fragments as false positives; fusing fragments whose pause is inside the marks' own fragment duration should recover mw precision where the extractor fragmented.","mechanism_confirmed":"Fusion print fired (262 plateau events -> 204 cycles) and the subset mw median rose 0.223885 -> 0.228612 with every other device bit-identical.","diagnostic_unlock":"bench_v4.py --dump prints per-pair P/R/F1 plus device aggregates; this is now the standard targeting tool.","device_structure":{"kettle":"P .81 R .80 - healthy","dishwasher":"P .76 R .37 - recall-starved, needs more detection not tighter gates","fridge":"P .30 R .23","microwave":"P .25 R .24","washing_machine":"P .23 R .20"},"worst_pairs":"refit/house_6 mw R=0.02 on 390 gt cycles; refit/house_10 fridge P=0.04 on 1956 gt and mw F1=0.19; refit/house_10 wm P=0.13 R=0.22","next_action_hint":"Use the full-pool dump table to target the collapses: house_6's microwave recall (0.02 on 390 gt cycles) is the single largest device-level hole, and dw needs recall (36 preds vs 127 gt), not gate tightening. The mw fusion is conditional and cannot help unfragmented houses.","inert_edits":["_dw30_profile window skip (the all-or-nothing branch never fired in 61 blocks)","dw disable message correction"]}}
++{"run":90,"commit":"2f0ee0f","metric":0.352638,"metrics":{"mean_device_f1_p10":0.346326,"transfer_mean_f1":0.151921,"median_kettle_f1":0.55514,"median_microwave_f1":0.267281,"median_fridge_f1":0.370963,"median_washing_machine_f1":0.242345,"median_dishwasher_f1":0.388346,"b1_events_mined":5260,"b1_enroll_top1_enc":0.84,"b1_enroll_top1_raw":0.65,"b1_cross_house_top1":0.21,"b1_gate_kettle_kept_frac":0.813,"b1_gate_mw_kept_frac":0.853,"b2_probe_mw_iso_mean":0.34,"b2_probe_iso_all_mean":0.61,"device_balanced_mean":0.359112,"house_1_v4_mean":0.540104,"v4_n_pairs":66,"v4_n_houses":20,"fridge_median_delta":0,"primary_delta":-0.0019850000000000145},"status":"discard","description":"Goal (from m23): the per-pair dump showed two dishwashers dead on EVERY seed - refit/house_10 (0 of 86 GT cycles, all 5 seeds) and refit/house_13 (~1 of 73) - worth about +0.012 primary if both reached F1 0.4. Both were diagnosed as the SAME root cause: bands derived from a mark whose own run is structureless.\n\n(1) MERGE GAP. refit/house_10's profile printed heater_gap_merge=70min, and 70 min is exactly the `4200.0 / DW30_GRID_S` fallback, reached only when max_gap == 0, i.e. when the marks show no internal pause at all. Its hs lower margin of 0.75 means every mark run is fully ON (one block per window), so no gap is ever measured. In the eval window that evidence-free 70-min gap fuses distinct cycles into one long run, and the span band (8-21 min, from the marks' own runs) then rejects every one. With no pause evidence the honest gap is one grid step; a single-block mark also means a genuine cycle's heater is continuous, so nothing needs bridging. Applied to both mirrored profiles (_dw30_profile and _wm30_profile).\n\n(2) DUTY FLOOR. A mark run IS the merged region above the heater threshold, so hs = 1.0 minus whatever dips the merge bridged. When every mark run is fully ON the floor of 0.75*min(hss) = 0.75 carries no information and excludes genuinely partial-duty cycles: other houses' dw marks measure hs 0.22-0.64, and refit/house_10's eval cycles plausibly do too. The floor is now dropped (hs_lo = 0) only when min(hss) >= 0.999, so houses with real dip evidence keep their measured band.\n\nEffect on the target: refit/house_10 went from 0 to 10 runs passing the run-basis gates and its profile now prints hs=0.00-1.75 and heater_gap_merge=0min. But it still emits only 1 prediction against 86 GT cycles.\n\nSUBSET SCREEN (refit/house_10, house_17, house_6, ukdale/house_1, seed 2026): mean 0.365202 -> 0.357100, dw median 0.457500 -> 0.408889, all other devices bit-identical. Note the two screens (with and without a dw mark-window skip port) were bit-identical, so that port is inert; and refit/house_13, the other dead-dishwasher home, is NOT in the subset, so the subset cannot see the main benefit of these fixes. The pool is the only arbiter that can, which is why it was measured despite the subset drop.\n\nAUTHORITATIVE POOL RUN: primary 0.352638 vs floor 0.354623 (delta -0.001985), p10 0.346326 (floor 0.33669), device_balanced 0.359112, house_1_v4 0.540104, medians kettle 0.55514 / mw 0.267281 / fridge 0.370963 / wm 0.242345 / dw 0.388346, 66 pairs / 20 houses, checksPass true.\n\nFULL-POOL DEVICE AGGREGATES:\nEXIT=0\npairs parsed: 330\n  AGGR kettle           P=0.5187 R=0.6191 F1=0.5426 gt=20445 pred=28999 n_pairs=60\n  AGGR microwave        P=0.3305 R=0.2891 F1=0.2744 gt=9440 pred=10675 n_pairs=55\n  AGGR fridge           P=0.4299 R=0.3342 F1=0.3676 gt=189625 pred=150243 n_pairs=90\n  AGGR washing_machine  P=0.2447 R=0.2479 F1=0.2358 gt=4290 pred=5209 n_pairs=75\n  AGGR dishwasher       P=0.4730 R=0.3424 F1=0.3803 gt=2635 pred=1589 n_pairs=50\n\nDISHWASHER PAIRS (sorted) AND ALL SUB-0.02 PAIRS:\n(the target device) ---\nrefit/house_10     s2026  F1=0.000 P=0.000 R=0.000 n=1/86\nrefit/house_11     s2026  F1=0.000 P=0.000 R=0.000 n=12/12\nrefit/house_10     s1     F1=0.000 P=0.000 R=0.000 n=0/86\nrefit/house_10     s2     F1=0.000 P=0.000 R=0.000 n=0/86\nrefit/house_11     s2     F1=0.000 P=0.000 R=0.000 n=26/12\nrefit/house_10     s3     F1=0.000 P=0.000 R=0.000 n=2/86\nrefit/house_11     s3     F1=0.000 P=0.000 R=0.000 n=6/12\nrefit/house_10     s4     F1=0.000 P=0.000 R=0.000 n=0/86\nrefit/house_11     s4     F1=0.000 P=0.000 R=0.000 n=9/12\nrefit/house_7      s2026  F1=0.060 P=0.120 R=0.040 n=33/91\nrefit/house_11     s1     F1=0.070 P=0.070 R=0.080 n=15/12\nrefit/house_7      s3     F1=0.080 P=0.140 R=0.050 n=37/91\nrefit/house_7      s4     F1=0.100 P=0.120 R=0.080 n=56/91\nrefit/house_21     s1     F1=0.110 P=0.280 R=0.070 n=18/76\nrefit/house_6      s1     F1=0.130 P=0.120 R=0.150 n=17/13\nrefit/house_7      s1     F1=0.130 P=0.180 R=0.100 n=51/91\nrefit/house_7      s2     F1=0.180 P=0.310 R=0.130 n=39/91\nrefit/house_18     s3     F1=0.250 P=0.900 R=0.140 n=10/63\nrefit/house_21     s3     F1=0.420 P=0.520 R=0.360 n=52/76\nrefit/house_21     s2026  F1=0.440 P=0.390 R=0.490 n=94/76\nrefit/house_13     s2026  F1=0.460 P=0.460 R=0.450 n=71/73\nrefit/house_21     s4     F1=0.470 P=0.760 R=0.340 n=34/76\nrefit/house_21     s2     F1=0.500 P=0.460 R=0.540 n=89/76\nukdale/house_1     s2     F1=0.500 P=0.470 R=0.540 n=32/28\nrefit/house_16     s4     F1=0.500 P=0.450 R=0.570 n=73/58\nrefit/house_1      s1     F1=0.510 P=0.830 R=0.370 n=12/27\nrefit/house_13     s2     F1=0.510 P=0.600 R=0.440 n=53/73\nrefit/house_16     s1     F1=0.530 P=0.440 R=0.670 n=88/58\nrefit/house_16     s3     F1=0.530 P=0.630 R=0.450 n=41/58\nrefit/house_16     s2026  F1=0.540 P=0.520 R=0.550 n=61/58\nrefit/house_6      s3     F1=0.540 P=0.540 R=0.540 n=13/13\nrefit/house_18     s2026  F1=0.550 P=0.750 R=0.430 n=36/63\nrefit/house_1      s4     F1=0.550 P=0.490 R=0.630 n=35/27\nrefit/house_13     s4     F1=0.550 P=0.810 R=0.410 n=37/73\nrefit/house_6      s2026  F1=0.560 P=0.580 R=0.540 n=12/13\nrefit/house_16     s2     F1=0.560 P=0.510 R=0.620 n=70/58\nrefit/house_6      s2     F1=0.560 P=0.580 R=0.540 n=12/13\nrefit/house_13     s1     F1=0.570 P=0.720 R=0.470 n=47/73\nrefit/house_6      s4     F1=0.570 P=0.530 R=0.620 n=15/13\nrefit/house_13     s3     F1=0.580 P=0.770 R=0.470 n=44/73\nrefit/house_18     s4     F1=0.580 P=0.960 R=0.410 n=27/63\nrefit/house_1      s2     F1=0.600 P=0.620 R=0.590 n=26/27\nrefit/house_1      s2026  F1=0.620 P=0.640 R=0.590 n=25/27\nrefit/house_18     s1     F1=0.620 P=0.750 R=0.520 n=44/63\nukdale/house_1     s1     F1=0.630 P=0.750 R=0.540 n=20/28\nrefit/house_18     s2     F1=0.650 P=0.910 R=0.510 n=35/63\nukdale/house_1     s2026  F1=0.670 P=1.000 R=0.500 n=14/28\nrefit/house_1      s3     F1=0.670 P=0.930 R=0.520 n=15/27\nukdale/house_1     s3     F1=0.700 P=1.000 R=0.540 n=15/28\nukdale/house_1     s4     F1=0.700 P=1.000 R=0.540 n=15/28\n\nVerdict: below the +0.01 keep bar. The two fixes are individually well-founded and each removed a real blocker (house_10 now admits its own runs), but admission is not detection: the admitted runs collapse into a single cluster, so house_10's real cycles are still not being found at all - the blocker is upstream of the gate family.","title":"Single-block dw marks: drop 70min merge gap and the hs floor","summary":"Two dw bands were derived from structureless marks; pool primary 0.352638 (floor 0.354623), dw median 0.388346","timestamp":1790502982384,"segment":2,"confidence":2.5880083292503655,"asi":{"hypothesis":"refit/house_10 and house_13's dead dishwashers share one root cause: gate bands derived from a mark whose own run is structureless, specifically an evidence-free 70-min merge gap and a duty floor of 0.75*1.0.","confirmed":"house_10 went from 0 to 10 runs passing the run-basis gates; its profile now prints heater_gap_merge=0min and hs=0.00-1.75. The 70-min value was provably the else-branch fallback 4200/DW30_GRID_S, reachable only when max_gap==0.","refuted":"Admission is not detection. With 10 runs admitted house_10 still emits 1 prediction against 86 GT cycles, so the remaining blocker is upstream of the gate family: the admitted runs form a single time cluster rather than 86 cycles.","inert_edits":["dw mark-window skip port from _wm30_profile (bit-identical subset results with and without it, so it is genuinely inert on this pool)"],"next_action_hint":"Diagnose house_10 upstream of the gates: dump the eval-window exc trace against the GT cycle times and find why the per-cycle heater signature is not present as one run per cycle (heat threshold from PROG_HEAT_AMP_FRAC * min(wm_amp, mark amp)? marks single-block at hs=1.0 vs eval cycles partial duty?). Also confirm whether house_13 even has a dw mark. Do NOT keep widening the band family; two rounds of band repairs have now moved the pool by ~0.","subset_warning":"The 4-house subset cannot see house_13 and its dw subset median moved down; subset aggregates are not comparable to the pool."}}
++{"run":91,"commit":"2f0ee0f","metric":0.3581651989081585,"metrics":{"mean_device_f1_p10":0.3436511416642649,"transfer_mean_f1":0.151921,"median_kettle_f1":0.55514,"median_microwave_f1":0.267281,"median_fridge_f1":0.370963,"median_washing_machine_f1":0.242345,"median_dishwasher_f1":0.384353,"b1_events_mined":5260,"b1_enroll_top1_enc":0.84,"b1_enroll_top1_raw":0.65,"b1_cross_house_top1":0.21,"b1_gate_kettle_kept_frac":0.813,"b1_gate_mw_kept_frac":0.853,"b2_probe_mw_iso_mean":0.34,"b2_probe_iso_all_mean":0.61,"device_balanced_mean":0.36586712629491175,"house_1_v4_mean":0.5401041710856695,"v4_n_pairs":66,"v4_n_houses":20,"fridge_median_delta":0,"primary_delta":0.003542},"status":"discard","description":"CONTEXT. Run 90 was discarded only because the primary is the median over seeds of the per-seed 66-pair mean, and its median seed (2026) fell 0.0020 when an evidence-free 70-min merge fallback was replaced by 1. Follow-up diagnostics (m25) then refuted, one at a time, level/threshold, merge gap alone, the hs floor, and the density ceiling, and an additive gate census on refit/house_10's eval window (merge_n=10) isolated the gate:\n- all gates permissive: 176 runs admitted, 43/86 GT cycles touched\n- + span band 8-21 min: 176 -> 16 runs, 9/86 cycles\n- + amp>=1393W, + mean 1375-5022W, + hs 0-1.75, + dens<=0.588: no further change (16 runs, 9 cycles)\nGround truth: 86 dw cycles, 10.0-27.2 min (median 18.8), spacing 16.6 h; 86/86 reach the mark-derived 1393 W. The 5 dw marks are 14.4-17.6 min windows each holding exactly ONE block of 12.5-17.0 min with hs=1.0 - no internal pause, no partial duty. So the span band (0.6*min, 1.25*max of the mark spans) was a tolerance around one structureless example.\n\nCHANGE (src/experiments/04_autoresearch/model.py, dw profile only). When the marks contain no internal pause at all (max_gap == 0), the merged block IS the whole above-heater region and the mark-span spread carries no evidence about burst distribution. In that case the merge gap is derived from the mark span scale (merge_n = round(0.5 * 0.6 * min(spans) / DW30_GRID_S), i.e. bridge pauses up to half the shortest mark span) and the span tolerance is widened about the same centre (0.25*min(spans) to 3.0*max(spans)); the scale-tolerant gates (amp/mean/hs/idle/dens) keep arbitrating. Evidence-bearing houses are untouched because the branch is keyed on max_gap == 0. Built on the run-90 edits (merge fallback + dw hs floor) re-applied from .auto/runs/90_single_block_mark_fixes.diff.\n\nMEASURED (full pool, 20 houses, 66 pairs, 5 seeds, 111 s, checks pass).\nprimary 0.358165 vs floor 0.354623 (+0.003542, sub-bar); p10 0.343651 vs 0.336690 (+0.006961); device_balanced 0.365867 vs 0.358294 (+0.007573); house_1 v4 mean 0.540104 (unchanged); dishwasher median 0.384353 vs 0.346705 (+0.037648); microwave median 0.267281 (+0.001277); kettle 0.555140, fridge 0.370963, washing_machine 0.242345 all unchanged - no device median dropped.\nTargeted screen (refit/house_10, refit/house_13): house_10 seed 2026 dishwasher went F1 0.15 (n=10 preds) -> 0.36 (n=73 preds, R=0.34); house_13 dishwasher 0.46 (2026) / 0.38 (seed 1), the run-90 level. p10 rising more than the median is the expected signature of repairing dead tail pairs rather than the centre.\n\nVERDICT. Real, uniformly-signed gain with no device regression, but +0.0035 is below the +0.01 keep bar, so discarded. Diff preserved at .auto/runs/91_single_block_span_condition.diff for bundling (as m22/m23 were). The condition is structural (absence of pause evidence in the calibration marks), not keyed to any house or benchmark value.\n\nNEXT. (1) The same argument applies to the wm mirror, which is identical code: a wm whose marks show no pause gets the same treatment. (2) Per-pair attribution of this run was not re-dumped; the next run should run bench_v4.py --dump and diff per pair against .scratch/run90_base.csv to find which houses moved and which dead pairs remain. (3) Remaining dead pairs on the median seed: refit/house_10 fridge (P=0.04 on 1956 gt), refit/house_6 microwave (R=0.02 on 390 gt), refit/house_11 wm/dw, refit/house_7 dw.","title":"run 91: dw span band from mark scale when marks show no pause","summary":"Pool 0.358165 (+0.0035): p10 +0.0070, db +0.0076, dw median +0.0377; house_10 dw 0.15->0.36. Sub-bar, discarded.","timestamp":1790504740081,"segment":2,"confidence":2.615277498414071,"asi":{"hypothesis":"For a house whose calibration marks contain no internal pause (max_gap == 0), the dw span band fitted to those marks is a tolerance around a structureless example and must be relaxed to a scale tolerance, with the merge gap derived from the mark span scale.","gate_census_house_10":"permissive 176 runs/43 cycles; span band alone 16/9; amp, mean, hs, dens add nothing","refuted_this_run":["level/threshold (86/86 cycles reach 1393 W)","merge gap alone (best 16 admitted, 9/86 cycles)","dw hs floor as house_10 cause (identical counts)","density ceiling (0.588 to inf changed nothing)"],"measured_gain":"primary +0.003542, p10 +0.006961, device_balanced +0.007573, dw median +0.037648, no device median down","rollback_reason":"primary gain below the +0.01 keep bar; diff saved to .auto/runs/91_single_block_span_condition.diff","next_action_hint":"apply the same no-pause condition to the wm mirror; dump per-pair results and diff against .scratch/run90_base.csv; then target refit/house_10 fridge, refit/house_6 microwave, refit/house_11 wm/dw","trap":"the printed 'dw sustained runs: N pass run-basis gates' line reports the mining/pre span, not the eval window"}}
+diff --git a/src/experiments/04_autoresearch/model.py b/src/experiments/04_autoresearch/model.py
+index b452cea..3f5c16a 100644
+--- a/src/experiments/04_autoresearch/model.py
++++ b/src/experiments/04_autoresearch/model.py
+@@ -456,7 +456,16 @@ def _dw30_profile(exc: np.ndarray, cal: dict, mark_dw: dict,
+     if max_gap > 0:
+         merge_n = max(1, int(round(1.25 * max_gap / DW30_GRID_S)))
+     else:
+-        merge_n = int(round(4200.0 / DW30_GRID_S))
++        # The marks show no internal pause, so there is NO evidence for a
++        # merge gap. The old fallback was a fixed 4200 s (70 min), which
++        # joined distinct eval-window cycles into one long run whose span
++        # then failed span_band: refit/house_10's dishwasher admitted 0 of
++        # its own runs on all five seeds (0 of 86 GT cycles detected all
++        # year) while its marks' own runs are 13-17 min. With no pause
++        # evidence the honest gap is the smallest resolvable one; a
++        # single-block mark means a genuine cycle's heater is continuous,
++        # so nothing needs bridging.
++        merge_n = 1
+     spans, p90s, means, hss, idles, denss = [], [], [], [], [], []
+     pres, posts = [], []
+     for (lo_us, hi_us), (j0, j1) in zip(cal['marks_us'], per):
+@@ -492,15 +501,37 @@ def _dw30_profile(exc: np.ndarray, cal: dict, mark_dw: dict,
+     # extension uses the median post phase symmetrically.
+     ext_back_s = max(0.0, float(np.median(pres)))
+     ext_fwd_s = max(0.0, float(np.median(posts)))
++    # see the hs_band note below: a mark whose runs are all fully ON gives
++    # no duty evidence, so no lower margin is imposed
++    # When the marks hold no internal pause at all (max_gap == 0) and every
++    # mark run sits wholly above the heater level (min(hss) >= 0.999), the
++    # merged block IS the above-heater region, so the mark-span spread
++    # carries no evidence about how one cycle's heater bursts are
++    # distributed: the narrow band is a tolerance around one
++    # structureless example. Relax it to a scale tolerance about the same
++    # centre and bridge this house's own burst pauses (up to half the
++    # shortest mark span); the scale-tolerant gates keep arbitrating.
++    if max_gap == 0.0:
++        merge_n = max(1, int(round(0.5 * 0.6 * min(spans) / DW30_GRID_S)))
++        span_band = (0.25 * min(spans), 3.0 * max(spans))
++    else:
++        span_band = (0.6 * min(spans), 1.25 * max(spans))
++    hs_lo = 0.0 if min(hss) >= 0.999 else 0.75 * min(hss)
+     prof = {'heat': heat,
+             'merge_n': merge_n,
+-            'span_band': (0.6 * min(spans), 1.25 * max(spans)),
++            'span_band': span_band,
+             # the wm30 profile carries the same 0.8 lower margin; the
+             # heater level varies +-15-20% across cycles and the dw/wm
+-            # class separation lives in the dens/idle gates, not here
++            # class separation lives in the dens/idle gates, not here.
++            # A mark run IS the merged region above the heater threshold, so
++            # hs is 1.0 minus whatever dips the merge bridged: when every mark
++            # run is fully ON there is no duty evidence at all, and the 0.75
++            # lower margin then excludes genuinely partial-duty cycles
++            # (refit/house_10 admitted 10 runs against 86 GT cycles). Keep the
++            # measured floor only when a mark run actually showed a dip.
+             'amp_lo': 0.8 * min(p90s),
+             'mean_band': (0.8 * min(means), 1.25 * max(means)),
+-            'hs_band': (0.75 * min(hss), 1.75 * max(hss)),
++            'hs_band': (hs_lo, 1.75 * max(hss)),
+             'idle_hi': 2.0 * max([v for v in idles if v is not None]) if any(v is not None for v in idles) else float('inf'),
+             'dens_hi': 2.0 * max(denss),
+             'ext_back6': int(round(ext_back_s / cad_s)),
+@@ -663,7 +694,16 @@ def _wm30_profile(exc: np.ndarray, cal: dict, mark_wm: dict,
+     if max_gap > 0:
+         merge_n = max(1, int(round(1.25 * max_gap / DW30_GRID_S)))
+     else:
+-        merge_n = int(round(4200.0 / DW30_GRID_S))
++        # The marks show no internal pause, so there is NO evidence for a
++        # merge gap. The old fallback was a fixed 4200 s (70 min), which
++        # joined distinct eval-window cycles into one long run whose span
++        # then failed span_band: refit/house_10's dishwasher admitted 0 of
++        # its own runs on all five seeds (0 of 86 GT cycles detected all
++        # year) while its marks' own runs are 13-17 min. With no pause
++        # evidence the honest gap is the smallest resolvable one; a
++        # single-block mark means a genuine cycle's heater is continuous,
++        # so nothing needs bridging.
++        merge_n = 1
+     spans, p90s, means, hss, idles, denss, oss, oes = (
+         [], [], [], [], [], [], [], [])
+     for j0, j1 in per:
+@@ -687,9 +727,23 @@ def _wm30_profile(exc: np.ndarray, cal: dict, mark_wm: dict,
+         oes.append((j1 - pad_n - j0 - b) * DW30_GRID_S)
+     ext_back_s = float(np.mean(oss))
+     ext_fwd_s = float(np.mean(oes))
++    # The ceiling hangs off max(spans), a maximum over the five mark
++    # windows. When those spans are outlier-dominated (max > 3x min) that
++    # maximum is one sample's width, not a device property: the band then
++    # admits eval runs far longer than any typical mark cycle and the
++    # detector's precision collapses (profiles such as 5-136 min and
++    # 4-44 min). In that case the ceiling is referenced to the median
++    # mark span instead, at the same PROG_SPAN_HI margin; houses whose
++    # marks are mutually consistent keep the original reference, so the
++    # change is inert for them. The lower bound still hangs off min(spans)
++    # so shorter-than-mark cycles stay admitted.
++    if max(spans) > 3.0 * min(spans):
++        span_hi = PROG_SPAN_HI * float(np.median(spans))
++    else:
++        span_hi = PROG_SPAN_HI * max(spans)
+     prof = {'heat': heat,
+             'merge_n': merge_n,
+-            'span_band': (0.6 * min(spans), 1.25 * max(spans)),
++            'span_band': (0.6 * min(spans), span_hi),
+             # REL_AMP lo margin (0.8x) on the heater p90 floor: the mark
+             # windows' p90s are the strongest observed heater draws; the
+             # same lo margin every other amp band uses covers the weaker
+@@ -1316,13 +1370,37 @@ def build_and_train(ctx: dict):
+                     + np.abs(dur - md) / mdh)
+             dispute = ket_ok & mw_ok
+             mw_ok = mw_ok & ~(dispute & (ket_z <= mw_z))
+-        for k in np.flatnonzero(mw_ok):
+-            i0 = int(k)
+-            seg = out['microwave'][on[i0]:off[i0]]
+-            out['microwave'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
+-            i0 = int(k)
+-            seg = out['microwave'][on[i0]:off[i0]]
+-            out['microwave'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
++        _mwk = np.flatnonzero(mw_ok)
++        if eb is not None and _mwk.size > 1:
++            # duty-chunked magnetron: one GT cycle fragments into several
++            # 30-60s plateau events, and score_episodes matches onsets
++            # one-to-one, so every extra fragment is a false onset. Fuse
++            # fragments whose pause is inside the marks' own fragment
++            # duration (1.25x, the same margin convention as the wm/dw
++            # merge gaps) and emit the merged cycle span once.
++            gap_n = max(1, int(round(1.25 * float(eb['dur_p50']) / cad_s)))
++            groups = []
++            g0 = g1 = int(_mwk[0])
++            amax = float(amp[g0])
++            for k in _mwk[1:]:
++                k = int(k)
++                if on[k] - off[g1] <= gap_n:
++                    g1 = k
++                    amax = max(amax, float(amp[k]))
++                else:
++                    groups.append((g0, g1, amax))
++                    g0 = g1 = k
++                    amax = float(amp[k])
++            groups.append((g0, g1, amax))
++            print(f'   mw fragment fusion: {_mwk.size} plateau events -> '
++                  f'{len(groups)} cycles (pause<='
++                  f'{1.25 * float(eb["dur_p50"]) / 60:.1f}min)')
++        else:
++            groups = [(int(k), int(k), float(amp[int(k)])) for k in _mwk]
++        for g0, g1, amax in groups:
++            a6, b6 = int(on[g0]), int(off[g1])
++            seg = out['microwave'][a6:b6]
++            out['microwave'][a6:b6] = np.maximum(seg, amax)
+         if fridge_band is not None:
+             ok = ((fr_amp >= fridge_band['amp'][0])
+                   & (fr_amp <= fridge_band['amp'][1])

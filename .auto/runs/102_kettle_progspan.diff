@@ -1,0 +1,266 @@
+diff --git a/src/experiments/04_autoresearch/model.py b/src/experiments/04_autoresearch/model.py
+index b452cea..e04ed86 100644
+--- a/src/experiments/04_autoresearch/model.py
++++ b/src/experiments/04_autoresearch/model.py
+@@ -92,6 +92,7 @@ FR_STEP_MIN_W = 20.0   # fridge-only step floor: the pool's compressor steps
+                        # are 22-91 W, i.e. all below AMP_MIN_W = 50 W
+ DUTY_AMP_W = (20.0, 300.0)
+ DUTY_DUR_S = (600.0, 2400.0)
++DUTY_DUR_SHORT = 120.0  # extended mining floor: some homes recycle in <10min
+ DUTY_CELL_MIN = 300    # min events per (amp, dur) cell over the mined span
+ DUTY_CV_MAX = 0.6      # require regular (thermostat-like) recycling
+ FR_POP_AMP_HI = 120.0  # fallback population amp cap: domestic fridge
+@@ -456,7 +457,16 @@ def _dw30_profile(exc: np.ndarray, cal: dict, mark_dw: dict,
+     if max_gap > 0:
+         merge_n = max(1, int(round(1.25 * max_gap / DW30_GRID_S)))
+     else:
+-        merge_n = int(round(4200.0 / DW30_GRID_S))
++        # The marks show no internal pause, so there is NO evidence for a
++        # merge gap. The old fallback was a fixed 4200 s (70 min), which
++        # joined distinct eval-window cycles into one long run whose span
++        # then failed span_band: refit/house_10's dishwasher admitted 0 of
++        # its own runs on all five seeds (0 of 86 GT cycles detected all
++        # year) while its marks' own runs are 13-17 min. With no pause
++        # evidence the honest gap is the smallest resolvable one; a
++        # single-block mark means a genuine cycle's heater is continuous,
++        # so nothing needs bridging.
++        merge_n = 1
+     spans, p90s, means, hss, idles, denss = [], [], [], [], [], []
+     pres, posts = [], []
+     for (lo_us, hi_us), (j0, j1) in zip(cal['marks_us'], per):
+@@ -492,15 +502,37 @@ def _dw30_profile(exc: np.ndarray, cal: dict, mark_dw: dict,
+     # extension uses the median post phase symmetrically.
+     ext_back_s = max(0.0, float(np.median(pres)))
+     ext_fwd_s = max(0.0, float(np.median(posts)))
++    # see the hs_band note below: a mark whose runs are all fully ON gives
++    # no duty evidence, so no lower margin is imposed
++    # When the marks hold no internal pause at all (max_gap == 0) and every
++    # mark run sits wholly above the heater level (min(hss) >= 0.999), the
++    # merged block IS the above-heater region, so the mark-span spread
++    # carries no evidence about how one cycle's heater bursts are
++    # distributed: the narrow band is a tolerance around one
++    # structureless example. Relax it to a scale tolerance about the same
++    # centre and bridge this house's own burst pauses (up to half the
++    # shortest mark span); the scale-tolerant gates keep arbitrating.
++    if max_gap == 0.0:
++        merge_n = max(1, int(round(0.5 * 0.6 * min(spans) / DW30_GRID_S)))
++        span_band = (0.25 * min(spans), 3.0 * max(spans))
++    else:
++        span_band = (0.6 * min(spans), 1.25 * max(spans))
++    hs_lo = 0.0 if min(hss) >= 0.999 else 0.75 * min(hss)
+     prof = {'heat': heat,
+             'merge_n': merge_n,
+-            'span_band': (0.6 * min(spans), 1.25 * max(spans)),
++            'span_band': span_band,
+             # the wm30 profile carries the same 0.8 lower margin; the
+             # heater level varies +-15-20% across cycles and the dw/wm
+-            # class separation lives in the dens/idle gates, not here
++            # class separation lives in the dens/idle gates, not here.
++            # A mark run IS the merged region above the heater threshold, so
++            # hs is 1.0 minus whatever dips the merge bridged: when every mark
++            # run is fully ON there is no duty evidence at all, and the 0.75
++            # lower margin then excludes genuinely partial-duty cycles
++            # (refit/house_10 admitted 10 runs against 86 GT cycles). Keep the
++            # measured floor only when a mark run actually showed a dip.
+             'amp_lo': 0.8 * min(p90s),
+             'mean_band': (0.8 * min(means), 1.25 * max(means)),
+-            'hs_band': (0.75 * min(hss), 1.75 * max(hss)),
++            'hs_band': (hs_lo, 1.75 * max(hss)),
+             'idle_hi': 2.0 * max([v for v in idles if v is not None]) if any(v is not None for v in idles) else float('inf'),
+             'dens_hi': 2.0 * max(denss),
+             'ext_back6': int(round(ext_back_s / cad_s)),
+@@ -663,7 +695,16 @@ def _wm30_profile(exc: np.ndarray, cal: dict, mark_wm: dict,
+     if max_gap > 0:
+         merge_n = max(1, int(round(1.25 * max_gap / DW30_GRID_S)))
+     else:
+-        merge_n = int(round(4200.0 / DW30_GRID_S))
++        # The marks show no internal pause, so there is NO evidence for a
++        # merge gap. The old fallback was a fixed 4200 s (70 min), which
++        # joined distinct eval-window cycles into one long run whose span
++        # then failed span_band: refit/house_10's dishwasher admitted 0 of
++        # its own runs on all five seeds (0 of 86 GT cycles detected all
++        # year) while its marks' own runs are 13-17 min. With no pause
++        # evidence the honest gap is the smallest resolvable one; a
++        # single-block mark means a genuine cycle's heater is continuous,
++        # so nothing needs bridging.
++        merge_n = 1
+     spans, p90s, means, hss, idles, denss, oss, oes = (
+         [], [], [], [], [], [], [], [])
+     for j0, j1 in per:
+@@ -685,8 +726,15 @@ def _wm30_profile(exc: np.ndarray, cal: dict, mark_wm: dict,
+         # emission extension targets
+         oss.append((a - pad_n) * DW30_GRID_S)
+         oes.append((j1 - pad_n - j0 - b) * DW30_GRID_S)
+-    ext_back_s = float(np.mean(oss))
+-    ext_fwd_s = float(np.mean(oes))
++    # Median, not mean: the marks are five windows and one anomalous one
++    # (an extra load inside its pad, a cycle that starts late) moves the
++    # mean by up to a fifth of its span, which shifts every emitted episode
++    # and collapses the device to zero matches while counts and gates all
++    # still pass - the exact failure the dw profile was fixed for
++    # (a 606-642s offset error, relit/dw F1 0.03). Same convention, same
++    # non-negative clamp as the dw's ext_back_s/ext_fwd_s above.
++    ext_back_s = max(0.0, float(np.median(oss)))
++    ext_fwd_s = max(0.0, float(np.median(oes)))
+     prof = {'heat': heat,
+             'merge_n': merge_n,
+             'span_band': (0.6 * min(spans), 1.25 * max(spans)),
+@@ -1089,6 +1137,42 @@ def build_and_train(ctx: dict):
+             print('   fridge mined cell: none regular enough; '
+                   'fallback = passive-window pairs')
+ 
++    # short-cycle rescue: the 600 s mining floor is a compressor prior, so a
++    # home whose fridge recycles every few minutes is invisible to the
++    # (amp x dur) cell fit above - that fit can only see the >=600 s tail,
++    # which is the merged long excursions. Re-mine the same grid over the
++    # full sustained range and accept a materially shorter mode only when a
++    # single 1-min duration bucket DOMINATES the whole in-window population
++    # (>=2000 events and >=50% of them) and the prior band's own floor is
++    # still pinned at the 600 s prior. The thermostat-interval cv gate used
++    # by the cell fit above is not usable here: a real fridge's inter-cycle
++    # interval varies (cv 0.69 on eco/house_06) so no cell ever clears 0.6.
++    if (fridge_band is not None
++            and fridge_band['dur'][0] >= 0.9 * DUTY_DUR_S[0]):
++        dm_w = ((fr_amp >= DUTY_AMP_W[0]) & (fr_amp <= DUTY_AMP_W[1])
++                & (fr_dur >= DUTY_DUR_SHORT) & (fr_dur <= DUTY_DUR_S[1]))
++        idx_w = np.flatnonzero(dm_w)
++        buckets_w: dict = {}
++        for k in idx_w:
++            buckets_w.setdefault(int(fr_dur[k] // 60.0), []).append(int(k))
++        ks_w = np.zeros(0, dtype=np.int64)
++        d50_w = 0.0
++        dom = 0.0
++        if idx_w.size:
++            _b, _ks = max(buckets_w.items(), key=lambda kv: len(kv[1]))
++            ks_w = np.asarray(_ks, dtype=np.int64)
++            d50_w = float(np.percentile(fr_dur[ks_w], 50))
++            dom = len(ks_w) / float(idx_w.size)
++        if (ks_w.size >= 2000 and dom >= 0.5
++                and DUTY_DUR_SHORT <= d50_w <= 300.0
++                and d50_w < 0.5 * fridge_band['dur'][0]):
++            print(f'   fridge short-cycle cell: p50={d50_w / 60:.1f}min '
++                  f'n={ks_w.size} dom={dom:.2f} replaces the '
++                  f'{fridge_band["dur"][0] / 60:.0f}min-floor band')
++            fridge_band = {'amp': _pband(fr_amp[ks_w]),
++                           'dur': _pband(fr_dur[ks_w]),
++                           'n': int(ks_w.size)}
++
+     # fridge run-basis gates: compressor draws below the extractor's amp
+     # floor or with broken rise/fall pairing never become events; on the
+     # coarse grid they are isolated flat runs inside the fridge band.
+@@ -1118,10 +1202,14 @@ def build_and_train(ctx: dict):
+             fr_lo = 0.8 * fridge_band['amp'][0]
+             fr_dur_lo = fridge_band['dur'][0] / REL_DUR[1]
+             fr_iso = 3.0 * fridge_band['amp'][1]
++        # a short-cycle band can sit below the mark-derived 1/3 floor:
++        # clamp so the run window never inverts (lo > hi admits nothing)
++        fr_dur_lo = min(fr_dur_lo, fridge_band['dur'][0])
++        fr_dur_hi = max(fridge_band['dur'][1], fr_dur_lo)
+         fridge_band['fr_run'] = {'amp_lo': fr_lo,
+                                  'amp_hi': fridge_band['amp'][1],
+                                  'dur_lo': fr_dur_lo,
+-                                 'dur_hi': fridge_band['dur'][1],
++                                 'dur_hi': fr_dur_hi,
+                                  'iso_amp': fr_iso,
+                                  'iso_win': KET_ISO_WIN_S}
+         fr_ok = ((ev_amp >= fridge_band['amp'][0])
+@@ -1171,10 +1259,12 @@ def build_and_train(ctx: dict):
+             exc_e = _dw30_grid(f, cad_s)
+         if dw30 is not None or wm30 is not None:
+             ev30_e = np.sort(on // stride)
++        prog_spans = []
+         if dw30 is not None:
+             for a30, b30 in _dw30_runs(exc_e, ev30_e, dw30):
+                 i0 = max(0, stride * a30 - dw30['ext_back6'])
+                 i1 = min(len(f), stride * b30 + dw30['ext_fwd6'])
++                prog_spans.append((stride * a30, stride * b30))
+                 seg = out['dishwasher'][i0:i1]
+                 out['dishwasher'][i0:i1] = np.maximum(
+                     seg, dw30['emit_w'])
+@@ -1205,6 +1295,7 @@ def build_and_train(ctx: dict):
+             out[d][on[a0]:off[a1 - 1]] = mark[d]['mean_w']
+             ev_in_named[a0:a1] = True
+             named_spans.append((on[a0], off[a1 - 1]))
++        prog_spans.extend(named_spans)
+ 
+         # 1b) wm sustained runs (see _wm30_profile): the marks' heater
+         # blocks fuse into one run per cycle; gated on span, heater p90,
+@@ -1236,6 +1327,7 @@ def build_and_train(ctx: dict):
+                     continue
+                 i0 = max(0, a6 - wm30['ext_back6'])
+                 i1 = min(len(f), b6 + wm30['ext_fwd6'])
++                prog_spans.append((a6, b6))
+                 seg = out['washing_machine'][i0:i1]
+                 out['washing_machine'][i0:i1] = np.maximum(
+                     seg, wm30['emit_w'])
+@@ -1245,14 +1337,25 @@ def build_and_train(ctx: dict):
+         # named chains that mimic the microwave band - suppress mw there.
+         # Kettle is separated by duration, fridge by amplitude, so their
+         # classification stays chain-blind.
++        # an event lying inside a span already emitted as a program
++        # appliance (named chain, or a sustained dw/wm run) draws at the
++        # program heater's level: dw/wm heater blocks share the kettle's
++        # amp range and no mark-derived band can separate them (m35/m36),
++        # but the program span is already known by construction. mw
++        # suppresses here via ev_in_named; the kettle was chain-blind.
++        ev_in_prog = np.zeros(len(on), dtype=bool)
++        for c0, c1 in prog_spans:
++            ev_in_prog |= (on < c1) & (off > c0)
+         eb = ev_band.get('kettle')
+         if eb is not None:
+             ket_ok = ((amp >= eb['amp_lo']) & (amp <= eb['amp_hi'])
++                      & ~ev_in_prog
+                       & (dur >= eb['dur_lo']) & (dur <= eb['dur_hi']))
+         elif 'kettle' in mark:
+             p = mark['kettle']
+             dr = dur_ref.get('kettle', p['dur_s'])
+             ket_ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
++                      & ~ev_in_prog
+                       & (dur >= REL_DUR[0] * dr) & (dur <= REL_DUR[1] * dr))
+         else:
+             ket_ok = np.zeros(len(on), dtype=bool)
+@@ -1316,13 +1419,37 @@ def build_and_train(ctx: dict):
+                     + np.abs(dur - md) / mdh)
+             dispute = ket_ok & mw_ok
+             mw_ok = mw_ok & ~(dispute & (ket_z <= mw_z))
+-        for k in np.flatnonzero(mw_ok):
+-            i0 = int(k)
+-            seg = out['microwave'][on[i0]:off[i0]]
+-            out['microwave'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
+-            i0 = int(k)
+-            seg = out['microwave'][on[i0]:off[i0]]
+-            out['microwave'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
++        _mwk = np.flatnonzero(mw_ok)
++        if eb is not None and _mwk.size > 1:
++            # duty-chunked magnetron: one GT cycle fragments into several
++            # 30-60s plateau events, and score_episodes matches onsets
++            # one-to-one, so every extra fragment is a false onset. Fuse
++            # fragments whose pause is inside the marks' own fragment
++            # duration (1.25x, the same margin convention as the wm/dw
++            # merge gaps) and emit the merged cycle span once.
++            gap_n = max(1, int(round(1.25 * float(eb['dur_p50']) / cad_s)))
++            groups = []
++            g0 = g1 = int(_mwk[0])
++            amax = float(amp[g0])
++            for k in _mwk[1:]:
++                k = int(k)
++                if on[k] - off[g1] <= gap_n:
++                    g1 = k
++                    amax = max(amax, float(amp[k]))
++                else:
++                    groups.append((g0, g1, amax))
++                    g0 = g1 = k
++                    amax = float(amp[k])
++            groups.append((g0, g1, amax))
++            print(f'   mw fragment fusion: {_mwk.size} plateau events -> '
++                  f'{len(groups)} cycles (pause<='
++                  f'{1.25 * float(eb["dur_p50"]) / 60:.1f}min)')
++        else:
++            groups = [(int(k), int(k), float(amp[int(k)])) for k in _mwk]
++        for g0, g1, amax in groups:
++            a6, b6 = int(on[g0]), int(off[g1])
++            seg = out['microwave'][a6:b6]
++            out['microwave'][a6:b6] = np.maximum(seg, amax)
+         if fridge_band is not None:
+             ok = ((fr_amp >= fridge_band['amp'][0])
+                   & (fr_amp <= fridge_band['amp'][1])

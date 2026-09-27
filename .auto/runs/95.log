@@ -1,0 +1,781 @@
+   mark profiles: kettle amp=115W dur=36.4min mean=109W; microwave amp=1046W dur=2.6min mean=918W; fridge amp=328W dur=1.6min mean=897W
+   kettle mark draw fragments in the extractor (event p50 1110W/864s vs core 115W/2184s) - event-based gate bands
+   mined 29659 fridge-floor events (>=20W step)
+   mined 15450 level-excursion events from 180 pre-span days
+   mined kettle cluster: n=1600 dur_p50=9.4min (mark 36.4min)
+   mined microwave cluster: n=286 dur_p50=2.7min (mark 2.6min)
+   mined program chains: 0 pass structure, named wm=0 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   kettle sustained marks: 2/5 windows hold an isolated; 3 hold an in-band run
+   kettle sustained runs: 74 net-new candidates (0.41/day)
+   fridge fallback: population band amp=21-89W dur=10-37min n=5133
+   fridge run-basis: 1416 net-new candidates (7.87/day)
+   mark profiles: kettle amp=1361W dur=2.0min mean=1165W; fridge amp=165W dur=0.8min mean=331W; washing_machine amp=2132W dur=85.1min mean=444W dens=0.10-0.52/min; dishwasher amp=2180W dur=78.5min mean=815W dens=0.04-0.36/min
+   mined 23734 fridge-floor events (>=20W step)
+   mined 16056 level-excursion events from 180 pre-span days
+   dw sustained profile: span=4-94min amp>=1402W mean=734-2331W hs=0.19-1.10 idle<=708W dens<=0.800/min heater_gap_merge=25min ext_back=17.5min ext_fwd=0.5min pre_offs=['17.5', '17.0', '66.0', '5.0', '17.5']
+   dw synth onset check: emitted-vs-pasted onset deltas ['+0', '+0', '-30'] (median +0s)
+   dw sustained runs: 244 pass run-basis gates (1.356/day)
+   mined kettle cluster: n=762 dur_p50=2.2min (mark 2.0min)
+   mined program chains: 310 pass structure, named wm=19 dw=0
+   wm sustained profile: span=16-100min amp>=1877W mean=1226-2734W hs=0.22-1.11 idle<=2952W dens=0.111-1.156/min heater_gap_merge=32min ext_back=4.5min ext_fwd=22.0min
+   wm sustained runs: 32 net-new candidates (0.178/day)
+   kettle sustained marks: 1/5 windows hold an isolated; 4 hold an in-band run
+   kettle sustained runs: 243 net-new candidates (1.35/day)
+   fridge fallback: population band amp=21-105W dur=11-38min n=3541
+   fridge run-basis: 1900 net-new candidates (10.56/day)
+   mark profiles: fridge amp=40W dur=4.1min mean=49W
+   mined 15719 fridge-floor events (>=20W step)
+   mined 11185 level-excursion events from 164 pre-span days
+   mined program chains: 0 pass structure, named wm=0 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   fridge fallback: population band amp=22-108W dur=10-36min n=1460
+   fridge run-basis: 7332 net-new candidates (44.71/day)
+   mark profiles: microwave amp=1226W dur=1.7min mean=1113W; fridge amp=30W dur=0.7min mean=30W; washing_machine amp=2020W dur=89.1min mean=451W dens=0.03-0.48/min
+   mark re-anchor fridge: amp 30W is below the reader floor 38W -> median draw 77W
+   mined 11407 fridge-floor events (>=20W step)
+   mined 6299 level-excursion events from 180 pre-span days
+   mined microwave cluster: n=187 dur_p50=1.4min (mark 1.7min)
+   mined program chains: 63 pass structure, named wm=37 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   wm sustained profile: mark window 2 has no heater blocks; skipped
+   wm sustained profile: span=5-60min amp>=1867W mean=1621-3984W hs=0.63-1.75 idle<=964W dens=0.068-0.941/min heater_gap_merge=9min ext_back=4.2min ext_fwd=73.5min
+   wm sustained runs: 18 net-new candidates (0.100/day)
+   fridge fallback: population band amp=22-85W dur=11-37min n=2182
+   fridge run-basis: 2068 net-new candidates (11.49/day)
+   mark profiles: kettle amp=2632W dur=1.3min mean=1871W; microwave amp=1216W dur=1.8min mean=315W; fridge amp=74W dur=0.3min mean=141W; washing_machine amp=459W dur=100.4min mean=219W dens=0.37-0.72/min
+   microwave mark draw fragments in the extractor (event p50 606W/60s vs core 1216W/108s) - event-based gate bands
+   mined 24535 fridge-floor events (>=20W step)
+   mined 14760 level-excursion events from 180 pre-span days
+   mined kettle cluster: n=1023 dur_p50=1.3min (mark 1.3min)
+   mined microwave cluster: n=378 dur_p50=1.4min (mark 1.8min)
+   mined program chains: 424 pass structure, named wm=53 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   wm sustained profile: span=53-112min amp>=405W mean=248-650W hs=0.35-1.17 idle<=288W dens=0.302-1.622/min heater_gap_merge=10min ext_back=1.0min ext_fwd=10.5min
+   wm sustained runs: 72 net-new candidates (0.400/day)
+   kettle sustained marks: 4/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 212 net-new candidates (1.18/day)
+   fridge fallback: population band amp=21-108W dur=11-38min n=5342
+   fridge run-basis: 4252 net-new candidates (23.62/day)
+   mw fragment fusion: 1011 plateau events -> 730 cycles (pause<=1.2min)
+   mark profiles: fridge amp=782W dur=7.0min mean=1818W
+   mined 22945 fridge-floor events (>=20W step)
+   mined 10371 level-excursion events from 180 pre-span days
+   mined program chains: 0 pass structure, named wm=0 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   fridge fallback: population band amp=22-61W dur=12-38min n=5439
+   fridge run-basis: 4091 net-new candidates (22.73/day)
+   mark profiles: kettle amp=2960W dur=2.5min mean=3000W; washing_machine amp=637W dur=70.2min mean=30W dens=0.17-0.33/min; dishwasher amp=2088W dur=22.7min mean=1845W dens=0.00-0.23/min
+   mined 20613 fridge-floor events (>=20W step)
+   mined 14691 level-excursion events from 180 pre-span days
+   dw sustained profile: span=3-93min amp>=1646W mean=1460-2873W hs=0.00-1.75 idle<=infW dens<=0.348/min heater_gap_merge=3min ext_back=0.5min ext_fwd=0.0min pre_offs=['0.5', '0.5', '1.0', '0.0', '-1.0']
+   dw synth onset check: 1/3 pastes recovered by gates (deltas ['none', '+0', 'none']) - no correction
+   dw sustained runs: 207 pass run-basis gates (1.150/day)
+   mined kettle cluster: n=1437 dur_p50=1.9min (mark 2.5min)
+   mined program chains: 373 pass structure, named wm=33 dw=0
+   wm sustained profile: span=34-176min amp>=2189W mean=1006-2559W hs=0.41-1.71 idle<=566W dens=0.117-0.709/min heater_gap_merge=19min ext_back=0.0min ext_fwd=1.5min
+   wm sustained runs: 33 net-new candidates (0.183/day)
+   kettle sustained marks: 1/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 103 net-new candidates (0.57/day)
+   fridge fallback: population band amp=22-111W dur=11-37min n=5610
+   mark profiles: kettle amp=2956W dur=1.1min mean=2123W; microwave amp=1743W dur=3.0min mean=848W; fridge amp=313W dur=0.7min mean=535W; washing_machine amp=1998W dur=129.0min mean=457W dens=0.18-0.52/min; dishwasher amp=2525W dur=98.3min mean=1116W dens=0.08-0.21/min
+   mined 35198 fridge-floor events (>=20W step)
+   mined 18986 level-excursion events from 180 pre-span days
+   dw sustained profile: span=48-122min amp>=2022W mean=1065-2077W hs=0.38-0.90 idle<=717W dens<=0.677/min heater_gap_merge=39min ext_back=18.0min ext_fwd=0.0min pre_offs=['1.5', '18.5', '18.0', '17.5', '18.5']
+   dw synth onset check: emitted-vs-pasted onset deltas ['+0', 'none', '-30'] (median -15s)
+   dw sustained runs: 24 pass run-basis gates (0.133/day)
+   mined kettle cluster: n=1217 dur_p50=1.5min (mark 1.1min)
+   mined microwave cluster: n=395 dur_p50=1.1min (mark 3.0min)
+   mined program chains: 127 pass structure, named wm=27 dw=0
+   wm sustained profile: mark window 3 has no heater blocks; skipped
+   wm sustained profile: span=10-128min amp>=1902W mean=670-2951W hs=0.12-1.25 idle<=2167W dens=0.171-1.210/min heater_gap_merge=89min ext_back=4.5min ext_fwd=46.5min
+   wm sustained runs: 8 net-new candidates (0.044/day)
+   kettle sustained marks: 5/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 220 net-new candidates (1.22/day)
+   fridge fallback: population band amp=22-89W dur=11-37min n=10496
+   fridge run-basis: 3548 net-new candidates (19.71/day)
+   mark profiles: kettle amp=1944W dur=1.3min mean=1562W; microwave amp=1086W dur=1.6min mean=719W; fridge amp=104W dur=18.4min mean=109W; washing_machine amp=670W dur=67.4min mean=160W dens=0.00-0.27/min; dishwasher amp=1803W dur=93.1min mean=723W dens=0.06-0.25/min
+   mined 14141 fridge-floor events (>=20W step)   mark profiles: fridge amp=601W dur=2.2min mean=1331W
+   mined 22945 fridge-floor events (>=20W step)
+   mined 10371 level-excursion events from 180 pre-span days
+   mined program chains: 0 pass structure, named wm=0 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   fridge fallback: population band amp=22-61W dur=12-38min n=5439
+   fridge run-basis: 4091 net-new candidates (22.73/day)
+   mark profiles: kettle amp=2584W dur=1.8min mean=2570W; microwave amp=1417W dur=2.0min mean=1044W; fridge amp=932W dur=0.3min mean=2121W; washing_machine amp=875W dur=63.7min mean=393W dens=0.20-0.25/min
+   mined 19456 fridge-floor events (>=20W step)
+   mined 12184 level-excursion events from 180 pre-span days
+   mined kettle cluster: n=1655 dur_p50=1.5min (mark 1.8min)
+   mined microwave cluster: n=621 dur_p50=1.5min (mark 2.0min)
+   mined program chains: 358 pass structure, named wm=48 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   wm sustained profile: span=23-71min amp>=579W mean=318-1169W hs=0.11-1.01 idle<=600W dens=0.121-0.496/min heater_gap_merge=30min ext_back=3.0min ext_fwd=7.5min
+   wm sustained runs: 55 net-new candidates (0.306/day)
+   kettle sustained marks: 3/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 81 net-new candidates (0.45/day)
+   fridge fallback: population band amp=21-100W dur=11-38min n=2097
+   fridge run-basis: 2372 net-new candidates (13.18/day)
+   mark profiles: kettle amp=3108W dur=1.7min mean=3017W; microwave amp=1830W dur=4.9min mean=1244W; fridge amp=56W dur=18.8min mean=338W; washing_machine amp=2795W dur=45.8min mean=1119W dens=0.18-0.29/min
+   mined 21601 fridge-floor events (>=20W step)
+   mined 13308 level-excursion events from 180 pre-span days
+   mined kettle cluster: n=2230 dur_p50=1.3min (mark 1.7min)
+   mined microwave cluster: n=889 dur_p50=1.5min (mark 4.9min)
+   mined program chains: 467 pass structure, named wm=169 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   wm sustained profile: span=8-56min amp>=2030W mean=1167-4782W hs=0.33-1.75 idle<=911W dens=0.058-0.593/min heater_gap_merge=31min ext_back=2.0min ext_fwd=31.0min
+   wm sustained runs: 207 net-new candidates (1.150/day)
+   kettle sustained marks: 4/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 205 net-new candidates (1.14/day)
+   fridge fallback: population band amp=23-79W dur=11-36min n=3828
+   fridge run-basis: 518 net-new candidates (2.88/day)
+   mark profiles: microwave amp=1254W dur=3.6min mean=696W; fridge amp=2129W dur=17.1min mean=2780W; washing_machine amp=2045W dur=118.3min mean=480W dens=0.26-0.36/min; dishwasher amp=2017W dur=13.7min mean=1806W dens=0.06-0.25/min
+   microwave mark draw fragments in the extractor (event p50 2404W/132s vs core 1254W/216s) - event-based gate bands
+   mined 26229 fridge-floor events (>=20W step)
+   mined 19960 level-excursion events from 180 pre-span days
+   dw sustained profile: span=4-19min amp>=1263W mean=1212-5456W hs=0.42-1.75 idle<=2929W dens<=0.667/min heater_gap_merge=4min ext_back=1.0min ext_fwd=0.0min pre_offs=['-1.0', '1.0', '1.5', '6.0', '1.0']
+   dw synth onset check: 0/3 pastes recovered by gates (deltas ['none', 'none', 'none']) - no correction
+   dw sustained runs: 0 pass run-basis gates (0.000/day)
+   mined microwave cluster: n=405 dur_p50=3.5min (mark 3.6min)
+   mined program chains: 427 pass structure, named wm=128 dw=0
+   wm sustained profile: span=7-143min amp>=1516W mean=371-3144W hs=0.13-1.75 idle<=1254W dens=0.188-0.734/min heater_gap_merge=100min ext_back=9.5min ext_fwd=24.5min
+   wm sustained runs: 33 net-new candidates (0.183/day)
+   fridge fallback: population band amp=22-104W dur=11-37min n=3722
+   fridge run-basis: 1414 net-new candidates (7.86/day)
+   mw fragment fusion: 999 plateau events -> 800 cycles (pause<=2.8min)
+   mark profiles: kettle amp=2416W dur=1.3min mean=2344W; microwave amp=1572W dur=1.8min mean=528W; fridge amp=625W dur=0.3min mean=1032W; washing_machine amp=1884W dur=90.6min mean=608W dens=0.30-0.56/min; dishwasher amp=2384W dur=97.2min mean=660W dens=0.03-0.12/min
+   mined 18664 fridge-floor events (>=20W step)
+   mined 10880 level-excursion events from 180 pre-span days
+   dw sustained profile: span=46-99min amp>=1846W mean=554-2358W hs=0.22-1.52 idle<=612W dens<=0.280/min heater_gap_merge=68min ext_back=18.0min ext_fwd=0.0min pre_offs=['18.0', '18.0', '18.5', '18.5', '18.0']
+   dw synth onset check: emitted-vs-pasted onset deltas ['+0', '-30', '+0'] (median +0s)
+   dw sustained runs: 56 pass run-basis gates (0.311/day)
+   mined kettle cluster: n=678 dur_p50=1.8min (mark 1.3min)
+   mined microwave cluster: n=1001 dur_p50=2.4min (mark 1.8min)
+   mined program chains: 190 pass structure, named wm=81 dw=0
+   wm sustained profile: span=15-83min amp>=1423W mean=457-2210W hs=0.10-1.38 idle<=1374W dens=0.143-0.962/min heater_gap_merge=51min ext_back=2.5min ext_fwd=57.0min
+   wm sustained runs: 50 net-new candidates (0.278/day)
+   kettle sustained marks: 2/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 111 net-new candidates (0.62/day)
+   fridge fallback: population band amp=22-92W dur=10-36min n=4966
+   fridge run-basis: 2205 net-new candidates (12.25/day)
+   mark profiles: kettle amp=111W dur=29.6min mean=30W; microwave amp=947W dur=2.2min mean=848W; fridge amp=441W dur=2.5min mean=828W
+   kettle mark draw fragments in the extractor (event p50 2369W/132s vs core 111W/1776s) - event-based gate bands
+   mined 29659 fridge-floor events (>=20W step)
+   mined 15450 level-excursion events from 180 pre-span days
+   mined kettle cluster: n=1691 dur_p50=9.9min (mark 29.6min)
+   mined microwave cluster: n=298 dur_p50=2.7min (mark 2.2min)
+   mined program chains: 0 pass structure, named wm=0 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   kettle sustained marks: 1/5 windows hold an isolated; 2 hold an in-band run
+   kettle sustained runs: 106 net-new candidates (0.59/day)
+   fridge fallback: population band amp=21-89W dur=10-37min n=5133
+   fridge run-basis: 1416 net-new candidates (7.87/day)
+   mark profiles: kettle amp=2014W dur=3.6min mean=1431W; microwave amp=1362W dur=2.0min mean=1170W; washing_machine amp=3008W dur=53.5min mean=1165W dens=0.09-0.37/min
+   mined 17092 fridge-floor events (>=20W step)
+   mined 12458 level-excursion events from 180 pre-span days
+   mined kettle cluster: n=528 dur_p50=2.1min (mark 3.6min)
+   mined microwave cluster: n=485 dur_p50=2.5min (mark 2.0min)
+   mined program chains: 89 pass structure, named wm=26 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   wm sustained profile: span=10-38min amp>=2580W mean=1651-4011W hs=0.49-1.75 idle<=1582W dens=0.000-0.842/min heater_gap_merge=13min ext_back=0.5min ext_fwd=26.5min
+   wm sustained runs: 16 net-new candidates (0.089/day)
+   kettle sustained marks: 4/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 161 net-new candidates (0.89/day)
+   fridge fallback: population band amp=21-115W dur=11-38min n=1803
+   mark profiles: fridge amp=30W dur=20.0min mean=30W
+   mined 6034 fridge-floor events (>=20W step)
+   mined 4444 level-excursion events from 142 pre-span days
+   mined program chains: 0 pass structure, named wm=0 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   fridge fallback: population band amp=22-87W dur=12-34min n=2371
+   fridge run-basis: 204 net-new candidates (1.44/day)
+   mark profiles: fridge amp=56W dur=30.4min mean=602W; washing_machine amp=2218W dur=32.0min mean=798W dens=0.09-0.21/min; dishwasher amp=2199W dur=29.1min mean=1683W dens=0.06-0.16/min
+   mined 19714 fridge-floor events (>=20W step)
+   mined 12208 level-excursion events from 180 pre-span days
+   dw sustained profile: span=16-39min amp>=1828W mean=1397-2561W hs=0.57-1.42 idle<=184W dens<=0.286/min heater_gap_merge=5min ext_back=0.5min ext_fwd=0.0min pre_offs=['0.5', '0.5', '1.0', '0.0', '1.0']
+   dw synth onset check: 1/3 pastes recovered by gates (deltas ['-30', 'none', 'none']) - no correction
+   dw sustained runs: 29 pass run-basis gates (0.161/day)   mark profiles: microwave amp=1230W dur=4.8min mean=699W; fridge amp=298W dur=1.4min mean=268W; washing_machine amp=2224W dur=119.4min mean=542W dens=0.22-0.29/min; dishwasher amp=2150W dur=13.3min mean=1890W dens=0.00-0.19/min
+   microwave mark draw fragments in the extractor (event p50 852W/150s vs core 1230W/288s) - event-based gate bands
+   mined 26229 fridge-floor events (>=20W step)
+   mined 19960 level-excursion events from 180 pre-span days
+   dw sustained profile: span=3-51min amp>=1393W mean=1375-5022W hs=0.00-1.75 idle<=infW dens<=0.588/min heater_gap_merge=4min ext_back=0.0min ext_fwd=0.0min pre_offs=['0.5', '0.0', '0.5', '-1.0', '0.0']
+   dw synth onset check: 0/3 pastes recovered by gates (deltas ['none', 'none', 'none']) - no correction
+   dw sustained runs: 107 pass run-basis gates (0.594/day)
+   mined microwave cluster: n=405 dur_p50=3.5min (mark 4.8min)
+   mined program chains: 422 pass structure, named wm=173 dw=0
+   wm sustained profile: span=43-137min amp>=1942W mean=659-3170W hs=0.21-1.58 idle<=1688W dens=0.161-0.587/min heater_gap_merge=34min ext_back=0.0min ext_fwd=24.5min
+   wm sustained runs: 70 net-new candidates (0.389/day)
+   fridge fallback: population band amp=22-104W dur=11-37min n=3722
+   fridge run-basis: 1414 net-new candidates (7.86/day)
+   mw fragment fusion: 262 plateau events -> 204 cycles (pause<=3.1min)
+   mark profiles: kettle amp=2374W dur=2.4min mean=2028W; fridge amp=92W dur=10.5min mean=93W; washing_machine amp=2298W dur=62.8min mean=834W dens=0.31-0.39/min; dishwasher amp=2236W dur=89.7min mean=690W dens=0.05-0.14/min
+   mined 27697 fridge-floor events (>=20W step)
+   mined 24652 level-excursion events from 180 pre-span days
+   dw sustained profile: span=46-118min amp>=2090W mean=1043-2259W hs=0.28-0.86 idle<=1331W dens<=0.302/min heater_gap_merge=47min ext_back=10.0min ext_fwd=0.0min pre_offs=['0.0', '10.0', '10.0', '10.0', '-1.0']
+   dw synth onset check: emitted-vs-pasted onset deltas ['+0', '+0', '-30'] (median +0s)
+   dw sustained runs: 97 pass run-basis gates (0.539/day)
+   mined kettle cluster: n=2574 dur_p50=2.0min (mark 2.4min)
+   mined program chains: 543 pass structure, named wm=173 dw=0
+   wm sustained profile: span=5-136min amp>=1890W mean=1038-3260W hs=0.31-1.75 idle<=1250W dens=0.000-1.294/min heater_gap_merge=47min ext_back=5.5min ext_fwd=35.5min
+   wm sustained runs: 90 net-new candidates (0.500/day)
+   kettle sustained marks: 0/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 103 net-new candidates (0.57/day)
+   fridge fallback: population band amp=25-113W dur=10-33min n=6316
+   fridge run-basis: 834 net-new candidates (4.63/day)
+   mark profiles: kettle amp=2964W dur=1.3min mean=2062W; microwave amp=1518W dur=2.2min mean=775W; fridge amp=191W dur=0.3min mean=586W; washing_machine amp=1608W dur=54.4min mean=390W dens=0.11-0.37/min
+   mined 19456 fridge-floor events (>=20W step)
+   mined 12184 level-excursion events from 180 pre-span days
+   mined kettle cluster: n=1544 dur_p50=1.5min (mark 1.3min)
+   mined microwave cluster: n=1009 dur_p50=1.4min (mark 2.2min)
+   mined program chains: 313 pass structure, named wm=40 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   wm sustained profile: span=4-44min amp>=1157W mean=468-2587W hs=0.11-1.75 idle<=771W dens=0.000-0.914/min heater_gap_merge=37min ext_back=3.5min ext_fwd=24.0min
+   wm sustained runs: 103 net-new candidates (0.572/day)
+   kettle sustained marks: 3/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 187 net-new candidates (1.04/day)
+   fridge fallback: population band amp=21-100W dur=11-38min n=2097
+   fridge run-basis: 2372 net-new candidates (13.18/day)
+   mark profiles: kettle amp=3459W dur=2.2min mean=3085W; fridge amp=98W dur=13.7min mean=658W; washing_machine amp=2247W dur=55.6min mean=863W dens=0.16-0.26/min; dishwasher amp=2309W dur=90.4min mean=736W dens=0.03-0.12/min
+   mined 27697 fridge-floor events (>=20W step)
+   mined 24652 level-excursion events from 180 pre-span days
+   dw sustained profile: span=45-116min amp>=1892W mean=804-2388W hs=0.26-1.09 idle<=1298W dens<=0.317/min heater_gap_merge=47min ext_back=10.0min ext_fwd=0.0min pre_offs=['9.5', '10.0', '15.0', '-1.0', '10.5']
+   dw synth onset check: emitted-vs-pasted onset deltas ['+0', '-60', '+30'] (median +0s)
+   dw sustained runs: 120 pass run-basis gates (0.667/day)
+   mined kettle cluster: n=102 dur_p50=3.5min (mark 2.2min)
+   mined program chains: 542 pass structure, named wm=104 dw=0
+   wm sustained profile: span=10-72min amp>=2279W mean=1469-3207W hs=0.42-1.48 idle<=2308W dens=0.141-0.897/min heater_gap_merge=17min ext_back=1.5min ext_fwd=27.5min
+   wm sustained runs: 120 net-new candidates (0.667/day)
+   kettle sustained marks: 0/5 windows hold an isolated; 4 hold an in-band run
+   kettle sustained runs: 195 net-new candidates (1.08/day)
+   fridge fallback: population band amp=25-113W dur=10-33min n=6316
+   fridge run-basis: 654 net-new candidates (3.63/day)
+   mark profiles: kettle amp=2888W dur=2.2min mean=2257W; microwave amp=1558W dur=2.2min mean=813W; fridge amp=120W dur=18.1min mean=115W; washing_machine amp=1508W dur=64.8min mean=552W dens=0.22-0.35/min
+   mined 19456 fridge-floor events (>=20W step)
+   mined 12184 level-excursion events from 180 pre-span days
+   mined kettle cluster: n=1552 dur_p50=1.5min (mark 2.2min)
+   mined microwave cluster: n=1527 dur_p50=1.5min (mark 2.2min)
+   mined program chains: 327 pass structure, named wm=41 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   wm sustained profile: span=8-91min amp>=1663W mean=663-1616W hs=0.16-0.90 idle<=1132W dens=0.162-0.662/min heater_gap_merge=54min ext_back=3.5min ext_fwd=1.5min
+   wm sustained runs: 21 net-new candidates (0.117/day)
+   kettle sustained marks: 2/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 113 net-new candidates (0.63/day)
+   fridge fallback: population band amp=21-100W dur=11-38min n=2097
+   fridge run-basis: 21 net-new candidates (0.12/day)
+   mark profiles: kettle amp=2428W dur=3.3min mean=2153W; fridge amp=536W dur=0.6min mean=1880W; washing_machine amp=2809W dur=58.7min mean=771W dens=0.18-0.33/min; dishwasher amp=2349W dur=90.3min mean=805W dens=0.05-0.13/min
+   mined 27697 fridge-floor events (>=20W step)
+   mined 24652 level-excursion events from 180 pre-span days
+   dw sustained profile: span=43-116min amp>=1880W mean=664-2533W hs=0.25-1.08 idle<=386W dens<=0.466/min heater_gap_merge=49min ext_back=0.5min ext_fwd=0.0min pre_offs=['0.5', '-0.5', '-1.0', '10.0', '10.5']
+   dw synth onset check: emitted-vs-pasted onset deltas ['+0', '-90', 'none'] (median -45s)
+   dw sustained runs: 72 pass run-basis gates (0.400/day)
+   mined kettle cluster: n=2565 dur_p50=2.0min (mark 3.3min)
+   mined program chains: 534 pass structure, named wm=198 dw=0
+   wm sustained profile: span=5-184min amp>=1973W mean=1845-3946W hs=0.40-1.75 idle<=2648W dens=0.130-0.889/min heater_gap_merge=34min ext_back=1.0min ext_fwd=24.0min
+   wm sustained runs: 70 net-new candidates (0.389/day)
+   kettle sustained marks: 1/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 173 net-new candidates (0.96/day)
+   fridge fallback: population band amp=25-113W dur=10-33min n=6316
+   fridge run-basis: 1416 net-new candidates (7.87/day)
+   mark profiles: fridge amp=73W dur=10.8min mean=128W; washing_machine amp=2973W dur=79.7min mean=1428W dens=0.07-0.20/min; dishwasher amp=2955W dur=29.0min mean=2076W dens=0.06-0.32/min
+   mined 31167 fridge-floor events (>=20W step)
+   mined 15346 level-excursion events from 180 pre-span days
+   dw sustained profile: span=10-38min amp>=1921W mean=1403-4285W hs=0.45-1.75 idle<=4432W dens<=0.686/min heater_gap_merge=14min ext_back=0.5min ext_fwd=0.0min pre_offs=['2.5', '0.5', '0.5', '0.0', '1.0']
+   dw synth onset check: 1/3 pastes recovered by gates (deltas ['+0', 'none', 'none']) - no correction
+   dw sustained runs: 123 pass run-basis gates (0.683/day)
+   mined program chains: 380 pass structure, named wm=59 dw=0
+   wm sustained profile: span=10-91min amp>=2328W mean=1325-3818W hs=0.28-1.75 idle<=4146W dens=0.091-0.553/min heater_gap_merge=34min ext_back=0.5min ext_fwd=16.0min
+   mark profiles: microwave amp=1162W dur=4.0min mean=1006W; fridge amp=44W dur=2.4min mean=161W; washing_machine amp=1971W dur=92.6min mean=30W dens=0.23-0.47/min
+   mined 11407 fridge-floor events (>=20W step)
+   mined 6299 level-excursion events from 180 pre-span days
+   mined microwave cluster: n=161 dur_p50=1.5min (mark 4.0min)
+   mined program chains: 63 pass structure, named wm=34 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   wm sustained profile: span=7-94min amp>=1867W mean=1087-3950W hs=0.32-1.75 idle<=1002W dens=0.164-0.800/min heater_gap_merge=35min ext_back=0.0min ext_fwd=56.0min
+   wm sustained runs: 21 net-new candidates (0.117/day)
+   fridge fallback: population band amp=22-85W dur=11-37min n=2182
+   fridge run-basis: 2011 net-new candidates (11.17/day)
+   mark profiles: microwave amp=1831W dur=3.5min mean=997W; fridge amp=174W dur=13.2min mean=215W; washing_machine amp=1624W dur=43.4min mean=736W dens=0.07-0.39/min; dishwasher amp=3200W dur=18.7min mean=2804W dens=0.05-0.23/min
+   mined 20223 fridge-floor events (>=20W step)
+   mined 17953 level-excursion events from 180 pre-span days
+   dw sustained profile: span=9-25min amp>=2402W mean=1603-4347W hs=0.53-1.75 idle<=16W dens<=0.500/min heater_gap_merge=6min ext_back=0.5min ext_fwd=0.0min pre_offs=['0.5', '1.0', '0.5', '0.5', '1.0']
+   dw synth onset check: 0/3 pastes recovered by gates (deltas ['none', 'none', 'none']) - no correction
+   dw sustained runs: 7 pass run-basis gates (0.039/day)
+   mined microwave cluster: n=271 dur_p50=1.7min (mark 3.5min)
+   mined program chains: 204 pass structure, named wm=8 dw=0
+   wm sustained profile: span=5-54min amp>=1286W mean=697-3364W hs=0.17-1.75 idle<=1616W dens=0.000-1.032/min heater_gap_merge=26min ext_back=8.0min ext_fwd=11.5min
+   wm sustained runs: 69 net-new candidates (0.383/day)
+   fridge fallback: population band amp=27-115W dur=11-38min n=3173
+   fridge run-basis: 1651 net-new candidates (9.17/day)
+   mark profiles: fridge amp=635W dur=0.2min mean=1005W
+   mined 22945 fridge-floor events (>=20W step)
+   mined 10371 level-excursion events from 180 pre-span days
+   mined program chains: 0 pass structure, named wm=0 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   fridge fallback: population band amp=22-61W dur=12-38min n=5439
+   fridge run-basis: 4091 net-new candidates (22.73/day)
+   mark profiles: microwave amp=1172W dur=2.2min mean=1067W; fridge amp=272W dur=0.5min mean=378W; washing_machine amp=2159W dur=88.3min mean=459W dens=0.15-0.52/min
+   mined 11407 fridge-floor events (>=20W step)
+   mined 6299 level-excursion events from 180 pre-span days
+   mined microwave cluster: n=163 dur_p50=1.4min (mark 2.2min)
+   mined program chains: 62 pass structure, named wm=41 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   wm sustained profile: mark window 4 has no heater blocks; skipped
+   wm sustained profile: span=4-89min amp>=1895W mean=1108-3543W hs=0.37-1.75 idle<=938W dens=0.107-0.588/min heater_gap_merge=35min ext_back=4.2min ext_fwd=54.5min
+   wm sustained runs: 15 net-new candidates (0.083/day)
+   fridge fallback: population band amp=22-85W dur=11-37min n=2182
+   fridge run-basis: 2169 net-new candidates (12.05/day)
+   mark profiles: microwave amp=1427W dur=1.7min mean=406W; fridge amp=279W dur=4.7min mean=312W; washing_machine amp=2316W dur=48.6min mean=700W dens=0.13-0.38/min; dishwasher amp=2989W dur=17.0min mean=2422W dens=0.05-0.41/min
+   mined 20223 fridge-floor events (>=20W step)
+   mined 17953 level-excursion events from 180 pre-span days
+   dw sustained profile: span=9-39min amp>=2384W mean=1159-3887W hs=0.38-1.75 idle<=202W dens<=0.933/min heater_gap_merge=13min ext_back=0.0min ext_fwd=0.0min pre_offs=['0.5', '0.0', '0.0', '0.5', '0.0']
+   dw synth onset check: 0/3 pastes recovered by gates (deltas ['none', 'none', 'none']) - no correction
+   dw sustained runs: 59 pass run-basis gates (0.328/day)
+   mined microwave cluster: n=423 dur_p50=1.3min (mark 1.7min)
+   mined program chains: 164 pass structure, named wm=53 dw=0
+   wm sustained profile: span=3-123min amp>=2130W mean=919-3364W hs=0.22-1.75 idle<=1846W dens=0.000-0.751/min heater_gap_merge=59min ext_back=7.0min ext_fwd=25.0min
+   wm sustained runs: 45 net-new candidates (0.250/day)
+   fridge fallback: population band amp=27-115W dur=11-38min n=3173
+   fridge run-basis: 1651 net-new candidates (9.17/day)
+
+   fridge fallback: population band amp=22-61W dur=12-38min n=5439
+   fridge run-basis: 4091 net-new candidates (22.73/day)
+   mark profiles: kettle amp=2979W dur=2.2min mean=2258W; washing_machine amp=2456W dur=68.1min mean=972W dens=0.17-0.30/min; dishwasher amp=2282W dur=14.6min mean=2102W dens=0.06-0.19/min
+   mined 20613 fridge-floor events (>=20W step)
+   mined 14691 level-excursion events from 180 pre-span days
+   dw sustained profile: span=3-72min amp>=1712W mean=1646-3874W hs=0.00-1.75 idle<=infW dens<=0.444/min heater_gap_merge=4min ext_back=0.5min ext_fwd=0.0min pre_offs=['0.5', '-1.0', '0.5', '1.0', '0.5']
+   dw synth onset check: 0/3 pastes recovered by gates (deltas ['none', 'none', 'none']) - no correction
+   dw sustained runs: 208 pass run-basis gates (1.156/day)
+   mined kettle cluster: n=1431 dur_p50=1.9min (mark 2.2min)
+   mined program chains: 249 pass structure, named wm=64 dw=0
+   wm sustained profile: span=2-82min amp>=2006W mean=1168-3355W hs=0.34-1.75 idle<=1534W dens=0.000-0.600/min heater_gap_merge=42min ext_back=4.0min ext_fwd=4.0min
+   wm sustained runs: 30 net-new candidates (0.167/day)
+   kettle sustained marks: 4/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 90 net-new candidates (0.50/day)
+   fridge fallback: population band amp=22-111W dur=11-37min n=5610
+   mark profiles: kettle amp=2840W dur=1.4min mean=1776W; microwave amp=1995W dur=1.9min mean=982W; fridge amp=45W dur=11.8min mean=360W; washing_machine amp=872W dur=16.8min mean=428W dens=0.12-0.62/min; dishwasher amp=2410W dur=96.7min mean=946W dens=0.07-0.12/min
+   mined 35198 fridge-floor events (>=20W step)
+   mined 18986 level-excursion events from 180 pre-span days
+   dw sustained profile: span=45-121min amp>=1943W mean=936-1719W hs=0.32-0.93 idle<=1072W dens<=0.265/min heater_gap_merge=36min ext_back=18.0min ext_fwd=0.0min pre_offs=['18.0', '18.5', '18.0', '4.5', '20.5']
+   dw synth onset check: emitted-vs-pasted onset deltas ['+0', '+0', '+0'] (median +0s)
+   dw sustained runs: 29 pass run-basis gates (0.161/day)
+   mined kettle cluster: n=1438 dur_p50=1.5min (mark 1.4min)
+   mined microwave cluster: n=698 dur_p50=1.5min (mark 1.9min)
+   mined program chains: 212 pass structure, named wm=23 dw=0
+   wm sustained profile: mark window 1 has no heater blocks; skipped
+   wm sustained profile: span=3-331min amp>=543W mean=358-1312W hs=0.27-1.01 idle<=980W dens=0.150-1.240/min heater_gap_merge=45min ext_back=3.2min ext_fwd=2.0min
+   wm sustained runs: 37 net-new candidates (0.206/day)
+   kettle sustained marks: 1/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 208 net-new candidates (1.16/day)
+   fridge fallback: population band amp=22-89W dur=11-37min n=10496
+   fridge run-basis: 1349 net-new candidates (7.49/day)
+   mark profiles: kettle amp=2019W dur=1.4min mean=1654W; microwave amp=1241W dur=1.7min mean=801W; fridge amp=349W dur=0.7min mean=459W; washing_machine amp=159W dur=98.5min mean=63W dens=0.00-0.29/min; dishwasher amp=1572W dur=94.9min mean=730W dens=0.04-0.26/min
+   mined 14141 fridge-floor events (>=20W step)
+   mined 9384 level-excursion events from 180 pre-span days
+   dw sustained profile: span=34-121min amp>=1071W mean=599-2208W hs=0.44-1.69 idle<=230W dens<=0.577/min heater_gap_merge=29min ext_back=3.5min ext_fwd=0.5min pre_offs=['0.0', '3.5', '-1.0', '11.5', '28.0']
+   dw synth onset check: emitted-vs-pasted onset deltas ['+0', '-870', '-210'] (median -210s)
+   dw synth onset check: ext_back 3.5 -> 0.0 min; deltas after ['+210', '-660', '+0']
+   dw sustained runs: 27 pass run-basis gates (0.150/day)
+   mined kettle cluster: n=1305 dur_p50=1.8min (mark 1.4min)
+   mined microwave cluster: n=918 dur_p50=1.6min (mark 1.7min)
+   mined program chains: 692 pass structure, named wm=95 dw=0
+   wm sustained profile: mark window 0 has no heater blocks; skipped
+   wm sustained profile: span=5-150min amp>=166W mean=83-1835W hs=0.17-1.75 idle<=130W dens=0.000-0.569/min heater_gap_merge=65min ext_back=1.0min ext_fwd=0.0min
+   wm sustained runs: 215 net-new candidates (1.194/day)
+   kettle sustained marks: 3/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 123 net-new candidates (0.68/day)
+   fridge fallback: population band amp=21-113W dur=11-37min n=2853
+   fridge run-basis: 2180 net-new candidates (12.11/day)
+   mark profiles: kettle amp=1408W dur=2.7min mean=965W; fridge amp=115W dur=8.8min mean=113W; washing_machine amp=2000W dur=85.0min mean=479W dens=0.21-0.55/min; dishwasher amp=2214W dur=79.8min mean=900W dens=0.06-0.18/min
+   mined 23734 fridge-floor events (>=20W step)
+   mined 16056 level-excursion events from 180 pre-span days
+   dw sustained profile: span=34-81min amp>=1638W mean=746-1503W hs=0.18-0.92 idle<=1137W dens<=0.400/min heater_gap_merge=54min ext_back=17.5min ext_fwd=0.5min pre_offs=['9.5', '18.0', '18.5', '17.5', '17.5']
+   dw synth onset check: emitted-vs-pasted onset deltas ['+0', '-30', 'none'] (median -15s)
+   dw sustained runs: 84 pass run-basis gates (0.467/day)
+   mined kettle cluster: n=718 dur_p50=2.1min (mark 2.7min)
+   mined program chains: 331 pass structure, named wm=29 dw=0
+   wm sustained profile: span=12-81min amp>=1668W mean=910-2593W hs=0.35-1.48 idle<=2242W dens=0.111-0.941/min heater_gap_merge=24min ext_back=4.0min ext_fwd=55.5min
+   wm sustained runs: 134 net-new candidates (0.744/day)
+   kettle sustained marks: 4/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 181 net-new candidates (1.01/day)
+   fridge fallback: population band amp=21-105W dur=11-38min n=3541
+   fridge run-basis: 670 net-new candidates (3.72/day)
+
+   fridge run-basis: 3584 net-new candidates (19.91/day)
+   mark profiles: microwave amp=1307W dur=4.3min mean=817W; fridge amp=1872W dur=1.0min mean=2035W; washing_machine amp=2228W dur=118.7min mean=565W dens=0.21-0.46/min; dishwasher amp=3190W dur=12.8min mean=2502W dens=0.00-0.41/min
+   mined 26229 fridge-floor events (>=20W step)
+   mined 19960 level-excursion events from 180 pre-span days
+   dw sustained profile: span=4-21min amp>=1442W mean=1348-6043W hs=0.46-1.75 idle<=3082W dens<=0.966/min heater_gap_merge=3min ext_back=1.0min ext_fwd=0.0min pre_offs=['1.0', '-1.0', '-1.0', '4.5', '3.0']
+   dw synth onset check: 0/3 pastes recovered by gates (deltas ['none', 'none', 'none']) - no correction
+   dw sustained runs: 3 pass run-basis gates (0.017/day)
+   mined microwave cluster: n=420 dur_p50=3.5min (mark 4.3min)
+   mined program chains: 421 pass structure, named wm=160 dw=0
+   wm sustained profile: span=10-128min amp>=1593W mean=712-2871W hs=0.21-1.75 idle<=686W dens=0.166-1.105/min heater_gap_merge=46min ext_back=14.5min ext_fwd=25.0min
+   wm sustained runs: 59 net-new candidates (0.328/day)
+   fridge fallback: population band amp=22-104W dur=11-37min n=3722
+   fridge run-basis: 1414 net-new candidates (7.86/day)
+   mark profiles: kettle amp=3045W dur=1.9min mean=2369W; microwave amp=1702W dur=5.8min mean=1138W; fridge amp=668W dur=19.9min mean=923W; washing_machine amp=2296W dur=50.1min mean=1097W dens=0.16-0.25/min
+   mined 21601 fridge-floor events (>=20W step)
+   mined 13308 level-excursion events from 180 pre-span days
+   mined kettle cluster: n=2597 dur_p50=1.2min (mark 1.9min)
+   mined microwave cluster: n=672 dur_p50=1.8min (mark 5.8min)
+   mined program chains: 505 pass structure, named wm=176 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   wm sustained profile: span=8-99min amp>=2104W mean=984-4785W hs=0.32-1.75 idle<=460W dens=0.058-0.584/min heater_gap_merge=29min ext_back=1.0min ext_fwd=4.5min
+   wm sustained runs: 245 net-new candidates (1.361/day)
+   kettle sustained marks: 2/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 186 net-new candidates (1.03/day)
+   fridge fallback: population band amp=23-79W dur=11-36min n=3828
+   fridge run-basis: 2367 net-new candidates (13.15/day)
+   mark profiles: microwave amp=1270W dur=6.3min mean=857W; fridge amp=54W dur=21.2min mean=157W; washing_machine amp=2140W dur=119.2min mean=297W dens=0.22-0.41/min; dishwasher amp=1933W dur=13.4min mean=1772W dens=0.00-0.14/min
+   microwave mark draw fragments in the extractor (event p50 1224W/117s vs core 1270W/378s) - event-based gate bands
+   mined 26229 fridge-floor events (>=20W step)
+   mined 19960 level-excursion events from 180 pre-span days
+   dw sustained profile: span=4-19min amp>=1263W mean=1060-2721W hs=0.50-1.75 idle<=2829W dens<=0.615/min heater_gap_merge=1min ext_back=0.0min ext_fwd=0.0min pre_offs=['1.0', '6.0', '0.0', '0.0', '0.0']
+   dw synth onset check: 0/3 pastes recovered by gates (deltas ['none', 'none', 'none']) - no correction
+   dw sustained runs: 0 pass run-basis gates (0.000/day)
+   mined microwave cluster: n=408 dur_p50=3.5min (mark 6.3min)
+   mined program chains: 430 pass structure, named wm=163 dw=0
+   wm sustained profile: span=48-154min amp>=1664W mean=369-3823W hs=0.10-1.43 idle<=1057W dens=0.196-0.846/min heater_gap_merge=109min ext_back=0.0min ext_fwd=9.0min
+   wm sustained runs: 18 net-new candidates (0.100/day)
+   fridge fallback: population band amp=22-104W dur=11-37min n=3722
+   fridge run-basis: 455 net-new candidates (2.53/day)
+   mw fragment fusion: 70 plateau events -> 65 cycles (pause<=2.4min)
+   mark profiles: kettle amp=3090W dur=1.6min mean=2616W; microwave amp=1692W dur=2.5min mean=1119W; fridge amp=48W dur=0.6min mean=58W; washing_machine amp=2558W dur=45.9min mean=890W dens=0.06-0.35/min
+   mined 21601 fridge-floor events (>=20W step)
+   mined 13308 level-excursion events from 180 pre-span days
+   mined kettle cluster: n=2372 dur_p50=1.2min (mark 1.6min)
+   mined microwave cluster: n=678 dur_p50=1.8min (mark 2.5min)
+   mined program chains: 486 pass structure, named wm=167 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   wm sustained profile: span=4-82min amp>=2104W mean=984-3619W hs=0.32-1.75 idle<=701W dens=0.000-0.727/min heater_gap_merge=29min ext_back=2.0min ext_fwd=23.5min
+   wm sustained runs: 225 net-new candidates (1.250/day)
+   kettle sustained marks: 1/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 188 net-new candidates (1.04/day)
+   fridge fallback: population band amp=23-79W dur=11-36min n=3828
+   fridge run-basis: 1782 net-new candidates (9.90/day)
+
+   mined 9384 level-excursion events from 180 pre-span days
+   dw sustained profile: span=31-108min amp>=1567W mean=660-1491W hs=0.29-1.16 idle<=294W dens<=0.688/min heater_gap_merge=35min ext_back=0.0min ext_fwd=9.5min pre_offs=['-1.0', '28.5', '-1.0', '3.0', '0.0']
+   dw synth onset check: emitted-vs-pasted onset deltas ['none', '-60', '-60'] (median -60s)
+   dw sustained runs: 34 pass run-basis gates (0.189/day)
+   mined kettle cluster: n=1325 dur_p50=1.8min (mark 1.3min)
+   mined microwave cluster: n=893 dur_p50=1.8min (mark 1.6min)
+   mined program chains: 251 pass structure, named wm=36 dw=0
+   wm sustained profile: span=15-124min amp>=576W mean=174-1731W hs=0.09-1.42 idle<=688W dens=0.079-0.661/min heater_gap_merge=99min ext_back=0.5min ext_fwd=10.0min
+   wm sustained runs: 66 net-new candidates (0.367/day)
+   kettle sustained marks: 3/5 windows hold an isolated; 3 hold an in-band run
+   kettle sustained runs: 126 net-new candidates (0.70/day)
+   fridge fallback: population band amp=21-113W dur=11-37min n=2853
+   fridge run-basis: 719 net-new candidates (3.99/day)
+   mark profiles: kettle amp=1384W dur=1.8min mean=1217W; fridge amp=244W dur=52.5min mean=223W; washing_machine amp=2150W dur=88.7min mean=391W dens=0.31-0.52/min; dishwasher amp=1979W dur=80.3min mean=716W dens=0.03-0.23/min
+   mined 23734 fridge-floor events (>=20W step)
+   mined 16056 level-excursion events from 180 pre-span days
+   dw sustained profile: span=3-80min amp>=1369W mean=750-3482W hs=0.21-1.40 idle<=314W dens<=0.500/min heater_gap_merge=24min ext_back=18.0min ext_fwd=0.5min pre_offs=['16.5', '17.5', '77.5', '18.0', '18.5']
+   dw synth onset check: emitted-vs-pasted onset deltas ['-30', '-60', 'none'] (median -45s)
+   dw sustained runs: 164 pass run-basis gates (0.911/day)
+   mined kettle cluster: n=734 dur_p50=2.2min (mark 1.8min)
+   mined program chains: 334 pass structure, named wm=46 dw=0
+   wm sustained profile: span=8-81min amp>=1588W mean=1221-2593W hs=0.52-1.75 idle<=670W dens=0.167-0.718/min heater_gap_merge=24min ext_back=5.0min ext_fwd=60.0min
+   wm sustained runs: 26 net-new candidates (0.144/day)
+   kettle sustained marks: 3/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 104 net-new candidates (0.58/day)
+   fridge fallback: population band amp=21-105W dur=11-38min n=3541
+   fridge run-basis: 1900 net-new candidates (10.56/day)
+   mark profiles: fridge amp=46W dur=4.0min mean=52W
+   mined 15719 fridge-floor events (>=20W step)
+   mined 11185 level-excursion events from 164 pre-span days
+   mined program chains: 0 pass structure, named wm=0 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   fridge fallback: population band amp=22-108W dur=10-36min n=1460
+   fridge run-basis: 7478 net-new candidates (45.60/day)
+   mark profiles: fridge amp=44W dur=18.4min mean=311W; washing_machine amp=2250W dur=79.2min mean=977W dens=0.10-0.23/min; dishwasher amp=2338W dur=32.3min mean=1660W dens=0.03-0.18/min
+   mark re-anchor fridge: amp 44W is below the reader floor 49W -> median draw 98W
+   mined 31167 fridge-floor events (>=20W step)
+   mined 15346 level-excursion events from 180 pre-span days
+   dw sustained profile: span=18-42min amp>=1875W mean=1340-2696W hs=0.56-1.33 idle<=370W dens<=0.418/min heater_gap_merge=10min ext_back=0.5min ext_fwd=0.0min pre_offs=['1.0', '0.5', '0.5', '0.0', '0.0']
+   dw synth onset check: emitted-vs-pasted onset deltas ['+0', '+0', '+0'] (median +0s)
+   dw sustained runs: 184 pass run-basis gates (1.022/day)
+   mined program chains: 399 pass structure, named wm=220 dw=0
+   wm sustained profile: span=28-119min amp>=1753W mean=568-2765W hs=0.21-1.01 idle<=602W dens=0.073-0.522/min heater_gap_merge=57min ext_back=0.5min ext_fwd=0.5min
+   wm sustained runs: 33 net-new candidates (0.183/day)
+   fridge fallback: population band amp=21-88W dur=11-37min n=6658
+   fridge run-basis: 60 net-new candidates (0.33/day)
+   mark profiles: kettle amp=2380W dur=2.0min mean=2114W; microwave amp=1658W dur=1.2min mean=826W; fridge amp=62W dur=20.4min mean=61W; washing_machine amp=1910W dur=86.8min mean=659W dens=0.08-0.37/min; dishwasher amp=2270W dur=96.2min mean=560W dens=0.02-0.05/min
+   microwave mark draw fragments in the extractor (event p50 1130W/60s vs core 1658W/72s) - event-based gate bands
+   mined 18664 fridge-floor events (>=20W step)
+   mined 10880 level-excursion events from 180 pre-span days
+   dw sustained profile: span=46-98min amp>=1801W mean=566-1214W hs=0.22-0.56 idle<=638W dens<=0.129/min heater_gap_merge=68min ext_back=18.0min ext_fwd=0.0min pre_offs=['18.0', '18.5', '18.0', '18.0', '18.0']
+   dw synth onset check: emitted-vs-pasted onset deltas ['+0', '+0', '+0'] (median +0s)
+   dw sustained runs: 36 pass run-basis gates (0.200/day)
+   mined kettle cluster: n=686 dur_p50=1.8min (mark 2.0min)
+   mined microwave cluster: n=980 dur_p50=2.5min (mark 1.2min)
+   mined program chains: 190 pass structure, named wm=101 dw=0
+   wm sustained profile: mark window 1 has no heater blocks; skipped
+   wm sustained profile: span=15-98min amp>=1600W mean=663-1287W hs=0.15-0.50 idle<=1376W dens=0.184-0.815/min heater_gap_merge=44min ext_back=2.5min ext_fwd=16.5min
+   wm sustained runs: 31 net-new candidates (0.172/day)
+   kettle sustained marks: 2/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 82 net-new candidates (0.46/day)
+   fridge fallback: population band amp=22-92W dur=10-36min n=4966
+   fridge run-basis: 1246 net-new candidates (6.92/day)
+   mw fragment fusion: 576 plateau events -> 485 cycles (pause<=1.2min)
+
+   fridge run-basis: 2205 net-new candidates (12.25/day)
+   mw fragment fusion: 243 plateau events -> 236 cycles (pause<=0.8min)
+   mark profiles: kettle amp=99W dur=35.5min mean=45W; microwave amp=1014W dur=2.6min mean=1007W; fridge amp=275W dur=1.8min mean=237W
+   microwave mark draw fragments in the extractor (event p50 1828W/135s vs core 1014W/156s) - event-based gate bands
+   mined 29659 fridge-floor events (>=20W step)
+   mined 15450 level-excursion events from 180 pre-span days
+   mined kettle cluster: n=2145 dur_p50=10.6min (mark 35.5min)
+   mined microwave cluster: n=283 dur_p50=2.7min (mark 2.6min)
+   mined program chains: 0 pass structure, named wm=0 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   kettle sustained marks: 2/5 windows hold an isolated; 4 hold an in-band run
+   kettle sustained runs: 57 net-new candidates (0.32/day)
+   fridge fallback: population band amp=21-89W dur=10-37min n=5133
+   fridge run-basis: 1416 net-new candidates (7.87/day)
+   mw fragment fusion: 1218 plateau events -> 679 cycles (pause<=2.8min)
+   mark profiles: kettle amp=1891W dur=2.7min mean=1566W; microwave amp=1260W dur=4.0min mean=1238W; washing_machine amp=2964W dur=53.3min mean=1079W dens=0.10-0.23/min
+   mined 17092 fridge-floor events (>=20W step)
+   mined 12458 level-excursion events from 180 pre-span days
+   mined kettle cluster: n=518 dur_p50=2.1min (mark 2.7min)
+   mined microwave cluster: n=497 dur_p50=2.5min (mark 4.0min)
+   mined program chains: 92 pass structure, named wm=16 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   wm sustained profile: span=6-25min amp>=2632W mean=2208-4224W hs=0.75-1.75 idle<=infW dens=0.043-0.875/min heater_gap_merge=0min ext_back=0.5min ext_fwd=31.5min
+   wm sustained runs: 6 net-new candidates (0.033/day)
+   kettle sustained marks: 1/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 204 net-new candidates (1.13/day)
+   fridge fallback: population band amp=21-115W dur=11-38min n=1803
+   mark profiles: fridge amp=30W dur=20.0min mean=30W
+   mined 6034 fridge-floor events (>=20W step)
+   mined 4444 level-excursion events from 142 pre-span days
+   mined program chains: 0 pass structure, named wm=0 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   fridge fallback: population band amp=22-87W dur=12-34min n=2371
+   fridge run-basis: 204 net-new candidates (1.44/day)
+   mark profiles: fridge amp=53W dur=17.6min mean=170W; washing_machine amp=2138W dur=42.7min mean=477W dens=0.00-0.28/min; dishwasher amp=2409W dur=31.3min mean=1754W dens=0.09-0.36/min
+   mined 19714 fridge-floor events (>=20W step)
+   mined 12208 level-excursion events from 180 pre-span days
+   dw sustained profile: span=19-42min amp>=1793W mean=1436-4481W hs=0.60-1.57 idle<=2074W dens<=0.698/min heater_gap_merge=4min ext_back=0.0min ext_fwd=0.0min pre_offs=['0.5', '0.0', '0.5', '-0.5', '0.0']
+   dw synth onset check: emitted-vs-pasted onset deltas ['+0', '+0', '+30'] (median +0s)
+   dw sustained runs: 69 pass run-basis gates (0.383/day)
+   mined program chains: 286 pass structure, named wm=67 dw=0
+   wm sustained profile: mark window 2 has no heater blocks; skipped
+   wm sustained profile: span=3-59min amp>=1908W mean=913-3005W hs=0.31-1.75 idle<=771W dens=0.055-0.727/min heater_gap_merge=27min ext_back=0.8min ext_fwd=23.8min
+   wm sustained runs: 58 net-new candidates (0.322/day)
+   fridge fallback: population band amp=22-95W dur=12-37min n=4245
+   fridge run-basis: 1608 net-new candidates (8.93/day)
+   mark profiles: kettle amp=2645W dur=1.6min mean=1962W; microwave amp=1171W dur=2.1min mean=1159W; fridge amp=371W dur=0.3min mean=498W; washing_machine amp=582W dur=101.0min mean=303W dens=0.33-0.61/min
+   mined 24535 fridge-floor events (>=20W step)
+   mined 14760 level-excursion events from 180 pre-span days
+   mined kettle cluster: n=993 dur_p50=1.3min (mark 1.6min)
+   mined microwave cluster: n=372 dur_p50=1.4min (mark 2.1min)
+   mined program chains: 377 pass structure, named wm=84 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   wm sustained profile: span=27-123min amp>=473W mean=274-847W hs=0.26-1.51 idle<=458W dens=0.245-1.279/min heater_gap_merge=12min ext_back=0.5min ext_fwd=4.0min
+   wm sustained runs: 52 net-new candidates (0.289/day)
+   kettle sustained marks: 1/5 windows hold an isolated; 4 hold an in-band run
+   kettle sustained runs: 145 net-new candidates (0.81/day)
+   fridge fallback: population band amp=21-108W dur=11-38min n=5342
+   fridge run-basis: 2598 net-new candidates (14.43/day)
+
+   dw synth onset check: emitted-vs-pasted onset deltas ['-30', '-30', '-30'] (median -30s)
+   dw sustained runs: 185 pass run-basis gates (1.028/day)
+   mined kettle cluster: n=790 dur_p50=2.3min (mark 1.8min)
+   mined program chains: 306 pass structure, named wm=55 dw=0
+   wm sustained profile: span=13-121min amp>=1870W mean=1350-2976W hs=0.38-1.67 idle<=3004W dens=0.150-1.238/min heater_gap_merge=19min ext_back=4.0min ext_fwd=55.5min
+   wm sustained runs: 106 net-new candidates (0.589/day)
+   kettle sustained marks: 2/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 124 net-new candidates (0.69/day)
+   fridge fallback: population band amp=21-105W dur=11-38min n=3541
+   fridge run-basis: 1900 net-new candidates (10.56/day)
+   mark profiles: fridge amp=43W dur=4.0min mean=51W
+   mined 15719 fridge-floor events (>=20W step)
+   mined 11185 level-excursion events from 164 pre-span days
+   mined program chains: 0 pass structure, named wm=0 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   fridge fallback: population band amp=22-108W dur=10-36min n=1460
+   fridge run-basis: 7402 net-new candidates (45.13/day)
+   mark profiles: kettle amp=2923W dur=2.2min mean=2588W; microwave amp=2556W dur=1.4min mean=2101W; fridge amp=2780W dur=2.4min mean=3364W; washing_machine amp=632W dur=27.5min mean=283W dens=0.16-0.31/min
+   microwave mark draw fragments in the extractor (event p50 1550W/78s vs core 2556W/84s) - event-based gate bands
+   mined 19456 fridge-floor events (>=20W step)
+   mined 12184 level-excursion events from 180 pre-span days
+   mined kettle cluster: n=1546 dur_p50=1.5min (mark 2.2min)
+   mined microwave cluster: n=1672 dur_p50=1.5min (mark 1.4min)
+   mined program chains: 376 pass structure, named wm=17 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   wm sustained profile: mark window 0 has no heater blocks; skipped
+   wm sustained profile: span=15-79min amp>=622W mean=365-2279W hs=0.34-1.20 idle<=505W dens=0.122-0.627/min heater_gap_merge=10min ext_back=0.5min ext_fwd=0.2min
+   wm sustained runs: 144 net-new candidates (0.800/day)
+   kettle sustained marks: 3/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 120 net-new candidates (0.67/day)
+   fridge fallback: population band amp=21-100W dur=11-38min n=2097
+   fridge run-basis: 2372 net-new candidates (13.18/day)
+   mw fragment fusion: 1274 plateau events -> 962 cycles (pause<=1.6min)
+   mark profiles: kettle amp=2320W dur=2.8min mean=2308W; fridge amp=2658W dur=0.6min mean=2793W; washing_machine amp=2416W dur=104.7min mean=954W dens=0.18-0.30/min; dishwasher amp=2240W dur=90.5min mean=647W dens=0.08-0.19/min
+   mined 27697 fridge-floor events (>=20W step)
+   mined 24652 level-excursion events from 180 pre-span days
+   dw sustained profile: span=46-108min amp>=1846W mean=737-1751W hs=0.28-0.83 idle<=828W dens<=0.494/min heater_gap_merge=52min ext_back=10.5min ext_fwd=0.0min pre_offs=['10.5', '10.0', '10.5', '10.0', '16.0']
+   dw synth onset check: emitted-vs-pasted onset deltas ['+0', '+0', '-30'] (median +0s)
+   dw sustained runs: 62 pass run-basis gates (0.344/day)
+   mined kettle cluster: n=2587 dur_p50=2.0min (mark 2.8min)
+   mined program chains: 542 pass structure, named wm=163 dw=0
+   wm sustained profile: span=19-131min amp>=2119W mean=628-2872W hs=0.10-1.02 idle<=1121W dens=0.167-0.614/min heater_gap_merge=101min ext_back=4.0min ext_fwd=8.0min
+   wm sustained runs: 40 net-new candidates (0.222/day)
+   kettle sustained marks: 3/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 154 net-new candidates (0.86/day)
+   fridge fallback: population band amp=25-113W dur=10-33min n=6316
+   fridge run-basis: 1416 net-new candidates (7.87/day)
+   mark profiles: kettle amp=2340W dur=1.2min mean=1752W; microwave amp=1526W dur=1.4min mean=808W; fridge amp=113W dur=11.2min mean=151W; washing_machine amp=1536W dur=63.0min mean=518W dens=0.15-0.33/min
+   kettle mark draw fragments in the extractor (event p50 2845W/66s vs core 2340W/72s) - event-based gate bands
+   mined 19456 fridge-floor events (>=20W step)
+   mined 12184 level-excursion events from 180 pre-span days
+   mined kettle cluster: n=3069 dur_p50=1.5min (mark 1.2min)
+   mined microwave cluster: n=1088 dur_p50=1.5min (mark 1.4min)
+   mined program chains: 323 pass structure, named wm=36 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   wm sustained profile: span=1-34min amp>=1648W mean=1024-2887W hs=0.42-1.75 idle<=1401W dens=0.000-0.519/min heater_gap_merge=4min ext_back=3.5min ext_fwd=53.0min
+   wm sustained runs: 33 net-new candidates (0.183/day)
+   kettle sustained marks: 3/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 56 net-new candidates (0.31/day)
+   fridge fallback: population band amp=21-100W dur=11-38min n=2097
+   fridge run-basis: 253 net-new candidates (1.41/day)
+   mark profiles: kettle amp=2182W dur=2.4min mean=1536W; fridge amp=91W dur=14.8min mean=136W; washing_machine amp=2197W dur=63.5min mean=564W dens=0.16-0.37/min; dishwasher amp=2141W dur=87.1min mean=677W dens=0.07-0.31/min
+   mined 27697 fridge-floor events (>=20W step)
+   mined 24652 level-excursion events from 180 pre-span days
+   dw sustained profile: span=46-116min amp>=1958W mean=809-2507W hs=0.27-1.09 idle<=1298W dens<=0.624/min heater_gap_merge=52min ext_back=10.5min ext_fwd=0.0min pre_offs=['10.5', '11.0', '15.5', '10.0', '-1.0']
+   dw synth onset check: emitted-vs-pasted onset deltas ['-30', '+0', '-30'] (median -30s)
+   dw sustained runs: 123 pass run-basis gates (0.683/day)
+   mined kettle cluster: n=2446 dur_p50=2.0min (mark 2.4min)
+   mined program chains: 548 pass structure, named wm=107 dw=0
+   wm sustained profile: span=11-126min amp>=2063W mean=1017-3802W hs=0.29-1.75 idle<=2058W dens=0.113-0.947/min heater_gap_merge=48min ext_back=5.5min ext_fwd=32.0min
+   wm sustained runs: 85 net-new candidates (0.472/day)
+   kettle sustained marks: 1/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 106 net-new candidates (0.59/day)
+   fridge fallback: population band amp=25-113W dur=10-33min n=6316
+   fridge run-basis: 725 net-new candidates (4.03/day)
+
+   mined program chains: 284 pass structure, named wm=26 dw=0
+   wm sustained profile: span=2-36min amp>=1883W mean=914-4470W hs=0.26-1.75 idle<=1368W dens=0.000-0.500/min heater_gap_merge=12min ext_back=2.0min ext_fwd=14.0min
+   wm sustained runs: 68 net-new candidates (0.378/day)
+   fridge fallback: population band amp=22-95W dur=12-37min n=4245
+   fridge run-basis: 968 net-new candidates (5.38/day)
+   mark profiles: kettle amp=2614W dur=1.7min mean=2226W; microwave amp=1100W dur=1.8min mean=932W; fridge amp=163W dur=0.5min mean=515W; washing_machine amp=526W dur=99.8min mean=240W dens=0.36-0.61/min
+   mined 24535 fridge-floor events (>=20W step)
+   mined 14760 level-excursion events from 180 pre-span days
+   mined kettle cluster: n=1069 dur_p50=1.3min (mark 1.7min)
+   mined microwave cluster: n=396 dur_p50=1.4min (mark 1.8min)
+   mined program chains: 396 pass structure, named wm=75 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   wm sustained profile: span=27-119min amp>=392W mean=200-521W hs=0.26-1.07 idle<=391W dens=0.310-1.348/min heater_gap_merge=17min ext_back=0.5min ext_fwd=9.5min
+   wm sustained runs: 49 net-new candidates (0.272/day)
+   kettle sustained marks: 1/5 windows hold an isolated; 4 hold an in-band run
+   kettle sustained runs: 141 net-new candidates (0.78/day)
+   fridge fallback: population band amp=21-108W dur=11-38min n=5342
+   fridge run-basis: 2598 net-new candidates (14.43/day)
+   mark profiles: kettle amp=1862W dur=2.6min mean=1627W; fridge amp=120W dur=2.0min mean=107W
+   mined 14724 fridge-floor events (>=20W step)
+   mined 13788 level-excursion events from 180 pre-span days
+   mined kettle cluster: n=148 dur_p50=5.7min (mark 2.6min)
+   mined program chains: 0 pass structure, named wm=0 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   kettle sustained marks: 2/5 windows hold an isolated; 4 hold an in-band run
+   kettle sustained runs: 131 net-new candidates (0.73/day)
+   fridge fallback: population band amp=37-80W dur=11-35min n=7777
+   fridge run-basis: 1937 net-new candidates (10.76/day)
+   mark profiles: kettle amp=3053W dur=2.1min mean=2077W; washing_machine amp=2266W dur=68.0min mean=567W dens=0.22-0.40/min; dishwasher amp=2119W dur=15.4min mean=1962W dens=0.00-0.24/min
+   mined 20613 fridge-floor events (>=20W step)
+   mined 14691 level-excursion events from 180 pre-span days
+   dw sustained profile: span=4-66min amp>=1596W mean=1575-2945W hs=0.00-1.75 idle<=infW dens<=0.571/min heater_gap_merge=4min ext_back=0.5min ext_fwd=0.0min pre_offs=['0.0', '0.5', '1.0', '0.5', '1.0']
+   dw synth onset check: 0/3 pastes recovered by gates (deltas ['none', 'none', 'none']) - no correction
+   dw sustained runs: 178 pass run-basis gates (0.989/day)
+   mined kettle cluster: n=1411 dur_p50=1.9min (mark 2.1min)
+   mined program chains: 252 pass structure, named wm=69 dw=0
+   wm sustained profile: span=14-86min amp>=1846W mean=679-1942W hs=0.16-0.83 idle<=1404W dens=0.128-0.754/min heater_gap_merge=54min ext_back=3.0min ext_fwd=36.5min
+   wm sustained runs: 24 net-new candidates (0.133/day)
+   kettle sustained marks: 2/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 84 net-new candidates (0.47/day)
+   fridge fallback: population band amp=22-111W dur=11-37min n=5610
+   mark profiles: kettle amp=2002W dur=1.9min mean=1939W; microwave amp=1266W dur=2.3min mean=988W; washing_machine amp=2823W dur=45.0min mean=897W dens=0.06-0.21/min
+   mined 17092 fridge-floor events (>=20W step)
+   mined 12458 level-excursion events from 180 pre-span days
+   mined kettle cluster: n=526 dur_p50=2.1min (mark 1.9min)
+   mined microwave cluster: n=496 dur_p50=2.5min (mark 2.3min)
+   mined program chains: 98 pass structure, named wm=14 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   wm sustained profile: span=7-21min amp>=2742W mean=2327-5881W hs=0.73-1.75 idle<=-178W dens=0.044-0.500/min heater_gap_merge=0min ext_back=0.5min ext_fwd=30.5min
+   wm sustained runs: 0 net-new candidates (0.000/day)
+   kettle sustained marks: 3/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 179 net-new candidates (0.99/day)
+   fridge fallback: population band amp=21-115W dur=11-38min n=1803
+
+   wm sustained runs: 38 net-new candidates (0.211/day)
+   fridge fallback: population band amp=21-88W dur=11-37min n=6658
+   fridge run-basis: 580 net-new candidates (3.22/day)
+   mark profiles: kettle amp=2423W dur=2.2min mean=1914W; microwave amp=1669W dur=1.3min mean=1036W; fridge amp=51W dur=20.9min mean=118W; washing_machine amp=2068W dur=89.8min mean=632W dens=0.25-0.49/min; dishwasher amp=2198W dur=95.7min mean=536W dens=0.01-0.05/min
+   microwave mark draw fragments in the extractor (event p50 1280W/45s vs core 1669W/78s) - event-based gate bands
+   mined 18664 fridge-floor events (>=20W step)
+   mined 10880 level-excursion events from 180 pre-span days
+   dw sustained profile: span=46-99min amp>=1823W mean=536-2064W hs=0.21-1.33 idle<=638W dens<=0.077/min heater_gap_merge=69min ext_back=18.5min ext_fwd=0.0min pre_offs=['19.0', '19.5', '18.5', '17.5', '18.5']
+   dw synth onset check: emitted-vs-pasted onset deltas ['-30', '-30', 'none'] (median -30s)
+   dw sustained runs: 35 pass run-basis gates (0.194/day)
+   mined kettle cluster: n=678 dur_p50=1.8min (mark 2.2min)
+   mined microwave cluster: n=983 dur_p50=2.5min (mark 1.3min)
+   mined program chains: 187 pass structure, named wm=67 dw=0
+   wm sustained profile: span=15-84min amp>=1472W mean=577-1981W hs=0.10-1.18 idle<=1552W dens=0.088-0.973/min heater_gap_merge=53min ext_back=3.0min ext_fwd=56.0min
+   wm sustained runs: 86 net-new candidates (0.478/day)
+   kettle sustained marks: 4/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 99 net-new candidates (0.55/day)
+   fridge fallback: population band amp=22-92W dur=10-36min n=4966
+   fridge run-basis: 1399 net-new candidates (7.77/day)
+   mw fragment fusion: 367 plateau events -> 345 cycles (pause<=0.9min)
+   mark profiles: kettle amp=110W dur=25.7min mean=112W; microwave amp=932W dur=2.7min mean=477W; fridge amp=234W dur=0.3min mean=440W
+   mined 29659 fridge-floor events (>=20W step)
+   mined 15450 level-excursion events from 180 pre-span days
+   mined kettle cluster: n=1674 dur_p50=9.9min (mark 25.7min)
+   mined microwave cluster: n=301 dur_p50=2.6min (mark 2.7min)
+   mined program chains: 0 pass structure, named wm=0 dw=0
+   dw sustained detector disabled (mark windows produced no heater runs)
+   kettle sustained marks: 1/5 windows hold an isolated; 2 hold an in-band run
+   kettle sustained runs: 127 net-new candidates (0.71/day)
+   fridge fallback: population band amp=21-89W dur=10-37min n=5133
+   fridge run-basis: 1416 net-new candidates (7.87/day)
+   mark profiles: kettle amp=2785W dur=1.7min mean=2641W; microwave amp=1744W dur=2.3min mean=695W; fridge amp=511W dur=0.4min mean=1107W; washing_machine amp=1955W dur=128.9min mean=644W dens=0.18-0.52/min; dishwasher amp=2407W dur=98.3min mean=929W dens=0.10-0.23/min
+   mined 35198 fridge-floor events (>=20W step)
+   mined 18986 level-excursion events from 180 pre-span days
+   dw sustained profile: span=48-122min amp>=1990W mean=974-1884W hs=0.30-0.93 idle<=640W dens<=0.677/min heater_gap_merge=39min ext_back=17.5min ext_fwd=0.0min pre_offs=['-1.0', '1.0', '17.5', '18.5', '18.0']
+   dw synth onset check: emitted-vs-pasted onset deltas ['+0', '+30', '+60'] (median +30s)
+   dw sustained runs: 33 pass run-basis gates (0.183/day)
+   mined kettle cluster: n=1502 dur_p50=1.5min (mark 1.7min)
+   mined microwave cluster: n=394 dur_p50=1.1min (mark 2.3min)
+   mined program chains: 129 pass structure, named wm=24 dw=0
+   wm sustained profile: span=10-109min amp>=1902W mean=658-3406W hs=0.12-1.75 idle<=1596W dens=0.172-0.926/min heater_gap_merge=89min ext_back=8.0min ext_fwd=33.0min
+   wm sustained runs: 7 net-new candidates (0.039/day)
+   kettle sustained marks: 5/5 windows hold an isolated; 5 hold an in-band run
+   kettle sustained runs: 151 net-new candidates (0.84/day)
+   fridge fallback: population band amp=22-89W dur=11-37min n=10496
+   fridge run-basis: 3548 net-new candidates (19.71/day)
+---- scored 66 pairs on 5 seeds in 93s
+  kettle           F1 (median over seeds of the pair mean) = 0.5540
+  microwave        F1 (median over seeds of the pair mean) = 0.2635
+  fridge           F1 (median over seeds of the pair mean) = 0.3710
+  washing_machine  F1 (median over seeds of the pair mean) = 0.2467
+  dishwasher       F1 (median over seeds of the pair mean) = 0.3844
+  seed 1     mean_device_f1 = 0.333426
+  seed 2     mean_device_f1 = 0.360499
+  seed 3     mean_device_f1 = 0.358233
+  seed 4     mean_device_f1 = 0.353784
+  seed 2026  mean_device_f1 = 0.359446
+  pair-mean          median=0.358233 p10=0.341569
+  device-balanced    median=0.359969
+  house_1 subset     median=0.540104
+METRIC mean_device_f1=0.358233
+METRIC mean_device_f1_p10=0.341569
+METRIC device_balanced_mean=0.359969
+METRIC house_1_v4_mean=0.540104
+METRIC v4_n_pairs=66.000000
+METRIC v4_n_houses=20.000000
+METRIC median_kettle_f1=0.553975
+METRIC median_microwave_f1=0.263539
+METRIC median_fridge_f1=0.370963
+METRIC median_washing_machine_f1=0.246657
+METRIC median_dishwasher_f1=0.384353

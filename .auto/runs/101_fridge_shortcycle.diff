@@ -1,0 +1,69 @@
+--- a/src/experiments/04_autoresearch/model.py
++++ b/src/experiments/04_autoresearch/model.py
+@@ -92,6 +92,7 @@
+                        # are 22-91 W, i.e. all below AMP_MIN_W = 50 W
+ DUTY_AMP_W = (20.0, 300.0)
+ DUTY_DUR_S = (600.0, 2400.0)
++DUTY_DUR_SHORT = 120.0  # extended mining floor: some homes recycle in <10min
+ DUTY_CELL_MIN = 300    # min events per (amp, dur) cell over the mined span
+ DUTY_CV_MAX = 0.6      # require regular (thermostat-like) recycling
+ FR_POP_AMP_HI = 120.0  # fallback population amp cap: domestic fridge
+@@ -1136,6 +1137,42 @@
+             print('   fridge mined cell: none regular enough; '
+                   'fallback = passive-window pairs')
+ 
++    # short-cycle rescue: the 600 s mining floor is a compressor prior, so a
++    # home whose fridge recycles every few minutes is invisible to the
++    # (amp x dur) cell fit above - that fit can only see the >=600 s tail,
++    # which is the merged long excursions. Re-mine the same grid over the
++    # full sustained range and accept a materially shorter mode only when a
++    # single 1-min duration bucket DOMINATES the whole in-window population
++    # (>=2000 events and >=50% of them) and the prior band's own floor is
++    # still pinned at the 600 s prior. The thermostat-interval cv gate used
++    # by the cell fit above is not usable here: a real fridge's inter-cycle
++    # interval varies (cv 0.69 on eco/house_06) so no cell ever clears 0.6.
++    if (fridge_band is not None
++            and fridge_band['dur'][0] >= 0.9 * DUTY_DUR_S[0]):
++        dm_w = ((fr_amp >= DUTY_AMP_W[0]) & (fr_amp <= DUTY_AMP_W[1])
++                & (fr_dur >= DUTY_DUR_SHORT) & (fr_dur <= DUTY_DUR_S[1]))
++        idx_w = np.flatnonzero(dm_w)
++        buckets_w: dict = {}
++        for k in idx_w:
++            buckets_w.setdefault(int(fr_dur[k] // 60.0), []).append(int(k))
++        ks_w = np.zeros(0, dtype=np.int64)
++        d50_w = 0.0
++        dom = 0.0
++        if idx_w.size:
++            _b, _ks = max(buckets_w.items(), key=lambda kv: len(kv[1]))
++            ks_w = np.asarray(_ks, dtype=np.int64)
++            d50_w = float(np.percentile(fr_dur[ks_w], 50))
++            dom = len(ks_w) / float(idx_w.size)
++        if (ks_w.size >= 2000 and dom >= 0.5
++                and DUTY_DUR_SHORT <= d50_w <= 300.0
++                and d50_w < 0.5 * fridge_band['dur'][0]):
++            print(f'   fridge short-cycle cell: p50={d50_w / 60:.1f}min '
++                  f'n={ks_w.size} dom={dom:.2f} replaces the '
++                  f'{fridge_band["dur"][0] / 60:.0f}min-floor band')
++            fridge_band = {'amp': _pband(fr_amp[ks_w]),
++                           'dur': _pband(fr_dur[ks_w]),
++                           'n': int(ks_w.size)}
++
+     # fridge run-basis gates: compressor draws below the extractor's amp
+     # floor or with broken rise/fall pairing never become events; on the
+     # coarse grid they are isolated flat runs inside the fridge band.
+@@ -1165,10 +1202,14 @@
+             fr_lo = 0.8 * fridge_band['amp'][0]
+             fr_dur_lo = fridge_band['dur'][0] / REL_DUR[1]
+             fr_iso = 3.0 * fridge_band['amp'][1]
++        # a short-cycle band can sit below the mark-derived 1/3 floor:
++        # clamp so the run window never inverts (lo > hi admits nothing)
++        fr_dur_lo = min(fr_dur_lo, fridge_band['dur'][0])
++        fr_dur_hi = max(fridge_band['dur'][1], fr_dur_lo)
+         fridge_band['fr_run'] = {'amp_lo': fr_lo,
+                                  'amp_hi': fridge_band['amp'][1],
+                                  'dur_lo': fr_dur_lo,
+-                                 'dur_hi': fridge_band['dur'][1],
++                                 'dur_hi': fr_dur_hi,
+                                  'iso_amp': fr_iso,
+                                  'iso_win': KET_ISO_WIN_S}
+         fr_ok = ((ev_amp >= fridge_band['amp'][0])

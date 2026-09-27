@@ -1,0 +1,135 @@
+diff --git a/src/experiments/04_autoresearch/model.py b/src/experiments/04_autoresearch/model.py
+index b452cea..13f485c 100644
+--- a/src/experiments/04_autoresearch/model.py
++++ b/src/experiments/04_autoresearch/model.py
+@@ -99,7 +99,7 @@ FR_POP_AMP_HI = 120.0  # fallback population amp cap: domestic fridge
+ # sustained 95-300 W tail (laptops, heaters) that corrupts percentiles
+ FR_POP_MIN = 300       # min fallback-population events to calibrate a band
+ BURST_CLUSTER_MIN = 50  # mined burst cluster needed for a dur reference
+-REL_AMP = 0.20
++REL_AMP = 0.15
+ REL_DUR = (1.0 / 3.0, 3.0)
+ 
+ 
+@@ -456,7 +456,16 @@ def _dw30_profile(exc: np.ndarray, cal: dict, mark_dw: dict,
+     if max_gap > 0:
+         merge_n = max(1, int(round(1.25 * max_gap / DW30_GRID_S)))
+     else:
+-        merge_n = int(round(4200.0 / DW30_GRID_S))
++        # The marks show no internal pause, so there is NO evidence for a
++        # merge gap. The old fallback was a fixed 4200 s (70 min), which
++        # joined distinct eval-window cycles into one long run whose span
++        # then failed span_band: refit/house_10's dishwasher admitted 0 of
++        # its own runs on all five seeds (0 of 86 GT cycles detected all
++        # year) while its marks' own runs are 13-17 min. With no pause
++        # evidence the honest gap is the smallest resolvable one; a
++        # single-block mark means a genuine cycle's heater is continuous,
++        # so nothing needs bridging.
++        merge_n = 1
+     spans, p90s, means, hss, idles, denss = [], [], [], [], [], []
+     pres, posts = [], []
+     for (lo_us, hi_us), (j0, j1) in zip(cal['marks_us'], per):
+@@ -492,15 +501,37 @@ def _dw30_profile(exc: np.ndarray, cal: dict, mark_dw: dict,
+     # extension uses the median post phase symmetrically.
+     ext_back_s = max(0.0, float(np.median(pres)))
+     ext_fwd_s = max(0.0, float(np.median(posts)))
++    # see the hs_band note below: a mark whose runs are all fully ON gives
++    # no duty evidence, so no lower margin is imposed
++    # When the marks hold no internal pause at all (max_gap == 0) and every
++    # mark run sits wholly above the heater level (min(hss) >= 0.999), the
++    # merged block IS the above-heater region, so the mark-span spread
++    # carries no evidence about how one cycle's heater bursts are
++    # distributed: the narrow band is a tolerance around one
++    # structureless example. Relax it to a scale tolerance about the same
++    # centre and bridge this house's own burst pauses (up to half the
++    # shortest mark span); the scale-tolerant gates keep arbitrating.
++    if max_gap == 0.0:
++        merge_n = max(1, int(round(0.5 * 0.6 * min(spans) / DW30_GRID_S)))
++        span_band = (0.25 * min(spans), 3.0 * max(spans))
++    else:
++        span_band = (0.6 * min(spans), 1.25 * max(spans))
++    hs_lo = 0.0 if min(hss) >= 0.999 else 0.75 * min(hss)
+     prof = {'heat': heat,
+             'merge_n': merge_n,
+-            'span_band': (0.6 * min(spans), 1.25 * max(spans)),
++            'span_band': span_band,
+             # the wm30 profile carries the same 0.8 lower margin; the
+             # heater level varies +-15-20% across cycles and the dw/wm
+-            # class separation lives in the dens/idle gates, not here
++            # class separation lives in the dens/idle gates, not here.
++            # A mark run IS the merged region above the heater threshold, so
++            # hs is 1.0 minus whatever dips the merge bridged: when every mark
++            # run is fully ON there is no duty evidence at all, and the 0.75
++            # lower margin then excludes genuinely partial-duty cycles
++            # (refit/house_10 admitted 10 runs against 86 GT cycles). Keep the
++            # measured floor only when a mark run actually showed a dip.
+             'amp_lo': 0.8 * min(p90s),
+             'mean_band': (0.8 * min(means), 1.25 * max(means)),
+-            'hs_band': (0.75 * min(hss), 1.75 * max(hss)),
++            'hs_band': (hs_lo, 1.75 * max(hss)),
+             'idle_hi': 2.0 * max([v for v in idles if v is not None]) if any(v is not None for v in idles) else float('inf'),
+             'dens_hi': 2.0 * max(denss),
+             'ext_back6': int(round(ext_back_s / cad_s)),
+@@ -663,7 +694,16 @@ def _wm30_profile(exc: np.ndarray, cal: dict, mark_wm: dict,
+     if max_gap > 0:
+         merge_n = max(1, int(round(1.25 * max_gap / DW30_GRID_S)))
+     else:
+-        merge_n = int(round(4200.0 / DW30_GRID_S))
++        # The marks show no internal pause, so there is NO evidence for a
++        # merge gap. The old fallback was a fixed 4200 s (70 min), which
++        # joined distinct eval-window cycles into one long run whose span
++        # then failed span_band: refit/house_10's dishwasher admitted 0 of
++        # its own runs on all five seeds (0 of 86 GT cycles detected all
++        # year) while its marks' own runs are 13-17 min. With no pause
++        # evidence the honest gap is the smallest resolvable one; a
++        # single-block mark means a genuine cycle's heater is continuous,
++        # so nothing needs bridging.
++        merge_n = 1
+     spans, p90s, means, hss, idles, denss, oss, oes = (
+         [], [], [], [], [], [], [], [])
+     for j0, j1 in per:
+@@ -1316,13 +1356,37 @@ def build_and_train(ctx: dict):
+                     + np.abs(dur - md) / mdh)
+             dispute = ket_ok & mw_ok
+             mw_ok = mw_ok & ~(dispute & (ket_z <= mw_z))
+-        for k in np.flatnonzero(mw_ok):
+-            i0 = int(k)
+-            seg = out['microwave'][on[i0]:off[i0]]
+-            out['microwave'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
+-            i0 = int(k)
+-            seg = out['microwave'][on[i0]:off[i0]]
+-            out['microwave'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
++        _mwk = np.flatnonzero(mw_ok)
++        if eb is not None and _mwk.size > 1:
++            # duty-chunked magnetron: one GT cycle fragments into several
++            # 30-60s plateau events, and score_episodes matches onsets
++            # one-to-one, so every extra fragment is a false onset. Fuse
++            # fragments whose pause is inside the marks' own fragment
++            # duration (1.25x, the same margin convention as the wm/dw
++            # merge gaps) and emit the merged cycle span once.
++            gap_n = max(1, int(round(1.25 * float(eb['dur_p50']) / cad_s)))
++            groups = []
++            g0 = g1 = int(_mwk[0])
++            amax = float(amp[g0])
++            for k in _mwk[1:]:
++                k = int(k)
++                if on[k] - off[g1] <= gap_n:
++                    g1 = k
++                    amax = max(amax, float(amp[k]))
++                else:
++                    groups.append((g0, g1, amax))
++                    g0 = g1 = k
++                    amax = float(amp[k])
++            groups.append((g0, g1, amax))
++            print(f'   mw fragment fusion: {_mwk.size} plateau events -> '
++                  f'{len(groups)} cycles (pause<='
++                  f'{1.25 * float(eb["dur_p50"]) / 60:.1f}min)')
++        else:
++            groups = [(int(k), int(k), float(amp[int(k)])) for k in _mwk]
++        for g0, g1, amax in groups:
++            a6, b6 = int(on[g0]), int(off[g1])
++            seg = out['microwave'][a6:b6]
++            out['microwave'][a6:b6] = np.maximum(seg, amax)
+         if fridge_band is not None:
+             ok = ((fr_amp >= fridge_band['amp'][0])
+                   & (fr_amp <= fridge_band['amp'][1])
