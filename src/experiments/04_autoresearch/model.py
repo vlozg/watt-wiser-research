@@ -84,7 +84,9 @@ DW_BASE_MIN = 120      # min baseline samples before it is trusted
 DW_RUN_MIN_S = 1200.0  # ignore heater runs < 20 min (cooking bursts);
                        # the marks' merged runs are 76-81.5 min
 FFILL_LIMIT = 10       # frozen bench protocol: max mains gap ffill
-DUTY_AMP_W = (40.0, 300.0)
+FR_STEP_MIN_W = 20.0   # fridge-only step floor: the pool's compressor steps
+                       # are 22-91 W, i.e. all below AMP_MIN_W = 50 W
+DUTY_AMP_W = (20.0, 300.0)
 DUTY_DUR_S = (600.0, 2400.0)
 DUTY_CELL_MIN = 300    # min events per (amp, dur) cell over the mined span
 DUTY_CV_MAX = 0.6      # require regular (thermostat-like) recycling
@@ -110,7 +112,8 @@ def _runs(on: np.ndarray):
                     np.flatnonzero(d == -1).tolist()))
 
 
-def _extract_events(sig: np.ndarray, cad_s: float):
+def _extract_events(sig: np.ndarray, cad_s: float,
+                    amp_min: float = AMP_MIN_W):
     """Level-excursion events: a rise (> AMP_MIN_W over +-18 s) ends at
     the FIRST fall within MAXSPAN_S whose magnitude is within FALL_REL of
     the rise AND whose post-fall level returns to the pre-rise baseline
@@ -122,8 +125,8 @@ def _extract_events(sig: np.ndarray, cad_s: float):
     fut = np.concatenate([sig[STEP_H:], np.full(STEP_H, sig[-1])])
     past = np.concatenate([np.full(STEP_H, sig[0]), sig[:-STEP_H]])
     stp = fut - past
-    is_rise = stp > AMP_MIN_W
-    is_fall = stp < -AMP_MIN_W
+    is_rise = stp > amp_min
+    is_fall = stp < -amp_min
     r_idx = np.flatnonzero(is_rise & ~np.concatenate([[False], is_rise[:-1]]))
     base_roll = _roll_median(sig, 11)
     zc = np.cumsum(sig <= 0.5, dtype=np.int32)
@@ -814,6 +817,13 @@ def build_and_train(ctx: dict):
                        SMOOTH_N)
     ev_on, ev_off, ev_amp = _extract_events(sig, cad_s)
     ev_dur = (ev_off - ev_on) * cad_s
+    # fridge-only low-floor mine (FR_STEP_MIN_W). AMP_MIN_W = 50 W blinds
+    # every sub-50 W compressor step, so the fridge never sees the majority
+    # of the pool. Every other device keeps the shared set above untouched.
+    fr_on, fr_off, fr_amp = _extract_events(sig, cad_s, FR_STEP_MIN_W)
+    fr_dur = (fr_off - fr_on) * cad_s
+    print('   mined %d fridge-floor events (>=%.0fW step)'
+          % (len(fr_on), FR_STEP_MIN_W))
     days = len(sig) * cad_s / 86400
     print(f'   mined {len(ev_on)} level-excursion events from {days:.0f} '
           'pre-span days')
@@ -992,22 +1002,22 @@ def build_and_train(ctx: dict):
                         'iso_win': KET_ISO_WIN_S}
 
     # fridge: most-regular (amp x dur) duty cell among mined events
-    dm = ((ev_amp >= DUTY_AMP_W[0]) & (ev_amp <= DUTY_AMP_W[1])
-          & (ev_dur >= DUTY_DUR_S[0]) & (ev_dur <= DUTY_DUR_S[1]))
+    dm = ((fr_amp >= DUTY_AMP_W[0]) & (fr_amp <= DUTY_AMP_W[1])
+          & (fr_dur >= DUTY_DUR_S[0]) & (fr_dur <= DUTY_DUR_S[1]))
     fridge_band = None
     if int(dm.sum()) >= DUTY_CELL_MIN:
         cells: dict = {}
         for k in np.flatnonzero(dm):
-            key = (int(ev_amp[k] // 10.0), int(ev_dur[k] // 300.0))
+            key = (int(fr_amp[k] // 10.0), int(fr_dur[k] // 300.0))
             cells.setdefault(key, []).append(int(k))
         cand = []
         for ks in cells.values():
             if len(ks) < DUTY_CELL_MIN:
                 continue
             ks = np.asarray(ks, dtype=np.int64)
-            a50 = float(np.percentile(ev_amp[ks], 50))
-            d50 = float(np.percentile(ev_dur[ks], 50))
-            iv = np.diff(np.sort(ev_on[ks])) * cad_s
+            a50 = float(np.percentile(fr_amp[ks], 50))
+            d50 = float(np.percentile(fr_dur[ks], 50))
+            iv = np.diff(np.sort(fr_on[ks])) * cad_s
             cv = (float(iv.std() / iv.mean())
                   if len(iv) >= 3 and iv.mean() > 0 else 9.9)
             cand.append((cv, a50, d50, ks))
@@ -1015,8 +1025,8 @@ def build_and_train(ctx: dict):
         if cand and cand[0][0] <= DUTY_CV_MAX:
             cv, a50, _, ks = cand[0]
             n_cell = len(ks)
-            fridge_band = {'amp': _pband(ev_amp[ks]),
-                           'dur': _pband(ev_dur[ks]), 'n': n_cell, 'cv': cv}
+            fridge_band = {'amp': _pband(fr_amp[ks]),
+                           'dur': _pband(fr_dur[ks]), 'n': n_cell, 'cv': cv}
             print(f'   fridge mined cell: a50={a50:.0f}W '
                   f'amp_band={fridge_band["amp"][0]:.0f}-'
                   f'{fridge_band["amp"][1]:.0f}W '
@@ -1027,10 +1037,10 @@ def build_and_train(ctx: dict):
         # small-sustained population itself (compressor-class window,
         # amp capped at FR_POP_AMP_HI). The passive-window mark rests on
         # 3 pairs whose amp sits below the population mode.
-        fpop = dm & (ev_amp <= FR_POP_AMP_HI)
+        fpop = dm & (fr_amp <= FR_POP_AMP_HI)
         if int(fpop.sum()) >= FR_POP_MIN:
-            fridge_band = {'amp': _pband(ev_amp[fpop]),
-                           'dur': _pband(ev_dur[fpop]),
+            fridge_band = {'amp': _pband(fr_amp[fpop]),
+                           'dur': _pband(fr_dur[fpop]),
                            'n': int(fpop.sum())}
             print(f'   fridge fallback: population band '
                   f'amp={fridge_band["amp"][0]:.0f}-'
@@ -1093,6 +1103,9 @@ def build_and_train(ctx: dict):
         sig = _roll_median(f, SMOOTH_N)
         base_roll = _roll_median(sig, 11)
         on, off, amp = _extract_events(sig, cad_s)
+        fr_on, fr_off, fr_amp = _extract_events(sig, cad_s,
+                                               FR_STEP_MIN_W)
+        fr_dur_e = (fr_off - fr_on) * cad_s
         out = {d: np.zeros(len(f), dtype='float32') for d in ALL_DEVICES}
         if len(on) == 0:
             return {d: out[d] for d in devices}
@@ -1260,22 +1273,22 @@ def build_and_train(ctx: dict):
             seg = out['microwave'][on[i0]:off[i0]]
             out['microwave'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
         if fridge_band is not None:
-            ok = ((amp >= fridge_band['amp'][0])
-                  & (amp <= fridge_band['amp'][1])
-                  & (dur >= fridge_band['dur'][0])
-                  & (dur <= fridge_band['dur'][1]))
+            ok = ((fr_amp >= fridge_band['amp'][0])
+                  & (fr_amp <= fridge_band['amp'][1])
+                  & (fr_dur_e >= fridge_band['dur'][0])
+                  & (fr_dur_e <= fridge_band['dur'][1]))
         elif 'fridge' in mark:
             p = mark['fridge']
-            ok = ((np.abs(amp - p['amp']) / p['amp'] <= REL_AMP)
-                  & (dur >= REL_DUR[0] * p['dur_s'])
-                  & (dur <= REL_DUR[1] * p['dur_s']))
+            ok = ((np.abs(fr_amp - p['amp']) / p['amp'] <= REL_AMP)
+                  & (fr_dur_e >= REL_DUR[0] * p['dur_s'])
+                  & (fr_dur_e <= REL_DUR[1] * p['dur_s']))
         else:
-            ok = np.zeros(len(on), dtype=bool)
+            ok = np.zeros(len(fr_on), dtype=bool)
         fr_ok_idx = np.flatnonzero(ok)
         for k in fr_ok_idx:
             i0 = int(k)
-            seg = out['fridge'][on[i0]:off[i0]]
-            out['fridge'][on[i0]:off[i0]] = np.maximum(seg, amp[i0])
+            seg = out['fridge'][fr_on[i0]:fr_off[i0]]
+            out['fridge'][fr_on[i0]:fr_off[i0]] = np.maximum(seg, fr_amp[i0])
         # 3) kettle sustained runs: draws whose rise/fall pairing broke
         # (mid-draw level changes) never become events; on the coarse
         # grid they are one isolated flat run. Emit runs the burst
@@ -1326,9 +1339,9 @@ def build_and_train(ctx: dict):
                     continue
                 a6 = a * stride
                 b6 = b * stride
-                k = int(np.searchsorted(on[fr_ok_idx], b6 - 1,
+                k = int(np.searchsorted(fr_on[fr_ok_idx], b6 - 1,
                                         side='right')) - 1
-                if k >= 0 and off[fr_ok_idx[k]] > a6:
+                if k >= 0 and fr_off[fr_ok_idx[k]] > a6:
                     continue
                 w = float(np.median(exc_e[a:b]))
                 seg = out['fridge'][a6:b6]

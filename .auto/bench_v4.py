@@ -172,15 +172,19 @@ def run_job(job):
     fn = _load_model().build_and_train(ctx)
     feed_e = _fill(espan['mains'])
     pred = fn(feed_e)
-    f1 = {}
+    f1, det = {}, {}
     for d in plan['devs']:
         gt_mask, _u = p4._union_mask(cmap[d], espan['devices'], smooth=False)
         gt = v2.cycles_from_mask(gt_mask, espan['ts_us'], d)
         w = np.nan_to_num(np.asarray(pred[d], dtype='float32'))
         pe = v2.cycles_from_mask(w > plan['thr'][d], espan['ts_us'], d)
-        f1[d] = float(ev.score_episodes(pe, gt, v2.TAU_ONSET_S[d] * 1e6,
-                                        v2.DURATION_BAND)['f1'])
-    return {'tag': tag, 'seed': seed, 'f1': f1, 'secs': time.time() - t0}
+        sc = ev.score_episodes(pe, gt, v2.TAU_ONSET_S[d] * 1e6,
+                               v2.DURATION_BAND)
+        f1[d] = float(sc['f1'])
+        det[d] = {'p': float(sc['precision']), 'r': float(sc['recall']),
+                  'n_gt': int(len(gt)), 'n_pred': int(len(pe))}
+    return {'tag': tag, 'seed': seed, 'f1': f1, 'det': det,
+            'secs': time.time() - t0}
 
 
 def _dev_means(v):
@@ -198,6 +202,7 @@ def main():
     ap.add_argument('--seeds', default='')
     ap.add_argument('--workers', type=int, default=WORKERS)
     ap.add_argument('--holdout', action='store_true')
+    ap.add_argument('--dump', action='store_true')
     args = ap.parse_args()
     if 'ALL_DEVICES' not in MODEL.read_text():
         raise SystemExit('model.py is missing the device-subset refactor '
@@ -280,6 +285,29 @@ def main():
                'dev_med': dev_med, 'seed_means': seed_means}
     (ROOT / '.auto' / 'last_bench_v4.json').write_text(
         json.dumps(summary, indent=1, sort_keys=True))
+    if args.dump:
+        agg = {}
+        for r in rows:
+            if 'det' not in r:
+                continue
+            print('  %-20s seed %-5d %s' % (r['tag'], r['seed'],
+                  ' '.join('%s P=%.2f R=%.2f F1=%.2f n=%d/%d'
+                           % (d, r['det'][d]['p'], r['det'][d]['r'],
+                              r['f1'][d], r['det'][d]['n_pred'],
+                              r['det'][d]['n_gt'])
+                           for d in DEV_ORDER if d in r['det'])))
+            for d, v in r['det'].items():
+                agg.setdefault(d, []).append(v)
+        for d in DEV_ORDER:
+            if d in agg:
+                xs = agg[d]
+                print('  AGGR %-16s P=%.4f R=%.4f F1=%.4f gt=%d pred=%d n_pairs=%d'
+                      % (d, np.mean([x['p'] for x in xs]),
+                         np.mean([x['r'] for x in xs]),
+                         np.mean([r['f1'][d] for r in rows
+                                  if d in r.get('f1', {})]),
+                         sum(x['n_gt'] for x in xs),
+                         sum(x['n_pred'] for x in xs), len(xs)))
     for name, val in met:
         print('METRIC ' + name + '=%.6f' % val)
 

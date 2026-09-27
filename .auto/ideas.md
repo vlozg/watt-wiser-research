@@ -602,3 +602,142 @@ fresh build_and_train per (house, seed); primary = median over seeds of the mean
 F1 over the 66 pool pairs; report pool pair-mean, device-balanced mean, the
 house_1 subset and the v3 readout side by side; --holdout for the 7 holdout
 houses, milestone-only.
+
+## FROZEN v4 FLOOR at HEAD (run 73, keep, 5 seeds / 66 pairs / 20 houses)
+primary mean_device_f1 0.306428 (pair-mean, median over seeds); p10 0.299752;
+device-balanced 0.315375; house_1 subset 0.529246. Per-device medians: kettle
+0.536898 / microwave 0.266004 / fridge 0.265079 / washing_machine 0.228634 /
+dishwasher 0.346705. Per-seed: 2026 0.302565, 1 0.306428, 2 0.311406, 3
+0.313968, 4 0.297877 (spread 0.298-0.314 -> low-noise median). Full pass 128 s.
+0.505987 (v3) is a house_1-ONLY number and is NOT comparable to the v4 pool
+primary: the drop is a metric redefinition, not a regression. transfer_mean_f1
+0.151921 is a carried frozen v3 readout - bench_v4 does not recompute it; the
+milestone replacement is holdout_mean_f1 over the 7 holdout houses.
+measure.sh now runs bench_v4; checks.sh gates all five per-device medians in
+[0,1] plus scored houses/pairs == the frozen 20/66. bench_v4 refuses to run if
+model.py lacks ALL_DEVICES (guards against a revert silently breaking v4).
+WEAKEST pool device: washing_machine 0.2286 (15 pairs, widest per-house spread)
+- that is the B4 target.
+## v4 POOL LOSS STRUCTURE (seed 2026, 66 pairs, bench_v4.py --dump)
+AGGR (mean over that device's pairs):
+  kettle           P=0.4751 R=0.5144 F1=0.4576  gt=4089  pred=5091  n=12
+  microwave        P=0.3080 R=0.2744 F1=0.2622  gt=1888  pred=1560  n=11
+  fridge           P=0.3867 R=0.1739 F1=0.2264  gt=37925 pred=16048 n=18
+  washing_machine  P=0.2491 R=0.2557 F1=0.2423  gt=858   pred=1077  n=15
+  dishwasher       P=0.4478 R=0.3594 F1=0.3883  gt=527   pred=359   n=10
+Readings:
+1. fridge is 18/66 = 27% of the pool weight and by far the worst recall
+   (0.17). It is BIMODAL, not uniformly bad - it works on eco/house_02
+   (P.94 R.63 F.75), refit/house_7 (.81/.49/.61), refit/house_16 (.55/.43/.49)
+   and ukdale/house_1 (.67/.38/.49), and collapses on eco/house_01
+   (.15/.02/.04), eco/house_03 (.05/.03/.03), eco/house_06 (.02/.00/.00),
+   refit/house_12 (.05/.02), refit/house_10 (.03/.02), refit/house_8
+   (.50/.09) and refit/house_17 (.57/.05). A per-house BAND failure, not a
+   global margin: the band comes from one mined duty cell or one population
+   fallback window, so a house whose passive window is unrepresentative gets a
+   band that admits almost nothing (the three eco houses are fridge-only and
+   all three collapse).
+2. fridge emits 42% as many cycles as GT (16048 vs 37925) yet only 39% match,
+   so this is NOT only recall: emitted cycles also land at wrong times or are
+   merged/split. Prime suspect is run-basis emission lag - the run path starts
+   where the 30 s smoothed level crosses amp_lo = 0.8 x mark amp (~line 1075)
+   and writes max(seg, w) across the run (~line 1334), so onsets are
+   structurally late by the climb. Check against v2.TAU_ONSET_S['fridge'].
+3. wm is bad on BOTH axes (P0.25/R0.26) and emits MORE than GT (1077 vs 858):
+   merging/splitting, not a threshold problem. That is the B4 target.
+4. mw is precision-poor (.31) and emits fewer than GT (1560 vs 1888) -
+   consistent with the m7 verdict that the mw ceiling is downstream of
+   extraction, not of a gate.
+5. kettle and dw are the healthiest (dw P.45/R.36 still over-admits on the
+   run-basis gates). The device-balanced mean (0.3154) tracks the pair-mean
+   (0.3064), so the pair-mean is not badly skewed by the 18 fridge pairs.
+Next bets, in order (each must lift the v4 primary by >= 0.01 with no per-device
+median down more than 0.03):
+  (a) fridge per-house band from the house's own pre-span excursion population
+      conditioned on the fridge mark (marks + history only, no hand-set
+      constant), plus the run-basis onset-lag check against TAU_ONSET_S;
+  (b) B4 wm explicit-duration phase model - the both-axes failure argues for a
+      duration/phase prior, not another gate.
+## m8: fridge run-gate re-basing REFUTED (run 74, discard)
+Bet: the fridge cannot be button-calibrated (PASSIVE_FRIDGE_H=3), so its mark
+comes from ONE random 3 h mains window with no labels. On the v4 pool that mark
+amp reads 30/298/328/601/932/2203 W while the mined per-house population band
+sits at 51-117 W on EVERY house, so the run-basis gate amp_lo = 0.8 x mark amp
+lands ABOVE the band top and emits 0 candidates - on 5 of the 8 diagnosed
+houses, all of them high-precision/very-low-recall (refit/house_17 P.57 R.05,
+refit/house_8 P.50 R.09, refit/house_10 P.03 R.02, refit/house_12, eco/house_01).
+Change: clamp the mark amp into the mined band (0.8 / 3.0 margins unchanged).
+A credible mark is a no-op, so house_1 was bit-identical (0.529246) as predicted.
+RESULT: primary 0.306428 -> 0.303330 (-0.0031), p10 0.299752 -> 0.297894,
+fridge median 0.265079 -> 0.258555 (-0.0065), device-balanced 0.315375 ->
+0.313924. All five seeds fell uniformly (-0.0020 to -0.0036), every other device
+median bit-identical. Reverted.
+WHAT IT RULES OUT: the pool fridge deficit is NOT a mis-based gate or a disabled
+detection path. The 0.8 x mark gate was PROTECTING precision - run-basis emission
+at 51-117 W / 11-38 min over 90 days admits more lookalikes than compressor
+cycles in the houses that fail. It is the BAND SELECTION that is wrong there.
+NEXT (concrete lead): on 8/8 diagnosed houses the log printed 'fridge fallback:
+population band' - the intended per-house calibration (the most-regular (amp,dur)
+duty cell, DUTY_AMP_W=(40,300), DUTY_DUR_S=(600,2400), DUTY_CELL_MIN=300,
+DUTY_CV_MAX=0.6) NEVER FIRES anywhere in the pool. So every house is calibrated
+from the p10-p90 of the whole <=120 W small-sustained population, which in the
+collapsing houses is dominated by non-fridge activity. Diagnose why the cell
+detector falls through (best CV vs 0.6, per-cell occupancy vs 300) rather than
+re-margining the fallback band.
+Note the eco houses are pathological: eco/house_06 GT fridge cycles are 4.0 min
+(p50) against a band dur of 11-37 min and its GT threshold is 24 W; eco/house_03
+is 18.3 min at thr 12 W; eco/house_01 is 22.7 min with p90 66 min vs a band top
+of 38 min. A single global dur band cannot fit 4 min and 22 min devices.
+## m9: the fridge run-basis path is a NO-OP either way; the duty-cell
+##     detector's statistics do not exist on this pool (runs 74-75)
+
+### The cell detector is unreachable, and relaxing it cannot help
+Instrumented the mining to print cell occupancy/CV. With the shipped 10 W x
+300 s quantization: eco/house_02 7 cells >=300, ukdale/house_1 2, and
+eco/house_01 / eco/house_06 / refit/house_17 ZERO. Best cell CVs 0.74-1.06
+against DUTY_CV_MAX = 0.6 - so both gates fail, everywhere. Cause of the low
+occupancy: the extractor yields only ~11 fridge-class events/day over the
+180-day pre-span (dm = 1002-7588 events spread over 100-140 cells), so a single
+10 W x 300 s cell can never hold DUTY_CELL_MIN = 300 of them. DUTY_CELL_MIN is
+an absolute count that does not scale with span or extractor yield.
+Then re-ran with coarser 20 W x 600 s cells and a 20-event floor. Coarsening
+collapsed 100-140 cells to ~40 and did NOT rescue the gate: best CVs became
+1.018 / 0.865 / 0.891 / 2.037 / 1.006 / 0.834 / 0.765 (house_02, house_1,
+house_01, house_03, house_06, house_17, house_8). The most-populated cells have
+CV 1.0-11.8. So the CV statistic does not discriminate: the mined fridge-class
+events are near-Poisson in time on EVERY house of the pool, and the intended
+'regular duty cell' signal does not exist here. Relaxing DUTY_CV_MAX would just
+pick a small random 20-58-event cell - worse than the population band.
+CONCLUSION: the cell detector is dead code by construction (both gates), and it
+is not repairable by re-scaling them. The population fallback IS the fridge
+calibration on the whole pool. Any further fridge work must target emission
+(precision) or a different unsupervised signature, not these gates.
+
+### The run-basis gates: two ablations, both non-positive
+Run 74: clamp the passive mark amp into the mined band (amp_lo 0.8 x mark amp
+was landing ABOVE the band top, silently emitting 0 candidates on 5 of 8
+diagnosed houses - all high-precision/very-low-recall: house_17 P.57 R.05,
+house_8 P.50 R.09). Result -0.0031 primary, fridge median -0.0065.
+Run 75: same clamp PLUS floor the mark duration at the band's own dur low edge
+(the passive window returns the 1200 s default when it finds no matched
+compressor pair, giving mark dur 0.3-2.2 min on house_17/10/12 and therefore a
+near-zero dur_lo = a blip flood - this is what made run 74 lose). Result:
+primary 0.306011 (-0.0004, mixed seed signs: +0.0013/-0.0004/+0.0024/+0.0001/
+-0.00003), p10 +0.0005, device-balanced +0.001, fridge median -0.0001, house_1
+bit-identical. The duration floor exactly cancels run-74's loss.
+CONCLUSION: correctly gated or not, the run-basis path contributes ~nothing to
+the pool fridge metric. The fridge deficit is not in the gating at all - it is
+2 of 3 of the following, per house: (a) the house's compressor level sits above
+the FR_POP_AMP_HI = 120 W cap that the fallback band top inherits, (b) the
+house's cycle duration is outside the mined 10-40 min class entirely
+(eco/house_06 GT p50 is 4.0 min at thr 24 W; eco/house_01 is 22.7 min with p90
+66 min against a band top of 38 min), or (c) the fridge's unsupervised signature
+is not separable from lookalikes (P .03-.15 in the collapsed houses).
+NEXT BETS on the fridge, in order: (1) stop gating anything on the passive
+window - but note runs 74/75 show that is worth ~0; (2) the honest lever is
+per-house cycle-period estimation from the mains itself (autocorrelation of the
+small-excursion indicator over the pre-span), giving a per-house duration band
+that can span 4 min and 22 min devices - the mined-event interval CV cannot do
+this, but an ACF peak is a different statistic and is untested; (3) otherwise
+leave fridge alone and spend on the directed parameter fitting (52 literals) and
+the B4 washing-machine phase model, which have much larger headroom.
