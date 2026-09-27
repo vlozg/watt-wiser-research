@@ -1155,3 +1155,46 @@ whereas the run's own mean level is principled and provably identical on
 house_11's 13 episodes (every admitted run's mean is 330-495 W against thr
 45.5 W); (b) house_11 wm/dw are TIME-COVERAGE mismatches, not placement bugs -
 do not chase placement there; (c) execute the big-bet portfolio (B3 first).
+## m19 (run 85, DISCARD +0.002069) - the dw run-basis span band is the binding gate
+
+Hypothesis: the dw run-basis `span_band` (0.6/1.25 x the K=5 mark window spans) silently excludes
+most of the house's own runs - the m18 defect class (a calibration-derived statistic gating out the
+population) on the dw's span axis instead of amplitude.
+
+Method: temporary one-gate-at-a-time instrumentation in `build_and_train` (relax exactly one key of
+`dw30`, recount `_dw30_runs`, print the per-gate counts). At seed 2026, house_7 / house_10 / house_11 /
+house_6 runs admitted:
+
+  span_band  44->145, 32->47, 97->216, 42->70   <- binding on EVERY house
+  mean_band  52/40/129/43    hs_band 50/32/104/46
+  dens_hi    47/37/118/42    idle_hi 44/32/97/47    amp_lo 59/32/98/42
+
+Every extra run admitted by relaxing `span_band` ALREADY passed all the other run gates, so the
+population of runs that pass every other gate is a valid re-anchor. Repair: re-anchor
+`dw30['span_band']` from that population at the SAME 0.6/1.25 margins with p10/p90 (one junk run
+cannot set an edge), only ever widen, only when >= 5 such runs exist (same order as the K=5 marks).
+Scope: the dw device only - the wm passes its own `wm30` profile to `_dw30_runs`.
+
+Measured (66 pairs / 20 houses / 5 seeds): primary 0.338897 (+0.002069), p10 0.325042 (-0.000309),
+device_balanced 0.344129 (+0.002732), house_1 0.520777 (-0.024848), dw median 0.331597 (-0.015108).
+kettle / microwave / fridge / wm medians BIT-IDENTICAL to the floor.
+Per house (seed 2026, dw only): refit/house_10 0.15->0.28 (10->57 preds, P 0.70->0.35, R 0.08->0.23),
+refit/house_7 0.065->0.07, refit/house_6 0.56->0.55, ukdale/house_1 0.67->0.64 (P 1.00->0.88),
+refit/house_11 0.00 (12->53 preds, all false positives).
+
+Verdict: DISCARD, but the lever is real (+0.002 primary; the recall it was for did appear on
+house_10). It loses precision (house_1 dw, house_11's 41 extra junk runs), so it must carry a
+precision guard before entering a bundle. The reverted `src/` is the run-84 floor.
+
+REFUTED in the same iteration: extending the kettle's population-anchored duration reference
+(`dur_ref`, the mined p50 over pre-span events inside the mark amp band, already used for the kettle
+at model.py L1223) to the mw admission gate. Measured: ukdale/house_1 mw 0.352->0.15 (-0.20) against
+only +0.03 on refit/house_17. Reason: the mined mw cluster is cross-fire contaminated (house_6 and
+house_1 both p50 2.5 min vs a 1.2 min mark), whereas for the kettle the mined and mark durations
+agree (1.8 vs 1.9 min). The raw mark duration is the better mw anchor - do not retry without a
+changed assumption.
+
+NEXT: point the same one-gate instrumentation at the fridge (refit/house_10 1936 preds / 1956 GT at
+P 0.04 R 0.04; refit/house_17 280 / 1840) and the mw (refit/house_6 74 / 390). That method found the
+binding dw gate in a single screen, and fridge_dw/mw pair-level zeros are the largest clean prizes
+left. B3 is still the next multi-run project, with this instrumentation as its confidence step.

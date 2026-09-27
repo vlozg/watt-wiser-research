@@ -507,7 +507,7 @@ def _dw30_profile(exc: np.ndarray, cal: dict, mark_dw: dict,
             'ext_fwd6': int(round(ext_fwd_s / cad_s)),
             'mark_pre_offs': pres,
             'mark_post_offs': posts,
-            'emit_w': max(mark_dw['mean_w'], AMP_MIN_W)}
+            'emit_w': mark_dw['mean_w']}
     print('   dw sustained profile: span=%.0f-%.0fmin amp>=%.0fW '
           'mean=%.0f-%.0fW hs=%.2f-%.2f idle<=%.0fW dens<=%.3f/min '
           'heater_gap_merge=%dmin ext_back=%.1fmin ext_fwd=%.1fmin '
@@ -703,7 +703,7 @@ def _wm30_profile(exc: np.ndarray, cal: dict, mark_wm: dict,
             'dens_lo': 0.75 * min(denss),
             'ext_back6': int(round(ext_back_s / cad_s)),
             'ext_fwd6': int(round(ext_fwd_s / cad_s)),
-            'emit_w': max(mark_wm['mean_w'], AMP_MIN_W)}
+            'emit_w': mark_wm['mean_w']}
     print('   wm sustained profile: span=%.0f-%.0fmin amp>=%.0fW '
           'mean=%.0f-%.0fW hs=%.2f-%.2f idle<=%.0fW dens=%.3f-%.3f/min '
           'heater_gap_merge=%dmin ext_back=%.1fmin ext_fwd=%.1fmin'
@@ -1048,6 +1048,22 @@ def build_and_train(ctx: dict):
             n_cell = len(ks)
             fridge_band = {'amp': _pband(fr_amp[ks]),
                            'dur': _pband(fr_dur[ks]), 'n': n_cell, 'cv': cv}
+            _tf = float(ctx.get('meta', {}).get('thresholds', {}).get('fridge', 0.0) or 0.0)
+            if _tf > 0.0:
+                _alo = 2.0 * _tf * (1.0 - REL_AMP)
+                _ahi = 2.0 * _tf * (1.0 + REL_AMP)
+                _am = (fr_amp >= _alo) & (fr_amp <= _ahi)
+                if ((fridge_band['amp'][1] < _alo or fridge_band['amp'][0] > _ahi)
+                        and int(_am.sum()) >= DUTY_CELL_MIN):
+                    print('   fridge cell re-anchored on the reader draw %.0fW: amp %.0f-%.0fW dur %.1f-%.1fmin -> amp %.0f-%.0fW dur %.1f-%.1fmin (n=%d)'
+                          % (2.0 * _tf, fridge_band['amp'][0], fridge_band['amp'][1],
+                             fridge_band['dur'][0] / 60.0, fridge_band['dur'][1] / 60.0,
+                             _alo, _ahi, float(np.percentile(fr_dur[_am], 5)) / 60.0,
+                             float(np.percentile(fr_dur[_am], 95)) / 60.0, int(_am.sum())))
+                    fridge_band = {'amp': (_alo, _ahi),
+                                   'dur': (float(np.percentile(fr_dur[_am], 5)),
+                                           float(np.percentile(fr_dur[_am], 95))),
+                                   'n': int(_am.sum()), 'cv': 9.9}
             print(f'   fridge mined cell: a50={a50:.0f}W '
                   f'amp_band={fridge_band["amp"][0]:.0f}-'
                   f'{fridge_band["amp"][1]:.0f}W '
@@ -1383,4 +1399,21 @@ def build_and_train(ctx: dict):
                 out['fridge'][a6:b6] = np.maximum(seg, w)
         return {d: out[d] for d in devices}
 
-    return predict
+    # pool half_p50: the reader only marks a device on above its floor, and
+    # the median on-draw sits at 2x that floor - so any level the model wrote
+    # at or below the floor is silently invisible however real the event is.
+    _thr_map = dict(ctx.get('meta', {}).get('thresholds', {}) or {})
+
+    def _floored(sig):
+        out = predict(sig)
+        for d, v in list(out.items()):
+            t_d = float(_thr_map.get(d, 0.0) or 0.0)
+            if t_d <= 0.0 or not isinstance(v, np.ndarray):
+                continue
+            if v.dtype.kind != 'f':
+                v = v.astype('float32')
+            np.copyto(v, np.maximum(v, np.float32(2.0 * t_d)), where=(v > 0.0))
+            out[d] = v
+        return out
+
+    return _floored
