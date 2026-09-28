@@ -19,6 +19,8 @@ dependencies = [
     "nbconvert>=7.16",
     "playwright",
     "torch>=2.14.0",
+    "paho-mqtt>=2.1.0",
+    "python-dotenv>=1.2.3",
 ]
 
 [dependency-groups]

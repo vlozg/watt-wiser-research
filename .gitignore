@@ -34,3 +34,7 @@ __marimo__/
 
 # Local agent instructions (never tracked)
 AGENTS.local.md
+# Local environment variables and secrets
+.env
+.env.*
+!.env.example
