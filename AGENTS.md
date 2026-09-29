@@ -20,10 +20,20 @@ for US homes with Shelly EM Gen3 submeters.
 - `src/` - pipeline + experiment code: `pipelines/` (00 download, 01 extract,
   02 fnd EDA notebook sources, 03 gold, 04 GT-cycle EDA notebook source), `experiments/00_baseline` (baseline
   scaffold: marimo notebook source + `baseline_lib.py` shared helpers; renders to
-  `docs/reports/baseline/` via `make export-baseline` - edit the source, re-export) and
+  `docs/reports/baseline/` via `make export-baseline` - edit the source, re-export),
   `experiments/01_fhmm` (session-supervised FHMM: `fhmm_lib.py` shared helpers + frozen
   runner `02_run_kcurve.py` + analysis notebook `01_fhmm_session_supervised.py`; renders to
-  `docs/reports/fhmm/` via `make export-fhmm` - edit the source, re-export).
+  `docs/reports/fhmm/` via `make export-fhmm` - edit the source, re-export),
+  `experiments/02_seq2seq` (target-home seq2seq power model; it trains on the home's own
+  submeter, so it is a supervised upper-bound reference, not deployment-parity code),
+  `experiments/03_pattern_matching` (pattern-matching detector),
+  `experiments/04_autoresearch` (rules + event-mining model, the benchmarked deliverable:
+  scored only by the frozen `.auto/measure.sh`, terminal record in `.auto/dossier.md`),
+  `experiments/05_method_compare` (cross-method comparison + marimo explorer: rules, rules
+  with ground-truth thresholds, FHMM, and a mark-free cross-home seq2seq; holdout readout
+  only) and `experiments/06_transfer_dl` (cross-home transfer sandbox, not yet tracked - it
+  imports 05's harness and awaits an isolation rewrite or removal).
+  Experiments are isolated from one another: never import across these directories.
 - `deprecated/` - quarantined legacy trees the owner has not reviewed; do not extend.
   `deprecated/analysis/`: EDA judge (`eda_shelly.py` CLI + `eda_shelly_interactive.py`
   marimo UI + `eda_reference_ukdale.json`; schema-checked inputs, single implementation -

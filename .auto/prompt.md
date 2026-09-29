@@ -1,69 +1,108 @@
-# Autoresearch task: WattWiser NILM detection + regression model
+> **STATUS: TERMINAL (closed by the owner 2026-09-28).** This loop is closed and
+> must not be resumed as a rule-tuning loop. The rule bound space is exhausted:
+> 106 runs, 29 keeps, last keep `b4298ca` at primary 0.366174 against a bar of
+> 0.376174. The terminal record is `.auto/dossier.md`; the full hypothesis
+> record is `.auto/ideas.md`. The open direction is the per-device hybrid
+> (rules for microwave/fridge/dishwasher, a cross-home net for kettle and
+> washing machine) measured in `data/results/method_compare/` - a new
+> experiment, not a continuation. Sections 0-9 below remain the frozen charter
+> for any future segment.
 
-## Goal
-Build and iteratively improve a NILM model that fits the WattWiser problem
-statement (docs/PROBLEM_STATEMENTS.md): aggregate-only input, low frequency,
-calibration-supported, episode-level evaluation. Bar set by the user:
-episode F1 > 0.7 for EVERY target device, with a tracked regression score
-(per-device power MAE / nMAE) reported on every run.
+# Autoresearch task: WattWiser NILM - episode detection + attribution (transfer-learning segment)
 
-## Primary metric (frozen)
-METRIC min_device_f1 - the worst target device's episode-level F1 on the
-frozen benchmark (higher is better; target > 0.7).
+## 0. What this loop is for
+Improve the product's ability to answer, from the aggregate alone, *which enrolled
+device is running, when, and how much energy it used - or UNKNOWN*. Grounding
+authority: `docs/PROBLEM_STATEMENTS.md` (it wins over every other doc). Deployment
+parity is absolute: the method never sees a per-device meter, at any time, end to
+end (that doc's sections 3 and 7). The only supervision is K guided calibration
+sessions per home, plus whatever the aggregate itself offers.
 
-## Regression score (tracked on every run)
-- METRIC mean_mae_w: macro mean of per-device MAE (W), lower is better
-- METRIC worst_mae_w: the worst per-device MAE (W)
-- METRIC mean_nmae: macro mean of per-device nMAE (MAE / mean aggregate W)
-Per-device MAE/nMAE are printed in the benchmark table and saved to
-.auto/last_bench.json.
+## 1. Primary metric (frozen, measured by .auto/measure.sh)
+METRIC mean_device_f1 - median over the frozen 5 seeds of the mean episode F1 over
+the frozen 66 (house, device) pairs; every pool house is re-calibrated with its own
+K=5 marks, its own pre-split history and a fresh build_and_train - the deployment
+path. Higher is better. Tracked on every run: mean_device_f1_p10,
+device_balanced_mean, house_1_v4_mean, the five per-device medians, transfer_mean_f1.
 
-## Frozen benchmark protocol (.auto/bench.py - do not tune)
-- Data: UK-DALE gold layer (data/gold/ukdale), 6 s mean resample.
-- Eval house: house_1; eval span: first 30 days after split_us
-  1380585600000000 (house_1 splits.csv contract, 2013-10-01).
-- Expanded eval (user request): the 30-day slice is the frozen loop metric;
-  when an improvement looks big enough to keep, confirm it on a larger span
-  before declaring it final: BENCH_EVAL=full bash .auto/measure.sh re-scores
-  the SAME trained model over the full post-split house_1 span
-  (2013-10-01 to end of data, ~3.5 y; 90d/365d also available). The run logs
-  the 30-day min_device_f1 as its decision metric and carries the full_
-  METRIC lines (full-span F1/MAE) in its metrics + description.
-- Devices (5): kettle, microwave, fridge, washing_machine, dishwasher.
-- GT episodes: gold submeter channel > per-device threshold
-  (data/gold/thresholds.json, half_p50: kettle 1173 W, microwave 762 W,
-  fridge 44.5 W, washing_machine 90 W, dishwasher 60.5 W); min episode
-  2 samples (12 s). Same thresholds applied to predictions (deployment parity).
-- Matching: wattwiser.experiments.evaluation.score_episodes with onset
-  tolerance tau = 12 s (2x cadence, the fhmm FROZEN tau_native_s convention)
-  and duration band (1/3, 3.0). Frozen; never tuned on test.
-- Calibration: K = 5 ON-sessions per device drawn with seed 2026 from
-  house_1 PRE-split span - the only target-house data a model may train on.
-- Pretraining data (allowed): house_2 + house_5 labelled channels (last 20%
-  of each house = validation). NOTHING from house_1 post-split span may
-  influence training, model selection, or hyperparameters.
-- Model input: aggregate mains only (gap-filled: ffill limit 10 samples). Cadence note: the client meter samples natively at 1 Hz; the 6 s benchmark cadence is the frozen UK-DALE gold contract and stays fixed.
-- Model output: per-device watts on the eval grid (stride-32
-  overlapping-window inference is the reference implementation).
+## 2. Frozen - never edit, never tune
+`.auto/measure.sh`, `.auto/bench.py`, `bench_v2.py`, `bench_v3.py`,
+`bench_v4.py`, `checks.sh`, `pool_v4.py`, `pool_v4.json`; the evaluation
+contract (`wattwiser.experiments.evaluation`); the threshold / tau / duration-band
+/ cadence constants; pool eligibility, eval spans and seeds. If a protocol constant
+looks wrong, STOP and say why instead of silently editing it.
 
-## Rules (cheating = wasted run)
-1. Only src/experiments/04_autoresearch/model.py may change between
-   iterations. bench.py, measure.sh, checks.sh and the protocol constants
-   are frozen; if a protocol constant must change, stop and say why instead
-   of silently editing it.
-2. Never train on house_1 channels beyond the provided calibration sessions
-   (ctx['calib']); the eval span must not influence any model choice.
-3. Do not tune thresholds, tau, duration band, eval span, or metric code.
-4. Never use eval-house submeter channels as model input.
-5. Every run gets logged: keep/discard/crash all carry evidence.
+## 3. What may change now (segment-3 rewrite licence)
+This loop is no longer restricted to small threshold tweaks. Explicitly authorised:
+1. **Architecture rewrites.** Replace the rule-based detector with a learned model
+   or a hybrid; change representations; add learned components; delete rule families.
+2. **New tracked artifacts.** Training scripts, library modules and small committed
+   checkpoints are legitimate - e.g. `src/experiments/06_transfer_dl/`, weights under
+   `data/results/transfer_dl/`. The scored entry point stays
+   `src/experiments/04_autoresearch/model.py` (bench_v4 hard-codes it), so a new
+   architecture lands there as a thin adapter over the new module + weights.
+3. **Multi-run bets.** Pre-register hypothesis, milestones and kill criterion in
+   `.auto/ideas.md` before starting. One bad first run is not a refutation; judge a
+   bet over its milestone, not over one measurement.
+4. **Problem reframing inside the product boundary** - different output
+   parameterisation, different UNKNOWN semantics, a retrieval / transfer
+   formulation instead of per-home rules.
 
-## Iteration mechanics
-- Benchmark: bash .auto/measure.sh (METRIC lines; primary printed first and last).
-- Checks: bash .auto/checks.sh (gate: all 5 devices scored, finite metrics).
-- Backlog: .auto/ideas.md - work top-down unless evidence says otherwise;
-  persist hypothesis / rollback_reason / next_action_hint in the asi field.
+## 4. Landing rule (how a big rewrite survives the auto-revert)
+The plugin auto-commits on `keep` and auto-reverts on `discard`, so an
+intermediate behaviour-neutral rewrite cannot survive a run on its own. Therefore:
+- Develop a rewritten architecture in its own module (`06_transfer_dl/`), where
+  iterations do not touch the scored path.
+- Land it by making `04_autoresearch/model.py` an adapter and running the bench:
+  that run is the `keep` that persists the work.
+- Park intermediate diffs as `.auto/runs/<n>_<slug>.diff` so a revert cannot lose them.
+- A pure refactor that cannot move the primary metric ships as a diff artifact,
+  never as a run.
 
-## Known prior baseline (EXP-02: pointwise F1 at 50 W, K-only training, house 1)
-fridge 0.487, kettle 0.037, microwave 0.058, washing machine 0.100 - not
-comparable to this benchmark's episode F1 (different metric), but it shows
-K-only training underfits. First lever: multi-house pretraining.
+## 5. Data discipline (cheating = wasted run)
+1. Never use a scored home's eval-span submeter channels as model input, and no
+   model choice may depend on the eval span.
+2. Training on other homes' labels is legitimate: the 20 dev homes' **pre-split**
+   spans may be used for pretraining. The 7 holdout houses are a **milestone-only
+   readout** - never train on them, never select hyperparameters on them, and never
+   run `--holdout` per iteration.
+3. The calibration interface is K=5 marks per device plus the pre-span aggregate. A
+   method may not require extra labels: solve it with better methods, not more labels.
+4. Report honestly: p10 and per-device medians beside every primary. A change that
+   helps the mean and hurts the tail is not a win.
+5. Every run is logged - keep / discard / crash - with its evidence.
+
+## 6. Keep rule, and its multi-run exception
+Default: keep iff primary >= last kept primary + 0.01 AND p10 does not fall AND no
+device median falls more than 0.03.
+Exception, for a pre-registered big bet: an *intermediate* milestone may declare its
+own bar in advance - e.g. "primary no worse than -0.005, p10 not down, and the
+target device or group measurably improved" - and that declared bar then makes the
+run a legitimate keep. The bar is declared in `.auto/ideas.md` BEFORE the run, never
+chosen after seeing the number.
+
+## 7. Standing product bars (not the loop metric)
+house_1 v3 median >= 0.70 and transfer mean >= 0.50 are product bars. K=5 marks is a
+product constraint, not a tunable.
+
+## 8. Iteration mechanics
+- Benchmark: `bash .auto/measure.sh` (full pool, ~95-165 s). Screens:
+  `--seeds N` single seed (~19 s) or `--houses` (~4 s); compare a screen against
+  THAT seed's own base.
+- Audit gate vacuity / behaviour BEFORE the pool; `ast.parse` model.py before any
+  pool run.
+- The discard auto-revert is not guaranteed: verify `git status --porcelain src/`
+  and restore with `git checkout -- src/experiments/04_autoresearch/model.py` if dirty.
+- Backlog: `.auto/ideas.md`; diagnostics in the asi field (hypothesis /
+  rollback_reason / next_action_hint).
+
+## 9. Where the campaign stands (segment 2, kept honest)
+Incumbent `b4298ca`: primary 0.366174, p10 0.345739. Runs 103-118 were 16 consecutive
+discards that measured out the rule-bound space: every relaxation of a gate protects
+precision (dw merge / span / mean floors), some bounds are provably vacuous (the wm
+heat-share ceiling), and the residue with bar-clearing magnitude - unlabelled or
+rejected program cycles leaking heater blocks into the kettle (worth ~+0.015) - is
+unreachable by construction: `ev_in_prog` derives only from emitted program spans, a
+home with no marks for that device has no profile at all, and no amp or duration band
+can separate a duty-cycling heater from a boil. That is a representation failure,
+which is why segment 3 is a learned / transfer formulation (experiment 06, H09).

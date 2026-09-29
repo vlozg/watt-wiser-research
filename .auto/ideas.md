@@ -1854,3 +1854,386 @@ NEXT (in order):
      the detector" pattern is worth checking pair by pair before any new
      mechanism is added.
   3) The burst-device band family stays closed (m32/m35/m36, unchanged).
+
+m38 (run 102, KEEP 0.366174, commit b4298ca) - program-span ownership at EVENT level.
+  1) WIN: a burst event lying inside a span already EMITTED as a dw/wm program run
+     is that program's own heater, not the kettle. The mw has applied this to
+     named chains since run 88 (ev_in_named); the emitted dw30/wm30 run-basis
+     spans were never in that set, and model.py L1334-1335 admitted the kettle
+     gate was chain-blind. Fix: ev_in_prog over the CORE emitted runs
+     (stride*a30..stride*b30 and a6..b6) plus the named chains, with
+     '& ~ev_in_prog' on both kettle-gate branches. Pool 0.363271 -> 0.366174
+     (+0.002903); kettle median 0.55514 -> 0.56105; cleared the pre-registered
+     bar 0.364623 (= floor 0.354623 + 0.01). First keep since run 86.
+     NEW BAR for run 103: primary >= 0.376174.
+  2) COST, and the next lever: ukdale/house_1 subset 0.540104 -> 0.529428
+     (-0.0107). There the kettle declares 1173 W - the same level as a wm/dw
+     heater - so real coincident boils are suppressed. NEXT: make the test
+     level-aware, i.e. suppress only when the program's own claimed amp can
+     explain the event (program amp >= event amp). The FPs suppressed elsewhere
+     sit far below the program's amp, so the win should survive.
+  3) THE EXTENSION IS NOT FREE: suppressing on the pre/post-extended span
+     (i1 = stride*b30 + ext_fwd6, +-22 min) collapses the kettle gain back to the
+     incumbent (0.566709 -> 0.561131). Suppress on the core emitted run only.
+  4) Two adjacent generalizations refuted by measurement and reverted:
+     ev_in_named |= ev_in_prog (mw) gave -0.000049 at seed 2026; using
+     prog_spans in the kettle SUSTAINED-run dedup gave 0.566709 -> 0.561214 -
+     that path is already isolation-gated, so its runs inside a program span are
+     real kettles.
+  5) Fridge strand CLOSED by census (.scratch/s102_buckets.py): of the 18 pool
+     fridge houses eco/house_06 is the ONLY one with a dominant short-cycle mode
+     (4 min bucket, 0.73 of its 11644 events). Every other house is flat (top
+     bucket dominance 0.06-0.16, several 2/3/4 min buckets competing) with its
+     >=600 s mode (10-24 min) intact, so run 101's 120-300 s rescue window fires
+     exactly where it should and widening it wins nothing. Fridge run-merge was
+     also refuted (18 pairs, seed 2026: primary -0.002 / -0.007 / -0.020 at
+     r = 0.25/0.5/1.0 of the shorter chunk) - the preds are correctly sized.
+  6) The AMP_MIN_W = 50 W visibility defect is real but NOT fixable globally:
+     house_6 mw declares 43 W, house_8 44 W, house_10 47 W, eco/house_03 kettle
+     17 W, and the fridge already carries its own FR_STEP_MIN_W mine for the
+     22-91 W steps. Lowering the SHARED floor to min(50, 0.5*min(2*thr)) was
+     refuted hard: seed-2026 primary 0.366660 (-0.0058 vs the kept change) with
+     all five medians down (kettle 0.5589, mw 0.2505, wm 0.2388, dw 0.4174) -
+     the sub-50 W population is noise, not those devices. Any fix here must be
+     device-specific.
+  7) OPEN, in order: (a) level-aware suppression (item 2); (b) refit/house_11 dw
+     0.000 (12 preds / 12 GT, zero match) and refit/house_7 dw 0.065 (33/91,
+     under-emission); (c) the mw cluster (refit/house_6 0.040 on 74/390);
+     (d) owner-directed: fold the 52 model.py literals into one fitted parameter
+     dict, per-home reliability from calibration-only signals, and the
+     history-length curve at 7/14/30/60 days.
+
+SEGMENT 3 CHARTER (owner-directed: pivot to transfer learning / DL) - the rewrite
+licence, data discipline and multi-run keep exception are in .auto/prompt.md
+sections 3-6. Home of the work: src/experiments/06_transfer_dl/ (05_method_compare
+stays the comparison + explorer/visualization harness; 02_seq2seq supplies the net;
+04_autoresearch/model.py stays the scored entry point bench_v4 hard-codes).
+
+B6-pre (pre-registered BEFORE any run) - CROSS-HOME TRANSFER BACKBONE.
+Hypothesis (docs/hypotheses/H09_cross_house_transfer.md): a shared representation
+pretrained on the development homes' pre-split spans, then adapted to a new home
+using only its K=5 marks and its own pre-span aggregate, can beat the per-home rule
+stack (incumbent primary 0.366174) on the frozen pool - and specifically closes the
+mark-free program-cycle leak (house_12 712 kettle preds vs 127 GT) that runs 103-118
+proved no band or span rule can reach.
+Milestones: M1 DL baseline established with the existing comparison harness - where
+does a cross-home seq2seq actually stand, dev vs unseen? No claims before that
+number. M2 leave-one-home-out transfer matrix (H09 diagonal vs off-diagonal) on the
+dev pool. M3 adapt-on-marks: condition / fine-tune the backbone with the target
+home's K=5 marks only, score the frozen pool. M4 land the winner into
+04_autoresearch/model.py as an adapter and run the full bench.
+Kill criterion: if by M3 the adapted backbone cannot beat the rule incumbent on the
+pool primary with p10 not falling - judged over at least 3 pre-registered runs, not
+one - abandon the backbone and report the transfer matrix as the result (H09 is
+deliberately two-sided; a measured weak transfer is a result, not a failure).
+Data discipline: the 7 holdout houses are a milestone-only readout, never trained or
+tuned on; dev homes' PRE-SPLIT spans only; no eval-span submeter is ever an input.
+
+m55 (run 118) - the first marks-free STRUCTURAL lever, after 116/117 proved span
+bookkeeping cannot reach the leak (ev_in_prog derives only from prog_spans, which
+derives only from a device profile; house_12 has no dishwasher in cmap, so no dw30
+exists and no span of any kind can cover its 712 kettle events vs 127 GT). Since
+m35/m36 showed no amp/duration band separates a partial-duty program heater from a
+boil, the untested discriminator is TEMPORAL GEOMETRY: a thermostat/program heater
+duty-cycles with an OFF gap <= its own ON-time, whereas independent boils are
+separated by far more than their duration. TESTED: at the kettle gate, drop an
+admitted event only if BOTH neighbours are admitted and each gap <= that
+neighbour's own ON-time (on/off indices only - no unit conversion, no new
+constant, no marks, no sub-meter data). Reading: kettle+primary up => temporal
+geometry is the marks-free discriminator and it should be reused for the mw and
+the dropped trains fed back as unlabelled program spans; kettle down => real
+repeated boils sit within their own duration of each other and the next form is
+the amplitude stability of the train across its members.
+
+m54 (run 117) - completes run 116 on the dw block. CONFIRMED by read: the dw
+block computes i0/i1 (ext_back6/ext_fwd6 margins, the largest of any device:
+back to 10 min, forward to 68 min) and EMITS over out['dishwasher'][i0:i1], but
+registered only the RAW run (stride*a30, stride*b30) in prog_spans. ev_in_prog is
+built exclusively from prog_spans and is the kettle's ONLY defence against
+program heaters (m35/m36: dw heater bursts sit inside every kettle band).
+TESTED: append((stride*a30, stride*b30)) -> (i0, i1) - a consistency fix using
+already-computed indices, no new constant. Reading: inert like run 116 => span
+bookkeeping cannot reach the case that matters; the leak needs a house with a
+profile whose cycles are REJECTED or with NO profile at all (house_12 has no
+dishwasher in cmap, hence no dw30 exists and no span of any kind can cover it),
+which needs a marks-free program-heater detector on the burst side - B4/B2.
+
+m53 (run 116) - run 115's reconnaissance exposed an inconsistency at the leak
+point. The wm EMITS its cycle over the ext_back/ext_fwd-extended span
+[i0, i1] (margins up to 24-68 min) but registered only the RAW run
+(a6, b6) in prog_spans, and ev_in_prog - the kettle's only defence against
+program heaters (m35/m36: no amp/dur band can separate them) - is built solely
+from prog_spans. So the model claimed an interval as the program's own cycle for
+emission while leaving the heater bursts in that interval's margins to surface as
+kettle draws (house_12 712 preds/127 GT, house_7 455/108; the pool kettle block is
+12 pairs at mean 0.562, so those two are worth ~+0.015 > the +0.01 bar). TESTED:
+prog_spans.append((a6, b6)) -> (i0, i1) in the wm block - a consistency fix using
+already-computed indices, no new constant. Reading: kettle up => leak confirmed as
+margin bursts and the dw block's identical append should be aligned too (needs its
+verbatim text); kettle down => the margins hold real draws and the real case is
+mark-free (house_12 has no dishwasher in cmap, hence no dw profile at all), which
+needs a marks-free program-heater detector on the burst side - the B4/B2 route.
+
+m52 (run 115) - the wm heat-share CEILING, the last untested extreme in the wm
+bands: hs_band = (0.75*min(hss), 1.75*max(hss)). It sits BELOW 1.0 whenever the
+marked runs were not all fully ON (max(hss) < 0.571), so it rejects high-duty real
+cycles, and is vacuous when max(hss) = 1.0 - which is why it can look inert in a
+dump and still bind in weak houses (cf. run 107's lesson). TESTED: ceiling ->
+inf, floor untouched. Also banked for the record: the kettle/prog suppression
+region (model.py ~L1310-1372) printed in this run. PRIORITY ARITHMETIC for future
+runs: the kettle block (12 pairs, mean F1 0.562) holds the two dead pairs
+house_12 0.060 (712 preds/127 GT) and house_7 0.130 (455/108) worth ~+0.015
+together - more than the +0.01 bar - and run 114 showed events shifting between
+dw and kettle, so the mechanism is the unlabeled-program leak: a house with no
+dw marks (house_12 has no dishwasher in cmap) emits no dw program spans, so its
+heater blocks surface as kettle bursts. Fix belongs on the burst side.
+
+m51 (run 114) - after run 113 closed the dw span floor as precision-protecting,
+the second untested dw summary gate is mean_band = (0.8*min(means),
+1.25*max(means)). Its FLOOR rejects any cycle whose whole-run mean power falls
+below 0.8x the lowest marked mean, and a long pump-heavy real cycle has exactly
+that low-mean signature (house_7 dw means span 429-1052 W, floor at 343 W), so it
+is a cycle-length-coupled statistic - a different mechanism from the level/share
+floors closed in 104/113. TESTED: dw mean_band lower bound -> 0.0, ceiling and all
+other bands untouched. Reading: inert => the deficit comes from cycles producing
+no above-heat run at all (marks representativeness, the B4 route); harmful => all
+four dw admission mechanisms tested by removal (merge 109, idle 110, span 113,
+mean here) protect precision and the dw gate family is exhausted for tuning.
+
+m50 (run 113) - last untested dw admission gate: the SPAN floor. The dw profile
+builds span_band as (0.25*min(spans), 3.0*max(spans)) or (0.6*min(spans),
+1.25*max(spans)) depending on whether the marks' runs are fully ON, so any real
+cycle shorter than the floor is rejected outright - the natural mechanism for
+house_7 admitting 44 run-basis cycles/yr against 91 GT. Runs 109/110 already
+proved the deficit is not the merge and that dw admission gates do bind. TESTED:
+both dw span floors set to 0.0, all upper bounds untouched. Reading: inert =>
+the deficit comes from the heat-level/share gates or from cycles producing no
+above-heat run at all (marks representativeness, not a gate); harmful => the
+floor protects precision and, after the run 110/111 idle dial, this device needs
+a better discriminator (B4 phase grammar) rather than any single gate.
+
+m49 (run 112) - combined the two individually-real-but-sub-bar device changes
+(wm merge median-gap from run 108; dw extrapolated idle ceiling from run 111) to
+test their INTERACTION through the shared prog_spans suppression: the wm's split
+runs expose kettle bursts (run 108: kettle -0.0032) and the dw's widened
+admission adds program-span coverage that should re-suppress them. Both lines are
+single-line and were measured in isolation, so this is a clean two-variable test.
+Reading: kettle loss smaller than run 108 standalone => the cross-device coupling
+is real and prog_spans becomes the top target; primary merely additive => no
+interaction, and the B4 phase grammar is the remaining route.
+
+m48 (run 111) - follow-up to m47. Run 110 (dw idle_hi = inf) was NOT vacuous:
+dw median +0.005965, p10 +0.000527, but pool primary -0.001833, so the ceiling
+binds and the optimum lies between 2.0*max(mark idle medians) and infinity: it
+buys recall in weak dw houses and pays with precision elsewhere. TESTED (1 line,
+dw profile dict L536): idle_hi = 3.0*max - min, i.e. the sample max extrapolated
+by one observed spread (the max over ~5 windows is downward-biased), keeping the
+original x2 factor. Non-arbitrary in form; compare the dw/mean tradeoff against
+run 110's outright removal. If it is inert vs 2x max, the eval-time idle medians
+jump far past any moderate widening and only the extremes matter.
+
+m47 (run 110) - the dw is the pool's most PRECISION-rich (P 0.447) and recall-poor
+(R 0.347) program device, so its constraint should be admission, not precision;
+house_7 admits 44 run-basis cycles/yr against 91 GT. Run 109 proved the merge is
+not the deficit (removing the long-gap merge cost the dw 0.0455), so the untested
+lever is the sustained-phase idle ceiling (dw profile dict L536, idle_hi =
+2.0*max of the marks' sub-heat medians). Only the WM's ceiling had been probed
+(run 106: vacuous, never bound). TESTED: dw idle_hi = float('inf'), all other
+bands untouched. Reading: inert => vacuous, deficit is span/onset placement;
+harmful => load-bearing, completing the device-specific ceiling-family picture.
+Remaining untested dw widths: hs_band upper bound, span_band.
+
+m46 (run 109) - the run-108 generation mechanism (median heater gap instead of
+the max) applied to the DW, which has the strongest over-merge signature in the
+pool: refit/house_7 admits 44 run-basis cycles/yr against 91 GT cycles (0.244 vs
+0.5 per day; dw recall 0.347, 2/10 pairs under F1 0.2, house_11 gates 97 times
+for 12 GT). The dw profile (L444-458) carries the identical duplicated statistic
+as the wm (max_gap over all mark windows -> merge_n = 1.25*max_gap/30). If the dw
+gain is real but the primary is flat again, the binding constraint is the shared
+prog_spans suppression that cost the kettle 0.0032 in run 108, not the merge.
+
+m45 (run 108) - FIRST generation-side change (gates closed, m44): the wm's
+merge_n = 1.25 * max_gap where max_gap is the largest heater-block gap inside ANY
+one mark window (L682-696). One window holding two wash cycles therefore supplies
+its INTER-cycle pause, and the eval-time merger bridged 35-78 min (spans reached
+156 min, i.e. two GT cycles in one pred; 31 dead wm pairs at recall 0.245).
+TESTED: merge_n from min(max_gap, 2*median(wm_gaps)), the robust-estimator
+precedent, guard changed to 'max_gap > 0 and wm_gaps' so the documented
+no-pause fallback (merge_n=1) is untouched. Still-open generation defect in the
+same function: per window the profile keeps max(_merge_runs(...), key=len) - the
+LONGEST run - so a contaminated two-cycle window also donates that window's
+span/p90/idle/dens statistics.
+
+m44 (run 107) - dens_hi = 2.0*max(denss) trimmed to the second-densest window
+REGRESSES: pool 0.362782 (-0.003392), p10 0.344327, wm 0.241681 (-0.004976),
+seed 3 wm -0.013727 with fridge/dw unchanged. The dump's 1.035-1.294 blocks/min
+ceilings are set by REAL wm cycles (a high heater-block rate is wm-like), not by
+pump chatter, so this upper bound is load-bearing for recall even though its
+range looked vacuous. Runs 104 (floors) + 105 (heat level) + 106 (idle ceiling) +
+107 (dens ceiling) now CLOSE the wm gate family: no single-feature gate separates
+the wm FPs because they are structurally wm-like. Levers left: candidate
+GENERATION (the merged-run construction, heater_gap_merge up to 78 min) or B2
+synthetic supervision. Untouched: the dishwasher profile (L536-537), never
+scored in isolation. METHOD: a bound whose range merely LOOKS vacuous may still
+bind on the tail; the audit must test the bound, not argue it.
+
+m43 (run 106 follow-up, RECORD CORRECTION + method) - the BASE seed-3 values are
+microwave 0.292094 / dishwasher 0.354751, i.e. IDENTICAL to what run 106's (and
+run 105's) seed-3 screens printed for their variants. So the "+0.0249 microwave /
+-0.0296 dishwasher" movement claimed in run 105's log entry was PHANTOM: I
+compared a single-seed (seed 3) draw against the POOL MEDIAN baselines
+(0.267210 / 0.384353), which are different seeds' draws for those devices. The
+per-device pool median is not seed 3's value for every device, so a seed-3 screen
+must always be compared against a seed-3 BASE measurement - the base pool median
+is a valid baseline only for the primary and for the devices whose median draw
+happens to be seed 3 (kettle, wm, and the primary do coincide, which is what made
+the error easy). Run 105's conclusion still stands where it matters (its pool was
+net-neutral: mw/dw bit-identical), but its device-level deltas were an artefact.
+SECOND METHOD POINT (run 106): the idle cap min(2*max(idles), heat) is a REAL
+vacuity repair - the gate's own range (up to 2952 W vs a heat level of ~1.5 kW)
+provably cannot constrain anything - yet the pool is BIT-IDENTICAL on all ten
+aggregates, because the pool aggregates are medians over seeds and the cap only
+bites in the non-median draw where the vacuity was observed. "Fires only in a
+non-median draw" and "cannot fire at all" are indistinguishable in the pool
+report: to tell them apart, screen BOTH a mid seed and seed 2026 and compare each
+against its own base.
+
+m42 (run 106) - GATE VACUITY AUDIT. idles[i] in _wm30_profile is the MEDIAN of the
+sub-level phase INSIDE the i-th merged run (L722), and a merged run is by
+construction the 30 s grid at or above heat, so every idle is below heat: the
+ceiling 2.0*max(idles) can only exceed heat through the x2 factor. In the pool
+dump it does - idle<=2952 W and <=2914 W, and 263 W where heat is 161 W. A 3 kW
+"quiet level" test admits anything, i.e. the gate is vacuous exactly where wm
+precision is worst (P 0.245; 7/15 pairs < 0.2). TESTED: idle_hi ->
+min(2.0*max(idles), heat) (the run-mining level, no new constant).
+METHOD: this is the first gate audited for vacuity BY CONSTRUCTION (does the
+statistic's range intersect the gate's range?) instead of by tuning; the same
+audit is open for dens_hi = 2*max(denss) (reaches 1.294/min in the dump),
+span_band (a 2-156 min min/max) and hs_band's 1.75*max. Note the failure mode
+learned here in passing: an edit that only half-rewrites a parenthesised
+expression passes a naive string replace but fails ast - always run
+python3 -c ast.parse BEFORE the 150 s pool run (a broken tree measures as a null
+metric and log_experiment rejects a non-finite metric).
+
+m41 (run 105, DISCARD 0.3662xx - net-neutral) - the wm's heat level is NOT the
+over-emission lever, and (the durable part) a wm change is NOT device-local.
+TESTED: heat = PROG_HEAT_AMP_FRAC * min(mark_wm['amp'], dw_amp) -> the wm's own
+mark amp (a cross-device coupling removed). SCREEN seed 3 (= the median seed =
+the primary's own draw): 0.366174 -> 0.366222 (+0.000048) but with microwave
+0.267210 -> 0.292094 (+0.024884) exactly offset by dishwasher 0.384353 ->
+0.354751 (-0.029602). SCREEN seed 2026: +0.000135 with mw and dw BIT-IDENTICAL
+to base. So the change fires broadly yet its effect is a cancellation.
+FINDING: the wm30 runs are emitted as program spans and enter the shared
+prog_spans / dispute / named-chain machinery that gates the microwave,
+dishwasher and kettle. Therefore (1) never judge a wm-only hypothesis on the wm
+median - check all five device medians; (2) a ~0.025 "gain" in one draw can be
+pure reallocation with zero net (only the pool primary arbitrates); (3) any
+future edit to run 102's program-span rule must be scored on all five device
+medians. Also diagnosed here: refit/house_7 dw has 44 candidate runs/yr against
+91 GT cycles at F1 0.032 (a TIMING failure, not a count failure - its dw mark
+pre_offs run -0.5,-1.0,-1.0,+4.5,+14.5 min with ext_back clamped to 0), and
+refit/house_11 dw passes 97 run-basis gates against 12 GT at F1 0.000.
+WM OVER-EMISSION is now closed against: heat level (m41), admission floors
+(m40), mark-statistic trims (m40). Remaining routes: candidate generation at
+the 30 s dwell/merge level, or B2 synthetic supervision. Bar 0.376174.
+
+m40 (run 104, DISCARD 0.366174 - bit-identical to the committed blunt rule) -
+the wm admission floors are NOT the over-emission mechanism; m39's lead was
+mis-framed. TESTED: replace 0.75*min(x) with a trimmed min (sorted[1] of five
+usable windows) for hs_band[0] and dens_lo in _wm30_profile. SCREENS (seed
+2026): bundle 0.372409 (-0.001052, wm 0.247979 -> 0.242229); density-only
+0.373607 (+0.000146, wm 0.247885); heat-share-only 0.372577 (-0.000884, wm
+0.243702, house_1 +0.003175). POOL (density-only): 0.366174 with EVERY
+reported aggregate bit-identical to the blunt rule (p10 0.345739,
+device_balanced 0.368405, house_1 0.529428, all five device medians).
+LEARNINGS. (1) The heat-share floor is a RECALL guard: the low-hs merged runs
+it admits are real wm cycles with long pump phases (the hs value comes from the
+MERGED run, so a house whose mark windows need a wide merge naturally has low
+hs). hs_lo rounding to 0.00 is protecting truth, not admitting lookalikes. Do
+NOT reopen hs_lo - not as a trim, not as a joint repair with merge_n.
+(2) The density floor rarely binds: after trimming it 4 of 5 seeds are
+unchanged to the last digit, so dw30-lookalike rejection already comes from the
+other gates (span/amp/mean/idle ceilings). Do not reopen dens_lo.
+(3) METHOD - the most valuable result of this run: a seed-2026 screen is NOT a
+valid go/no-go filter for a change whose FIRING depends on the calibration
+draw. The primary is the median of the five per-seed means and seed 2026 is the
+top, most atypical draw (0.373 vs 0.346-0.366 for seeds 1-4), so a change that
+fires only in 2026 can show +0.0001 on the screen and exactly 0.000000 on the
+pool - run 104 is the first case where the screen's sign did not transfer.
+Before spending a 150 s pool run, confirm the change fires in a MID seed
+(1 or 3), not only in 2026.
+NEXT: the wm over-emission (median 0.2467, 7/15 pairs < 0.2) must be attacked
+at candidate GENERATION (what merges into a run, i.e. _runs/_merge_runs and the
+30 s grid dwell structure) or through the program path - not through the
+admission floors. The largest structural lever is still B2 synthetic
+supervision -> the device-pure admission band, which is also the only remaining
+route to B3's device-pure labeling closure. Bar stays 0.376174.
+
+m39 (run 103, DISCARD 0.363341; bar was 0.376174) - the program-span yield is
+NOT narrowable by the program's own claimed level; that trade is intrinsic.
+HYPOTHESIS: yield a burst event only when the program span's OWN claimed level
+can explain its amplitude (dw30/wm30 emit_w, the chain's measured span level
+lvl from L1282), keeping the run-102 blunt rule's kettle gain while protecting
+ukdale/house_1's real coincident boils (its kettle declares 1173 W, at wm/dw
+heater level). CHANGE: prog_spans entries became 3-tuples (c0, c1, level);
+prog_spans.extend(named_spans) replaced by two explicit appends so named_spans
+keeps its 2-tuple form for the wm30 dup test and the kettle sustained dedup;
+gate = (on<c1)&(off>c0)&(amp<=lvl_p); CORE runs only, never the extension.
+RESULT: house_1_v4_mean recovered EXACTLY (0.529428 -> 0.540104, +0.010676) but
+the whole kettle gain went back (screen 0.566709 -> 0.561279; pool delta
+-0.005661). Pool 0.363341 (-0.002833 vs the committed blunt 0.366174); p10
+0.346289. REFUTATION, and not salvageable by a margin: the FPs the blunt rule
+removes sit ABOVE the program's level (they are the program's own above-mean
+heater spikes, not partial-duty draws) while house_1's true kettle sits at only
+~1.18x the wm's emitted mean, so the two populations OVERLAP in amp-vs-level.
+Any margin >= 1.18 suppresses house_1's kettle, any margin < 1.18 re-admits the
+spikes. Do not reopen this feature (also do not reopen the extension-coverage
+variant, m38).
+STATE: src/ reverted to the committed blunt rule b4298ca (0.366174) = the
+best-known state; nothing banked, no diff needed. Bar stays 0.376174.
+RECORDED LEAD (untested): the wm heat-share admission floor is structurally
+unstable across builds. hs_band = (0.75*min(hss), 1.75*max(hss)) over the
+usable mark windows; in 3 of the logged builds hs_lo rounds to 0.00, i.e. one
+low-hs merged run disables the whole house's heat-share test. It is entangled
+with merge_n: hs is measured over the MERGED run, so a build with a large
+max_gap yields long merged runs with low hs, which loosens the floor AND widens
+the merge at once. Any repair must treat hs and merge_n jointly; a trimmed-min
+floor alone moves both. The wm cluster is the largest headroom left (median
+0.2467, 7/15 pairs < 0.2, over-emitting).
+NEXT: a +0.01 step must be structural, not span ownership. Candidates in order:
+(1) B2 synthetic supervision -> the device-pure admission band, which is also
+the last route for B3's device-pure labeling closure; (2) the wm cluster via
+the hs/merge_n joint repair above; (3) the last two dw pairs below 0.2
+(refit/house_11 dw 0.000 on 12/12 and refit/house_7 dw 0.065 on 33/91).
+
+## SEGMENT 3 - CLOSED (2026-09-28)
+
+The rule line is terminal: 106 runs, 29 keeps, 0 crashes; last keep `b4298ca`
+at pool primary 0.366174 against a bar of 0.376174. Runs 103-118 exhausted the
+remaining bound space (harmful: dw merge/idle/span/mean floors; inert or
+vacuous: 115 bit-identical, 116 ~1e-4, 117 7e-5, 118 zero firing; real but
+non-compounding: 108 and 112). The remaining measured loss is a representation
+failure, not a gate: the kettle block's two dead pairs (house_12 0.060 with 712
+predictions against 127 GT cycles, house_7 0.130 with 455 against 108, ~+0.015
+together) come from `ev_in_prog` deriving only from `prog_spans`, so a home
+with no dishwasher marks emits no dw program spans and its duty-cycling heater
+blocks surface as kettle boils. No amplitude or duration band separates them.
+
+The transfer-learning segment produced no run against this loop's metric. Its
+output is the cross-method reference in `data/results/method_compare/`
+(experiment 05, 26 unseen pairs, per-pair median over seeds): rules 0.306,
+rules+GT thresholds 0.325, cross-home seq2seq 0.280 with **no button presses**,
+FHMM 0.159. The net wins the kettle 0.733 against 0.582 (and against 0.580 with
+ground-truth thresholds, so the gap is representational) and the development
+washing machine, and loses the microwave (0.049 against 0.153) where the
+failure is amplitude - several homes sit at 43-47 W, under the 50 W visibility
+floor.
+
+Next experiment (new, not a continuation): per-device arbitration - rules for
+microwave/fridge/dishwasher, the cross-home net for kettle and washing machine.
+Per-device best-of is 0.353 against rules' 0.306 unseen, i.e. +0.047 with no
+training. Adaptation on K=5 marks is the follow-on and must be built against
+segment 0's recorded fine-tuning failure (about 11x retention damage at 40
+epochs, saturated heads from a reused `pos_weight`): freeze the trunk,
+fine-tune the head only, recompute `pos_weight` on calibration data, guard the
+OFF-sigmoid. Terminal record: `.auto/dossier.md`.
