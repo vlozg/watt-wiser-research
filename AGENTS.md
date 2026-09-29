@@ -31,8 +31,9 @@ for US homes with Shelly EM Gen3 submeters.
   scored only by the frozen `.auto/measure.sh`, terminal record in `.auto/dossier.md`),
   `experiments/05_method_compare` (cross-method comparison + marimo explorer: rules, rules
   with ground-truth thresholds, FHMM, and a mark-free cross-home seq2seq; holdout readout
-  only) and `experiments/06_transfer_dl` (cross-home transfer sandbox, not yet tracked - it
-  imports 05's harness and awaits an isolation rewrite or removal).
+  only) and `experiments/06_transfer_dl` (cross-home transfer learning: standalone
+  `transfer_lib.py` + backbone pretraining, capacity review in
+  `backbone_capacity_review.md`).
   Experiments are isolated from one another: never import across these directories.
 - `deprecated/` - quarantined legacy trees the owner has not reviewed; do not extend.
   `deprecated/analysis/`: EDA judge (`eda_shelly.py` CLI + `eda_shelly_interactive.py`
